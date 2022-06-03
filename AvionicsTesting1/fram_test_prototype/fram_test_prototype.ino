@@ -12,20 +12,18 @@
 
 // Byte patterns
 
-#define zeros_byte 0x00
-#define ones_byte 0xFF
-#define alternating_byte 0xAA
-#define test_byte 0xAF
+const auto zeros_byte = 0x00;
+const auto ones_byte = 0xFF;
+const auto alternating_byte = 0xAA;
+const auto test_byte = 0xAF;
 
-// Specified FRAM size is 256K bits
+// Specified FRAM size is 32K bytes
 
-#define fram_size 32768
-// Use small size to shorten testing cycle
-// #define fram_size 1024 
+const long fram_size = 32 * long(1024);
 
 // Power off delay in milliseconds
 
-#define power_delay 5000
+const auto power_delay = 5 * 1000;
 
 // Create the FRAM object
 
@@ -77,7 +75,7 @@ void setup(void) {
 // Read increasing addresses looking for test byte
 
   auto progress_counter = 0;
-  unsigned int address;
+  long address;
   for (address = 1; address < fram_size * 8; address++) {
 
     progress(progress_counter);
@@ -119,7 +117,7 @@ void setup(void) {
   Serial.println("Writing and reading alternating ones and zeros ascending");
   progress_counter = 0;
  
-  for (auto address = 0; address < fram_size; address++) {
+  for (long address = 0; address < fram_size; address++) {
     
     progress(progress_counter);
 
@@ -140,7 +138,7 @@ void setup(void) {
   Serial.println("Writing and reading zeros descending");
   progress_counter = 0;
  
-  for (auto address = fram_size - 1; address >= 0; address--) {
+  for (long address = fram_size - 1; address >= 0; address--) {
     
     progress(progress_counter);
 
@@ -162,7 +160,7 @@ void setup(void) {
   Serial.println("Writing and reading ones at random locations");
   progress_counter = 0;
  
-  for (auto count = 0; count < fram_size; count++) {
+  for (long count = 0; count < fram_size; count++) {
     
     progress(progress_counter);
 
@@ -184,7 +182,7 @@ void setup(void) {
   Serial.println("Writing test bytes ascending");
   progress_counter = 0;
  
-  for (auto address = 0; address < fram_size; address++) {
+  for (long address = 0; address < fram_size; address++) {
     
     progress(progress_counter);
 
@@ -223,7 +221,7 @@ void setup(void) {
   Serial.println("Verifying test bytes ascending");
   progress_counter = 0;
  
-  for (auto address = 0; address < fram_size; address++) {
+  for (long address = 0; address < fram_size; address++) {
     
     progress(progress_counter);
   
