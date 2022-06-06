@@ -3,15 +3,28 @@
 # Lee A. Congdon
 # 16 May 2022
 #
+# This is not the FRAM device planned for SilverSat
+#
 
 import board
 import busio
 import adafruit_fram
 import random
+from time import time
 
 ZEROS_BYTE = int(0x00)
 ONES_BYTE = int(0xFF)
 ALTERNATING_BYTE = int(0xAA)
+
+# Helper function for displaying progress dots
+
+def progress_display(counter):
+    TICK_SIZE = 100
+    counter += 1
+    if counter > TICK_SIZE:
+        print(".", end="", flush=True)
+        counter = 0
+    return counter
 
 # Set up i2c connection
 
@@ -20,6 +33,7 @@ fram = adafruit_fram.FRAM_I2C(i2c, address=0x50)
 
 # Identify the test
 
+start = time()
 print("Starting FRAM Test Suite")
 
 # Get the size of the FRAM in bytes
@@ -27,7 +41,7 @@ print("Starting FRAM Test Suite")
 print("Checking size of FRAM")
 
 size = 0
-progress_counter = 0
+counter = 0
 while True:
 
     try:
@@ -37,10 +51,7 @@ while True:
         break
     
     size += 1
-    progress_counter += 1
-    if progress_counter > 1000:
-        print(".", end="")
-        progress_counter = 0
+    counter = progress_display(counter)
 
 if size == len(fram):
     print("Size agrees with reported length")
@@ -51,7 +62,7 @@ else:
 
 print("Starting alternating ones and zeros test")
 
-progress_counter = 0
+counter = 0
 for index in range(len(fram)):
     
     try:
@@ -63,10 +74,7 @@ for index in range(len(fram)):
     except RuntimeError:
         print(f"I/O error at address: {index:#06x}")
     
-    progress_counter += 1
-    if progress_counter > 1000:
-        print(".", end="")
-        progress_counter = 0
+    counter = progress_display(counter)
 
 print("\nAlternating ones and zeros test complete")
 
@@ -74,7 +82,7 @@ print("\nAlternating ones and zeros test complete")
 
 print("Starting zeros descending test")
 
-progress_counter = 0
+counter = 0
 for index in range(len(fram) - 1, -1, -1):
     
     try:
@@ -86,10 +94,7 @@ for index in range(len(fram) - 1, -1, -1):
     except RuntimeError:
         print(f"I/O error at address: {index:#06x}")
     
-    progress_counter += 1
-    if progress_counter > 1000:
-        print(".", end="")
-        progress_counter = 0
+    counter = progress_display(counter)
 
 print("\nZeros descending test complete")
 
@@ -98,7 +103,7 @@ print("\nZeros descending test complete")
 print("Starting ones random test")
 
 test_size = len(fram)
-progress_counter = 0
+counter = 0
 for _ in range(test_size):
     location = random.randrange(0, len(fram))
     
@@ -111,11 +116,8 @@ for _ in range(test_size):
     except RuntimeError:
         print(f"I/O error at address: {location:#06x}")
     
-    progress_counter += 1
-    if progress_counter > 1000:
-        print(".", end="")
-        progress_counter = 0
+    counter = progress_display(counter)
 
 print("\nOnes random test complete")
 
-print("FRAM test suite complete")
+print(f"FRAM test suite completed in {(time() - start):10.3f} seconds")
