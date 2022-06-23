@@ -1,15 +1,13 @@
 //
-// FRAM Test Prototype
+// Mock FRAM Test
 // Lee A. Congdon
-// 21 May 2022
+// 22 June 2022
 //
-// Prototype to test the FRAM on the Avionics Board for SilverSat
-// The Adafruit FRAM (Product ID: 1895) is not the FRAM specified for the satellite
-// Caution: this test overwrites existing data in the FRAM
+// Test the mock FRAM on the Avionics Board for SilverSat
 //
 
-#include "Adafruit_FRAM_I2C.h"
 #include <Arduino.h>
+#include "fram_mock.h"
 
 // Byte patterns
 
@@ -22,31 +20,13 @@ const auto test_byte = 0xAF;
 
 const long fram_size = 32 * long(1024);
 
-// Power off delay in milliseconds
-
-const auto power_delay = 5 * 1000;
-
 // Create the FRAM object
 
-auto fram = Adafruit_FRAM_I2C();
-
-
-// Helper function to update the counter and print a dot if required
-
-void progress(int &counter) {
-  counter++;
-  if (counter > 1000) {
-    Serial.print(".");
-    counter = 0;
-  }
-}
-
+auto fram = Fram();
 
 // Run the tests
 
 void setup(void) {
-
-// Setup the test
 
   Serial.begin(115200);
   while (!Serial);
@@ -75,12 +55,9 @@ void setup(void) {
 
 // Read increasing addresses looking for test byte
 
-  auto progress_counter = 0;
   long address;
   for (address = 1; address < fram_size * 8; address++) {
 
-    progress(progress_counter);
-    
 // If values don't match, memory address hasn't wrapped
 
     if (fram.read(address) != test_byte)
@@ -98,7 +75,7 @@ void setup(void) {
 // Check if address 0 was changed
 
     if (fram.read(0) == (byte)~test_byte) {
-      Serial.println("\nFound maximum address");
+      Serial.println("Found maximum address");
       break;
     }
   }
@@ -115,13 +92,10 @@ void setup(void) {
 // Write/read alternating bits from byte zero up
 
   auto alternating_test_successful = true;
-  Serial.println("Writing and reading alternating ones and zeros ascending");
-  progress_counter = 0;
+  Serial.println("\nWriting and reading alternating ones and zeros ascending");
  
   for (long address = 0; address < fram_size; address++) {
     
-    progress(progress_counter);
-
 // Write and read pattern
     
     fram.write(address, alternating_byte);
@@ -131,18 +105,15 @@ void setup(void) {
       alternating_test_successful = false;
     }
   }
-  Serial.println("\nAlternating bits test complete");
+  Serial.println("Alternating bits test complete");
 
 // Read/write zero bytes from the largest address down
   
   auto zeros_test_successful = true;  
-  Serial.println("Writing and reading zeros descending");
-  progress_counter = 0;
+  Serial.println("\nWriting and reading zeros descending");
  
   for (long address = fram_size - 1; address >= 0; address--) {
     
-    progress(progress_counter);
-
 // Write and read pattern
     
     fram.write(address, zeros_byte);
@@ -152,18 +123,13 @@ void setup(void) {
       zeros_test_successful = false;
     }
   }
-  Serial.println("\nZero bits test complete");
-
+  Serial.println("Zero bits test complete");
 
 // Read/write one bytes randomly
 
   auto ones_test_successful = true;
-  Serial.println("Writing and reading ones at random locations");
-  progress_counter = 0;
- 
+  Serial.println("\nWriting and reading ones at random locations");
   for (long count = 0; count < fram_size; count++) {
-    
-    progress(progress_counter);
 
 // Write and read pattern
 
@@ -175,81 +141,21 @@ void setup(void) {
       zeros_test_successful = false;
     }
   }
-  Serial.println("\nOne bits test complete");
-
-// Write test_bytes from address zero up, request power off, request power on, check memory 
-
-  auto power_test_successful = true;
-  Serial.println("Writing test bytes ascending");
-  progress_counter = 0;
- 
-  for (long address = 0; address < fram_size; address++) {
-    
-    progress(progress_counter);
-
-// Write pattern
-    
-    fram.write(address, test_byte);
-    if (fram.read(address) != test_byte) {
-      Serial.print("\nI/O error at address 0x"); Serial.println(address, HEX);
-      Serial.print("Error during power test");
-      power_test_successful = false;
-    }
-  }
-
-// Ask for power off
-  
-  Serial.println("\nDisconnect power to the FRAM and press Enter");
-  while (true) {
-    if (Serial.read() == '\n') break;
-  }
-  Serial.print("Waiting "); Serial.print( power_delay / 1000 ); Serial.println(" seconds");
-  delay(power_delay);
-  
-// Ask for power on and reinitialize FRAM
-  
-  Serial.println("Connect power to the FRAM and press Enter");
-  while (true) {
-    if (Serial.read() == '\n') break;
-  }
-  if (fram.begin(fram_i2c_address)) {  
-    Serial.println("Reestablished FRAM I2C connection");
-  } else {
-    Serial.println("I2C FRAM not identified...check your connections and setup and retry");
-    while (true);
-  }
-    
-  Serial.println("Verifying test bytes ascending");
-  progress_counter = 0;
- 
-  for (long address = 0; address < fram_size; address++) {
-    
-    progress(progress_counter);
-  
-// Read pattern
-   
-    if (fram.read(address) != test_byte) {
-      Serial.print("\nI/O error at address 0x"); Serial.println(address, HEX);
-      Serial.print("Error during power test");
-      power_test_successful = false;
-    }
-  }
-  Serial.println("\nPower test complete");
+  Serial.println("One bits test complete");
 
 // Tests completed
 
   if (size_check_successful &&
       alternating_test_successful &&
       zeros_test_successful &&
-      ones_test_successful &&
-      power_test_successful
+      ones_test_successful
   ) {
-    Serial.println("All tests succeeded");
+    Serial.println("\nAll tests succeeded");
   } else {
-    Serial.println("Test(s) failed");
+    Serial.println("\nTest(s) failed");
   }
 
-  Serial.print("Completed FRAM Test Suite in "); Serial.print( (millis() - start_time) / 1000 ); Serial.println(" seconds");
+  Serial.print("Completed FRAM Test Suite in "); Serial.print( (millis() - start_time) / 1000.0, 3 ); Serial.println(" seconds");
 
 }
 
