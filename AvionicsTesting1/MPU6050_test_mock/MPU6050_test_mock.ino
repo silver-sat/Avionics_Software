@@ -3,8 +3,9 @@
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
 #include <Wire.h>
+#include "MPU6050_mock.h"
 
-Adafruit_MPU6050 mpu;
+MPU6050_Mock mpu;
 
 void setup(void) {
   Serial.begin(115200);
