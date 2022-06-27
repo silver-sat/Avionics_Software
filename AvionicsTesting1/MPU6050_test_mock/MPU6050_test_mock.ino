@@ -92,6 +92,16 @@ void loop() {
   sensors_event_t a, g, temp;
   mpu.getEvent(&a, &g, &temp);
 
+  temp.temperature = 25.0;
+
+  a.acceleration.x = 2.0;
+  a.acceleration.y = 3.0;
+  a.acceleration.z = 4.0;
+
+  g.gyro.x = 6.0;
+  g.gyro.y = 7.0;
+  g.gyro.z = 8.0;
+
   /* Print out the values */
   Serial.print("Acceleration X: ");
   Serial.print(a.acceleration.x);
