@@ -13,6 +13,7 @@ class MPU6050_Mock : public Adafruit_MPU6050
 {
 public:
     bool begin() const {return true;}
+
 };
 
 #endif
