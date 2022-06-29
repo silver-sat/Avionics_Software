@@ -4,7 +4,7 @@
 // 20 June 2022
 //
 
-#include "bus_switch_mock.h"
+#include <bus_switch_mock.h>
 
 BusSwitch bus_switch;
 
@@ -17,27 +17,27 @@ void setup(void) {
     Serial.println("Starting Bus Switch Test");
 
     for (auto index = 1; index < 21; index++) {
-        bus_switch.enable();
-        bus_switch.disable();
-        bus_switch.enable();
+        bus_switch.enableBus();
+        bus_switch.disableBus();
+        bus_switch.enableBus();
     }
 
     // Dump debug log
 
-    auto count = bus_switch._debug_log.size();
+    auto count = bus_switch.getLogSize();
     Serial.print("There are "); Serial.print(count); Serial.println(" entries in the log");
     for (auto index = count; index > 0; index--) {
-        auto log_entry = bus_switch._debug_log.shift();
+        auto log_entry = bus_switch.getLogEntry();
         Serial.print("Entry: "); 
         switch (log_entry.action)
         {
-            case CREATE:
+            case BusSwitch::Action::create:
                 Serial.print("Created switch at ");
                 break;
-            case ENABLE:
+            case BusSwitch::Action::enable:
                 Serial.print("Enabled switch at ");
                 break;
-            case DISABLE:
+            case BusSwitch::Action::disable:
                 Serial.print("Disabled switch at ");
                 break;
         }
