@@ -6,17 +6,18 @@
 // Based on Adafruit_FRAM_I2C
 //
 
-#ifndef FRAM_MOCK_H
-#define FRAM_MOCK_H
+#ifndef SILVERSAT_FRAM_MOCK_H
+#define SILVERSAT_FRAM_MOCK_H
 
 #define FRAM_DEFAULT_ADDRESS (0x50)
-#define FRAM_MEMORY_SIZE 32768
+#define FRAM_MEMORY_SIZE 16384 // 32K FRAM does not fit on Metro M0 Express
 
 #include <Arduino.h>
 
-class Fram {
+class FRAM {
 public:
-    Fram(void);
+
+    FRAM();
 
     bool begin(uint8_t i2caddr = FRAM_DEFAULT_ADDRESS, void *theWire = NULL);
     bool write(uint16_t addr, uint8_t value);
@@ -46,7 +47,8 @@ template <class T> uint16_t readObject(uint16_t addr, T &value) {
     return n;
   }
 
-protected:
+private:
+
     uint8_t _i2caddr = 0;
     const uint16_t _memory_size = FRAM_MEMORY_SIZE;
     uint8_t _memory[FRAM_MEMORY_SIZE];

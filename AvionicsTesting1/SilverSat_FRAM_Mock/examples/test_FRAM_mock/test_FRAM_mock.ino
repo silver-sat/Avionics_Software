@@ -6,8 +6,7 @@
 // Test the mock FRAM on the Avionics Board for SilverSat
 //
 
-#include <Arduino.h>
-#include "fram_mock.h"
+#include <SilverSat_FRAM_mock.h>
 
 // Byte patterns
 
@@ -18,11 +17,11 @@ const auto test_byte = 0xAF;
 
 // Specified FRAM size is 32K bytes
 
-const long fram_size = 32 * long(1024);
+const long FRAM_size = 32 * long(1024);
 
 // Create the FRAM object
 
-auto fram = Fram();
+FRAM fram;
 
 // Run the tests
 
@@ -56,7 +55,7 @@ void setup(void) {
 // Read increasing addresses looking for test byte
 
   long address;
-  for (address = 1; address < fram_size * 8; address++) {
+  for (address = 1; address < FRAM_size * 8; address++) {
 
 // If values don't match, memory address hasn't wrapped
 
@@ -81,7 +80,7 @@ void setup(void) {
   }
 
   Serial.print("Memory size is "); Serial.print(address); Serial.println(" bytes");
-  if (address == fram_size) {
+  if (address == FRAM_size) {
     Serial.println("Size agrees with specified length");
   } else {
     Serial.println("Error, size does not equal specified length");
@@ -94,7 +93,7 @@ void setup(void) {
   auto alternating_test_successful = true;
   Serial.println("\nWriting and reading alternating ones and zeros ascending");
  
-  for (long address = 0; address < fram_size; address++) {
+  for (long address = 0; address < FRAM_size; address++) {
     
 // Write and read pattern
     
@@ -112,7 +111,7 @@ void setup(void) {
   auto zeros_test_successful = true;  
   Serial.println("\nWriting and reading zeros descending");
  
-  for (long address = fram_size - 1; address >= 0; address--) {
+  for (long address = FRAM_size - 1; address >= 0; address--) {
     
 // Write and read pattern
     
@@ -129,11 +128,11 @@ void setup(void) {
 
   auto ones_test_successful = true;
   Serial.println("\nWriting and reading ones at random locations");
-  for (long count = 0; count < fram_size; count++) {
+  for (long count = 0; count < FRAM_size; count++) {
 
 // Write and read pattern
 
-    address = random(0, fram_size);
+    address = random(0, FRAM_size);
     fram.write(address, ones_byte);
     if (fram.read(address) != ones_byte) {
       Serial.print("\nI/O error at address 0x"); Serial.println(address, HEX);
