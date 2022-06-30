@@ -4,8 +4,8 @@
 // 29 June 2022
 //
 
-#ifndef BUS_SWITCH_MOCK_H
-#define BUS_SWITCH_MOCK_H
+#ifndef SILVERSAT_BUS_SWITCH_MOCK_H
+#define SILVERSAT_BUS_SWITCH_MOCK_H
 
 #define OE_PIN "??"
 #define OE_OVERBAR "??"

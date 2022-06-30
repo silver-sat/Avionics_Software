@@ -4,7 +4,7 @@
 // 20 June 2022
 //
 
-#include <bus_switch_mock.h>
+#include <SilverSat_Bus_Switch_mock.h>
 
 BusSwitch bus_switch;
 
