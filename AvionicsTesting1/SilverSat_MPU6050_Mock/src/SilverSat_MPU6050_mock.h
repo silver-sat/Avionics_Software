@@ -4,12 +4,12 @@
 // 26 June 2022
 //
 
-#ifndef MPU6050_MOCK_H
-#define MPU6050_MOCK_H
+#ifndef SILVERSAT_MPU6050_MOCK_H
+#define SILVERSAT_MPU6050_MOCK_H
 
 #include <Adafruit_MPU6050.h>
 
-class MPU6050_Mock : public Adafruit_MPU6050
+class MPU6050 : public Adafruit_MPU6050
 {
 public:
     bool begin() const {return true;}
