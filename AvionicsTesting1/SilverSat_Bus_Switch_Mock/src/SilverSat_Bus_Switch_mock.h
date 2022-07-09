@@ -1,8 +1,11 @@
-//
-// Mock bus switch for demonstration and testing
-// Lee A. Congdon
-// 29 June 2022
-//
+/**
+ * @file SilverSat_Bus_Switch_mock.h
+ * @author Lee A. Congdon (lee@silversat.org)
+ * @brief Header for mock bus switch for testing and demonstration
+ * @version 1.0.1
+ * @date 2022-07-09
+ *
+ */
 
 #ifndef SILVERSAT_BUS_SWITCH_MOCK_H
 #define SILVERSAT_BUS_SWITCH_MOCK_H
@@ -15,43 +18,67 @@
 #include <Arduino.h>
 #include <CircularBuffer.h>
 
-// Define bus switch object
-
-class BusSwitch {
+/**
+ * @brief The bus switch object
+ *
+ */
+class BusSwitch
+{
 public:
-
     BusSwitch();
 
-// Requested actions 
-
-    enum Action {
+    /**
+     * @brief Available actions
+     *
+     */
+    enum Action
+    {
         create,
         disable,
         enable,
     };
 
-// Log entry structure
-
-    struct LogEntry {
+    /**
+     * @brief Log entry structure
+     *
+     */
+    struct LogEntry
+    {
         uint32_t time_stamp;
         Action action;
-    }; 
+    };
 
-// Member functions
-
+    /**
+     * @brief Enable the bus
+     *
+     * @return true if successful
+     * @return false otherwise
+     */
     bool enableBus();
+    /**
+     * @brief Disable the bus
+     *
+     * @return true if successful
+     * @return false otherwise
+     */
     bool disableBus();
+    /**
+     * @brief Get the log size
+     *
+     * @return size_t log size
+     */
     size_t getLogSize();
+    /**
+     * @brief Get the next log entry
+     *
+     * @return LogEntry
+     */
     LogEntry getLogEntry();
 
-// Member variables
-
 private:
-
     const String _oe_pin = OE_PIN;
     const String _oe_overbar_pin = OE_OVERBAR;
     CircularBuffer<LogEntry, BUFFER_SIZE> _debug_log;
-
 };
 
 #endif
