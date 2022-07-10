@@ -1,8 +1,14 @@
-//
-// Mock MPU6050 for demonstration and testing
-// Lee A. Congdon
-// 26 June 2022
-//
+/**
+ * @file SilverSat_MPU6050_mock.h
+ * @author Lee A. Congdon (lee@silversat.org)
+ * @brief Mock MPU6050 for demonstration and testing
+ * @version 1.0.0
+ * @date 2022-06-27
+ * 
+ * 
+ */
+
+// This is a header only implementation
 
 #ifndef SILVERSAT_MPU6050_MOCK_H
 #define SILVERSAT_MPU6050_MOCK_H
