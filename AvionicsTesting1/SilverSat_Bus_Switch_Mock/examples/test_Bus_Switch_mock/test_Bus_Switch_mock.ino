@@ -3,7 +3,7 @@
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Sample test for mock bus switch
  * @version 1.0.1
- * @date 2022-07-09
+ * @date 2022-06-29
  *
  */
 
@@ -18,10 +18,8 @@ BusSwitch bus_switch;
 void setup(void)
 {
 
-    /**
-     * @brief Enable the serial port and start the test
-     *
-     */
+    // Enable the serial port and start the test
+
     Serial.begin(115200);
     while (!Serial)
         ;
@@ -29,10 +27,8 @@ void setup(void)
     Serial.println();
     Serial.println("Starting Bus Switch Test");
 
-    /**
-     * @brief Test the bus enable and disable functions
-     *
-     */
+    // Test the bus enable and disable functions
+
     for (auto index = 1; index < 21; index++)
     {
         bus_switch.enableBus();
@@ -40,10 +36,8 @@ void setup(void)
         bus_switch.enableBus();
     }
 
-    /**
-     * @brief Dump the debug log
-     *
-     */
+    // Dump the debug log
+
     auto count = bus_switch.getLogSize();
     Serial.print("There are ");
     Serial.print(count);
