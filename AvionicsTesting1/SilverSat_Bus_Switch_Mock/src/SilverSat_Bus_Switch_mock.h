@@ -3,7 +3,7 @@
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Header for mock bus switch for testing and demonstration
  * @version 1.0.1
- * @date 2022-07-09
+ * @date 2022-06-29
  *
  */
 
@@ -54,25 +54,32 @@ public:
      * @return true if successful
      * @return false otherwise
      */
+
     bool enableBus();
+
     /**
      * @brief Disable the bus
      *
      * @return true if successful
      * @return false otherwise
      */
+
     bool disableBus();
+
     /**
      * @brief Get the log size
      *
      * @return size_t log size
      */
+
     size_t getLogSize();
+
     /**
      * @brief Get the next log entry
      *
      * @return LogEntry
      */
+
     LogEntry getLogEntry();
 
 private:
