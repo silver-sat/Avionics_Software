@@ -1,4 +1,14 @@
-// Basic demo for accelerometer readings from Adafruit MPU6050
+/**
+ * @file test_MPU6050_mock.ino
+ * @author Lee A. Congdon (lee@silversat.org)
+ * @brief 
+ * @version 1.0.0
+ * @date 2022-06-27
+ * 
+ * 
+ */
+
+// Basic demo for accelerometer readings from Adafruit MPU6050 example
 
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
