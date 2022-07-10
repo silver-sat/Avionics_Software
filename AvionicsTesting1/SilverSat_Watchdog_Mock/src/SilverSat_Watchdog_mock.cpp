@@ -1,12 +1,16 @@
-//
-// Mock Watchdog for demonstration and testing
-// Lee A. Congdon
-// 30 June 2022
-//
+/**
+ * @file SilverSat_Watchdog_mock.cpp
+ * @author Lee A. Congdon (lee@silversat.org)
+ * @brief Mock Watchdog for demonstration and testing
+ * @version 1.0.0
+ * @date 2022-06-30
+ *
+ *
+ */
 
 #include <SilverSat_Watchdog_mock.h>
 
-// Constructor
+// Create the watchdog object
 
 Watchdog::Watchdog()
 {

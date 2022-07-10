@@ -1,10 +1,12 @@
-//
-// Mock Watchdog Test
-// Lee A. Congdon
-// 30 June 2022
-//
-// Test the mock Watchdog on the Avionics Board for SilverSat
-//
+/**
+ * @file test_Watchdog_mock.ino
+ * @author Lee A. Congdon (lee@silversat.org)
+ * @brief Test the mock Watchdog on the Avionics Board
+ * @version 1.0.0
+ * @date 2022-06-30
+ *
+ *
+ */
 
 #include <SilverSat_Watchdog_mock.h>
 
@@ -35,7 +37,7 @@ void setup(void)
   Serial.println("Early trigger test complete");
 
   // Normal operation
-  
+
   Serial.println("\nTesting normal trigger");
   delay(WATCHDOG_LOWER_BOUNDARY);
   watchdog.trigger();
@@ -49,7 +51,7 @@ void setup(void)
   Serial.println("Normal trigger test complete");
 
   // Late trigger
-  
+
   Serial.println("\nTesting late trigger");
   delay(WATCHDOG_UPPER_BOUNDARY + 1);
   watchdog.trigger();
@@ -63,7 +65,7 @@ void setup(void)
   Serial.println("Late trigger test complete");
 
   // Normal reset
-  
+
   Serial.println("\nTesting normal reset");
   watchdog.reset();
   delay(WATCHDOG_LOWER_BOUNDARY);

@@ -1,8 +1,12 @@
-//
-// Mock Watchdog for demonstration and testing
-// Lee A. Congdon
-// 30 June 2022
-//
+/**
+ * @file SilverSat_Watchdog_mock.h
+ * @author Lee A. Congdon (lee@silversat.org)
+ * @brief Mock Watchdog for demonstration and testing
+ * @version 1.0.0
+ * @date 2022-06-30
+ *
+ *
+ */
 
 #ifndef SILVERSAT_WATCHDOG_MOCK_H
 #define SILVERSAT_WATCHDOG_MOCK_H
@@ -16,12 +20,24 @@
 #include <Arduino.h>
 #include <CircularBuffer.h>
 
+/**
+ * @brief Mock watchdog
+ *
+ */
 class Watchdog
 {
 public:
+  /**
+   * @brief Construct a new Watchdog object
+   *
+   */
+
   Watchdog();
 
-  // Events
+  /**
+   * @brief Enumerate the possible actions on the object
+   *
+   */
 
   enum Event
   {
@@ -33,7 +49,11 @@ public:
     late_trigger_watchdog,
   };
 
-  // Log entry structure
+  /**
+   * @brief Log entry structure
+   *
+   *
+   */
 
   struct LogEntry
   {
@@ -41,13 +61,26 @@ public:
     Event event;
   };
 
-  //  Member functions
+  /**
+   * @brief Reset the watchdog
+   *
+   */
 
   void reset();
-  void trigger();
-  void dumpLog();
 
-  // Member variables
+  /**
+   * @brief Trigger the watchdog (notify still alive)
+   *
+   */
+
+  void trigger();
+
+  /**
+   * @brief Dump the watchdog log
+   *
+   */
+
+  void dumpLog();
 
 private:
   const String _wdi_pin = WATCHDOG_WDI_PIN;
