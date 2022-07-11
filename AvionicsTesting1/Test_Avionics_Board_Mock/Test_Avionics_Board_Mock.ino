@@ -25,29 +25,29 @@ void setup()
 
     // Test SAMD21
 
-    tests_succeeded = tests_succeeded && test_SAMD21();
+    tests_succeeded = test_SAMD21() && tests_succeeded;
 
     // Test Watchdog
 
-    tests_succeeded = tests_succeeded && test_Watchdog();
+    tests_succeeded = test_Watchdog() && tests_succeeded;
 
     // Test I2C Connectivity
 
-    tests_succeeded = tests_succeeded && test_I2C();
+    tests_succeeded = test_I2C() && tests_succeeded;
 
     // Test Realtime Clock
 
     // Test I2C Switch
 
-    tests_succeeded = tests_succeeded && test_Bus_Switch();
+    tests_succeeded = test_Bus_Switch() && tests_succeeded;
 
     // Test FRAM
 
-    tests_succeeded = tests_succeeded && test_FRAM();
+    tests_succeeded = test_FRAM() && tests_succeeded;
 
     // Test IMU
     
-    tests_succeeded = tests_succeeded && test_IMU();
+    tests_succeeded = test_IMU() && tests_succeeded;
     
     // End of tests
 
