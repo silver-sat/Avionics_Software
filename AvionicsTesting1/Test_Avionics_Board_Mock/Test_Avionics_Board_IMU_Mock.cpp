@@ -2,7 +2,7 @@
  * @file Test_Avionics_Board_IMU_Mock.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Test the IMU
- * @version 1.0.0
+ * @version 1.0.1
  * @date 2022-07-11
  *
  *
@@ -10,32 +10,29 @@
 
 // Basic demo for accelerometer readings from Adafruit MPU6050 example
 
-#include <Adafruit_MPU6050.h>
-#include <Adafruit_Sensor.h>
-#include <Wire.h>
-#include <SilverSat_MPU6050_mock.h>
+#include <SilverSat_IMU_mock.h>
 
 // Run the tests
 
 bool test_IMU()
 {
 
-  MPU6050 imu{};
+  IMU imu {};
 
   Serial.println("-----");
-  Serial.println("Starting IMU test");
+  Serial.println("Starting IMU test\n");
 
   // Initialize
   
   if (!imu.begin())
   {
-    Serial.println("Failed to find MPU6050 chip");
+    Serial.println("Failed to find IMU");
     while (1)
     {
       delay(10);
     }
   }
-  Serial.println("MPU6050 Found!");
+  Serial.println("IMU Found");
 
   imu.setAccelerometerRange(MPU6050_RANGE_8_G);
   Serial.print("Accelerometer range set to: ");
@@ -107,17 +104,7 @@ bool test_IMU()
   sensors_event_t a, g, temp;
   imu.getEvent(&a, &g, &temp);
 
-  temp.temperature = 25.0;
-
-  a.acceleration.x = 2.0;
-  a.acceleration.y = 3.0;
-  a.acceleration.z = 4.0;
-
-  g.gyro.x = 6.0;
-  g.gyro.y = 7.0;
-  g.gyro.z = 8.0;
-
-  Serial.print("\nAcceleration X: ");
+  Serial.print("Acceleration X: ");
   Serial.print(a.acceleration.x);
   Serial.print(", Y: ");
   Serial.print(a.acceleration.y);
