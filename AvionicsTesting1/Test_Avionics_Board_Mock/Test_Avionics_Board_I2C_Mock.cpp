@@ -35,7 +35,7 @@ bool test_I2C()
   // Test read
 
   i2c.begin(); // join i2c bus (address optional for master)
-  Serial.println("Reading I2C bus");
+  Serial.println("\nReading I2C bus");
   for (auto tests = 10; tests > 0; tests--)
   {
     i2c.requestFrom(2, 6, true); // request 6 bytes from slave device #2

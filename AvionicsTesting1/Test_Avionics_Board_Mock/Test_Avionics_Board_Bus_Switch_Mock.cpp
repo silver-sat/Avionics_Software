@@ -32,7 +32,7 @@ bool test_Bus_Switch()
     // Dump the debug log
 
     auto count = bus_switch.getLogSize();
-    Serial.print("There are ");
+    Serial.print("\nThere are ");
     Serial.print(count);
     Serial.println(" entries in the log");
     for (auto index = count; index > 0; index--)

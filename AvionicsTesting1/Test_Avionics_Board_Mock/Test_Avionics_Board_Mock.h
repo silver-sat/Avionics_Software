@@ -12,3 +12,5 @@ bool test_SAMD21();
 bool test_Watchdog();
 bool test_I2C();
 bool test_Bus_Switch();
+bool test_FRAM();
+bool test_IMU();

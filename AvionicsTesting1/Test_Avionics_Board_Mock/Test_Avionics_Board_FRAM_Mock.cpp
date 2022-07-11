@@ -1,0 +1,185 @@
+/**
+ * @file Test_Avionics_Board_FRAM_Mock.cpp
+ * @author Lee A. Congdon (lee@silversat.org)
+ * @brief Test the FRAM
+ * @version 1.0.0
+ * @date 2022-07-11
+ *
+ *
+ */
+
+#include <SilverSat_FRAM_mock.h>
+
+// Run the tests
+
+bool test_FRAM()
+{
+
+  // Test patterns
+
+  const auto zeros_byte = 0x00;
+  const auto ones_byte = 0xFF;
+  const auto alternating_byte = 0xAA;
+  const auto test_byte = 0xAF;
+
+  // Size for mock FRAM
+
+  const long FRAM_size = 32 * long(1024);
+
+  FRAM fram;
+
+  Serial.println("-----");
+  Serial.println("Starting FRAM test\n");
+
+  // Verify FRAM is present at specified address
+
+  auto fram_i2c_address = 0x50;
+  if (fram.begin(fram_i2c_address))
+  {
+    Serial.print("Found FRAM at I2C address 0x");
+    Serial.println(fram_i2c_address, HEX);
+  }
+  else
+  {
+    Serial.println("I2C FRAM not identified...check your connections and setup and retry");
+    while (true)
+      ;
+  }
+
+  // Get size
+
+  auto size_check_successful = true;
+  Serial.println("Checking size of FRAM");
+  if (!fram.write(0, test_byte))
+  {
+    Serial.print("\nFailed to write address 0x0000");
+    size_check_successful = false;
+  };
+
+  // Read increasing addresses looking for test byte
+
+  long address;
+  for (address = 1; address < FRAM_size * 8; address++)
+  {
+
+    // If values don't match, memory address hasn't wrapped
+
+    if (fram.read(address) != test_byte)
+      continue;
+
+    // test_byte found, write the inverse to check
+
+    if (!fram.write(address, (byte)~test_byte))
+    {
+      Serial.print("\nFailed to write address 0x");
+      Serial.println(address, HEX);
+      size_check_successful = false;
+      continue;
+    }
+
+    // Check if address 0 was changed
+
+    if (fram.read(0) == (byte)~test_byte)
+    {
+      Serial.println("Found maximum address");
+      break;
+    }
+  }
+
+  // Report memory size found
+
+  Serial.print("Memory size is ");
+  Serial.print(address);
+  Serial.println(" bytes");
+  if (address == FRAM_size)
+  {
+    Serial.println("Size agrees with specified length");
+  }
+  else
+  {
+    Serial.println("Error, size does not equal specified length");
+    size_check_successful = false;
+  }
+  Serial.println("Size check complete");
+
+  // Write/read alternating bits from byte zero up
+
+  auto alternating_test_successful = true;
+  Serial.println("\nWriting and reading alternating ones and zeros ascending");
+
+  for (long address = 0; address < FRAM_size; address++)
+  {
+
+    // Write and read pattern
+
+    fram.write(address, alternating_byte);
+    if (fram.read(address) != alternating_byte)
+    {
+      Serial.print("\nI/O error at address 0x");
+      Serial.println(address, HEX);
+      Serial.print("Error during alternating bits test");
+      alternating_test_successful = false;
+    }
+  }
+  Serial.println("Alternating bits test complete");
+
+  // Read/write zero bytes from the largest address down
+
+  auto zeros_test_successful = true;
+  Serial.println("\nWriting and reading zeros descending");
+
+  for (long address = FRAM_size - 1; address >= 0; address--)
+  {
+
+    // Write and read pattern
+
+    fram.write(address, zeros_byte);
+    if (fram.read(address) != zeros_byte)
+    {
+      Serial.print("\nI/O error at address 0x");
+      Serial.println(address, HEX);
+      Serial.print("Error during zero bits test");
+      zeros_test_successful = false;
+    }
+  }
+  Serial.println("Zero bits test complete");
+
+  // Read/write one bytes randomly
+
+  auto ones_test_successful = true;
+  Serial.println("\nWriting and reading ones at random locations");
+  for (long count = 0; count < FRAM_size; count++)
+  {
+
+    // Write and read pattern
+
+    address = random(0, FRAM_size);
+    fram.write(address, ones_byte);
+    if (fram.read(address) != ones_byte)
+    {
+      Serial.print("\nI/O error at address 0x");
+      Serial.println(address, HEX);
+      Serial.print("Error during zero bits test");
+      zeros_test_successful = false;
+    }
+  }
+  Serial.println("One bits test complete");
+
+  // End of test
+
+  Serial.println("\nFRAM test complete");
+  if (size_check_successful &&
+      alternating_test_successful &&
+      zeros_test_successful &&
+      ones_test_successful)
+  {
+    Serial.println("All tests succeeded");
+    return true;
+  }
+  else
+  {
+    Serial.println("Test(s) failed");
+    return false;
+  }
+
+}

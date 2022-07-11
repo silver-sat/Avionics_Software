@@ -43,8 +43,12 @@ void setup()
 
     // Test FRAM
 
-    // Test IMU
+    tests_succeeded = tests_succeeded && test_FRAM();
 
+    // Test IMU
+    
+    tests_succeeded = tests_succeeded && test_IMU();
+    
     // End of tests
 
     Serial.println("-----");
