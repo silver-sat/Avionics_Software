@@ -1,21 +1,16 @@
 /**
- * @file test_MPU6050_mock.ino
+ * @file test_IMU_mock.ino
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief 
- * @version 1.0.0
- * @date 2022-06-27
+ * @version 1.0.1
+ * @date 2022-07-11
  * 
- * 
+ * Based on Adafruit MPU6050 basic_readings.ino
  */
 
-// Basic demo for accelerometer readings from Adafruit MPU6050 example
+#include <SilverSat_IMU_mock.h>
 
-#include <Adafruit_MPU6050.h>
-#include <Adafruit_Sensor.h>
-#include <Wire.h>
-#include <SilverSat_MPU6050_mock.h>
-
-MPU6050 mpu;
+IMU imu;
 
 void setup(void) {
   Serial.begin(115200);
@@ -25,7 +20,7 @@ void setup(void) {
   Serial.println("Adafruit MPU6050 test!");
 
   // Try to initialize!
-  if (!mpu.begin()) {
+  if (!imu.begin()) {
     Serial.println("Failed to find MPU6050 chip");
     while (1) {
       delay(10);
@@ -33,9 +28,9 @@ void setup(void) {
   }
   Serial.println("MPU6050 Found!");
 
-  mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
+  imu.setAccelerometerRange(MPU6050_RANGE_8_G);
   Serial.print("Accelerometer range set to: ");
-  switch (mpu.getAccelerometerRange()) {
+  switch (imu.getAccelerometerRange()) {
   case MPU6050_RANGE_2_G:
     Serial.println("+-2G");
     break;
@@ -49,9 +44,9 @@ void setup(void) {
     Serial.println("+-16G");
     break;
   }
-  mpu.setGyroRange(MPU6050_RANGE_500_DEG);
+  imu.setGyroRange(MPU6050_RANGE_500_DEG);
   Serial.print("Gyro range set to: ");
-  switch (mpu.getGyroRange()) {
+  switch (imu.getGyroRange()) {
   case MPU6050_RANGE_250_DEG:
     Serial.println("+- 250 deg/s");
     break;
@@ -66,9 +61,9 @@ void setup(void) {
     break;
   }
 
-  mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
+  imu.setFilterBandwidth(MPU6050_BAND_21_HZ);
   Serial.print("Filter bandwidth set to: ");
-  switch (mpu.getFilterBandwidth()) {
+  switch (imu.getFilterBandwidth()) {
   case MPU6050_BAND_260_HZ:
     Serial.println("260 Hz");
     break;
@@ -100,17 +95,17 @@ void loop() {
 
   /* Get new sensor events with the readings */
   sensors_event_t a, g, temp;
-  mpu.getEvent(&a, &g, &temp);
+  imu.getEvent(&a, &g, &temp);
 
-  temp.temperature = 25.0;
+  // temp.temperature = 25.0;
 
-  a.acceleration.x = 2.0;
-  a.acceleration.y = 3.0;
-  a.acceleration.z = 4.0;
+  // a.acceleration.x = 2.0;
+  // a.acceleration.y = 3.0;
+  // a.acceleration.z = 4.0;
 
-  g.gyro.x = 6.0;
-  g.gyro.y = 7.0;
-  g.gyro.z = 8.0;
+  // g.gyro.x = 6.0;
+  // g.gyro.y = 7.0;
+  // g.gyro.z = 8.0;
 
   /* Print out the values */
   Serial.print("Acceleration X: ");
