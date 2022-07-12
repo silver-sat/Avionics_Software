@@ -37,6 +37,8 @@ void setup()
 
     // Test Realtime Clock
 
+    tests_succeeded = test_External_RTC() && tests_succeeded;
+
     // Test I2C Switch
 
     tests_succeeded = test_Bus_Switch() && tests_succeeded;
