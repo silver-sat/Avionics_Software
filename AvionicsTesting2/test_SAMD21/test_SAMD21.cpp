@@ -63,8 +63,6 @@ uint32_t SAMD21::read_timer()
   return micros();
 };
 
-// Access the I2C bus
-
 // Read a digital pin
 
 bool SAMD21::read_digital(uint8_t pin)
