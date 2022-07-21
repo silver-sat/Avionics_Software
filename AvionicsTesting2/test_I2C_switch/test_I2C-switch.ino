@@ -31,12 +31,15 @@ void setup(void)
 
     for (auto index = 1; index < 6; index++)
     {
+        Serial.println("enabling");
         bus_switch.enableBus();
-        delay(1000);
+        delay(5000);
+        Serial.println("disabling");
         bus_switch.disableBus();
-        delay(1000);
+        delay(5000);
+        Serial.println("enabling");
         bus_switch.enableBus();
-        delay(1000);
+        delay(5000);
     }
 
     Serial.print("Completed Bus Switch Test in ");
