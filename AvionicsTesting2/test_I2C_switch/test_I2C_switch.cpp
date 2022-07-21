@@ -13,7 +13,7 @@
 
 BusSwitch::BusSwitch()
 {
-      pinMode(OE_OVERBAR_PIN, OUTPUT);
+    pinMode(OE_OVERBAR_PIN, OUTPUT);
 };
 
 // Disable the bus
