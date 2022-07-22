@@ -14,8 +14,8 @@
 // #define WDTICK_PIN PIN_PB23
 #define WDTICK_PIN 2 // for testing
 #define WDRESET_PIN 3 // for testing
-#define WATCHDOG_LOWER_BOUNDARY 24 // 23.5 milliseconds
-#define WATCHDOG_UPPER_BOUNDARY 2000 // 2 seconds
+#define WATCHDOG_LOWER_BOUNDARY 23500 // 23.5 milliseconds
+#define WATCHDOG_UPPER_BOUNDARY 2000000 // 2 seconds
 
 #define BUFFER_SIZE 128
 
@@ -44,11 +44,11 @@ public:
   enum Event
   {
     create_watchdog,
-    early_trigger_watchdog,
-    trigger_watchdog,
-    late_trigger_watchdog,
+    trigger_watchdog_before_window,
+    trigger_watchdog_in_window,
+    trigger_watchdog_after_window,
     no_reset_received,
-    received_reset,
+    reset_received,
   };
 
   /**
@@ -71,7 +71,7 @@ public:
   void trigger();
 
   /**
-   * @brief Reset the watchdog
+   * @brief Determine if the watchdog has asserted a reset
    *
    */
 
@@ -87,7 +87,6 @@ public:
 private:
   const int _wdi_pin = WDTICK_PIN;
   unsigned long _last_action_time;
-  bool _lower_boundary_active;
   CircularBuffer<LogEntry, BUFFER_SIZE> _debug_log;
 };
 

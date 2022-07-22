@@ -15,7 +15,6 @@
 Watchdog::Watchdog()
 {
     _last_action_time = micros();
-    _lower_boundary_active = false;
     pinMode(WDTICK_PIN, OUTPUT);
     pinMode(WDRESET_PIN, INPUT);
     LogEntry log_entry{_last_action_time, Event::create_watchdog};
@@ -32,34 +31,33 @@ void Watchdog::trigger()
     unsigned long time_stamp = micros();
     unsigned long interval = time_stamp - _last_action_time;
 
-    if (interval < WATCHDOG_LOWER_BOUNDARY && _lower_boundary_active)
+    if (interval < WATCHDOG_LOWER_BOUNDARY)
     {
 
-        LogEntry log_entry{time_stamp, Event::early_trigger_watchdog};
+        LogEntry log_entry{time_stamp, Event::trigger_watchdog_before_window};
         _debug_log.push(log_entry);
     }
     else if (interval > WATCHDOG_UPPER_BOUNDARY)
     {
 
-        LogEntry log_entry{time_stamp, Event::late_trigger_watchdog};
+        LogEntry log_entry{time_stamp, Event::trigger_watchdog_after_window};
         _debug_log.push(log_entry);
     }
     else
     {
-        LogEntry log_entry{time_stamp, Event::trigger_watchdog};
+        LogEntry log_entry{time_stamp, Event::trigger_watchdog_in_window};
         _debug_log.push(log_entry);
-        _last_action_time = time_stamp;
-        _lower_boundary_active = true;
     };
+        _last_action_time = time_stamp;
 };
 
 void Watchdog::check_reset()
 {
     unsigned long time_stamp = micros();
-    if (digitalRead(WDRESET_PIN) == HIGH)
+    if (digitalRead(WDRESET_PIN) == LOW)
     {
 
-        LogEntry log_entry{time_stamp, Event::received_reset};
+        LogEntry log_entry{time_stamp, Event::reset_received};
         _debug_log.push(log_entry);
     }
     else
@@ -86,20 +84,20 @@ void Watchdog::dumpLog()
         case Watchdog::Event::create_watchdog:
             Serial.print("Watchdog created at ");
             break;
-        case Watchdog::Event::early_trigger_watchdog:
-            Serial.print("Watchdog triggered early at ");
+        case Watchdog::Event::trigger_watchdog_before_window:
+            Serial.print("Watchdog triggered before window at ");
             break;
-        case Watchdog::Event::trigger_watchdog:
-            Serial.print("Watchdog triggered at ");
+        case Watchdog::Event::trigger_watchdog_in_window:
+            Serial.print("Watchdog triggered in window at ");
             break;
-        case Watchdog::Event::late_trigger_watchdog:
-            Serial.print("Watchdog triggered late at ");
+        case Watchdog::Event::trigger_watchdog_after_window:
+            Serial.print("Watchdog triggered after window at ");
             break;
         case Watchdog::Event::no_reset_received:
             Serial.print("Watchdog had not issued reset at ");
             break;
-        case Watchdog::Event::received_reset:
-            Serial.print("Watchdog issued reset at ");
+        case Watchdog::Event::reset_received:
+            Serial.print("Watchdog had issued reset at ");
             break;
 
         default:

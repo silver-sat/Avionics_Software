@@ -15,60 +15,72 @@
 void setup(void)
 {
 
+  // Start the test
+
   Serial.begin(115200);
   while (!Serial)
     ;
-  auto start_time = millis();
+  auto start_time = micros();
   Serial.println();
   Serial.println("Starting Watchdog Test");
 
   Watchdog watchdog{};
 
+  // Normal trigger
+
   Serial.println("\nTesting normal trigger");
+  watchdog.check_reset();
+  watchdog.trigger();
   for (auto count = 0; count < 10; count++)
   {
 
-    // Early trigger
-
-    // Serial.println("\nTesting early trigger");
-    // watchdog.trigger();
-    // delay(WATCHDOG_LOWER_BOUNDARY);
-    // watchdog.trigger();
-    // watchdog.trigger();
-    // watchdog.dumpLog();
-    // Serial.println("Early trigger test complete");
-
-    // Normal operation
-
-    // delay(WATCHDOG_LOWER_BOUNDARY);
-    watchdog.trigger();
     watchdog.check_reset();
-    // delay(WATCHDOG_LOWER_BOUNDARY + 1);
-    // watchdog.trigger();
-    // delay(WATCHDOG_LOWER_BOUNDARY);
-    // watchdog.trigger();
-    // delay(WATCHDOG_LOWER_BOUNDARY + 1);
-    // watchdog.trigger();
-
-    // Late trigger
-
-    // Serial.println("\nTesting late trigger");
-    // delay(WATCHDOG_UPPER_BOUNDARY + 1);
-    // watchdog.trigger();
-    // delay(WATCHDOG_UPPER_BOUNDARY);
-    // watchdog.trigger();
-    // delay(WATCHDOG_UPPER_BOUNDARY + 1);
-    // watchdog.trigger();
-    // delay(WATCHDOG_UPPER_BOUNDARY);
-    // watchdog.trigger();
-    // watchdog.dumpLog();
-    // Serial.println("Late trigger test complete");
+    delay(WATCHDOG_LOWER_BOUNDARY / 1000 * 2);
+    watchdog.check_reset();
+    watchdog.trigger();
   }
+  watchdog.check_reset();
 
   watchdog.dumpLog();
   Serial.println("Normal trigger test complete");
+
+  // Late trigger
+
+  Serial.println("\nTesting late trigger");
+
+  delay(WATCHDOG_LOWER_BOUNDARY / 1000 * 2);
+  watchdog.check_reset();
+  watchdog.trigger();
+
+  for (auto count = 0; count < 20; count++)
+  {
+    watchdog.check_reset();
+    delay(500);
+  }
+  watchdog.check_reset();
+
+  watchdog.dumpLog();
+  Serial.println("Late trigger test complete");
+
+  // Early trigger
+
+  Serial.println("\nTesting early trigger");
+
+  watchdog.trigger();
+  watchdog.check_reset();
+  delay(WATCHDOG_LOWER_BOUNDARY / 1000 / 2);
+  watchdog.check_reset();
+
+  watchdog.trigger();
+  watchdog.check_reset();
+  watchdog.trigger();
+  watchdog.check_reset();
+
+  watchdog.dumpLog();
+  Serial.println("Late trigger test complete");
+
   Serial.print("\nCompleted Watchdog Test Suite in ");
-  Serial.print((millis() - start_time) / 1000.0, 3);
+  Serial.print((micros() - start_time) / 1000000.0, 3);
   Serial.println(" seconds");
 }
 void loop(void)
