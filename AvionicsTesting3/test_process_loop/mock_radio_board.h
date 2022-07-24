@@ -15,24 +15,33 @@ class MockRadioBoard
 {
 public:
     MockRadioBoard();
-    
+
     /**
-     * @brief command
-     * 
+     * @brief command layout
+     *
      */
-    struct command {
+    struct command
+    {
         byte content[256];
     };
 
     /**
-     * @brief beacon
-     * 
+     * @brief beacon layout
+     *
      */
-    
-    struct beacon {
+
+    struct beacon
+    {
         byte content[256];
     };
-    
+
+    /**
+     * @brief Check for command
+     *
+     */
+
+    bool command_received();
+
     /**
      * @brief Get command
      *
@@ -42,10 +51,14 @@ public:
 
     /**
      * @brief Send beacon
-     * 
+     *
      */
 
     void send_beacon(beacon);
+
+private:
+    bool _is_command{false};
+    command _command{"test command"};
 };
 
 #endif
