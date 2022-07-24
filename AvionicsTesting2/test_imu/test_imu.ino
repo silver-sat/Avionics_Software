@@ -4,7 +4,7 @@
  * @brief Test the Inertial Measurement Unit for SilverSat
  * @version 1.0.0
  * @date 2022-07-21
- * 
+ *
  * Based on Adafruit MPU6050 basic_readings.ino
  */
 
@@ -14,7 +14,8 @@
 
 Adafruit_MPU6050 imu;
 
-void setup(void) {
+void setup(void)
+{
   Serial.begin(115200);
   while (!Serial)
     delay(10); // will pause Zero, Leonardo, etc until serial console opens
@@ -22,9 +23,11 @@ void setup(void) {
   Serial.println("Adafruit MPU6050 test!");
 
   // Try to initialize!
-  if (!imu.begin()) {
+  if (!imu.begin())
+  {
     Serial.println("Failed to find MPU6050 chip");
-    while (1) {
+    while (1)
+    {
       delay(10);
     }
   }
@@ -32,7 +35,8 @@ void setup(void) {
 
   imu.setAccelerometerRange(MPU6050_RANGE_8_G);
   Serial.print("Accelerometer range set to: ");
-  switch (imu.getAccelerometerRange()) {
+  switch (imu.getAccelerometerRange())
+  {
   case MPU6050_RANGE_2_G:
     Serial.println("+-2G");
     break;
@@ -48,7 +52,8 @@ void setup(void) {
   }
   imu.setGyroRange(MPU6050_RANGE_500_DEG);
   Serial.print("Gyro range set to: ");
-  switch (imu.getGyroRange()) {
+  switch (imu.getGyroRange())
+  {
   case MPU6050_RANGE_250_DEG:
     Serial.println("+- 250 deg/s");
     break;
@@ -65,7 +70,8 @@ void setup(void) {
 
   imu.setFilterBandwidth(MPU6050_BAND_21_HZ);
   Serial.print("Filter bandwidth set to: ");
-  switch (imu.getFilterBandwidth()) {
+  switch (imu.getFilterBandwidth())
+  {
   case MPU6050_BAND_260_HZ:
     Serial.println("260 Hz");
     break;
@@ -91,9 +97,6 @@ void setup(void) {
 
   Serial.println("");
   delay(100);
-}
-
-void loop() {
 
   /* Get new sensor events with the readings */
   sensors_event_t a, g, temp;
@@ -122,4 +125,8 @@ void loop() {
 
   Serial.println("");
   delay(500);
+}
+
+void loop()
+{
 }

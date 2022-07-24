@@ -49,6 +49,4 @@ void setup(void)
 
 void loop(void)
 {
-    while (true)
-        ;
 }

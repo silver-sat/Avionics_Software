@@ -1,0 +1,46 @@
+#!/bin/bash
+#
+# Unit test each component of the Avionics Board
+# 
+# Lee A. Congdon
+# lee@silversat.org
+# 24 July 2022
+#
+#
+
+board="adafruit:samd:adafruit_metro_m0" 
+serial_monitor="/dev/ttyACM0"
+
+# Start the test
+
+echo "Starting Avionics Board hardware unit test"
+
+# create the list of sketches
+
+declare -a sketches=(
+                     "test_SAMD21"
+                     "test_I2C_switch"
+                     "test_external_RTC" 
+                     "test_imu"
+                     "test_FRAM" 
+                     "test_watchdog"
+                     ) 
+
+# execute each sketch
+
+for sketch in "${sketches[@]}"
+do
+    echo "Test name:" $sketch
+    echo "Enter to continue, 'q' to quit"
+    read -n 1 response
+    if [ "$response" == "q" ] 
+        then 
+        exit
+    fi
+    arduino-cli compile --fqbn  $board $sketch
+    arduino-cli upload -p $serial_monitor --fqbn $board $sketch
+done
+
+# Test completed
+
+echo "Avionics Board hardware unit test complete"
