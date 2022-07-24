@@ -11,6 +11,8 @@
 #ifndef MOCK_RADIO_BOARD_H
 #define MOCK_RADIO_BOARD_H
 
+#include <Arduino.h>
+
 class MockRadioBoard
 {
 public:
@@ -20,20 +22,25 @@ public:
      * @brief command layout
      *
      */
-    struct command
-    {
-        byte content[256];
-    };
+
+    // todo: create structure for command layout
+    using command = String;
+    // struct command
+    // {
+    //     String content{"test command"};
+    // };
 
     /**
      * @brief beacon layout
      *
      */
 
-    struct beacon
-    {
-        byte content[256];
-    };
+    // todo: create structure for beacon layout
+    using beacon = String;
+    // struct beacon
+    // {
+    //     String content{"test beacon"};
+    // };
 
     /**
      * @brief Check for command
@@ -47,7 +54,7 @@ public:
      *
      */
 
-    command get_command();
+    String get_command();
 
     /**
      * @brief Send beacon

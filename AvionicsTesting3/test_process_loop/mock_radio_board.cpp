@@ -36,7 +36,7 @@ bool MockRadioBoard::command_received()
  *
  */
 
-MockRadioBoard::command MockRadioBoard::get_command(){
+String MockRadioBoard::get_command(){
     return _command;
 };
 
@@ -45,4 +45,6 @@ MockRadioBoard::command MockRadioBoard::get_command(){
  *
  */
 
-void MockRadioBoard::send_beacon(MockRadioBoard::beacon){};
+void MockRadioBoard::send_beacon(MockRadioBoard::beacon beacon){
+    Serial.print(micros()); Serial.print(" sending beacon: "), Serial.println(beacon);
+};

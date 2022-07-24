@@ -95,18 +95,18 @@ void loop()
 {
     // trigger the watchdog if past lower boundary
 
-    // if (micros() > (watchdog_reset_time + watchdog_lower_boundary))
-    // {
-    //     watchdog.trigger();
-    //     watchdog_reset_time = millis();
-    // };
+    if (micros() - watchdog_reset_time > watchdog_lower_boundary)
+    {
+        // watchdog.trigger();
+        watchdog_reset_time = millis();
+    };
 
     // send beacon
 
     if (micros() > last_beacon_time + beacon_delay)
     {
         // todo: format beacon message
-        MockRadioBoard::beacon message{"test beacon"};
+        MockRadioBoard::beacon message {"test beacon"};
         radio.send_beacon(message);
         last_beacon_time = micros();
     }
@@ -118,8 +118,8 @@ void loop()
 
         // todo: implement command processing
         auto command = radio.get_command();
-        Serial.print("Command received: ");
-        Serial.println((byte)command);
+        Serial.print(micros()); Serial.print(" Command received: ");
+        Serial.println(command);
     }
 
 };
