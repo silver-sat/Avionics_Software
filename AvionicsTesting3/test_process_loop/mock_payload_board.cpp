@@ -42,5 +42,3 @@ public:
     bool MockPayloadBoard::power_down_signal();
 
 };
-
-#endif
