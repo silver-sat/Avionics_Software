@@ -16,9 +16,19 @@
  */
 MockRadioBoard::MockRadioBoard(){};
 
-struct beacon
+/**
+ * @brief Check for command
+ *
+ */
+
+bool MockRadioBoard::command_received()
 {
-    byte content[256];
+    if (_is_command) {
+        _is_command = false;
+        return true;
+    } else {
+        return _is_command;
+    }
 };
 
 /**
@@ -26,11 +36,15 @@ struct beacon
  *
  */
 
-MockRadioBoard::command MockRadioBoard::get_command(){};
+String MockRadioBoard::get_command(){
+    return _command;
+};
 
 /**
  * @brief Send beacon
  *
  */
 
-void MockRadioBoard::send_beacon(MockRadioBoard::beacon){};
+void MockRadioBoard::send_beacon(MockRadioBoard::beacon beacon){
+    Serial.print(micros()); Serial.print(" sending beacon: "), Serial.println(beacon);
+};
