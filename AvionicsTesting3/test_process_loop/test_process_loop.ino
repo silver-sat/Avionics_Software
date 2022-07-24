@@ -1,35 +1,15 @@
 /**
- * @file Test_Avionics_Board.ino
+ * @file test_process_loop.ino
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief Test the SilverSat Avionics Board
- * @version 1.0.0
- * @date 2022-07-12
+ * @brief Test the Avionics Board
+ * @version 1.1.0
+ * @date 2022-07-24
  *
  *
  */
 
-#include <SilverSat_external_RTC_mock.h>
-#include <SilverSat_Watchdog_mock.h>
-#include <SilverSat_IMU_mock.h>
-#include <SilverSat_FRAM_mock.h>
 
-// definitions
 
-#define PLD_ON_A 9
-#define PLD_ON_B 10
-#define PLD_ON_C 11
-#define EN_EXT_I2C 8
-#define SERIAL_BAUD_RATE 115200
-
-enum PowerStatus
-{
-    excellent,
-    good,
-    fair,
-    poor,
-    critical,
-    unknown,
-};
 
 enum PayloadStatus
 {
@@ -42,12 +22,7 @@ enum PayloadStatus
 
 // constants
 
-const int watchdog_lower_boundary{0};         // watchdog must be triggered after window lower boundary and before upper boundary
-const int clock_request_delay{59 * 5 * 1000}; // wait in milliseconds before requesting time from ground
-const int power_status_delay{61 * 5 * 1000};  // wait in milliseconds between power state requests
-const int imu_data_delay{11 * 1000};          // IMU data collection interval in milliseconds
-const int power_adequate_delay{127 * 1000};   // adequate power check delay in milliseconds
-const int beacon_delay{293 * 1000};           // delay between beacon messages
+const int watchdog_lower_boundary {23500};    // 23.5 milliseconds
 
 // timers and flags
 
