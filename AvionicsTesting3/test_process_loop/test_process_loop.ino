@@ -98,7 +98,7 @@ void loop()
     if (micros() - watchdog_reset_time > watchdog_lower_boundary)
     {
         // watchdog.trigger();
-        watchdog_reset_time = millis();
+        watchdog_reset_time = micros();
     };
 
     // send beacon
