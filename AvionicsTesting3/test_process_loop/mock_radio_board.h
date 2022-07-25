@@ -11,6 +11,7 @@
 #ifndef MOCK_RADIO_BOARD_H
 #define MOCK_RADIO_BOARD_H
 
+#include "beacon.h"
 #include <Arduino.h>
 
 class MockRadioBoard
@@ -35,13 +36,6 @@ public:
      *
      */
 
-    // todo: create structure for beacon layout
-    using beacon = String;
-    // struct beacon
-    // {
-    //     String content{"test beacon"};
-    // };
-
     /**
      * @brief Check for command
      *
@@ -61,7 +55,7 @@ public:
      *
      */
 
-    void send_beacon(beacon);
+    void send_beacon(Beacon beacon);
 
 private:
     bool _is_command{false};

@@ -23,10 +23,13 @@ MockRadioBoard::MockRadioBoard(){};
 
 bool MockRadioBoard::command_received()
 {
-    if (_is_command) {
+    if (_is_command)
+    {
         _is_command = false;
         return true;
-    } else {
+    }
+    else
+    {
         return _is_command;
     }
 };
@@ -36,7 +39,8 @@ bool MockRadioBoard::command_received()
  *
  */
 
-String MockRadioBoard::get_command(){
+String MockRadioBoard::get_command()
+{
     return _command;
 };
 
@@ -45,6 +49,8 @@ String MockRadioBoard::get_command(){
  *
  */
 
-void MockRadioBoard::send_beacon(MockRadioBoard::beacon beacon){
-    Serial.print(micros()); Serial.print(" sending beacon: "), Serial.println(beacon);
+void MockRadioBoard::send_beacon(Beacon beacon)
+{
+    Serial.print(micros());
+    Serial.print(" sending beacon: "), Serial.println(beacon.get_code());
 };
