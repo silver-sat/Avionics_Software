@@ -11,13 +11,13 @@
 #include "command.h"
 
 /**
- * @brief convert string to operation
+ * @brief create command object
  *
  * @param command string
  * @return operation
  */
 
-Command* Command::create(String command)
+Command *Command::create_type1(String command)
 {
     if (command == "NoOperate")
     {
@@ -39,16 +39,82 @@ Command* Command::create(String command)
     {
         return new CommandReportT();
     }
-        else if (command == "TweeSlee")
+    else if (command == "TweeSlee")
     {
         return new CommandTweeSlee();
     }
-
+    else if (command == "Watchdog")
+    {
+        return new CommandWatchdog();
+    }
 
     else
     {
         return new CommandInvalid();
     };
+};
+
+Command *Command::create_type2(String command, int parameter)
+{
+    if (command == "BeaconSp")
+    {
+        return new CommandBeaconSp(parameter);
+    }
+    else
+    {
+        return new CommandInvalid();
+    };
+};
+
+Command *Command::create_type3(String command, time_value time)
+{
+    if (command == "PicTimes")
+    {
+        return new CommandPicTimes(time);
+    }
+    else if (command == "SetClock")
+    {
+        return new CommandSetClock(time);
+    }
+    else
+    {
+        return new CommandInvalid();
+    }
+};
+
+class Client
+{
+public:
+    Client(){
+
+    };
+    Client(String command)
+    {
+        _command = Command::create_type1(command);
+    };
+    Client(String command, int parameter)
+    {
+        _command = Command::create_type2(command, parameter);
+    };
+    Client(String command, time_value time)
+    {
+        _command = Command::create_type3(command, time);
+    };
+    ~Client()
+    {
+        if (_command)
+        {
+            delete _command;
+            _command = NULL;
+        };
+    };
+    Command *get_command()
+    {
+        return _command;
+    };
+
+private:
+    Command *_command;
 };
 
 /**
@@ -78,7 +144,7 @@ CommandInvalid::CommandInvalid()
 CommandNoOperate::CommandNoOperate()
 {
     _action = Command::no_operate;
-}
+};
 
 CommandPayComms::CommandPayComms()
 {
@@ -88,9 +154,32 @@ CommandPayComms::CommandPayComms()
 CommandReportT::CommandReportT()
 {
     _action = Command::report_t;
-}
+};
 
 CommandTweeSlee::CommandTweeSlee()
 {
     _action = Command::twee_slee;
-}
+};
+
+CommandWatchdog::CommandWatchdog()
+{
+    _action = Command::watchdog;
+};
+
+CommandBeaconSp::CommandBeaconSp(int parameter)
+{
+    _action = Command::beacon_sp;
+    _value = parameter;
+};
+
+CommandPicTimes::CommandPicTimes(time_value time)
+{
+    _action = Command::pic_times;
+    _time = time;
+};
+
+CommandSetClock::CommandSetClock(time_value time)
+{
+    _action = Command::set_clock;
+    _time = time;
+};

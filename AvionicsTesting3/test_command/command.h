@@ -13,6 +13,16 @@
 
 #include <Arduino.h>
 
+struct time_value
+{
+    int month;
+    int day;
+    int year;
+    int hour;
+    int minute;
+    int second;
+};
+
 class Command
 {
 public:
@@ -25,19 +35,19 @@ public:
     {
         beacon_sp,
         // s_call_sig, deprecated
-        pay_comms,  // also begin tweet
-        pic_times,  // one time to start
+        pay_comms, // also Begin tweet
+        pic_times,
         report_t,   // also GetTime
         no_operate, // also Ping
         set_clock,  // also SetTime
-        twee_slee,  // also halt
+        twee_slee,  // also Halt
         watchdog,
         // g_call_sig, deprecated
         // halt, see TweeSlee
         get_pic_times,
         get_telemetry,
         get_power,
-        get_photos, // count
+        get_photos,
         get_comms,
         get_beacon_interval,
         sent_test_packet,
@@ -71,12 +81,33 @@ public:
     operation get_operation();
 
     /**
-     * @brief Construct a command object
+     * @brief Create a command object with no parameters
      *
-     * @param command
+     * @param command action
+     * @return Command* the new command
      */
 
-    static Command *create(String command);
+    static Command *create_type1(String command);
+
+    /**
+     * @brief Create a command object with an integer parameter
+     *
+     * @param command action
+     * @param parameter value
+     * @return Command* the new command
+     */
+
+    static Command *create_type2(String command, int parameter);
+
+    /**
+     * @brief Create a type3 object
+     *
+     * @param command action
+     * @param time value
+     * @return Command* the new command
+     */
+
+    static Command *create_type3(String command, time_value time);
 
 protected:
     operation _action{invalid};
@@ -121,6 +152,39 @@ class CommandTweeSlee : public Command
 {
 public:
     CommandTweeSlee();
+};
+
+class CommandWatchdog : public Command
+{
+public:
+    CommandWatchdog();
+};
+
+class CommandBeaconSp : public Command
+{
+public:
+    CommandBeaconSp(int parameter);
+
+private:
+    int _value;
+};
+
+class CommandPicTimes : public Command
+{
+public:
+    CommandPicTimes(time_value time);
+
+private:
+    time_value _time;
+};
+
+class CommandSetClock : public Command
+{
+public:
+    CommandSetClock(time_value time);
+
+private:
+    time_value _time;
 };
 
 #endif
