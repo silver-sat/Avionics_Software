@@ -23,6 +23,14 @@ Command::operation toOperation(String command)
     {
         return Command::operation::no_operate;
     }
+    else if (command == "Invalid")
+    {
+        return Command::operation::invalid;
+    }
+    else if (command == "Unknown")
+    {
+        return Command::operation::unknown;
+    }
     else
     {
         return Command::operation::invalid;
@@ -30,15 +38,18 @@ Command::operation toOperation(String command)
 };
 
 /**
- * @brief Construct a new Command:: Command object
+ * @brief Construct a new Command with no parameters
  *
  * @param operation command
  * @param Content parameters
  */
 
-Command::Command(
+Command::Command(String command)
+{
+    _action = toOperation(command);
+};
 
-    String command,
-    Value data) : _action{toOperation(command)},
-                  _values{0}
-{};
+Command::operation Command::get_operation()
+{
+    return _action;
+}

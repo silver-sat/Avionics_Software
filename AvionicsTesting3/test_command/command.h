@@ -20,39 +20,51 @@ public:
      * @brief command syntax
      *
      */
+    union Value {
+        int int_value;
+        char char_value[10];
+        double double_value;
+    };
+
     enum operation
     {
         beacon_sp,
-        s_call_sig,
-        pay_comms,
-        pic_times,
-        report_t,
-        no_operate,
-        set_clock,
+        // s_call_sig, deprecated
+        pay_comms, // also begin tweet
+        pic_times, // one time to start
+        report_t, // also GetTime
+        no_operate, // also Ping
+        set_clock, // also SetTime
         twee_slee,
         watchdog,
-        g_call_sig,
-        invalid
-    };
-
-    union Value
-    {
-        int data;
-        String string;
-        int time[6];
-        ~Value(){};
+        // g_call_sig, deprecated
+        halt, // formerly TweeSlee
+        get_pic_times, 
+        get_telemetry,
+        get_power,
+        get_photos, // count
+        get_comms,
+        get_beacon_interval,
+        sent_test_packet,
+        unknown,
+        invalid,
     };
 
     /**
-     * @brief Construct a new Command object
+     * @brief Construct a new default Command object
+     * 
+     */
+    Command();
+
+    /**
+     * @brief Construct a new Command object with no parameters
      *
      * @param command operation
      * @param data parameters
      */
 
     Command(
-        String command,
-        Value parameter);
+        String command);
 
     /**
      * @brief Get the operation
@@ -63,16 +75,16 @@ public:
     operation get_operation();
 
     /**
-     * @brief Get the parameters of the command
+     * @brief Get the parameters
      *
-     * @return the values sent by the ground station
+     * @return the parameters sent by the ground station
      */
 
     Value get_values();
 
 private:
     operation _action{invalid};
-    Value _values{};
+    Value _value{};
 };
 
 #endif
