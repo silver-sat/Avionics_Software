@@ -2,7 +2,7 @@
  * @file command.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat commands
- * @version 1.0.0
+ * @version 1.0.1
  * @date 2022-07-25
  *
  *
@@ -17,23 +17,37 @@
  * @return operation
  */
 
-Command::operation toOperation(String command)
+Command* Command::create(String command)
 {
     if (command == "NoOperate")
     {
-        return Command::operation::no_operate;
+        return new CommandNoOperate();
     }
     else if (command == "Invalid")
     {
-        return Command::operation::invalid;
+        return new CommandInvalid();
     }
     else if (command == "Unknown")
     {
-        return Command::operation::unknown;
+        return new CommandUnknown();
     }
+    else if (command == "PayComms")
+    {
+        return new CommandPayComms();
+    }
+    else if (command == "ReportT")
+    {
+        return new CommandReportT();
+    }
+        else if (command == "TweeSlee")
+    {
+        return new CommandTweeSlee();
+    }
+
+
     else
     {
-        return Command::operation::invalid;
+        return new CommandInvalid();
     };
 };
 
@@ -44,12 +58,39 @@ Command::operation toOperation(String command)
  * @param Content parameters
  */
 
-Command::Command(String command)
-{
-    _action = toOperation(command);
-};
+Command::Command(){};
 
 Command::operation Command::get_operation()
 {
     return _action;
+};
+
+CommandUnknown::CommandUnknown()
+{
+    _action = Command::unknown;
+};
+
+CommandInvalid::CommandInvalid()
+{
+    _action = Command::invalid;
+};
+
+CommandNoOperate::CommandNoOperate()
+{
+    _action = Command::no_operate;
+}
+
+CommandPayComms::CommandPayComms()
+{
+    _action = Command::pay_comms;
+};
+
+CommandReportT::CommandReportT()
+{
+    _action = Command::report_t;
+}
+
+CommandTweeSlee::CommandTweeSlee()
+{
+    _action = Command::twee_slee;
 }
