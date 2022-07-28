@@ -13,6 +13,10 @@
 
 #include <Arduino.h>
 
+/**
+ * @brief date structure: month, day, year, hour, minute, second
+ * 
+ */
 struct time_value
 {
     int month;
@@ -23,11 +27,17 @@ struct time_value
     int second;
 };
 
+/**
+ * @brief Command structure and processing
+ * 
+ */
+
 class Command
 {
 public:
+
     /**
-     * @brief command syntax
+     * @brief command operation
      *
      */
 
@@ -78,68 +88,26 @@ public:
      * @return operation
      */
 
-    operation get_operation();
-
-    /**
-     * @brief Create a command object with no parameters
-     *
-     * @param command action
-     * @return Command* the new command
-     */
-
-    static Command *create_type1(String command);
-
-    /**
-     * @brief Create a command object with an integer parameter
-     *
-     * @param command action
-     * @param parameter value
-     * @return Command* the new command
-     */
-
-    static Command *create_type2(String command, int parameter);
-
-    /**
-     * @brief Create a type3 object
-     *
-     * @param command action
-     * @param time value
-     * @return Command* the new command
-     */
-
-    static Command *create_type3(String command, time_value time);
+    virtual operation get_operation();
 
     /**
      * @brief Print the data
      * 
      */
 
-    void acknowledge_command();
+    virtual void acknowledge_command();
 
     /**
      * @brief Execute the command
      * 
      */
 
-    bool execute_command();
+    virtual bool execute_command();
 
 protected:
     operation _action{invalid};
 };
 
-class Client
-{
-public:
-    Client();
-    Client(String command);
-    Client(String command, int parameter);
-    Client(String command, time_value time);
-    ~Client();
-    Command *get_command();
-
-private:
-    Command *_command;
-};
 
 /**
  * @brief unknown command

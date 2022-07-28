@@ -9,6 +9,7 @@
  */
 
 #include "Command.h"
+#include "CommandFactory.h"
 
 void setup()
 {
@@ -69,8 +70,8 @@ void setup()
     for (auto index = 0; index < (sizeof(command0) / sizeof(command0[0])); index++)
         {
 
-            auto client = new Client(command0[index]);
-            auto test = client->get_command();
+            auto factory = new CommandFactory(command0[index]);
+            auto test = factory->get_command();
             Serial.print(command0[index]);
             Serial.print(": ");
             Serial.print(test->get_operation());
@@ -83,7 +84,7 @@ void setup()
             {
                 Serial.println("Error");
             }
-            delete client;
+            delete factory;
         };
 
     Serial.println("Testing commands with integer parameter");
@@ -91,8 +92,8 @@ void setup()
     for (auto index = 0; index < (sizeof(command1) / sizeof(command1[0])); index++)
     {
 
-        auto client = new Client(command1[index], parameter1[index]);
-        auto test = client->get_command();
+        auto factory = new CommandFactory(command1[index], parameter1[index]);
+        auto test = factory->get_command();
         Serial.print(command1[index]);
         Serial.print(": ");
         Serial.print(test->get_operation());
@@ -105,7 +106,7 @@ void setup()
         {
             Serial.println("Error");
         }
-        delete client;
+        delete factory;
     };
 
     Serial.println("Testing commands with time parameter");
@@ -113,8 +114,8 @@ void setup()
     for (auto index = 0; index < (sizeof(command6) / sizeof(command6[0])); index++)
         {
 
-            auto client = new Client(command6[index], parameter6[index]);
-            auto test = client->get_command();
+            auto factory = new CommandFactory(command6[index], parameter6[index]);
+            auto test = factory->get_command();
             Serial.print(command6[index]);
             Serial.print(": ");
             Serial.print(test->get_operation());
@@ -127,21 +128,21 @@ void setup()
             {
                 Serial.println("Error");
             }
-            delete client;
+            delete factory;
         };
 
     Serial.println("Stress test");
 
     auto count {0};
     for (auto index = 0; index < 1000000; index++) {
-        auto client = new Client(command6[0], parameter6[0]);
-        auto test = client->get_command();
+        auto factory = new CommandFactory(command6[0], parameter6[0]);
+        auto test = factory->get_command();
         count++;
         if (count >= 10000) {
             Serial.print(".");
             count = 0;
         }
-        delete client;
+        delete factory;
     }
     Serial.println();
     Serial.println("Command class test complete");
