@@ -1,6 +1,7 @@
 <map id="AvionicsTesting3/test_process_loop/beacon.h" name="AvionicsTesting3/test_process_loop/beacon.h">
-<area shape="rect" id="node1" title="SilverSat beacon messages." alt="" coords="121,5,298,47"/>
-<area shape="rect" id="node2" href="$beacon_8cpp.html" title="SilverSat beacon messages." alt="" coords="5,102,197,143"/>
-<area shape="rect" id="node3" href="$mock__radio__board_8h.html" title="Mock Radio Board for Avionics testing." alt="" coords="221,95,416,151"/>
-<area shape="rect" id="node4" href="$mock__radio__board_8cpp.html" title="Mock Radio Board for Avionics testing." alt="" coords="221,199,416,255"/>
+<area shape="rect" id="node1" title="SilverSat beacon messages." alt="" coords="220,5,397,47"/>
+<area shape="rect" id="node2" href="$test__beacon_8ino.html" title="Test the SilverSat beacon class." alt="" coords="5,102,188,143"/>
+<area shape="rect" id="node3" href="$beacon_8cpp.html" title="SilverSat beacon messages." alt="" coords="213,102,405,143"/>
+<area shape="rect" id="node4" href="$mock__radio__board_8h.html" title="Mock Radio Board for Avionics testing." alt="" coords="429,95,623,151"/>
+<area shape="rect" id="node5" href="$mock__radio__board_8cpp.html" title="Mock Radio Board for Avionics testing." alt="" coords="429,199,623,255"/>
 </map>

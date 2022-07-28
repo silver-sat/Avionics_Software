@@ -1,4 +1,5 @@
 <map id="AvionicsTesting2/test_watchdog/test_watchdog.h" name="AvionicsTesting2/test_watchdog/test_watchdog.h">
-<area shape="rect" id="node1" title="Test watchdog." alt="" coords="13,5,216,47"/>
+<area shape="rect" id="node1" title="Test watchdog." alt="" coords="133,5,336,47"/>
 <area shape="rect" id="node2" href="$test__watchdog_8cpp.html" title="Test watchdog." alt="" coords="5,95,224,136"/>
+<area shape="rect" id="node3" href="$test__watchdog_8ino.html" title="Test the watchdog." alt="" coords="249,95,463,136"/>
 </map>

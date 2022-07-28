@@ -1,5 +1,6 @@
 <map id="AvionicsTesting1/SilverSat_IMU_Mock/src/SilverSat_IMU_mock.h" name="AvionicsTesting1/SilverSat_IMU_Mock/src/SilverSat_IMU_mock.h">
-<area shape="rect" id="node1" title="Mock IMU for demonstration and testing." alt="" coords="113,5,305,61"/>
-<area shape="rect" id="node2" href="$SilverSat__IMU__mock_8cpp.html" title="Mock IMU for demonstration and testing." alt="" coords="5,117,197,173"/>
-<area shape="rect" id="node3" href="$Test__Avionics__Board__IMU__Mock_8cpp.html" title="Test the IMU." alt="" coords="222,109,413,180"/>
+<area shape="rect" id="node1" title="Mock IMU for demonstration and testing." alt="" coords="256,5,448,61"/>
+<area shape="rect" id="node2" href="$test__IMU__mock_8ino.html" title=" " alt="" coords="5,117,232,173"/>
+<area shape="rect" id="node3" href="$SilverSat__IMU__mock_8cpp.html" title="Mock IMU for demonstration and testing." alt="" coords="256,117,448,173"/>
+<area shape="rect" id="node4" href="$Test__Avionics__Board__IMU__Mock_8cpp.html" title="Test the IMU." alt="" coords="473,109,663,180"/>
 </map>

@@ -1,5 +1,6 @@
 <map id="AvionicsTesting1/SilverSat_I2C_Mock/src/SilverSat_I2C_mock.h" name="AvionicsTesting1/SilverSat_I2C_Mock/src/SilverSat_I2C_mock.h">
-<area shape="rect" id="node1" title="Mock I2C interface for demonstration and testing." alt="" coords="112,5,304,61"/>
-<area shape="rect" id="node2" href="$SilverSat__I2C__mock_8cpp.html" title="Test mock I2C interface." alt="" coords="5,117,197,173"/>
-<area shape="rect" id="node3" href="$Test__Avionics__Board__I2C__Mock_8cpp.html" title="Test the I2C connection." alt="" coords="221,109,408,180"/>
+<area shape="rect" id="node1" title="Mock I2C interface for demonstration and testing." alt="" coords="253,5,445,61"/>
+<area shape="rect" id="node2" href="$test__SilverSat__I2C__mock_8ino.html" title="Test mock I2C interface." alt="" coords="5,109,228,180"/>
+<area shape="rect" id="node3" href="$SilverSat__I2C__mock_8cpp.html" title="Test mock I2C interface." alt="" coords="253,117,445,173"/>
+<area shape="rect" id="node4" href="$Test__Avionics__Board__I2C__Mock_8cpp.html" title="Test the I2C connection." alt="" coords="469,109,655,180"/>
 </map>
