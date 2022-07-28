@@ -1,5 +1,5 @@
 /**
- * @file command.h
+ * @file Command.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat commands
  * @version 1.0.1
@@ -108,6 +108,20 @@ public:
      */
 
     static Command *create_type3(String command, time_value time);
+
+    /**
+     * @brief Print the data
+     * 
+     */
+
+    void acknowledge_command();
+
+    /**
+     * @brief Execute the command
+     * 
+     */
+
+    bool execute_command();
 
 protected:
     operation _action{invalid};
