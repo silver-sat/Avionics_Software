@@ -167,9 +167,9 @@ void loop()
 
     // send beacon
 
-    if (micros() > last_beacon_time + beacon_delay)
+    if (micros() - last_beacon_time > beacon_delay)
     {
-        // todo: get power status
+        // todo: get power statusu
         // todo: get payload status
         // todo: format beacon message
         Beacon message{Beacon::excellent, Beacon::good, Beacon::fair, Beacon::poor, Beacon::critical};
