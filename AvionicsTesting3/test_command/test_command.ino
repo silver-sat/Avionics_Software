@@ -8,7 +8,7 @@
  *
  */
 
-#include "command.h"
+#include "Command.h"
 
 void setup()
 {

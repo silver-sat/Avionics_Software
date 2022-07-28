@@ -1,5 +1,5 @@
 /**
- * @file command.cpp
+ * @file Command.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat commands
  * @version 1.0.1
@@ -8,7 +8,7 @@
  *
  */
 
-#include "command.h"
+#include "Command.h"
 
 /**
  * @brief create command object
@@ -80,6 +80,15 @@ Command *Command::create_type3(String command, time_value time)
     {
         return new CommandInvalid();
     }
+};
+
+void Command::acknowledge_command() {
+    Serial.println("Acknowledging command");
+};
+
+bool Command::execute_command() {
+    Serial.println("Executing command");
+    return true;
 };
 
 Client::Client(){

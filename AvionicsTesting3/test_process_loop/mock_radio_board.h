@@ -1,8 +1,8 @@
 /**
  * @file mock_radio_board.h
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief Test the Avionics Board mock Radio Board
- * @version 1.0.0
+ * @brief Mock Radio Board for Avionics testing
+ * @version 1.0.1
  * @date 2022-07-24
  *
  *
@@ -12,29 +12,30 @@
 #define MOCK_RADIO_BOARD_H
 
 #include "beacon.h"
+#include "Command.h"
 #include <Arduino.h>
 
 class MockRadioBoard
 {
 public:
     MockRadioBoard();
+    ~MockRadioBoard();
 
     /**
-     * @brief command layout
+     * @brief initialize the connection
+     *
+     * @return true connection established
+     * @return false error
+     */
+
+    bool begin();
+
+    /**
+     * @brief Send beacon
      *
      */
 
-    // todo: create structure for command layout
-    using command = String;
-    // struct command
-    // {
-    //     String content{"test command"};
-    // };
-
-    /**
-     * @brief beacon layout
-     *
-     */
+    void send_beacon(Beacon beacon);
 
     /**
      * @brief Check for command
@@ -48,18 +49,11 @@ public:
      *
      */
 
-    String get_command();
-
-    /**
-     * @brief Send beacon
-     *
-     */
-
-    void send_beacon(Beacon beacon);
+    Command *get_command();
 
 private:
-    bool _is_command{false};
-    command _command{"test command"};
+    bool _command_ready{false};
+    Client *_client{};
 };
 
 #endif
