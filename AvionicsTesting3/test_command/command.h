@@ -113,6 +113,20 @@ protected:
     operation _action{invalid};
 };
 
+class Client
+{
+public:
+    Client();
+    Client(String command);
+    Client(String command, int parameter);
+    Client(String command, time_value time);
+    ~Client();
+    Command *get_command();
+
+private:
+    Command *_command;
+};
+
 /**
  * @brief unknown command
  *

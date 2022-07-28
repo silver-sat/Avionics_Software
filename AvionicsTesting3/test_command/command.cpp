@@ -82,39 +82,32 @@ Command *Command::create_type3(String command, time_value time)
     }
 };
 
-class Client
+Client::Client(){
+
+};
+Client::Client(String command)
 {
-public:
-    Client(){
-
-    };
-    Client(String command)
+    _command = Command::create_type1(command);
+};
+Client::Client(String command, int parameter)
+{
+    _command = Command::create_type2(command, parameter);
+};
+Client::Client(String command, time_value time)
+{
+    _command = Command::create_type3(command, time);
+};
+Client::~Client()
+{
+    if (_command)
     {
-        _command = Command::create_type1(command);
+        delete _command;
+        _command = NULL;
     };
-    Client(String command, int parameter)
-    {
-        _command = Command::create_type2(command, parameter);
-    };
-    Client(String command, time_value time)
-    {
-        _command = Command::create_type3(command, time);
-    };
-    ~Client()
-    {
-        if (_command)
-        {
-            delete _command;
-            _command = NULL;
-        };
-    };
-    Command *get_command()
-    {
-        return _command;
-    };
-
-private:
-    Command *_command;
+};
+Command *Client::get_command()
+{
+    return _command;
 };
 
 /**
