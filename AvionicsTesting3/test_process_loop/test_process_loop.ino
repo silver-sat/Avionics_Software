@@ -4,7 +4,20 @@
  * @brief Test the Avionics Board
  * @version 1.2.0
  * @date 2022-07-24
- *
+ * @mainpage Test Process Loop
+ * @section intro Overview
+ * 
+ * This is the main process loop to test the SilverSat Avionics Board.
+ * 
+ * The devices are implemented as classes interfacing to real hardware and include an external realtime clock, FRAM, inertial measurement 
+ * unit, watchdog timer, serial ports, I2C buses, and the SAMD21 processor.
+ * 
+ * The other boards: Power, Radio, and Payload are implemented as mock devices in software for these
+ * tests. Each mock board performs a subset of the functionality provided by the actual board, as needed
+ * to test the Avionics Board. 
+ * 
+ * The beacon message which Avionics sends to the radio board and the command messages the Radio
+ * Board sends to Avionics are also represented as classes.
  *
  */
 
