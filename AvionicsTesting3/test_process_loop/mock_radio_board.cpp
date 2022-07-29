@@ -29,7 +29,7 @@ MockRadioBoard::~MockRadioBoard()
         delete _factory;
         _factory = NULL;
     }
-}
+};
 
 /**
  * @brief initialize the connection
@@ -41,11 +41,11 @@ bool MockRadioBoard::begin()
 
     // Initial set clock command
 
-    auto factory = new CommandFactory("NoOperate");
+    auto factory = new CommandFactory("SetClock", {2024, 1, 1, 10, 10, 0});
     _factory = factory;
     _command_ready = true;
     return true;
-}
+};
 
 /**
  * @brief Send beacon

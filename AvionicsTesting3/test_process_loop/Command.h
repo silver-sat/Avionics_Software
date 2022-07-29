@@ -14,14 +14,15 @@
 #include <Arduino.h>
 
 /**
- * @brief date structure: month, day, year, hour, minute, second
+ * @brief date structure: year, month, day, hour, minute, second
  *
  */
+
 struct time_value
 {
+    int year;
     int month;
     int day;
-    int year;
     int hour;
     int minute;
     int second;
@@ -61,7 +62,7 @@ public:
         get_beacon_interval,
         sent_test_packet,
         unknown,
-        invalid,
+        invalid
     };
 
     /**
@@ -74,18 +75,35 @@ public:
     /**
      * @brief Construct a new Command object with no parameters
      *
-     * @param command operation
      *
      */
 
-    Command(
-        String command);
+    //    Command(String command);
 
-    /**
-     * @brief Get the operation
-     *
-     * @return operation
-     */
+    //    /**
+    //     * @brief Constructe a Command object with an integer parameter
+    //     *
+    //     * @param command operation
+    //     * @param parameter integer value
+    //     *
+    //     */
+
+    //    Command(String command, int parameter);
+
+    //    /**
+    //     * @brief Construct a Command object with a time_value parameter
+    //     *
+    //     * @param command operation
+    //     * @param parameter time value
+    //     */
+
+    //    Command(String command, time_value parameter);
+
+    //     /**
+    //      * @brief Get the operation
+    //      *
+    //      * @return operation
+    //      */
 
     virtual operation get_operation();
 
@@ -178,6 +196,7 @@ class CommandSetClock : public Command
 {
 public:
     CommandSetClock(time_value time);
+    bool execute_command();
 
 private:
     time_value _time;
