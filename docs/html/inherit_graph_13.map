@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classMockPowerBoard.html" title=" " alt="" coords="5,5,140,32"/>
+<area shape="rect" id="node1" href="$classRTC__I2C.html" title="A generic I2C RTC base class. DO NOT USE DIRECTLY." alt="" coords="5,5,80,32"/>
+<area shape="rect" id="node2" href="$classExternalRTC.html" title="RTC based on the DS1307 chip connected via I2C and the Wire library." alt="" coords="128,5,228,32"/>
 </map>

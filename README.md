@@ -20,3 +20,21 @@ You can install these drivers by cloning the repository using git or by download
 You can exercise individual hardware components by building the related sketch (e.g. test_imu) and uploading it to the Avonics Board. Note that some external libraries are required, for example to support the MPU6050 hardware. Install these libraries following the normal Ardunino procedure.
 
 You can execute all of the hardware tests in sequence using a bash script provided in the AvionicsTesting2 folder. This script requires the Arduino CLI, which can be installed from the Arduino.cc web site. To execute all of the hardware unit tests, insure the script is executable, connect a serial monitor to the appropriate port, open a terminal window, and execute the script. Follow the prompts and observe the results in the serial monitor.
+
+## Test Process Loop
+
+The AvionicsTesting3 folder contains test drivers for the functions of the Avionics Board. These drivers can be used to verify and exercise the functions of the board such as device setup, telemetry collection, beacon transmission, and command processing.
+
+The test process loop is the main process loop to test the SilverSat Avionics Board.
+ 
+The hardware devices on the Avionics Board are implemented as classes interfacing to real hardware and include an external realtime clock, FRAM, inertial measurement
+unit, watchdog timer, serial ports, I2C buses, and the SAMD21 processor.
+
+The other SilverSat boards: Power, Radio, and Payload are implemented as mock devices in software for these
+tests. Each mock board performs a subset of the functionality provided by the actual board, as needed
+to test the Avionics Board.
+
+The beacon message which Avionics sends to the radio board and the command messages the Radio
+Board sends to Avionics are also represented as classes.
+
+To execute this test, clone the respository to your machine or download a zip file and extract the folders. Upload the test_process_loop.ino file to your microcontroller. Open the serial port.

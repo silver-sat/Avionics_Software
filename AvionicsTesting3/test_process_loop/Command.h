@@ -15,7 +15,7 @@
 
 /**
  * @brief date structure: month, day, year, hour, minute, second
- * 
+ *
  */
 struct time_value
 {
@@ -29,15 +29,14 @@ struct time_value
 
 /**
  * @brief Command structure and processing
- * 
+ *
  */
 
 class Command
 {
 public:
-
     /**
-     * @brief command operation
+     * @brief Command operation
      *
      */
 
@@ -92,14 +91,14 @@ public:
 
     /**
      * @brief Print the data
-     * 
+     *
      */
 
     virtual void acknowledge_command();
 
     /**
      * @brief Execute the command
-     * 
+     *
      */
 
     virtual bool execute_command();
@@ -107,7 +106,6 @@ public:
 protected:
     operation _action{invalid};
 };
-
 
 /**
  * @brief unknown command
@@ -130,6 +128,8 @@ class CommandNoOperate : public Command
 {
 public:
     CommandNoOperate();
+    virtual void acknowledge_command();
+    virtual bool execute_command();
 };
 
 class CommandPayComms : public Command
