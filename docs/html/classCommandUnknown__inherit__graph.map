@@ -1,4 +1,4 @@
 <map id="CommandUnknown" name="CommandUnknown">
 <area shape="rect" id="node1" title="unknown command" alt="" coords="5,80,156,107"/>
-<area shape="rect" id="node2" href="$classCommand.html" title=" " alt="" coords="36,5,125,32"/>
+<area shape="rect" id="node2" href="$classCommand.html" title="Command structure and processing." alt="" coords="36,5,125,32"/>
 </map>

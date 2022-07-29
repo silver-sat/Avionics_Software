@@ -12,7 +12,7 @@
 #define MOCK_RADIO_BOARD_H
 
 #include "beacon.h"
-#include "Command.h"
+#include "CommandFactory.h"
 #include <Arduino.h>
 
 class MockRadioBoard
@@ -53,7 +53,7 @@ public:
 
 private:
     bool _command_ready{false};
-    Client *_client{};
+    CommandFactory *_factory{};
 };
 
 #endif

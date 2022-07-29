@@ -1,4 +1,6 @@
 <map id="AvionicsTesting1/Test_Avionics_Board_Mock/Test_Avionics_Board_Bus_Switch_Mock.cpp" name="AvionicsTesting1/Test_Avionics_Board_Mock/Test_Avionics_Board_Bus_Switch_Mock.cpp">
-<area shape="rect" id="node1" title="Test the I2C bus switch." alt="" coords="5,5,195,76"/>
-<area shape="rect" id="node2" title=" " alt="" coords="19,124,181,165"/>
+<area shape="rect" id="node1" title="Test the I2C bus switch." alt="" coords="17,5,206,76"/>
+<area shape="rect" id="node2" href="$SilverSat__Bus__Switch__mock_8h.html" title="Header for mock bus switch for testing and demonstration." alt="" coords="31,124,192,165"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,213,89,240"/>
+<area shape="rect" id="node4" title=" " alt="" coords="114,213,237,240"/>
 </map>

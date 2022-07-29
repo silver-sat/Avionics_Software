@@ -5,17 +5,17 @@
  * @version 1.2.0
  * @date 2022-07-24
  * @mainpage Test Process Loop
- * @section intro Overview
- * 
+ * @section overview Overview
+ *
  * This is the main process loop to test the SilverSat Avionics Board.
- * 
- * The devices are implemented as classes interfacing to real hardware and include an external realtime clock, FRAM, inertial measurement 
+ *
+ * The devices are implemented as classes interfacing to real hardware and include an external realtime clock, FRAM, inertial measurement
  * unit, watchdog timer, serial ports, I2C buses, and the SAMD21 processor.
- * 
+ *
  * The other boards: Power, Radio, and Payload are implemented as mock devices in software for these
  * tests. Each mock board performs a subset of the functionality provided by the actual board, as needed
- * to test the Avionics Board. 
- * 
+ * to test the Avionics Board.
+ *
  * The beacon message which Avionics sends to the radio board and the command messages the Radio
  * Board sends to Avionics are also represented as classes.
  *
@@ -82,12 +82,19 @@ MockPowerBoard power;
 
 void timestamp()
 {
-    Serial.print(external_rtc.now().hour(), DEC);
-    Serial.print(':');
-    Serial.print(external_rtc.now().minute(), DEC);
-    Serial.print(':');
-    Serial.print(external_rtc.now().second(), DEC);
-    Serial.print(" UTC");
+    if (clock_set)
+    {
+        Serial.print(external_rtc.now().hour(), DEC);
+        Serial.print(':');
+        Serial.print(external_rtc.now().minute(), DEC);
+        Serial.print(':');
+        Serial.print(external_rtc.now().second(), DEC);
+        Serial.print(" UTC ");
+    }
+
+    Serial.print("[");
+    Serial.print(micros());
+    Serial.print("] ");
 };
 
 /**
@@ -120,12 +127,14 @@ void setup()
 
     // Enable external realtime clock
 
+    timestamp();
     Serial.println("Initializing external realtime clock");
     if (!external_rtc.begin())
     {
         Serial.println("Waiting for external realtime clock");
         delay(10);
     }
+    timestamp();
     Serial.println("External realtime clock initialized");
 
     // Initialize connection to IMU
@@ -139,6 +148,8 @@ void setup()
 
     // Initialize Radio Board
 
+    timestamp();
+    Serial.println("Initializing mock Radio Board");
     radio.begin();
 
     // Initialize Payload Board and set power off
@@ -148,10 +159,12 @@ void setup()
 
     // wait for separation delay
 
+    timestamp();
     Serial.println("Entering separation delay");
     while (micros() - separation_time < separation_delay)
     {
     };
+    timestamp();
     Serial.println("Exiting separation delay");
 
     // deploy antenna
@@ -160,6 +173,7 @@ void setup()
     // watchdog.trigger();
     // watchdog_reset_time = micros();
 
+    timestamp();
     Serial.println("Setup complete, starting process loop");
 };
 
@@ -195,10 +209,22 @@ void loop()
     if (radio.command_received())
     {
         timestamp();
-        Serial.print(" Command received: ");
+        Serial.print("Command received: ");
         auto command = radio.get_command();
+        Serial.println(command->get_operation());
         command->acknowledge_command();
-        command->execute_command();
+        timestamp();
+        Serial.println("Command acknowledged");
+        if (command->execute_command())
+        {
+            timestamp();
+            Serial.println("Command executed");
+        }
+        else
+        {
+            timestamp();
+            Serial.println("Command failed");
+        };
     }
 
     // take photo

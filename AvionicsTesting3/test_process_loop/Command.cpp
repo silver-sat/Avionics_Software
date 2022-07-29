@@ -22,7 +22,7 @@ void Command::acknowledge_command()
 
 /**
  * @brief Execute the command
- * 
+ *
  * @return true successful
  * @return false error
  */
@@ -32,7 +32,6 @@ bool Command::execute_command()
     Serial.println("Executing command");
     return true;
 };
-
 
 /**
  * @brief Construct a new Command with no parameters
@@ -58,9 +57,36 @@ CommandInvalid::CommandInvalid()
     _action = Command::invalid;
 };
 
+/**
+ * @brief Construct a new Command No Operate:: Command No Operate object
+ *
+ */
+
 CommandNoOperate::CommandNoOperate()
 {
     _action = Command::no_operate;
+};
+
+/**
+ * @brief Acknowledge NoOperate command
+ * 
+ */
+
+void CommandNoOperate::acknowledge_command()
+{
+    Serial.println("Acknowledging NoOperate");
+};
+
+/**
+ * @brief Execute NoOperate command
+ * 
+ * @return true successful
+ */
+
+bool CommandNoOperate::execute_command()
+{
+    Serial.println("Executing NoOperate");
+    return true;
 };
 
 CommandPayComms::CommandPayComms()

@@ -24,10 +24,10 @@ MockRadioBoard::MockRadioBoard(){};
 
 MockRadioBoard::~MockRadioBoard()
 {
-    if (_client)
+    if (_factory)
     {
-        delete _client;
-        _client = NULL;
+        delete _factory;
+        _factory = NULL;
     }
 }
 
@@ -41,8 +41,8 @@ bool MockRadioBoard::begin()
 
     // Initial set clock command
 
-    auto client = new Client("SetClock", time_value{2022, 10, 15, 12, 0, 0});
-    _client = client;
+    auto factory = new CommandFactory("NoOperate");
+    _factory = factory;
     _command_ready = true;
     return true;
 }
@@ -83,5 +83,5 @@ bool MockRadioBoard::command_received()
 
 Command *MockRadioBoard::get_command()
 {
-    return _client->get_command();
+    return _factory->get_command();
 };

@@ -25,6 +25,7 @@
    <div id="projectname">SilverSat Avionics Software
    &#160;<span id="projectnumber">1.0</span>
    </div>
+   <div id="projectbrief">Avionics Board software for SilverSat</div>
   </td>
  </tr>
  </tbody>
@@ -77,6 +78,7 @@ $(function() {
 </li>
 <li>acknowledge_command()
 : <a class="el" href="classCommand.html#aea2fcbb557f5144945a233108c8009ec">Command</a>
+, <a class="el" href="classCommandNoOperate.html#a17ca014a9b09d2f16e8e3c270bf07ec7">CommandNoOperate</a>
 </li>
 <li>add()
 : <a class="el" href="classSAMD21.html#a3c185aff65b8ef7f316324d5e9ed6b68">SAMD21</a>
@@ -121,14 +123,11 @@ $(function() {
 <li>command_received()
 : <a class="el" href="classMockRadioBoard.html#ab375621307a795773a845e9dc273c44b">MockRadioBoard</a>
 </li>
-<li>create_type1()
-: <a class="el" href="classCommand.html#a47dea427bc463a3a6f19056037b23c69">Command</a>
+<li>CommandFactory()
+: <a class="el" href="classCommandFactory.html#a3bbb5805a95810b05c6f9b2b6a80e05a">CommandFactory</a>
 </li>
-<li>create_type2()
-: <a class="el" href="classCommand.html#a9acecdc3190a19c7a1801c704790be1b">Command</a>
-</li>
-<li>create_type3()
-: <a class="el" href="classCommand.html#af63baf34eb9dbecff691594cda15057e">Command</a>
+<li>CommandNoOperate()
+: <a class="el" href="classCommandNoOperate.html#a36daf79cdce7ba61fe648b01563e7f26">CommandNoOperate</a>
 </li>
 </ul>
 
@@ -147,7 +146,7 @@ $(function() {
 : <a class="el" href="classTimeSpan.html#a50f71a2e56d605b32b19ca86cce15d39">TimeSpan</a>
 </li>
 <li>disableBus()
-: <a class="el" href="classBusSwitch.html#abce362f6e49188ba037d2f7e24f0007a">BusSwitch</a>
+: <a class="el" href="classBusSwitch.html#a5ff19c03865dd680e87ca93ac8d41bba">BusSwitch</a>
 </li>
 <li>dumpLog()
 : <a class="el" href="classWatchdog.html#a5b6b48af5cbccbe901c6bf479c121375">Watchdog</a>
@@ -157,10 +156,11 @@ $(function() {
 
 <h3><a id="index_e"></a>- e -</h3><ul>
 <li>enableBus()
-: <a class="el" href="classBusSwitch.html#ae8f54f5b7228a0914347830a59bd387d">BusSwitch</a>
+: <a class="el" href="classBusSwitch.html#a50098c44894e120a812d7038e9e962d2">BusSwitch</a>
 </li>
 <li>execute_command()
 : <a class="el" href="classCommand.html#a13fa2faa2645a6ae413aece6e90bc2b9">Command</a>
+, <a class="el" href="classCommandNoOperate.html#a6f14d13d8d4df70c73306e4da8281bcd">CommandNoOperate</a>
 </li>
 </ul>
 
@@ -177,7 +177,8 @@ $(function() {
 : <a class="el" href="classBeacon.html#af86d05057dd74a5639dff0d177fad00e">Beacon</a>
 </li>
 <li>get_command()
-: <a class="el" href="classMockRadioBoard.html#a721c1af526a5c6df5a0ff50bf48b373c">MockRadioBoard</a>
+: <a class="el" href="classCommandFactory.html#adb89a936a8d579893b1643ef5e1560bd">CommandFactory</a>
+, <a class="el" href="classMockRadioBoard.html#a721c1af526a5c6df5a0ff50bf48b373c">MockRadioBoard</a>
 </li>
 <li>get_last_reset_time()
 : <a class="el" href="classSAMD21.html#a16f2e5756b4b78df17759b1692fbf4bd">SAMD21</a>
@@ -404,6 +405,9 @@ $(function() {
 
 
 <h3><a id="index__7E"></a>- ~ -</h3><ul>
+<li>~CommandFactory()
+: <a class="el" href="classCommandFactory.html#a7bb4a37a7903caf0e42207b7ec8a6ad6">CommandFactory</a>
+</li>
 <li>~MockRadioBoard()
 : <a class="el" href="classMockRadioBoard.html#ac785584c9975350fc52af35c89f2eecd">MockRadioBoard</a>
 </li>
