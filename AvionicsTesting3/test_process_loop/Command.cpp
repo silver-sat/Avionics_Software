@@ -9,6 +9,50 @@
  */
 
 #include "Command.h"
+#include "AvionicsBoard.h"
+
+/**
+ * @brief Construct a new Command object
+ *
+ */
+
+Command::Command(){
+
+};
+
+// /**
+//  * @brief Construct a new Command object with no parameters
+//  *
+//  * @param command operation
+//  *
+//  */
+
+// Command::Command(String command){
+
+// };
+
+// /**
+//  * @brief Constructe a Command object with an integer parameter
+//  *
+//  */
+
+// Command::Command(String command, int parameter){
+
+// };
+
+// /**
+//  * @brief Construct a Command object with a time_value parameter
+//  *
+//  */
+
+// Command::Command(String command, time_value parameter){
+
+// };
+
+Command::operation Command::get_operation()
+{
+    return _action;
+};
 
 /**
  * @brief Acknowledge the command
@@ -33,20 +77,6 @@ bool Command::execute_command()
     return true;
 };
 
-/**
- * @brief Construct a new Command with no parameters
- *
- * @param operation command
- * @param Content parameters
- */
-
-Command::Command(){};
-
-Command::operation Command::get_operation()
-{
-    return _action;
-};
-
 CommandUnknown::CommandUnknown()
 {
     _action = Command::unknown;
@@ -69,7 +99,7 @@ CommandNoOperate::CommandNoOperate()
 
 /**
  * @brief Acknowledge NoOperate command
- * 
+ *
  */
 
 void CommandNoOperate::acknowledge_command()
@@ -79,7 +109,7 @@ void CommandNoOperate::acknowledge_command()
 
 /**
  * @brief Execute NoOperate command
- * 
+ *
  * @return true successful
  */
 
@@ -126,3 +156,13 @@ CommandSetClock::CommandSetClock(time_value time)
     _action = Command::set_clock;
     _time = time;
 };
+
+bool CommandSetClock::execute_command()
+{
+    // Adjust UTC offset (in hours) according to time zone, noting daylight savings time
+    const auto utc_offset {4};
+    extern AvionicsBoard avionics;
+    DateTime utc_time = DateTime(_time.year, _time.month, _time.day, _time.hour, _time.minute, _time.second) + TimeSpan(0, 4, 0, 0);
+    avionics.set_external_rtc(utc_time);
+    return true;
+}

@@ -9,6 +9,7 @@
  */
 
 #include "CommandFactory.h"
+#include <Arduino.h>
 
 /**
  * @brief Construct a new Command Factory:: Command Factory object

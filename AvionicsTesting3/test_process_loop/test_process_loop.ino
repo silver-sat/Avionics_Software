@@ -23,10 +23,10 @@
 
 #include "beacon.h"
 #include "Command.h"
+#include "AvionicsBoard.h"
 #include "mock_power_board.h"
 #include "mock_payload_board.h"
 #include "mock_radio_board.h"
-#include <RTClib.h>
 
 /**
  * @brief constants
@@ -45,7 +45,6 @@ constexpr unsigned long beacon_delay{2 * 60 * 1000 * 1000}; // 2 minutes
 unsigned long separation_time{0};
 unsigned long watchdog_reset_time{0};
 unsigned long last_beacon_time{0};
-bool clock_set{false};
 // int power_status_time{0};
 // int imu_colletion_time{0};
 // int power_adequate_time{0};
@@ -64,13 +63,13 @@ bool clock_set{false};
  *
  */
 
-RTC_PCF8523 external_rtc{}; // todo: replace with Avionics Board realtime clock
 // Watchdog watchdog{};
 // IMU imu{};
 // FRAM fram{};
 // BusSwitch bus_switch;
 // Create serial buffer as serial_buffer;
 
+AvionicsBoard avionics;
 MockPayloadBoard payload;
 MockRadioBoard radio;
 MockPowerBoard power;
@@ -82,13 +81,19 @@ MockPowerBoard power;
 
 void timestamp()
 {
-    if (clock_set)
+    if (avionics.get_external_rtc_is_set())
     {
-        Serial.print(external_rtc.now().hour(), DEC);
+        Serial.print(avionics.get_year(), DEC);
+        Serial.print('/');
+        Serial.print(avionics.get_month(), DEC);
+        Serial.print('/');
+        Serial.print(avionics.get_day(), DEC);
+        Serial.print(' ');
+        Serial.print(avionics.get_hour(), DEC);
         Serial.print(':');
-        Serial.print(external_rtc.now().minute(), DEC);
+        Serial.print(avionics.get_minute(), DEC);
         Serial.print(':');
-        Serial.print(external_rtc.now().second(), DEC);
+        Serial.print(avionics.get_second(), DEC);
         Serial.print(" UTC ");
     }
 
@@ -113,6 +118,10 @@ void setup()
     };
     Serial.println("Testing SilverSat process loop");
 
+    //
+
+
+
     // Critical I2C
     // Disable I2C non crit links
     // busswitch.disable();
@@ -129,11 +138,7 @@ void setup()
 
     timestamp();
     Serial.println("Initializing external realtime clock");
-    if (!external_rtc.begin())
-    {
-        Serial.println("Waiting for external realtime clock");
-        delay(10);
-    }
+    avionics.initialize_external_rtc();
     timestamp();
     Serial.println("External realtime clock initialized");
 
@@ -151,6 +156,8 @@ void setup()
     timestamp();
     Serial.println("Initializing mock Radio Board");
     radio.begin();
+    timestamp();
+    Serial.println("Mock Radio Board initialized");
 
     // Initialize Payload Board and set power off
 
