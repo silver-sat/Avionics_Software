@@ -68,6 +68,31 @@ CommandUnknown::CommandUnknown()
 };
 
 /**
+ * @brief Acknowledge unknown command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandUnknown::acknowledge_command()
+{
+    Serial.println(" Unknown");
+    return Command::acknowledge_command();
+};
+
+/**
+ * @brief Execute unknown command
+ *
+ * @return false error
+ */
+bool CommandUnknown::execute_command()
+{
+    Command::execute_command();
+    Serial.println(" Unknown");
+    return false;
+}
+
+/**
  * @brief Construct a new Command Invalid:: Command Invalid object
  *
  */
@@ -75,6 +100,31 @@ CommandUnknown::CommandUnknown()
 CommandInvalid::CommandInvalid()
 {
     _action = Command::invalid;
+};
+
+/**
+ * @brief Acknowledge invalid command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandInvalid::acknowledge_command()
+{
+    Serial.println(" Invalid");
+    return Command::acknowledge_command();
+};
+
+/**
+ * @brief Execute invalid command
+ *
+ * @return false error
+ */
+bool CommandInvalid::execute_command()
+{
+    Command::execute_command();
+    Serial.println(" Invalid");
+    return false;
 };
 
 /**
@@ -90,13 +140,14 @@ CommandNoOperate::CommandNoOperate()
 /**
  * @brief Acknowledge NoOperate command
  *
+ * @return true successful
+ * @return false error
  */
 
 bool CommandNoOperate::acknowledge_command()
 {
     Serial.println(" NoOperate");
-    Command::acknowledge_command();
-    return true;
+    return Command::acknowledge_command();
 };
 
 /**
