@@ -13,7 +13,6 @@
 
 #include "beacon.h"
 #include "CommandFactory.h"
-#include <Arduino.h>
 
 class MockRadioBoard
 {
@@ -52,8 +51,25 @@ public:
     Command *get_command();
 
 private:
-    bool _command_ready{false};
-    CommandFactory *_factory{};
+    unsigned long _last_command_time{0};
+    unsigned long _command_interval{10 * 1000 * 1000};
+    size_t _command_index{10};
+    CommandSetClock sc1 = CommandSetClock({2023, 1, 1, 10, 10, 0});
+    CommandSetClock sc2 = CommandSetClock({2024, 1, 1, 10, 10, 0});
+    CommandNoOperate no{};
+    CommandBeaconSp bs1{10};
+    CommandBeaconSp bs2{20};
+    CommandUnknown un{};
+    CommandInvalid in{};
+    Command *_command_queue[10] = {&sc1, &no, &bs1, &no, &sc2, &no, &bs2, &no, &un, &in};
+
+    // auto factory = new CommandFactory("BeaconSp", 10);
+    // _factory = factory;
+    // _command_ready = true;
+    // return true;
+
+    Command *_command1;
+    Command *_command2;
 };
 
 #endif

@@ -94,7 +94,7 @@ CommandNoOperate::CommandNoOperate()
 
 bool CommandNoOperate::acknowledge_command()
 {
-    Serial.print(" NoOperate");
+    Serial.println(" NoOperate");
     Command::acknowledge_command();
     return true;
 };
@@ -232,16 +232,16 @@ bool CommandSetClock::acknowledge_command()
     Serial.print("SetClock: ");
     Serial.print("Year: ");
     Serial.print(_time.year);
-    Serial.print("Month: ");
+    Serial.print(" Month: ");
     Serial.print(_time.month);
-    Serial.print("Day: ");
+    Serial.print(" Day: ");
     Serial.print(_time.day);
-    Serial.print("Hour: ");
+    Serial.print(" Hour: ");
     Serial.print(_time.hour);
-    Serial.print("Minute: ");
+    Serial.print(" Minute: ");
     Serial.print(_time.minute);
-    Serial.print("Second: ");
-    Serial.print(_time.second);
+    Serial.print(" Second: ");
+    Serial.println(_time.second);
     Command::acknowledge_command();
     return true;
 }

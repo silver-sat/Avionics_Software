@@ -23,13 +23,12 @@ MockRadioBoard::MockRadioBoard(){};
  *
  */
 
-MockRadioBoard::~MockRadioBoard()
-{
-    if (_factory)
-    {
-        delete _factory;
-        _factory = NULL;
-    }
+MockRadioBoard::~MockRadioBoard(){
+    // if (_factory)
+    // {
+    //     delete _factory;
+    //     _factory = NULL;
+    // }
 };
 
 /**
@@ -39,12 +38,6 @@ MockRadioBoard::~MockRadioBoard()
 
 bool MockRadioBoard::begin()
 {
-
-    // Initial set clock command
-
-    auto factory = new CommandFactory("BeaconSp", 10);
-    _factory = factory;
-    _command_ready = true;
     return true;
 };
 
@@ -66,15 +59,7 @@ void MockRadioBoard::send_beacon(Beacon beacon)
 
 bool MockRadioBoard::command_received()
 {
-    if (_command_ready)
-    {
-        _command_ready = false;
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return (micros() - _last_command_time > _command_interval);
 };
 
 /**
@@ -84,5 +69,9 @@ bool MockRadioBoard::command_received()
 
 Command *MockRadioBoard::get_command()
 {
-    return _factory->get_command();
+    _last_command_time = micros();
+    auto factory = new CommandFactory("SetClock", {2023, 1, 1, 10, 10, 0});
+    _command1 = factory->get_command();
+    _command2 = &sc2;
+    return _command_queue[_command_index++ % 10];
 };
