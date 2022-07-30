@@ -73,46 +73,19 @@ public:
     Command();
 
     /**
-     * @brief Construct a new Command object with no parameters
+     * @brief Get the operation
      *
-     *
+     * @return operation
      */
-
-    //    Command(String command);
-
-    //    /**
-    //     * @brief Constructe a Command object with an integer parameter
-    //     *
-    //     * @param command operation
-    //     * @param parameter integer value
-    //     *
-    //     */
-
-    //    Command(String command, int parameter);
-
-    //    /**
-    //     * @brief Construct a Command object with a time_value parameter
-    //     *
-    //     * @param command operation
-    //     * @param parameter time value
-    //     */
-
-    //    Command(String command, time_value parameter);
-
-    //     /**
-    //      * @brief Get the operation
-    //      *
-    //      * @return operation
-    //      */
 
     virtual operation get_operation();
 
     /**
-     * @brief Print the data
+     * @brief Acknowlege the command
      *
      */
 
-    virtual void acknowledge_command();
+    virtual bool acknowledge_command();
 
     /**
      * @brief Execute the command
@@ -136,19 +109,34 @@ public:
     CommandUnknown();
 };
 
+/**
+ * @brief invalid command
+ *
+ */
+
 class CommandInvalid : public Command
 {
 public:
     CommandInvalid();
 };
 
+/**
+ * @brief no_operate command
+ *
+ */
+
 class CommandNoOperate : public Command
 {
 public:
     CommandNoOperate();
-    virtual void acknowledge_command();
-    virtual bool execute_command();
+    bool acknowledge_command() override;
+    bool execute_command() override;
 };
+
+/**
+ * @brief pay_comms command
+ *
+ */
 
 class CommandPayComms : public Command
 {
@@ -156,11 +144,21 @@ public:
     CommandPayComms();
 };
 
+/**
+ * @brief report_t command
+ *
+ */
+
 class CommandReportT : public Command
 {
 public:
     CommandReportT();
 };
+
+/**
+ * @brief twee_slee command
+ *
+ */
 
 class CommandTweeSlee : public Command
 {
@@ -168,20 +166,37 @@ public:
     CommandTweeSlee();
 };
 
+/**
+ * @brief watchdog command
+ *
+ */
+
 class CommandWatchdog : public Command
 {
 public:
     CommandWatchdog();
 };
 
+/**
+ * @brief beacon_sp command
+ *
+ */
+
 class CommandBeaconSp : public Command
 {
 public:
-    CommandBeaconSp(int parameter);
+    CommandBeaconSp(int seconds);
+    bool acknowledge_command() override;
+    bool execute_command() override;
 
 private:
-    int _value;
+    int _seconds;
 };
+
+/**
+ * @brief pic_times command
+ *
+ */
 
 class CommandPicTimes : public Command
 {
@@ -192,11 +207,17 @@ private:
     time_value _time;
 };
 
+/**
+ * @brief set_clock command
+ *
+ */
+
 class CommandSetClock : public Command
 {
 public:
     CommandSetClock(time_value time);
-    bool execute_command();
+    bool acknowledge_command() override;
+    bool execute_command() override;
 
 private:
     time_value _time;

@@ -24,37 +24,48 @@ public:
      * @brief Construct a new Command Factory object
      *
      */
+
     CommandFactory();
+
     /**
      * @brief Construct a new Command Factory object
      *
      * @param command operation
      */
+
     CommandFactory(String command);
+
     /**
      * @brief Construct a new Command Factory object
      *
      * @param command operation
-     * @param parameter
+     * @param value integer parameter
      */
-    CommandFactory(String command, int parameter);
+
+    CommandFactory(String command, int value);
+
     /**
      * @brief Construct a new Command Factory object
      *
      * @param command operation
      * @param time time value
      */
+
     CommandFactory(String command, time_value time);
+
     /**
      * @brief Destroy the Command Factory object
      *
      */
+
     ~CommandFactory();
+
     /**
      * @brief Get the command object
      *
      * @return Command*
      */
+
     Command *get_command();
 
 private:

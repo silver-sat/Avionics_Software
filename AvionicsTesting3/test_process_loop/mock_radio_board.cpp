@@ -9,6 +9,7 @@
  */
 
 #include "mock_radio_board.h"
+#include "timestamp.h"
 
 /**
  * @brief Construct a new Mock Radio Board:: Mock Radio Board object
@@ -41,7 +42,7 @@ bool MockRadioBoard::begin()
 
     // Initial set clock command
 
-    auto factory = new CommandFactory("SetClock", {2024, 1, 1, 10, 10, 0});
+    auto factory = new CommandFactory("BeaconSp", 10);
     _factory = factory;
     _command_ready = true;
     return true;
@@ -54,8 +55,8 @@ bool MockRadioBoard::begin()
 
 void MockRadioBoard::send_beacon(Beacon beacon)
 {
-    Serial.print(micros());
-    Serial.print(" sending beacon: "), Serial.println(beacon.get_code());
+    timestamp();
+    Serial.print("Sending beacon: "), Serial.println(beacon.get_code());
 };
 
 /**
