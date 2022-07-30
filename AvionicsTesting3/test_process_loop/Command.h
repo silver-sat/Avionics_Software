@@ -107,6 +107,8 @@ class CommandUnknown : public Command
 {
 public:
     CommandUnknown();
+    bool acknowledge_command() override;
+    bool execute_command() override;
 };
 
 /**
@@ -118,6 +120,8 @@ class CommandInvalid : public Command
 {
 public:
     CommandInvalid();
+    bool acknowledge_command() override;
+    bool execute_command() override;
 };
 
 /**
