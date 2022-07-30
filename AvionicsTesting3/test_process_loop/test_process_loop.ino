@@ -21,6 +21,7 @@
  *
  */
 
+#include "timestamp.h"
 #include "beacon.h"
 #include "Command.h"
 #include "AvionicsBoard.h"
@@ -35,7 +36,6 @@
 
 constexpr unsigned long separation_delay{5 * 1000 * 1000};  // todo: adjust to 45 minutes for full test
 constexpr unsigned long watchdog_lower_boundary{23500};     // 23.5 milliseconds
-constexpr unsigned long beacon_delay{2 * 60 * 1000 * 1000}; // 2 minutes
 
 /**
  * @brief timers and flags
@@ -44,7 +44,6 @@ constexpr unsigned long beacon_delay{2 * 60 * 1000 * 1000}; // 2 minutes
 
 unsigned long separation_time{0};
 unsigned long watchdog_reset_time{0};
-unsigned long last_beacon_time{0};
 // int power_status_time{0};
 // int imu_colletion_time{0};
 // int power_adequate_time{0};
@@ -58,49 +57,17 @@ unsigned long last_beacon_time{0};
 // sensors_event_t gyroscope;
 // sensors_event_t temperature;
 
-/**
- * @brief Create interface objects
- *
- */
 
-// Watchdog watchdog{};
-// IMU imu{};
-// FRAM fram{};
-// BusSwitch bus_switch;
-// Create serial buffer as serial_buffer;
+/**
+ * @brief Create the boards
+ * 
+ */
 
 AvionicsBoard avionics;
 MockPayloadBoard payload;
 MockRadioBoard radio;
 MockPowerBoard power;
 
-/**
- * @brief Helper function for timestamp
- *
- */
-
-void timestamp()
-{
-    if (avionics.get_external_rtc_is_set())
-    {
-        Serial.print(avionics.get_year(), DEC);
-        Serial.print('/');
-        Serial.print(avionics.get_month(), DEC);
-        Serial.print('/');
-        Serial.print(avionics.get_day(), DEC);
-        Serial.print(' ');
-        Serial.print(avionics.get_hour(), DEC);
-        Serial.print(':');
-        Serial.print(avionics.get_minute(), DEC);
-        Serial.print(':');
-        Serial.print(avionics.get_second(), DEC);
-        Serial.print(" UTC ");
-    }
-
-    Serial.print("[");
-    Serial.print(micros());
-    Serial.print("] ");
-};
 
 /**
  * @brief Initialize the devices and the boards
@@ -118,34 +85,13 @@ void setup()
     };
     Serial.println("Testing SilverSat process loop");
 
-    //
-
-
-
-    // Critical I2C
-    // Disable I2C non crit links
-    // busswitch.disable();
-    // pinMode(EN_EXT_I2C, OUTPUT);
-    // digitalWrite(EN_EXT_I2C, LOW);
-
-    // Disconnect from the Payload serial port
-    // serial_buffer.disable(payload);
-
-    // Connect to the Radio Board serial port
-    // serial_buffer.enable(radio);
-
-    // Enable external realtime clock
+    // Initialize Avionics Board
 
     timestamp();
-    Serial.println("Initializing external realtime clock");
-    avionics.initialize_external_rtc();
+    Serial.println("Initializing Avionics Board");
+    avionics.begin();
     timestamp();
-    Serial.println("External realtime clock initialized");
-
-    // Initialize connection to IMU
-    // imu.begin();
-
-    // Initialize connection to FRAM
+    Serial.println("Avionics Board initialized");
 
     // Initialize Power Board
 
@@ -179,7 +125,6 @@ void setup()
     // Start the watchdog timer
     // watchdog.trigger();
     // watchdog_reset_time = micros();
-
     timestamp();
     Serial.println("Setup complete, starting process loop");
 };
@@ -201,15 +146,7 @@ void loop()
 
     // send beacon
 
-    if (micros() - last_beacon_time > beacon_delay)
-    {
-        // todo: get power statusu
-        // todo: get payload status
-        // todo: format beacon message
-        Beacon message{Beacon::excellent, Beacon::good, Beacon::fair, Beacon::poor, Beacon::critical};
-        radio.send_beacon(message);
-        last_beacon_time = micros();
-    }
+    avionics.beacon();
 
     // receive command
 
@@ -218,7 +155,8 @@ void loop()
         timestamp();
         Serial.print("Command received: ");
         auto command = radio.get_command();
-        Serial.println(command->get_operation());
+        Serial.print(command->get_operation());
+        Serial.print(" ");
         command->acknowledge_command();
         timestamp();
         Serial.println("Command acknowledged");

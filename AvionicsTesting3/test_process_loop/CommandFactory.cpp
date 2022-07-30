@@ -15,6 +15,7 @@
  * @brief Construct a new Command Factory:: Command Factory object
  *
  */
+
 CommandFactory::CommandFactory(){
 
 };
@@ -22,8 +23,9 @@ CommandFactory::CommandFactory(){
 /**
  * @brief Construct a new Command Factory:: Command Factory object with only an operation
  *
- * @param command
+ * @param command operation
  */
+
 CommandFactory::CommandFactory(String command)
 {
     if (command == "NoOperate")
@@ -63,27 +65,32 @@ CommandFactory::CommandFactory(String command)
 /**
  * @brief Construct a new Command Factory:: Command Factory object with an operation and integer parameter
  *
- * @param command
- * @param parameter
+ * @param command operation
+ * @param value integer parameter
  */
-CommandFactory::CommandFactory(String command, int parameter)
+
+CommandFactory::CommandFactory(String command, int value)
+
 {
     if (command == "BeaconSp")
     {
-        _command = new CommandBeaconSp(parameter);
+        _command = new CommandBeaconSp(value);
     }
     else
     {
         _command = new CommandInvalid();
     };
 };
+
 /**
  * @brief Construct a new Command Factory:: Command Factory object with an operation and a time value parameter
  *
  * @param command
  * @param time time value
  */
+
 CommandFactory::CommandFactory(String command, time_value time)
+
 {
     if (command == "PicTimes")
     {
@@ -98,6 +105,12 @@ CommandFactory::CommandFactory(String command, time_value time)
         _command = new CommandInvalid();
     }
 };
+
+/**
+ * @brief Destroy the Command Factory:: Command Factory object and the associated command
+ *
+ */
+
 CommandFactory::~CommandFactory()
 {
     if (_command)
@@ -106,6 +119,13 @@ CommandFactory::~CommandFactory()
         _command = NULL;
     };
 };
+
+/**
+ * @brief return the command
+ *
+ * @return Command*
+ */
+
 Command *CommandFactory::get_command()
 {
     return _command;
