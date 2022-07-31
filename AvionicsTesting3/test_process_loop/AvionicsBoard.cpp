@@ -12,6 +12,7 @@
 #include "log_utility.h"
 #include "beacon.h"
 #include "mock_radio_board.h"
+#include "mock_payload_board.h"
 
 /**
  * @brief Construct a new Avionics Board:: Avionics Board object
@@ -74,14 +75,14 @@ bool AvionicsBoard::begin()
 /**
  * @brief Set the external realtime clock
  *
- * @param date_time
+ * @param time
  * @return true successful
  * @return false error
  */
 
-bool AvionicsBoard::set_external_rtc(DateTime date_time)
+bool AvionicsBoard::set_external_rtc(DateTime time)
 {
-    _external_rtc.adjust(date_time);
+    _external_rtc.adjust(time);
     _external_rtc.start();
     _external_rtc_is_set = true;
     return true;
@@ -197,6 +198,39 @@ bool AvionicsBoard::beacon()
         extern MockRadioBoard radio;
         radio.send_beacon(message);
         _last_beacon_time = micros();
+    };
+    return true;
+};
+
+/**
+ * @brief Set the time for the next payload photo
+ *
+ * @param time time for photo
+ * @return true successful
+ * @return false error
+ */
+
+bool AvionicsBoard::set_picture_time(DateTime time)
+{
+    _picture_time = time;
+    return true;
+};
+
+/**
+ * @brief Check time for photo and start payload if required
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool AvionicsBoard::check_photo()
+{
+    if (_external_rtc.now() >= _picture_time)
+    {
+        Log.traceln("Photo time reached");
+        _picture_time = _future_photo_date;
+        extern MockPayloadBoard payload;
+        payload.photo();
     };
     return true;
 };

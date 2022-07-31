@@ -51,6 +51,7 @@ bool MockPayloadBoard::photo()
         Log.noticeln("Starting photo session");
         _payload_active = true;
         _action_duration = _photo_duration;
+        _last_activity_time = micros();
         set_mode_photo();
         power_up();
         return true;
@@ -77,6 +78,7 @@ bool MockPayloadBoard::tweet()
         Log.noticeln("Starting Twitter session");
         _payload_active = true;
         _action_duration = _tweet_duration;
+        _last_activity_time = micros();
         set_mode_comms();
         power_up();
         return true;
@@ -95,18 +97,19 @@ bool MockPayloadBoard::tweet()
  * @return false error
  */
 
-bool MockPayloadBoard::check_state()
+bool MockPayloadBoard::check_shutdown()
 {
     if (_payload_active && (micros() - _last_activity_time > _action_duration))
     {
         Log.traceln("Payload activity ending");
         _payload_active = false;
         _power_down_signal = true;
-        _last_activity_time = micros();
     }
     if (power_down_signal_is_set())
     {
         Log.verboseln("Received power off signal from payload");
+        // todo: verify timing of shutdown signal reset
+        _power_down_signal = false;
         power_down();
     }
     return true;

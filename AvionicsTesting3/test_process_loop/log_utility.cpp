@@ -8,7 +8,7 @@
  * 
  */
 
-#include "log_utility.h""
+#include "log_utility.h"
 
 void printPrefix(Print* _logOutput, int logLevel) {
     printTimestamp(_logOutput);
