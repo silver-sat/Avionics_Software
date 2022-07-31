@@ -34,8 +34,8 @@
  *
  */
 
-constexpr unsigned long separation_delay{5 * 1000 * 1000};  // todo: adjust to 45 minutes for full test
-constexpr unsigned long watchdog_lower_boundary{23500};     // 23.5 milliseconds
+constexpr unsigned long separation_delay{5 * 1000 * 1000}; // todo: adjust to 45 minutes for full test
+constexpr unsigned long watchdog_lower_boundary{23500};    // 23.5 milliseconds
 
 /**
  * @brief timers and flags
@@ -57,17 +57,15 @@ unsigned long watchdog_reset_time{0};
 // sensors_event_t gyroscope;
 // sensors_event_t temperature;
 
-
 /**
  * @brief Create the boards
- * 
+ *
  */
 
 AvionicsBoard avionics;
 MockPayloadBoard payload;
 MockRadioBoard radio;
 MockPowerBoard power;
-
 
 /**
  * @brief Initialize the devices and the boards
@@ -105,22 +103,25 @@ void setup()
     timestamp();
     Serial.println("Mock Radio Board initialized");
 
-    // Initialize Payload Board and set power off
+    // Initialize Payload Board
 
-    // payload.begin();
-    // payload.power_down();
+    timestamp();
+    Serial.println("Initializing mock Payload Board");
+    payload.begin();
+    timestamp();
+    Serial.println("Mock Payload Board initialized");
 
     // wait for separation delay
 
     timestamp();
-    Serial.println("Entering separation delay");
+    Serial.println("Beginning separation delay");
     while (micros() - separation_time < separation_delay)
     {
     };
     timestamp();
-    Serial.println("Exiting separation delay");
-
-    // deploy antenna
+    Serial.println("Ending separation delay");
+ 
+   // deploy antenna
 
     // Start the watchdog timer
     // watchdog.trigger();
@@ -136,7 +137,7 @@ void setup()
 
 void loop()
 {
-    // trigger the watchdog if past lower boundary
+    // Trigger the watchdog if past lower boundary
 
     if (micros() - watchdog_reset_time > watchdog_lower_boundary)
     {
@@ -144,19 +145,18 @@ void loop()
         watchdog_reset_time = micros();
     };
 
-    // send beacon
+    // Send beacon
 
     avionics.beacon();
 
-    // receive command
+    // Receive command
 
     if (radio.command_received())
     {
         timestamp();
         Serial.print("Command received: ");
         auto command = radio.get_command();
-        Serial.print(command->get_operation());
-        Serial.print(" ");
+        Serial.println(command->get_operation());
         command->acknowledge_command();
         timestamp();
         Serial.println("Command acknowledged");
@@ -172,22 +172,14 @@ void loop()
         };
     }
 
-    // take photo
+    // Take photo
 
     // Get RTC
     // if RTC >= next picture time
     // set GPIO to photo
     // enable payload
 
-    // tweet
+    // Shut off Payload Board if ready to sleep
 
-    // Get RTC
-    // if RTC >= next tweet time
-    // set GPIO to tweet
-    // enable payload
-
-    // payload requesting shutdown?
-
-    // if GPIO shows shutdown
-    // turn off payload
+    payload.check_state();
 };

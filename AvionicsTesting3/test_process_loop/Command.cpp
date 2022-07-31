@@ -11,6 +11,7 @@
 #include "Command.h"
 #include "timestamp.h"
 #include "AvionicsBoard.h"
+#include "mock_payload_board.h"
 
 /**
  * @brief Construct a new Command object
@@ -76,8 +77,10 @@ CommandUnknown::CommandUnknown()
 
 bool CommandUnknown::acknowledge_command()
 {
-    Serial.println(" Unknown");
-    return Command::acknowledge_command();
+    auto status = Command::acknowledge_command();
+    timestamp();
+    Serial.println("Unknown");
+    return status;
 };
 
 /**
@@ -111,8 +114,10 @@ CommandInvalid::CommandInvalid()
 
 bool CommandInvalid::acknowledge_command()
 {
-    Serial.println(" Invalid");
-    return Command::acknowledge_command();
+    auto status = Command::acknowledge_command();
+    timestamp();
+    Serial.println("Invalid");
+    return status;
 };
 
 /**
@@ -146,8 +151,10 @@ CommandNoOperate::CommandNoOperate()
 
 bool CommandNoOperate::acknowledge_command()
 {
-    Serial.println(" NoOperate");
-    return Command::acknowledge_command();
+    auto status = Command::acknowledge_command();
+    timestamp();
+    Serial.println("NoOperate");
+    return status;
 };
 
 /**
@@ -173,6 +180,26 @@ CommandPayComms::CommandPayComms()
     _action = Command::pay_comms;
 };
 
+/**
+ * @brief Acknowledge PayComms command
+ * 
+ */
+
+bool CommandPayComms::acknowledge_command()
+{
+    auto status = Command::acknowledge_command();
+    timestamp();
+    Serial.println("PayComms");
+    return status;
+};
+
+bool CommandPayComms::execute_command(){
+
+    auto status = Command::execute_command();
+    Serial.println(" PayComms");
+    extern MockPayloadBoard payload;
+    return payload.tweet() && status;
+};
 /**
  * @brief Construct a new Command Report T:: Command Report T object
  *
@@ -224,11 +251,12 @@ CommandBeaconSp::CommandBeaconSp(int seconds)
 
 bool CommandBeaconSp::acknowledge_command()
 {
+    auto status = Command::acknowledge_command();
+    timestamp();
     Serial.print("BeaconSp: ");
     Serial.print(_seconds);
     Serial.println(" seconds");
-    Command::acknowledge_command();
-    return true;
+    return status;
 };
 
 /**
@@ -240,11 +268,10 @@ bool CommandBeaconSp::acknowledge_command()
 
 bool CommandBeaconSp::execute_command()
 {
-    extern AvionicsBoard avionics;
-    avionics.set_beacon_interval(_seconds);
-    Command::execute_command();
+    auto status = Command::execute_command();
     Serial.println(" BeaconSp");
-    return true;
+    extern AvionicsBoard avionics;
+    return avionics.set_beacon_interval(_seconds) && status;
 };
 
 /**
@@ -280,6 +307,8 @@ CommandSetClock::CommandSetClock(time_value time)
 
 bool CommandSetClock::acknowledge_command()
 {
+    auto status = Command::acknowledge_command();
+    timestamp();
     Serial.print("SetClock: ");
     Serial.print("Year: ");
     Serial.print(_time.year);
@@ -293,8 +322,7 @@ bool CommandSetClock::acknowledge_command()
     Serial.print(_time.minute);
     Serial.print(" Second: ");
     Serial.println(_time.second);
-    Command::acknowledge_command();
-    return true;
+    return status;
 }
 
 /**
@@ -307,11 +335,10 @@ bool CommandSetClock::acknowledge_command()
 bool CommandSetClock::execute_command()
 {
     // Adjust UTC offset (in hours) according to time zone, noting daylight savings time
+    auto status = Command::execute_command();
+    Serial.println(" SetClock");
     const auto utc_offset{4};
     extern AvionicsBoard avionics;
     DateTime utc_time = DateTime(_time.year, _time.month, _time.day, _time.hour, _time.minute, _time.second) + TimeSpan(0, 4, 0, 0);
-    avionics.set_external_rtc(utc_time);
-    Command::execute_command();
-    Serial.println(" SetClock");
-    return true;
+    return avionics.set_external_rtc(utc_time) && status;
 }

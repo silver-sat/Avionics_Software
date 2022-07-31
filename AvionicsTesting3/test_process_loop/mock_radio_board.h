@@ -14,6 +14,8 @@
 #include "beacon.h"
 #include "CommandFactory.h"
 
+#define COMMAND_QUEUE_SIZE 15
+
 class MockRadioBoard
 {
 public:
@@ -53,7 +55,6 @@ public:
 private:
     unsigned long _last_command_time{0};
     unsigned long _command_interval{10 * 1000 * 1000};
-    size_t _command_index{10};
     CommandSetClock sc1 = CommandSetClock({2023, 1, 1, 10, 10, 0});
     CommandSetClock sc2 = CommandSetClock({2024, 1, 1, 10, 10, 0});
     CommandNoOperate no{};
@@ -61,15 +62,11 @@ private:
     CommandBeaconSp bs2{20};
     CommandUnknown un{};
     CommandInvalid in{};
-    Command *_command_queue[10] = {&sc1, &no, &bs1, &no, &sc2, &no, &bs2, &no, &un, &in};
-
-    // auto factory = new CommandFactory("BeaconSp", 10);
-    // _factory = factory;
-    // _command_ready = true;
-    // return true;
-
-    Command *_command1;
-    Command *_command2;
+    CommandPayComms pc{};
+    size_t _command_index{COMMAND_QUEUE_SIZE};
+    Command *_command_queue[COMMAND_QUEUE_SIZE] = {&sc1, &pc, &pc, &no, &un,
+                                                   &bs1, &bs2, &no, &un, &in,
+                                                   &no, &no, &no, &no, &no,};
 };
 
 #endif

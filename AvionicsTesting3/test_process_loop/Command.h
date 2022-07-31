@@ -146,6 +146,8 @@ class CommandPayComms : public Command
 {
 public:
     CommandPayComms();
+    bool acknowledge_command() override;
+    bool execute_command() override;
 };
 
 /**

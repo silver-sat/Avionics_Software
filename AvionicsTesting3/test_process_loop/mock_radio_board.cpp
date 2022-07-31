@@ -70,8 +70,15 @@ bool MockRadioBoard::command_received()
 Command *MockRadioBoard::get_command()
 {
     _last_command_time = micros();
-    auto factory = new CommandFactory("SetClock", {2023, 1, 1, 10, 10, 0});
-    _command1 = factory->get_command();
-    _command2 = &sc2;
-    return _command_queue[_command_index++ % 10];
+
+    // auto factory = new CommandFactory("SetClock", {2023, 1, 1, 10, 10, 0});
+    // _command1 = factory->get_command();
+    // _command2 = &sc2;
+    // auto factory = new CommandFactory("BeaconSp", 10);
+    // _factory = factory;
+    // _command_ready = true;
+    // return true;
+
+
+    return _command_queue[_command_index++ % COMMAND_QUEUE_SIZE];
 };
