@@ -64,9 +64,23 @@ private:
     CommandInvalid in{};
     CommandPayComms pc{};
     size_t _command_index{COMMAND_QUEUE_SIZE};
-    Command *_command_queue[COMMAND_QUEUE_SIZE] = {&sc1, &pc, &pc, &no, &un,
-                                                   &bs1, &bs2, &no, &un, &in,
-                                                   &no, &no, &no, &no, &no,};
+    Command *_command_queue[COMMAND_QUEUE_SIZE] = {
+        &sc1,
+        &pc,
+        &pc,
+        &no,
+        &un,
+        &bs1,
+        &bs2,
+        &no,
+        &un,
+        &in,
+        &no,
+        &no,
+        &no,
+        &no,
+        &no,
+    };
 };
 
 #endif

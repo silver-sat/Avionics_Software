@@ -9,7 +9,7 @@
  */
 
 #include "mock_radio_board.h"
-#include "timestamp.h"
+#include "log_utility.h"
 
 /**
  * @brief Construct a new Mock Radio Board:: Mock Radio Board object
@@ -38,6 +38,7 @@ MockRadioBoard::~MockRadioBoard(){
 
 bool MockRadioBoard::begin()
 {
+    Log.verboseln("Radio initialized");
     return true;
 };
 
@@ -48,8 +49,7 @@ bool MockRadioBoard::begin()
 
 void MockRadioBoard::send_beacon(Beacon beacon)
 {
-    timestamp();
-    Serial.print("Sending beacon: "), Serial.println(beacon.get_code());
+    Log.noticeln("Transmitting beacon %s", beacon.get_code().c_str());
 };
 
 /**

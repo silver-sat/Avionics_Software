@@ -21,7 +21,7 @@
  *
  */
 
-#include "timestamp.h"
+#include "log_utility.h"
 #include "beacon.h"
 #include "Command.h"
 #include "AvionicsBoard.h"
@@ -78,18 +78,26 @@ void setup()
     // Serial connection for test reporting
 
     Serial.begin(115200);
-    while (!Serial)
+    while (!Serial && !Serial.available())
     {
     };
-    Serial.println("Testing SilverSat process loop");
 
+    // Log utility for test reporting
+
+    Log.setPrefix(printPrefix);
+    Log.setSuffix(printSuffix);
+    Log.begin(LOG_LEVEL_INFO, &Serial);
+    Log.setShowLevel(false);
+
+    Log.notice("**********************************************" CR);
+    Log.notice("***     Testing SilverSat Process Loop     ***" CR);
+    Log.notice("**********************************************" CR);
+    
     // Initialize Avionics Board
 
-    timestamp();
-    Serial.println("Initializing Avionics Board");
+    Log.noticeln("Initializing Avionics Board");
     avionics.begin();
-    timestamp();
-    Serial.println("Avionics Board initialized");
+    Log.noticeln("Avionics Board initialized");
 
     // Initialize Power Board
 
@@ -97,37 +105,30 @@ void setup()
 
     // Initialize Radio Board
 
-    timestamp();
-    Serial.println("Initializing mock Radio Board");
+    Log.noticeln("Initializing mock Radio Board");
     radio.begin();
-    timestamp();
-    Serial.println("Mock Radio Board initialized");
+    Log.noticeln("Mock Radio Board initialized");
 
     // Initialize Payload Board
 
-    timestamp();
-    Serial.println("Initializing mock Payload Board");
+    Log.noticeln("Initializing mock Payload Board");
     payload.begin();
-    timestamp();
-    Serial.println("Mock Payload Board initialized");
+    Log.noticeln("Mock Payload Board initialized");
 
     // wait for separation delay
 
-    timestamp();
-    Serial.println("Beginning separation delay");
+    Log.noticeln("Beginning separation delay");
     while (micros() - separation_time < separation_delay)
     {
     };
-    timestamp();
-    Serial.println("Ending separation delay");
+    Log.noticeln("Ending separation delay");
  
    // deploy antenna
 
     // Start the watchdog timer
     // watchdog.trigger();
     // watchdog_reset_time = micros();
-    timestamp();
-    Serial.println("Setup complete, starting process loop");
+    Log.noticeln("Setup complete, starting process loop");
 };
 
 /**
@@ -153,22 +154,17 @@ void loop()
 
     if (radio.command_received())
     {
-        timestamp();
-        Serial.print("Command received: ");
         auto command = radio.get_command();
-        Serial.println(command->get_operation());
+        Log.traceln("Command received: %d", command->get_operation());
         command->acknowledge_command();
-        timestamp();
-        Serial.println("Command acknowledged");
+        Log.traceln("Command acknowledged");
         if (command->execute_command())
         {
-            timestamp();
-            Serial.println("Command executed");
+            Log.traceln("Command executed");
         }
         else
         {
-            timestamp();
-            Serial.println("Command failed");
+            Log.errorln("Command failed");
         };
     }
 
