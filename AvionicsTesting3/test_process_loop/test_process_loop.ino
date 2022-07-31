@@ -90,7 +90,7 @@ void setup()
     Log.begin(LOG_LEVEL_VERBOSE, &Serial);
     Log.setShowLevel(false);
 
-    Log.notice(CR "Testing SilverSat Process Loop" CR);
+    Log.noticeln("Testing SilverSat Process Loop");
 
     // Initialize Avionics Board
 

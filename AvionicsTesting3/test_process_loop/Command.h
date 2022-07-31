@@ -159,6 +159,8 @@ class CommandReportT : public Command
 {
 public:
     CommandReportT();
+    bool acknowledge_command() override;
+    bool execute_command() override;
 };
 
 /**

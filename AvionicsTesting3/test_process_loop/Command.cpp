@@ -9,8 +9,10 @@
  */
 
 #include "Command.h"
+#include "Message.h"
 #include "log_utility.h"
 #include "AvionicsBoard.h"
+#include "mock_radio_board.h"
 #include "mock_payload_board.h"
 
 /**
@@ -195,6 +197,7 @@ bool CommandPayComms::execute_command()
     extern MockPayloadBoard payload;
     return payload.tweet() && status;
 };
+
 /**
  * @brief Construct a new Command Report T:: Command Report T object
  *
@@ -203,6 +206,28 @@ bool CommandPayComms::execute_command()
 CommandReportT::CommandReportT()
 {
     _action = Command::report_t;
+};
+
+/**
+ * @brief Acknowledge ReportT command
+ * 
+ */
+
+bool CommandReportT::acknowledge_command()
+{
+    auto status = Command::acknowledge_command();
+    Log.verboseln("ReportT");
+    return status;
+};
+
+bool CommandReportT::execute_command()
+{
+    auto status = Command::execute_command();
+    Log.verboseln("ReportT");
+    extern AvionicsBoard avionics;
+    extern MockRadioBoard radio;
+    auto message = Message(Message::acknowledgement, avionics.get_timestamp());
+    return radio.send_message(message);
 };
 
 /**
