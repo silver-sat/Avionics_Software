@@ -14,7 +14,7 @@
 #include <Arduino.h>
 
 /**
- * @brief date structure: year, month, day, hour, minute, second
+ * @brief date structure: UTC year, month, day, hour, minute, second
  *
  */
 
@@ -208,6 +208,8 @@ class CommandPicTimes : public Command
 {
 public:
     CommandPicTimes(time_value time);
+    bool acknowledge_command() override;
+    bool execute_command() override;
 
 private:
     time_value _time;

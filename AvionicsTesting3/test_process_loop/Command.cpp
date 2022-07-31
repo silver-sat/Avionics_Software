@@ -279,6 +279,36 @@ CommandPicTimes::CommandPicTimes(time_value time)
 };
 
 /**
+ * @brief Acknowlege PicTimes command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandPicTimes::acknowledge_command()
+{
+    auto status = Command::acknowledge_command();
+    Log.verboseln("PicTimes: Year: %d Month: %d Day: %d Hour: %d Minute %d Second %d",
+                  _time.year, _time.month, _time.day, _time.hour, _time.minute, _time.second);
+    return status;
+}
+
+/**
+ * @brief Execute PicTimes command
+ * 
+ * @return true successful
+ * @return false error
+ */
+bool CommandPicTimes::execute_command()
+{
+    auto status = Command::execute_command();
+    Log.verboseln("PicTimes");
+    extern AvionicsBoard avionics;
+    DateTime time = DateTime(_time.year, _time.month, _time.day, _time.hour, _time.minute, _time.second);
+    return avionics.set_picture_time(time) && status;
+};
+
+/**
  * @brief Construct a new Command Set Clock:: Command Set Clock object
  *
  * @param time time value
@@ -293,8 +323,8 @@ CommandSetClock::CommandSetClock(time_value time)
 /**
  * @brief Acknowlege SetClock command
  *
- * @return true
- * @return false
+ * @return true successful
+ * @return false error
  */
 
 bool CommandSetClock::acknowledge_command()
@@ -308,17 +338,15 @@ bool CommandSetClock::acknowledge_command()
 /**
  * @brief Execute SetClock command
  *
- * @return true
- * @return false
+ * @return true successful
+ * @return false error
  */
 
 bool CommandSetClock::execute_command()
 {
-    // Adjust UTC offset (in hours) according to time zone, noting daylight savings time
     auto status = Command::execute_command();
     Log.verboseln("SetClock");
-    const auto utc_offset{4};
     extern AvionicsBoard avionics;
-    DateTime utc_time = DateTime(_time.year, _time.month, _time.day, _time.hour, _time.minute, _time.second) + TimeSpan(0, 4, 0, 0);
-    return avionics.set_external_rtc(utc_time) && status;
+    DateTime time = DateTime(_time.year, _time.month, _time.day, _time.hour, _time.minute, _time.second);
+    return avionics.set_external_rtc(time) && status;
 }

@@ -21,6 +21,7 @@
  *
  */
 
+
 #include "log_utility.h"
 #include "beacon.h"
 #include "Command.h"
@@ -86,13 +87,11 @@ void setup()
 
     Log.setPrefix(printPrefix);
     Log.setSuffix(printSuffix);
-    Log.begin(LOG_LEVEL_INFO, &Serial);
+    Log.begin(LOG_LEVEL_VERBOSE, &Serial);
     Log.setShowLevel(false);
 
-    Log.notice("**********************************************" CR);
-    Log.notice("***     Testing SilverSat Process Loop     ***" CR);
-    Log.notice("**********************************************" CR);
-    
+    Log.notice(CR "Testing SilverSat Process Loop" CR);
+
     // Initialize Avionics Board
 
     Log.noticeln("Initializing Avionics Board");
@@ -122,12 +121,13 @@ void setup()
     {
     };
     Log.noticeln("Ending separation delay");
- 
-   // deploy antenna
+
+    // deploy antenna
 
     // Start the watchdog timer
     // watchdog.trigger();
     // watchdog_reset_time = micros();
+
     Log.noticeln("Setup complete, starting process loop");
 };
 
@@ -170,12 +170,10 @@ void loop()
 
     // Take photo
 
-    // Get RTC
-    // if RTC >= next picture time
-    // set GPIO to photo
-    // enable payload
+    avionics.check_photo();
+
 
     // Shut off Payload Board if ready to sleep
 
-    payload.check_state();
+    payload.check_shutdown();
 };

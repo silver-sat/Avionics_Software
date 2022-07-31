@@ -53,7 +53,7 @@ public:
      * @return true successful
      * @return false error
      */
-    bool check_state();
+    bool check_shutdown();
 
 private:
     /**
@@ -97,8 +97,8 @@ private:
     bool power_down_signal_is_set();
 
 private:
-    const unsigned long _tweet_duration{2 * 60 * 1000 * 1000}; // 2 minutes
-    const unsigned long _photo_duration{1 * 60 * 1000 * 1000}; // 1 minute
+    const unsigned long _tweet_duration{20 * 1000 * 1000};
+    const unsigned long _photo_duration{10 * 1000 * 1000};
     unsigned long _last_activity_time{0};
     unsigned long _action_duration{};
     bool _payload_active{false};

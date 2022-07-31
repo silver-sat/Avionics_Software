@@ -63,21 +63,23 @@ private:
     CommandUnknown un{};
     CommandInvalid in{};
     CommandPayComms pc{};
+    CommandPicTimes pt1 = CommandPicTimes({2023, 1, 1, 10, 10, 30});
+    CommandPicTimes pt2 = CommandPicTimes({2023, 1, 1, 10, 15, 30});
     size_t _command_index{COMMAND_QUEUE_SIZE};
     Command *_command_queue[COMMAND_QUEUE_SIZE] = {
         &sc1,
-        &pc,
-        &pc,
-        &no,
-        &un,
-        &bs1,
+        &pt1,
         &bs2,
         &no,
-        &un,
-        &in,
         &no,
         &no,
         &no,
+        &pc,
+        &pt2,
+        &no,
+        &no,
+        &no,
+        &pc,
         &no,
         &no,
     };
