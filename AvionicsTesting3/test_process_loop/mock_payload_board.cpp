@@ -9,7 +9,7 @@
  */
 
 #include "mock_payload_board.h"
-#include "timestamp.h"
+#include "log_utility.h"
 #include <Arduino.h>
 
 /**
@@ -32,8 +32,7 @@ bool MockPayloadBoard::begin()
 {
 
     power_down();
-    timestamp();
-    Serial.println("Initialized");
+    Log.verboseln("Payload initialized");
     return true;
 };
 
@@ -49,8 +48,7 @@ bool MockPayloadBoard::photo()
     if (!_payload_active)
     {
 
-        timestamp();
-        Serial.println("Starting photo session");
+        Log.noticeln("Starting photo session");
         _payload_active = true;
         _action_duration = _photo_duration;
         set_mode_photo();
@@ -59,8 +57,7 @@ bool MockPayloadBoard::photo()
     }
     else
     {
-        timestamp();
-        Serial.println("Error: Payload already active");
+        Log.errorln("Payload already active");
         return false;
     }
 };
@@ -77,8 +74,7 @@ bool MockPayloadBoard::tweet()
     if (!_payload_active)
     {
 
-        timestamp();
-        Serial.println("Starting Twitter session");
+        Log.noticeln("Starting Twitter session");
         _payload_active = true;
         _action_duration = _tweet_duration;
         set_mode_comms();
@@ -87,8 +83,7 @@ bool MockPayloadBoard::tweet()
     }
     else
     {
-        timestamp();
-        Serial.println("Error: payload already active");
+        Log.errorln("Payload already active");
         return false;
     }
 };
@@ -104,16 +99,14 @@ bool MockPayloadBoard::check_state()
 {
     if (_payload_active && (micros() - _last_activity_time > _action_duration))
     {
-        timestamp();
-        Serial.println("Ending payload activity");
+        Log.traceln("Payload activity ending");
         _payload_active = false;
         _power_down_signal = true;
         _last_activity_time = micros();
     }
     if (power_down_signal_is_set())
     {
-        timestamp();
-        Serial.println("Payload power is off");
+        Log.verboseln("Received power off signal from payload");
         power_down();
     }
     return true;
@@ -129,8 +122,7 @@ bool MockPayloadBoard::check_state()
 bool MockPayloadBoard::power_down()
 {
     // todo: set GPIO pins for power down
-    timestamp();
-    Serial.println("Payload power off");
+    Log.verboseln("Payload power off");
     return true;
 };
 
@@ -144,8 +136,7 @@ bool MockPayloadBoard::power_down()
 bool MockPayloadBoard::power_up()
 {
     // toto: set GPIO pins for power up
-    timestamp();
-    Serial.println("Payload power on");
+    Log.verboseln("Payload power on");
     return true;
 };
 
@@ -158,8 +149,7 @@ bool MockPayloadBoard::power_up()
 bool MockPayloadBoard::set_mode_comms()
 {
     // todo: set appropriate GPIO pins for tweet
-    timestamp();
-    Serial.println("Payload mode set to tweet");
+    Log.verboseln("Payload mode set to tweet");
     return true;
 };
 
@@ -172,7 +162,7 @@ bool MockPayloadBoard::set_mode_comms()
 bool MockPayloadBoard::set_mode_photo()
 {
     // todo: set appropriate GPIO pins for photo
-    Serial.println("Payload mode set to photo");
+    Log.verboseln("Payload mode set to photo");
     return true;
 };
 
@@ -185,5 +175,5 @@ bool MockPayloadBoard::set_mode_photo()
 
 bool MockPayloadBoard::power_down_signal_is_set()
 {
-    return false;
+    return _power_down_signal;
 };

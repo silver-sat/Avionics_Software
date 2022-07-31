@@ -9,7 +9,7 @@
  */
 
 #include "AvionicsBoard.h"
-#include "timestamp.h"
+#include "log_utility.h"
 #include "beacon.h"
 #include "mock_radio_board.h"
 
@@ -58,12 +58,10 @@ bool AvionicsBoard::begin()
 
     // Enable external realtime clock
 
-    timestamp();
-    Serial.println("Initializing external realtime clock");
+    Log.traceln("Initializing external realtime clock");
     // todo: replace with Avionics Board external realtime clock
     _external_rtc.begin();
-    timestamp();
-    Serial.println("External realtime clock initialized");
+    Log.traceln("External realtime clock initialized");
 
     // Initialize connection to IMU
     // imu.begin();

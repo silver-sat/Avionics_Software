@@ -9,7 +9,7 @@
  */
 
 #include "Command.h"
-#include "timestamp.h"
+#include "log_utility.h"
 #include "AvionicsBoard.h"
 #include "mock_payload_board.h"
 
@@ -39,8 +39,7 @@ Command::operation Command::get_operation()
 
 bool Command::acknowledge_command()
 {
-    timestamp();
-    Serial.println("Acknowledging command");
+    Log.traceln("Acknowledging command");
     return true;
 };
 
@@ -53,8 +52,7 @@ bool Command::acknowledge_command()
 
 bool Command::execute_command()
 {
-    timestamp();
-    Serial.print("Executing command");
+    Log.traceln("Executing command");
     return true;
 };
 
@@ -78,8 +76,7 @@ CommandUnknown::CommandUnknown()
 bool CommandUnknown::acknowledge_command()
 {
     auto status = Command::acknowledge_command();
-    timestamp();
-    Serial.println("Unknown");
+    Log.verboseln("Unknown");
     return status;
 };
 
@@ -91,7 +88,7 @@ bool CommandUnknown::acknowledge_command()
 bool CommandUnknown::execute_command()
 {
     Command::execute_command();
-    Serial.println(" Unknown");
+    Log.errorln("Unknown");
     return false;
 }
 
@@ -115,8 +112,7 @@ CommandInvalid::CommandInvalid()
 bool CommandInvalid::acknowledge_command()
 {
     auto status = Command::acknowledge_command();
-    timestamp();
-    Serial.println("Invalid");
+    Log.verboseln("Invalid");
     return status;
 };
 
@@ -128,7 +124,7 @@ bool CommandInvalid::acknowledge_command()
 bool CommandInvalid::execute_command()
 {
     Command::execute_command();
-    Serial.println(" Invalid");
+    Log.errorln("Invalid");
     return false;
 };
 
@@ -152,8 +148,7 @@ CommandNoOperate::CommandNoOperate()
 bool CommandNoOperate::acknowledge_command()
 {
     auto status = Command::acknowledge_command();
-    timestamp();
-    Serial.println("NoOperate");
+    Log.verboseln("NoOperate");
     return status;
 };
 
@@ -166,7 +161,7 @@ bool CommandNoOperate::acknowledge_command()
 bool CommandNoOperate::execute_command()
 {
     Command::execute_command();
-    Serial.println(" NoOperate");
+    Log.verboseln("NoOperate");
     return true;
 };
 
@@ -182,21 +177,21 @@ CommandPayComms::CommandPayComms()
 
 /**
  * @brief Acknowledge PayComms command
- * 
+ *
  */
 
 bool CommandPayComms::acknowledge_command()
 {
     auto status = Command::acknowledge_command();
-    timestamp();
-    Serial.println("PayComms");
+    Log.verboseln("PayComms");
     return status;
 };
 
-bool CommandPayComms::execute_command(){
+bool CommandPayComms::execute_command()
+{
 
     auto status = Command::execute_command();
-    Serial.println(" PayComms");
+    Log.verboseln("PayComms");
     extern MockPayloadBoard payload;
     return payload.tweet() && status;
 };
@@ -252,10 +247,7 @@ CommandBeaconSp::CommandBeaconSp(int seconds)
 bool CommandBeaconSp::acknowledge_command()
 {
     auto status = Command::acknowledge_command();
-    timestamp();
-    Serial.print("BeaconSp: ");
-    Serial.print(_seconds);
-    Serial.println(" seconds");
+    Log.verboseln("BeaconSp: %d seconds", _seconds);
     return status;
 };
 
@@ -269,7 +261,7 @@ bool CommandBeaconSp::acknowledge_command()
 bool CommandBeaconSp::execute_command()
 {
     auto status = Command::execute_command();
-    Serial.println(" BeaconSp");
+    Log.verboseln("BeaconSp");
     extern AvionicsBoard avionics;
     return avionics.set_beacon_interval(_seconds) && status;
 };
@@ -308,20 +300,8 @@ CommandSetClock::CommandSetClock(time_value time)
 bool CommandSetClock::acknowledge_command()
 {
     auto status = Command::acknowledge_command();
-    timestamp();
-    Serial.print("SetClock: ");
-    Serial.print("Year: ");
-    Serial.print(_time.year);
-    Serial.print(" Month: ");
-    Serial.print(_time.month);
-    Serial.print(" Day: ");
-    Serial.print(_time.day);
-    Serial.print(" Hour: ");
-    Serial.print(_time.hour);
-    Serial.print(" Minute: ");
-    Serial.print(_time.minute);
-    Serial.print(" Second: ");
-    Serial.println(_time.second);
+    Log.verboseln("SetClock: Year: %d Month: %d Day: %d Hour: %d Minute %d Second %d",
+                  _time.year, _time.month, _time.day, _time.hour, _time.minute, _time.second);
     return status;
 }
 
@@ -336,7 +316,7 @@ bool CommandSetClock::execute_command()
 {
     // Adjust UTC offset (in hours) according to time zone, noting daylight savings time
     auto status = Command::execute_command();
-    Serial.println(" SetClock");
+    Log.verboseln("SetClock");
     const auto utc_offset{4};
     extern AvionicsBoard avionics;
     DateTime utc_time = DateTime(_time.year, _time.month, _time.day, _time.hour, _time.minute, _time.second) + TimeSpan(0, 4, 0, 0);
