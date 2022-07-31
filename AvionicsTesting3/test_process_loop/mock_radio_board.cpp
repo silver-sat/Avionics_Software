@@ -82,3 +82,9 @@ Command *MockRadioBoard::get_command()
 
     return _command_queue[_command_index++ % COMMAND_QUEUE_SIZE];
 };
+
+bool MockRadioBoard::send_message(Message message)
+{
+    Log.noticeln("Sending message %s", message.get_message().c_str());
+    return true;
+};

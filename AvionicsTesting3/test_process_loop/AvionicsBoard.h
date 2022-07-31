@@ -81,12 +81,12 @@ public:
     int get_second();
 
     /**
-     * @brief Get the epoch
+     * @brief Get the timestamp
      *
-     * @return unsigned long epoch
+     * @return String timestamp
      */
 
-    unsigned long get_epoch();
+    String get_timestamp();
 
     /**
      * @brief Set the external realtime clock

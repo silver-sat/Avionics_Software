@@ -11,6 +11,8 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
+#include <Arduino.h>
+
 class Message
 {
 public:

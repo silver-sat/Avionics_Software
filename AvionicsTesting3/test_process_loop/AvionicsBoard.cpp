@@ -166,6 +166,11 @@ int AvionicsBoard::get_second()
     return _external_rtc.now().second();
 };
 
+String AvionicsBoard::get_timestamp()
+{
+    return _external_rtc.now().timestamp();
+};
+
 /**
  * @brief Set beacon interval
  *

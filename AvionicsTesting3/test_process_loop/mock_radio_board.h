@@ -12,6 +12,7 @@
 #define MOCK_RADIO_BOARD_H
 
 #include "beacon.h"
+#include "Message.h"
 #include "CommandFactory.h"
 
 #define COMMAND_QUEUE_SIZE 15
@@ -52,6 +53,13 @@ public:
 
     Command *get_command();
 
+    /**
+     * @brief Send message
+     * 
+     */
+
+    bool send_message(Message message);
+
 private:
     unsigned long _last_command_time{0};
     unsigned long _command_interval{10 * 1000 * 1000};
@@ -65,22 +73,23 @@ private:
     CommandPayComms pc{};
     CommandPicTimes pt1 = CommandPicTimes({2023, 1, 1, 10, 10, 30});
     CommandPicTimes pt2 = CommandPicTimes({2023, 1, 1, 10, 15, 30});
+    CommandReportT rt{};
     size_t _command_index{COMMAND_QUEUE_SIZE};
     Command *_command_queue[COMMAND_QUEUE_SIZE] = {
         &sc1,
-        &pt1,
+        &no,
         &bs2,
+        &rt,
+        &rt,
+        &sc2,
+        &rt,
+        &rt,
         &no,
         &no,
-        &no,
-        &no,
+        &sc1,
+        &rt,
         &pc,
-        &pt2,
-        &no,
-        &no,
-        &no,
-        &pc,
-        &no,
+        &rt,
         &no,
     };
 };
