@@ -26,7 +26,8 @@ public:
         acknowledgement,
         response,
         local_command,
-        invalid
+        beacon, // reserved
+        invalid,
     };
 
     /**

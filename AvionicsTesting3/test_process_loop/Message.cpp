@@ -30,18 +30,21 @@ String Message::get_message()
     switch (_header)
     {
     case acknowledgement:
-        return "A" + _content;
+        return "ACK" + _content;
 
     case response:
-        return "R" + _content;
+        return "RES" + _content;
 
     case local_command:
-        return "L" + _content;
+        return "LOC" + _content;
+
+    case beacon:
+        return "INV" + _content;
 
     case invalid:
-        return "I" + _content;
+        return "INV" + _content;
 
     default:
-        return "I" + _content;
+        return "INV" + _content;
     }
 };
