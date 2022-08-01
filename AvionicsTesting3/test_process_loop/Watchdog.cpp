@@ -33,16 +33,30 @@ Watchdog::Watchdog()
 
 bool Watchdog::trigger()
 {
-    if (digitalRead(WDRESET_PIN) == LOW)
+    auto reset = digitalRead(WDRESET_PIN);
+    if (reset != _reset_pin_state)
     {
-        Log.fatalln("Reset received");
+        if (!reset)
+        {
+            Log.fatalln("Reset pin changed state to %d ", reset);
+            if (_force_reset)
+            {
+                _force_reset = false;
+            };
+        }
+        else
+        {
+            Log.infoln("Reset pin changed state to %d ", reset);
+        };
+        _reset_pin_state = reset;
     };
+
     if (!_force_reset && (micros() - _last_action_time > WATCHDOG_LOWER_BOUNDARY))
     {
         digitalWrite(WDTICK_PIN, HIGH);
         digitalWrite(WDTICK_PIN, LOW);
         _last_action_time = micros();
-    }
+    };
     return true;
 };
 

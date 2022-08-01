@@ -54,6 +54,7 @@ private:
   const int _wdreset_pin = WDRESET_PIN;
   unsigned long _last_action_time{0};
   bool _force_reset{false};
+  int _reset_pin_state{};
 };
 
 #endif

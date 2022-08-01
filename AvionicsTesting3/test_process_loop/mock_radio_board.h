@@ -95,19 +95,19 @@ private:
     size_t _command_index{COMMAND_QUEUE_SIZE};
     Command *_command_queue[COMMAND_QUEUE_SIZE] = {
         &sc1,
-        &wd,
+        &rt,
         &bs2,
+        &wd,
         &no,
         &pt1,
         &no,
-        &wd,
-        &no,
         &no,
         &pc,
         &ts,
-        &no,
+        &pc,
         &ts,
         &pc,
+        &no,
         &no,
     };
 };
