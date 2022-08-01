@@ -2,7 +2,7 @@
  * @file mock_radio_board.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Mock Radio Board for Avionics testing
- * @version 1.0.1
+ * @version 1.0.2
  * @date 2022-07-24
  *
  *
@@ -24,9 +24,9 @@ public:
     ~MockRadioBoard();
 
     /**
-     * @brief initialize the connection
+     * @brief initialize the Radio Board
      *
-     * @return true connection established
+     * @return true successful
      * @return false error
      */
 
@@ -40,8 +40,30 @@ public:
     void send_beacon(Beacon beacon);
 
     /**
+     * @brief Process commands
+     *
+     * @return true no command or successful
+     * @return false error
+     */
+
+    bool check_command();
+
+    /**
+     * @brief Send message
+     *
+     * @return true successful
+     * @return false error
+     */
+
+    bool send_message(Message message);
+
+private:
+
+    /**
      * @brief Check for command
      *
+     * @return true no command or successful
+     * @return false error
      */
 
     bool command_received();
@@ -49,16 +71,10 @@ public:
     /**
      * @brief Get command
      *
+     * @return next command to process
      */
 
     Command *get_command();
-
-    /**
-     * @brief Send message
-     * 
-     */
-
-    bool send_message(Message message);
 
 private:
     unsigned long _last_command_time{0};
@@ -74,22 +90,23 @@ private:
     CommandPicTimes pt1 = CommandPicTimes({2023, 1, 1, 10, 10, 30});
     CommandPicTimes pt2 = CommandPicTimes({2023, 1, 1, 10, 15, 30});
     CommandReportT rt{};
+    CommandTweeSlee ts{};
     size_t _command_index{COMMAND_QUEUE_SIZE};
     Command *_command_queue[COMMAND_QUEUE_SIZE] = {
         &sc1,
-        &no,
+        &rt,
         &bs2,
-        &rt,
-        &rt,
-        &sc2,
-        &rt,
-        &rt,
+        &no,
+        &pt1,
         &no,
         &no,
-        &sc1,
-        &rt,
+        &no,
+        &no,
         &pc,
-        &rt,
+        &ts,
+        &no,
+        &ts,
+        &pc,
         &no,
     };
 };

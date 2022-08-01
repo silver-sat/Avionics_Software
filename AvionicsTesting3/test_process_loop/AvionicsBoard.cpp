@@ -2,7 +2,7 @@
  * @file AvionicsBoard.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Test Avionics Board for SilverSat
- * @version 1.0.0
+ * @version 1.0.1
  * @date 2022-07-29
  *
  *
@@ -89,18 +89,6 @@ bool AvionicsBoard::set_external_rtc(DateTime time)
 };
 
 /**
- * @brief Return external realtime clock status
- *
- * @return true clock is set
- * @return false clock is not set
- */
-
-bool AvionicsBoard::get_external_rtc_is_set()
-{
-    return _external_rtc_is_set;
-};
-
-/**
  * @brief Return external realtime clock year
  *
  * @return int year
@@ -108,7 +96,16 @@ bool AvionicsBoard::get_external_rtc_is_set()
 
 int AvionicsBoard::get_year()
 {
-    return _external_rtc.now().year();
+    if (_external_rtc_is_set)
+    {
+
+        return _external_rtc.now().year();
+    }
+    else
+    {
+        Log.error("get_year: external realtime clock not set");
+        return _future_invalid_date.year();
+    }
 };
 
 /**
@@ -119,7 +116,16 @@ int AvionicsBoard::get_year()
 
 int AvionicsBoard::get_month()
 {
-    return _external_rtc.now().month();
+    if (_external_rtc_is_set)
+    {
+
+        return _external_rtc.now().month();
+    }
+    else
+    {
+        Log.error("get_month: external realtime clock not set");
+        return _future_invalid_date.month();
+    }
 };
 
 /**
@@ -130,7 +136,16 @@ int AvionicsBoard::get_month()
 
 int AvionicsBoard::get_day()
 {
-    return _external_rtc.now().day();
+    if (_external_rtc_is_set)
+    {
+
+        return _external_rtc.now().day();
+    }
+    else
+    {
+        Log.error("get_day: external realtime clock not set");
+        return _future_invalid_date.day();
+    }
 };
 
 /**
@@ -141,7 +156,16 @@ int AvionicsBoard::get_day()
 
 int AvionicsBoard::get_hour()
 {
-    return _external_rtc.now().hour();
+    if (_external_rtc_is_set)
+    {
+
+        return _external_rtc.now().hour();
+    }
+    else
+    {
+        Log.error("get_hour: external realtime clock not set");
+        return _future_invalid_date.hour();
+    }
 };
 
 /**
@@ -152,7 +176,16 @@ int AvionicsBoard::get_hour()
 
 int AvionicsBoard::get_minute()
 {
-    return _external_rtc.now().minute();
+    if (_external_rtc_is_set)
+    {
+
+        return _external_rtc.now().minute();
+    }
+    else
+    {
+        Log.error("get_minute: external realtime clock not set");
+        return _future_invalid_date.minute();
+    }
 };
 
 /**
@@ -163,11 +196,31 @@ int AvionicsBoard::get_minute()
 
 int AvionicsBoard::get_second()
 {
-    return _external_rtc.now().second();
+    if (_external_rtc_is_set)
+    {
+
+        return _external_rtc.now().second();
+    }
+    else
+    {
+        Log.error("get_second: external realtime clock not set");
+        return _future_invalid_date.second();
+    }
 };
 
 String AvionicsBoard::get_timestamp()
 {
+        if (_external_rtc_is_set)
+    {
+
+        return _external_rtc.now().timestamp();
+    }
+    else
+    {
+        Log.error("get_timestamp: external realtime clock not set");
+        return _future_invalid_date.timestamp();
+    }
+
     return _external_rtc.now().timestamp();
 };
 
@@ -192,7 +245,7 @@ bool AvionicsBoard::set_beacon_interval(int seconds)
  * @return false error
  */
 
-bool AvionicsBoard::beacon()
+bool AvionicsBoard::check_beacon()
 {
     if (micros() - _last_beacon_time > _beacon_interval)
     {
@@ -230,10 +283,10 @@ bool AvionicsBoard::set_picture_time(DateTime time)
 
 bool AvionicsBoard::check_photo()
 {
-    if (_external_rtc.now() >= _picture_time)
+    if (_external_rtc_is_set && (_external_rtc.now() >= _picture_time))
     {
-        Log.traceln("Photo time reached");
-        _picture_time = _future_photo_date;
+        Log.traceln("Photo time reached %s", get_timestamp().c_str());
+        _picture_time = _future_invalid_date;
         extern MockPayloadBoard payload;
         payload.photo();
     };

@@ -55,6 +55,15 @@ public:
      */
     bool check_shutdown();
 
+    /**
+     * @brief End payload session
+     *
+     * @return true successful
+     * @return false error
+     */
+
+    bool end_activity();
+
 private:
     /**
      * @brief Power down Payload board

@@ -2,7 +2,7 @@
  * @file AvionicsBoard.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Test Avionics Board for SilverSat
- * @version 1.0.0
+ * @version 1.0.1
  * @date 2022-07-29
  *
  *
@@ -99,15 +99,6 @@ public:
     bool set_external_rtc(DateTime time);
 
     /**
-     * @brief Return external realtime clock status
-     *
-     * @return true clock is set
-     * @return false clock is not set
-     */
-
-    bool get_external_rtc_is_set();
-
-    /**
      * @brief Set beacon interval
      *
      * @param seconds
@@ -124,7 +115,7 @@ public:
      * @return false error
      */
 
-    bool beacon();
+    bool check_beacon();
 
     /**
      * @brief Set the time for the next payload photo
@@ -144,12 +135,12 @@ public:
     bool check_photo();
 
 private:
-    const DateTime _future_photo_date = DateTime(2050, 1, 1, 12, 0, 0);
+    const DateTime _future_invalid_date = DateTime(2050, 1, 1, 12, 0, 0);
     RTC_PCF8523 _external_rtc{};
     bool _external_rtc_is_set{false};
     unsigned long _beacon_interval{2 * 60 * 1000 * 1000}; // 2 minutes
     unsigned long _last_beacon_time{0};
-    DateTime _picture_time{_future_photo_date};
+    DateTime _picture_time{_future_invalid_date};
 };
 
 #endif

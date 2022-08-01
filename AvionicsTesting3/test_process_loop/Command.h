@@ -172,6 +172,8 @@ class CommandTweeSlee : public Command
 {
 public:
     CommandTweeSlee();
+    bool acknowledge_command() override;
+    bool execute_command() override;
 };
 
 /**

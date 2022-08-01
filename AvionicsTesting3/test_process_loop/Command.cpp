@@ -42,7 +42,9 @@ Command::operation Command::get_operation()
 bool Command::acknowledge_command()
 {
     Log.traceln("Acknowledging command");
-    return true;
+    auto message = Message(Message::acknowledgement, "");
+    extern MockRadioBoard radio;
+    return radio.send_message(message);
 };
 
 /**
@@ -210,7 +212,7 @@ CommandReportT::CommandReportT()
 
 /**
  * @brief Acknowledge ReportT command
- * 
+ *
  */
 
 bool CommandReportT::acknowledge_command()
@@ -226,8 +228,8 @@ bool CommandReportT::execute_command()
     Log.verboseln("ReportT");
     extern AvionicsBoard avionics;
     extern MockRadioBoard radio;
-    auto message = Message(Message::acknowledgement, avionics.get_timestamp());
-    return radio.send_message(message);
+    auto message = Message(Message::response, avionics.get_timestamp());
+    return radio.send_message(message) && status;
 };
 
 /**
@@ -237,7 +239,38 @@ bool CommandReportT::execute_command()
 
 CommandTweeSlee::CommandTweeSlee()
 {
-    _action = Command::twee_slee;
+    _action = CommandTweeSlee::twee_slee;
+};
+
+/**
+ * @brief Acknowledge TweeSlee command
+ *
+ * @return true
+ * @return false
+ */
+
+bool CommandTweeSlee::acknowledge_command()
+{
+    auto status = Command::acknowledge_command();
+    Log.verboseln("TweeSlee");
+    extern MockRadioBoard radio;
+    auto message = Message(Message::local_command, "STOP");
+    return radio.send_message(message) && status;
+};
+
+/**
+ * @brief Execute TweeSlee command
+ *
+ * @return true
+ * @return false
+ */
+
+bool CommandTweeSlee::execute_command()
+{
+    auto status = Command::execute_command();
+    Log.verboseln("TweeSlee");
+    extern MockPayloadBoard payload;
+    return payload.end_activity() && status;
 };
 
 /**
@@ -320,7 +353,7 @@ bool CommandPicTimes::acknowledge_command()
 
 /**
  * @brief Execute PicTimes command
- * 
+ *
  * @return true successful
  * @return false error
  */
