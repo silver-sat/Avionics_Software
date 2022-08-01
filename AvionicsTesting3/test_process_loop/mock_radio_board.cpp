@@ -94,7 +94,7 @@ bool MockRadioBoard::check_command()
 
 bool MockRadioBoard::send_message(Message message)
 {
-    Log.noticeln("Sending message %s", message.get_message().c_str());
+    Log.noticeln("Sending message: %s", message.get_message().c_str());
     return true;
 };
 
