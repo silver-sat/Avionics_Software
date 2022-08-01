@@ -2,7 +2,7 @@
  * @file mock_radio_board.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Mock Radio Board for Avionics testing
- * @version 1.0.1
+ * @version 1.0.2
  * @date 2022-07-24
  *
  *
@@ -32,8 +32,10 @@ MockRadioBoard::~MockRadioBoard(){
 };
 
 /**
- * @brief initialize the connection
+ * @brief initialize the Radio Board
  *
+ * @return true successful
+ * @return false error
  */
 
 bool MockRadioBoard::begin()
@@ -45,6 +47,8 @@ bool MockRadioBoard::begin()
 /**
  * @brief Send beacon
  *
+ * @return true successful
+ * @return false error
  */
 
 void MockRadioBoard::send_beacon(Beacon beacon)
@@ -53,8 +57,52 @@ void MockRadioBoard::send_beacon(Beacon beacon)
 };
 
 /**
+ * @brief Process commands
+ *
+ * @return true no command or successful
+ * @return false error
+ */
+
+bool MockRadioBoard::check_command()
+{
+    if (command_received())
+    {
+        auto command = get_command();
+        Log.traceln("Command received: %d", command->get_operation());
+        command->acknowledge_command();
+        Log.traceln("Command acknowledged");
+        if (command->execute_command())
+        {
+            Log.traceln("Command executed");
+            return true;
+        }
+        else
+        {
+            Log.errorln("Command failed");
+            return false;
+        };
+    };
+    return true;
+};
+
+/**
+ * @brief Send message
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool MockRadioBoard::send_message(Message message)
+{
+    Log.noticeln("Sending message %s", message.get_message().c_str());
+    return true;
+};
+
+/**
  * @brief Check for command
  *
+ * @return true command available
+ * @return false no command available
  */
 
 bool MockRadioBoard::command_received()
@@ -64,6 +112,8 @@ bool MockRadioBoard::command_received()
 
 /**
  * @brief Get command
+ *
+ * @return next command to process
  *
  */
 
@@ -79,12 +129,5 @@ Command *MockRadioBoard::get_command()
     // _command_ready = true;
     // return true;
 
-
     return _command_queue[_command_index++ % COMMAND_QUEUE_SIZE];
-};
-
-bool MockRadioBoard::send_message(Message message)
-{
-    Log.noticeln("Sending message %s", message.get_message().c_str());
-    return true;
 };

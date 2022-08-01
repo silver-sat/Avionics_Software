@@ -21,7 +21,6 @@
  *
  */
 
-
 #include "log_utility.h"
 #include "beacon.h"
 #include "Command.h"
@@ -148,30 +147,15 @@ void loop()
 
     // Send beacon
 
-    avionics.beacon();
+    avionics.check_beacon();
 
-    // Receive command
+    // Process command
 
-    if (radio.command_received())
-    {
-        auto command = radio.get_command();
-        Log.traceln("Command received: %d", command->get_operation());
-        command->acknowledge_command();
-        Log.traceln("Command acknowledged");
-        if (command->execute_command())
-        {
-            Log.traceln("Command executed");
-        }
-        else
-        {
-            Log.errorln("Command failed");
-        };
-    }
+    radio.check_command();
 
     // Take photo
 
     avionics.check_photo();
-
 
     // Shut off Payload Board if ready to sleep
 

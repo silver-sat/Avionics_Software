@@ -101,13 +101,11 @@ bool MockPayloadBoard::check_shutdown()
 {
     if (_payload_active && (micros() - _last_activity_time > _action_duration))
     {
-        Log.traceln("Payload activity ending");
-        _payload_active = false;
-        _power_down_signal = true;
+        end_activity();
     }
     if (power_down_signal_is_set())
     {
-        Log.verboseln("Received power off signal from payload");
+        Log.verboseln("Powering down Payload");
         // todo: verify timing of shutdown signal reset
         _power_down_signal = false;
         power_down();
@@ -121,6 +119,21 @@ bool MockPayloadBoard::check_shutdown()
  * @return true successful
  * @return false error
  */
+
+/**
+ * @brief End payload session
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool MockPayloadBoard::end_activity()
+{
+    Log.traceln("Payload activity ending");
+    _payload_active = false;
+    _power_down_signal = true;
+    return true;
+};
 
 bool MockPayloadBoard::power_down()
 {
