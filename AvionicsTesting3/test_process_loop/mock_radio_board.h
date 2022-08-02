@@ -93,23 +93,24 @@ private:
     CommandTweeSlee ts{};
     CommandWatchdog wd{};
     CommandGetPicTimes gt{};
+    CommandGetTelemetry gy{};
     size_t _command_index{COMMAND_QUEUE_SIZE};
     Command *_command_queue[COMMAND_QUEUE_SIZE] = {
-        &sc1,
-        &bs2,
-        &rt,
-        &gt,
+        &gy,
         &no,
-        &pt1,
-        &gt,
-        &gt,
-        &gt,
-        &pt2,
-        &gt,
-        &gt,
-        &gt,
+        &gy,
         &no,
+        &gy,
         &no,
+        &gy,
+        &no,
+        &gy,
+        &no,
+        &gy,
+        &no,
+        &gy,
+        &no,
+        &gy,
     };
 };
 

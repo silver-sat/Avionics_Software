@@ -60,12 +60,24 @@ bool AvionicsBoard::begin()
     // Enable external realtime clock
 
     Log.traceln("Initializing external realtime clock");
+
     // todo: replace with Avionics Board external realtime clock
+
     _external_rtc.begin();
+
+    if (!_external_rtc.begin())
+    {
+        Log.errorln("Cannot initialize realtime clock");
+        delay(500);
+        trigger_watchdog(); // must occur within window
+    };
     Log.traceln("External realtime clock initialized");
 
-    // Initialize connection to IMU
-    // imu.begin();
+    // Initialize Inertial Management Unit
+
+    Log.traceln("Initializing inertial management unit");
+    _imu.begin();
+    Log.traceln("Inertial measurement unit initialized");
 
     // Initialize connection to FRAM
 
@@ -275,7 +287,7 @@ bool AvionicsBoard::check_beacon()
 {
     if (micros() - _last_beacon_time > _beacon_interval)
     {
-        // todo: get power statusu
+        // todo: get power status
         // todo: get payload status
         // todo: format beacon message
         Beacon message{Beacon::excellent, Beacon::good, Beacon::fair, Beacon::poor, Beacon::critical};
@@ -319,7 +331,24 @@ bool AvionicsBoard::check_photo()
     return true;
 };
 
+/**
+ * @brief Get picture times
+ *
+ * @return String picture time
+ */
+
 String AvionicsBoard::get_pic_times()
 {
     return _picture_time.timestamp();
 };
+
+/**
+ * @brief Get telemetry
+ *
+ * @return String telemetry
+ */
+
+String AvionicsBoard::get_telemetry()
+{
+    return _imu.get_acceleration() + _imu.get_rotation() + _imu.get_temperature();
+}
