@@ -154,6 +154,15 @@ public:
 
     bool check_photo();
 
+    /**
+     * @brief Get scheduled picture times
+     * 
+     * @return true successful
+     * @return false error
+     */
+
+    String get_pic_times();
+
 private:
     RTC_PCF8523 _external_rtc{};
     bool _external_rtc_is_set{false};
@@ -161,7 +170,7 @@ private:
     unsigned long _beacon_interval{2 * 60 * 1000 * 1000}; // 2 minutes
     unsigned long _last_beacon_time{0};
     const DateTime _future_invalid_date = DateTime(2050, 1, 1, 12, 0, 0);
-    DateTime _picture_time{_future_invalid_date};
+    DateTime _picture_time{_future_invalid_date}; // todo: sorted queue of picture times
 };
 
 #endif

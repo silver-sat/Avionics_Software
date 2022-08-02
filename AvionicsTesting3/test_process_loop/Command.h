@@ -237,4 +237,17 @@ private:
     time_value _time;
 };
 
+/**
+ * @brief get_pic_times command
+ * 
+ */
+
+class CommandGetPicTimes : public Command
+{
+public:
+    CommandGetPicTimes();
+    bool acknowledge_command() override;
+    bool execute_command() override;
+};
+
 #endif
