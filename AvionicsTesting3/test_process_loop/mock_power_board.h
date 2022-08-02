@@ -11,11 +11,13 @@
 #ifndef MOCK_POWER_BOARD_H
 #define MOCK_POWER_BOARD_H
 
+#include <Arduino.h>
+
 class MockPowerBoard
 {
 public:
     MockPowerBoard();
-    
+
     enum PowerStatus
     {
         excellent,
@@ -31,7 +33,10 @@ public:
      *
      */
 
-    PowerStatus get_power_status();
+    String get_power_status();
+
+private:
+    PowerStatus _power_status{fair};
 };
 
 #endif

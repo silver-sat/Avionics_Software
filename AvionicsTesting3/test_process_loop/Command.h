@@ -255,6 +255,7 @@ public:
  * 
  */
 
+
 class CommandGetTelemetry : public Command
 {
 public:
@@ -263,4 +264,16 @@ public:
     bool execute_command() override;
 };
 
+/**
+ * @brief get_power command
+ * 
+ */
+
+class CommandGetPower : public Command
+{
+public:
+    CommandGetPower();
+    bool acknowledge_command() override;
+    bool execute_command() override;
+};
 #endif

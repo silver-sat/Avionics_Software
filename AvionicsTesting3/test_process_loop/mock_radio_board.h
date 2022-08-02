@@ -94,18 +94,19 @@ private:
     CommandWatchdog wd{};
     CommandGetPicTimes gt{};
     CommandGetTelemetry gy{};
+    CommandGetPower gp{};
     size_t _command_index{COMMAND_QUEUE_SIZE};
     Command *_command_queue[COMMAND_QUEUE_SIZE] = {
         &gy,
-        &no,
+        &gp,
         &gy,
-        &no,
+        &gp,
         &gy,
-        &no,
+        &gp,
         &gy,
-        &no,
+        &gp,
         &gy,
-        &no,
+        &gp,
         &gy,
         &no,
         &gy,

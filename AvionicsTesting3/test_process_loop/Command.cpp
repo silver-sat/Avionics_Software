@@ -12,6 +12,7 @@
 #include "Message.h"
 #include "log_utility.h"
 #include "AvionicsBoard.h"
+#include "mock_power_board.h"
 #include "mock_radio_board.h"
 #include "mock_payload_board.h"
 
@@ -511,6 +512,47 @@ bool CommandGetTelemetry::execute_command()
     extern AvionicsBoard avionics;
     extern MockRadioBoard radio;
     auto message = Message(Message::response, avionics.get_telemetry());
+    return radio.send_message(message) && status;
+
+};
+/**
+ * @brief Construct a new Command Get Power:: Command Get Power object
+ * 
+ */
+
+CommandGetPower::CommandGetPower()
+{
+    _action = Command::get_power;
+};
+
+/**
+ * @brief Acknowledge GetPower command
+ * 
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandGetPower::acknowledge_command()
+{
+    auto status = Command::acknowledge_command();
+    Log.verboseln("GetPower");
+    return status;
+};
+
+/**
+ * @brief  Execute GetPower command
+ * 
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandGetPower::execute_command()
+{
+    auto status = Command::execute_command();
+    Log.verboseln("GetPower");
+    extern MockPowerBoard power;
+    extern MockRadioBoard radio;
+    auto message = Message(Message::response, power.get_power_status());
     return radio.send_message(message) && status;
 
 };
