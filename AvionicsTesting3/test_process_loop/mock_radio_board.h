@@ -58,7 +58,6 @@ public:
     bool send_message(Message message);
 
 private:
-
     /**
      * @brief Check for command
      *
@@ -97,15 +96,17 @@ private:
     CommandGetPower gp{};
     CommandGetPhotos gc{};
     CommandGetComms co{};
+    CommandGetBeaconInterval bi{};
     size_t _command_index{COMMAND_QUEUE_SIZE};
     Command *_command_queue[COMMAND_QUEUE_SIZE] = {
         &co,
         &sc1,
         &pt1,
         &bs2,
+        &bi,
         &pt2,
-        &co,
-        &gc,
+        &bs1,
+        &bi,
         &gc,
         &gc,
         &gc,
@@ -113,7 +114,6 @@ private:
         &gc,
         &pc,
         &gc,
-        &co,
     };
 };
 

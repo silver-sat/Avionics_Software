@@ -597,6 +597,7 @@ bool CommandGetPhotos::execute_command()
     return radio.send_message(message) && status;
 
 };
+
 /**
  * @brief Construct a new Command Get Comms:: Command Get Comms object
  * 
@@ -635,6 +636,48 @@ bool CommandGetComms::execute_command()
     extern MockPayloadBoard payload;
     extern MockRadioBoard radio;
     auto message = Message(Message::local_command, "GetComms");
+    return radio.send_message(message) && status;
+
+};
+
+/**
+ * @brief Construct a new Command Get Beacon Interval:: Command Get Beacon Interval object
+ * 
+ */
+
+CommandGetBeaconInterval::CommandGetBeaconInterval()
+{
+    _action = Command::get_beacon_interval;
+};
+
+/**
+ * @brief Acknowledge GetBeaconInterval command
+ * 
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandGetBeaconInterval::acknowledge_command()
+{
+    auto status = Command::acknowledge_command();
+    Log.verboseln("GetBeaconInterval");
+    return status;
+};
+
+/**
+ * @brief  Execute GetBeaconInterval command
+ * 
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandGetBeaconInterval::execute_command()
+{
+    auto status = Command::execute_command();
+    Log.verboseln("GetBeaconInterval");
+    extern AvionicsBoard avionics;
+    extern MockRadioBoard radio;
+    auto message = Message(Message::response, String(avionics.get_beacon_interval()).c_str());
     return radio.send_message(message) && status;
 
 };

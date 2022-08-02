@@ -158,8 +158,7 @@ public:
     /**
      * @brief Get scheduled picture times
      *
-     * @return true successful
-     * @return false error
+     * @return String number of pictures available
      */
 
     String get_pic_times();
@@ -167,11 +166,18 @@ public:
     /**
      * @brief Get telemetry
      *
-     * @return true successful
-     * @return false error
+     * @return String telemetry data
      */
 
     String get_telemetry();
+
+    /**
+     * @brief Get the beacon interval
+     * 
+     * @return String interval
+     */
+    
+    String get_beacon_interval();
 
 private:
     RTC_PCF8523 _external_rtc{};
