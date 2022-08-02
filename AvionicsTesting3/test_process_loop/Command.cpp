@@ -597,3 +597,44 @@ bool CommandGetPhotos::execute_command()
     return radio.send_message(message) && status;
 
 };
+/**
+ * @brief Construct a new Command Get Comms:: Command Get Comms object
+ * 
+ */
+
+CommandGetComms::CommandGetComms()
+{
+    _action = Command::get_comms;
+};
+
+/**
+ * @brief Acknowledge GetComms command
+ * 
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandGetComms::acknowledge_command()
+{
+    auto status = Command::acknowledge_command();
+    Log.verboseln("GetComms");
+    return status;
+};
+
+/**
+ * @brief  Execute GetComms command
+ * 
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandGetComms::execute_command()
+{
+    auto status = Command::execute_command();
+    Log.verboseln("GetComms");
+    extern MockPayloadBoard payload;
+    extern MockRadioBoard radio;
+    auto message = Message(Message::local_command, "GetComms");
+    return radio.send_message(message) && status;
+
+};

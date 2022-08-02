@@ -290,4 +290,16 @@ public:
     bool execute_command() override;
 };
 
+/**
+ * @brief get_comms command
+ * 
+ */
+
+class CommandGetComms : public Command
+{
+public:
+    CommandGetComms();
+    bool acknowledge_command() override;
+    bool execute_command() override;
+};
 #endif
