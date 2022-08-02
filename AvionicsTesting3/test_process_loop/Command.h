@@ -250,4 +250,17 @@ public:
     bool execute_command() override;
 };
 
+/**
+ * @brief get_telemetry command
+ * 
+ */
+
+class CommandGetTelemetry : public Command
+{
+public:
+    CommandGetTelemetry();
+    bool acknowledge_command() override;
+    bool execute_command() override;
+};
+
 #endif

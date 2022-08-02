@@ -12,6 +12,7 @@
 #define AVIONICSBOARD_H
 
 #include "Watchdog.h"
+#include "IMU.h"
 #include <RTClib.h>
 
 class AvionicsBoard
@@ -156,12 +157,21 @@ public:
 
     /**
      * @brief Get scheduled picture times
-     * 
+     *
      * @return true successful
      * @return false error
      */
 
     String get_pic_times();
+
+    /**
+     * @brief Get telemetry
+     *
+     * @return true successful
+     * @return false error
+     */
+
+    String get_telemetry();
 
 private:
     RTC_PCF8523 _external_rtc{};
@@ -171,6 +181,7 @@ private:
     unsigned long _last_beacon_time{0};
     const DateTime _future_invalid_date = DateTime(2050, 1, 1, 12, 0, 0);
     DateTime _picture_time{_future_invalid_date}; // todo: sorted queue of picture times
+    IMU _imu;
 };
 
 #endif

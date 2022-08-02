@@ -472,3 +472,45 @@ bool CommandGetPicTimes::execute_command()
     return radio.send_message(message) && status;
 
 };
+
+/**
+ * @brief Construct a new Command Get Telemetry:: Command Get Telemetry object
+ * 
+ */
+
+CommandGetTelemetry::CommandGetTelemetry()
+{
+    _action = Command::get_telemetry;
+};
+
+/**
+ * @brief Acknowledge GetTelemetry command
+ * 
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandGetTelemetry::acknowledge_command()
+{
+    auto status = Command::acknowledge_command();
+    Log.verboseln("GetTelemetry");
+    return status;
+};
+
+/**
+ * @brief  Execute GetTelemetry command
+ * 
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandGetTelemetry::execute_command()
+{
+    auto status = Command::execute_command();
+    Log.verboseln("GetTelemetry");
+    extern AvionicsBoard avionics;
+    extern MockRadioBoard radio;
+    auto message = Message(Message::response, avionics.get_telemetry());
+    return radio.send_message(message) && status;
+
+};
