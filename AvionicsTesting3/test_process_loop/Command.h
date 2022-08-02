@@ -302,4 +302,18 @@ public:
     bool acknowledge_command() override;
     bool execute_command() override;
 };
+
+/**
+ * @brief get_beacon_interval command
+ * 
+ */
+
+class CommandGetBeaconInterval : public Command
+{
+public:
+    CommandGetBeaconInterval();
+    bool acknowledge_command() override;
+    bool execute_command() override;
+};
+
 #endif

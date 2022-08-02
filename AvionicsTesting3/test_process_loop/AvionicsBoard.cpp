@@ -352,3 +352,8 @@ String AvionicsBoard::get_telemetry()
 {
     return _imu.get_acceleration() + _imu.get_rotation() + _imu.get_temperature();
 }
+
+String AvionicsBoard::get_beacon_interval()
+{
+    return String(_beacon_interval / 1000 / 1000);
+}
