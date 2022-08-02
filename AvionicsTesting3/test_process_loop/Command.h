@@ -276,4 +276,18 @@ public:
     bool acknowledge_command() override;
     bool execute_command() override;
 };
+
+/**
+ * @brief get_photos command
+ * 
+ */
+
+class CommandGetPhotos : public Command
+{
+public:
+    CommandGetPhotos();
+    bool acknowledge_command() override;
+    bool execute_command() override;
+};
+
 #endif

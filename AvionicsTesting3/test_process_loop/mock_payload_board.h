@@ -64,6 +64,13 @@ public:
 
     bool end_activity();
 
+    /**
+     * @brief Get the photo count
+     * 
+     */
+
+    int get_photo_count();
+
 private:
     /**
      * @brief Power down Payload board
@@ -112,6 +119,7 @@ private:
     unsigned long _action_duration{};
     bool _payload_active{false};
     bool _power_down_signal{true};
+    int _photo_count{0};
 };
 
 #endif

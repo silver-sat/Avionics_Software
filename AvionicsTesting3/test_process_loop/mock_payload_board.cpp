@@ -166,6 +166,10 @@ bool MockPayloadBoard::set_mode_comms()
 {
     // todo: set appropriate GPIO pins for tweet
     Log.verboseln("Payload mode set to tweet");
+    if (_photo_count > 0)
+    {
+        _photo_count -= 1;
+    }
     return true;
 };
 
@@ -179,6 +183,7 @@ bool MockPayloadBoard::set_mode_photo()
 {
     // todo: set appropriate GPIO pins for photo
     Log.verboseln("Payload mode set to photo");
+    _photo_count += 1;
     return true;
 };
 
@@ -193,3 +198,10 @@ bool MockPayloadBoard::power_down_signal_is_set()
 {
     return _power_down_signal;
 };
+
+int MockPayloadBoard::get_photo_count()
+{
+    // todo: provide I2C interface to FRAM to access photo count
+
+    return _photo_count;
+}

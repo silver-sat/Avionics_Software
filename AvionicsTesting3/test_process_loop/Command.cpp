@@ -556,3 +556,44 @@ bool CommandGetPower::execute_command()
     return radio.send_message(message) && status;
 
 };
+/**
+ * @brief Construct a new Command Get Photos:: Command Get Photos object
+ * 
+ */
+
+CommandGetPhotos::CommandGetPhotos()
+{
+    _action = Command::get_photos;
+};
+
+/**
+ * @brief Acknowledge GetPhotos command
+ * 
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandGetPhotos::acknowledge_command()
+{
+    auto status = Command::acknowledge_command();
+    Log.verboseln("GetPhotos");
+    return status;
+};
+
+/**
+ * @brief  Execute GetPhotos command
+ * 
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandGetPhotos::execute_command()
+{
+    auto status = Command::execute_command();
+    Log.verboseln("GetPhotos");
+    extern MockPayloadBoard payload;
+    extern MockRadioBoard radio;
+    auto message = Message(Message::response, String(payload.get_photo_count()).c_str());
+    return radio.send_message(message) && status;
+
+};

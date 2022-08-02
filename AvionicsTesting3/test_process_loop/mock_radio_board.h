@@ -95,23 +95,24 @@ private:
     CommandGetPicTimes gt{};
     CommandGetTelemetry gy{};
     CommandGetPower gp{};
+    CommandGetPhotos gc{};
     size_t _command_index{COMMAND_QUEUE_SIZE};
     Command *_command_queue[COMMAND_QUEUE_SIZE] = {
-        &gy,
-        &gp,
-        &gy,
-        &gp,
-        &gy,
-        &gp,
-        &gy,
-        &gp,
-        &gy,
-        &gp,
-        &gy,
-        &no,
-        &gy,
-        &no,
-        &gy,
+        &sc1,
+        &pt1,
+        &bs2,
+        &pt2,
+        &gc,
+        &gc,
+        &gc,
+        &gc,
+        &gc,
+        &gc,
+        &gc,
+        &pc,
+        &gc,
+        &gc,
+        &gc,
     };
 };
 
