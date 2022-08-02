@@ -430,3 +430,45 @@ bool CommandSetClock::execute_command()
     DateTime time = DateTime(_time.year, _time.month, _time.day, _time.hour, _time.minute, _time.second);
     return avionics.set_external_rtc(time) && status;
 }
+
+/**
+ * @brief Construct a new Command Get Pic Times:: Command Get Pic Times object
+ * 
+ */
+
+CommandGetPicTimes::CommandGetPicTimes()
+{
+    _action = Command::get_pic_times;
+};
+
+/**
+ * @brief Acknowledge GetPicTimes command
+ * 
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandGetPicTimes::acknowledge_command()
+{
+    auto status = Command::acknowledge_command();
+    Log.verboseln("GetPicTimes");
+    return status;
+};
+
+/**
+ * @brief  Execute GetPicTimes command
+ * 
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandGetPicTimes::execute_command()
+{
+    auto status = Command::execute_command();
+    Log.verboseln("GetPicTimes");
+    extern AvionicsBoard avionics;
+    extern MockRadioBoard radio;
+    auto message = Message(Message::response, avionics.get_pic_times());
+    return radio.send_message(message) && status;
+
+};

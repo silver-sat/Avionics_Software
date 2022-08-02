@@ -92,21 +92,22 @@ private:
     CommandReportT rt{};
     CommandTweeSlee ts{};
     CommandWatchdog wd{};
+    CommandGetPicTimes gt{};
     size_t _command_index{COMMAND_QUEUE_SIZE};
     Command *_command_queue[COMMAND_QUEUE_SIZE] = {
         &sc1,
-        &rt,
         &bs2,
-        &wd,
+        &rt,
+        &gt,
         &no,
         &pt1,
-        &no,
-        &no,
-        &pc,
-        &ts,
-        &pc,
-        &ts,
-        &pc,
+        &gt,
+        &gt,
+        &gt,
+        &pt2,
+        &gt,
+        &gt,
+        &gt,
         &no,
         &no,
     };

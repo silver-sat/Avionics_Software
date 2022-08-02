@@ -318,3 +318,8 @@ bool AvionicsBoard::check_photo()
     };
     return true;
 };
+
+String AvionicsBoard::get_pic_times()
+{
+    return _picture_time.timestamp();
+};
