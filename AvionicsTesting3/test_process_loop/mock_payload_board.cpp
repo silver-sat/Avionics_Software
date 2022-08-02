@@ -105,7 +105,7 @@ bool MockPayloadBoard::check_shutdown()
     }
     if (power_down_signal_is_set())
     {
-        Log.verboseln("Powering down Payload");
+        Log.verboseln("Powering down payload");
         // todo: verify timing of shutdown signal reset
         _power_down_signal = false;
         power_down();

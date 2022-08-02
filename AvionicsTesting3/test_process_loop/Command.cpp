@@ -245,8 +245,8 @@ CommandTweeSlee::CommandTweeSlee()
 /**
  * @brief Acknowledge TweeSlee command
  *
- * @return true
- * @return false
+ * @return true successful
+ * @return false error
  */
 
 bool CommandTweeSlee::acknowledge_command()
@@ -261,8 +261,8 @@ bool CommandTweeSlee::acknowledge_command()
 /**
  * @brief Execute TweeSlee command
  *
- * @return true
- * @return false
+ * @return true successful
+ * @return false error
  */
 
 bool CommandTweeSlee::execute_command()
@@ -281,6 +281,28 @@ bool CommandTweeSlee::execute_command()
 CommandWatchdog::CommandWatchdog()
 {
     _action = Command::watchdog;
+};
+
+/**
+ * @brief Acknowledge Watchdog command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandWatchdog::acknowledge_command()
+{
+    auto status = Command::acknowledge_command();
+    Log.verboseln("Watchdog");
+    return status;
+};
+
+bool CommandWatchdog::execute_command()
+{
+    auto status = Command::execute_command();
+    Log.verboseln("Watchdog");
+    extern AvionicsBoard avionics;
+    return avionics.watchdog_force_reset() && status;
 };
 
 /**

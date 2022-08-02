@@ -19,17 +19,17 @@
  *
  */
 
-AvionicsBoard::AvionicsBoard()
-{
-    RTC_PCF8523 rtc;
-    _external_rtc = rtc;
+AvionicsBoard::AvionicsBoard(){
 
     /**
      * @brief Create interface objects
      *
      */
 
-    // Watchdog watchdog{};
+    // RTC_PCF8523 rtc;
+    // _external_rtc = rtc;
+    // Watchdog watchdog;
+    // _watchdog = watchdog;
     // IMU imu{};
     // FRAM fram{};
     // BusSwitch bus_switch;
@@ -70,6 +70,32 @@ bool AvionicsBoard::begin()
     // Initialize connection to FRAM
 
     return true;
+};
+
+/**
+ * @brief Trigger the watchdog
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool AvionicsBoard::trigger_watchdog()
+{
+    _watchdog.trigger();
+    return true;
+};
+
+/**
+ * @brief Force the watchdog to reset the processor
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool AvionicsBoard::watchdog_force_reset()
+{
+    Log.fatalln("Forcing watchdog reset");
+    return _watchdog.set_force_reset();
 };
 
 /**
@@ -210,7 +236,7 @@ int AvionicsBoard::get_second()
 
 String AvionicsBoard::get_timestamp()
 {
-        if (_external_rtc_is_set)
+    if (_external_rtc_is_set)
     {
 
         return _external_rtc.now().timestamp();

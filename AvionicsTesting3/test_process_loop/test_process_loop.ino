@@ -35,15 +35,8 @@
  */
 
 constexpr unsigned long separation_delay{5 * 1000 * 1000}; // todo: adjust to 45 minutes for full test
-constexpr unsigned long watchdog_lower_boundary{23500};    // 23.5 milliseconds
+const unsigned long separation_time{0};
 
-/**
- * @brief timers and flags
- *
- */
-
-unsigned long separation_time{0};
-unsigned long watchdog_reset_time{0};
 // int power_status_time{0};
 // int imu_colletion_time{0};
 // int power_adequate_time{0};
@@ -80,6 +73,7 @@ void setup()
     Serial.begin(115200);
     while (!Serial && !Serial.available())
     {
+        avionics.trigger_watchdog();
     };
 
     // Log utility for test reporting
@@ -118,14 +112,11 @@ void setup()
     Log.noticeln("Beginning separation delay");
     while (micros() - separation_time < separation_delay)
     {
+        avionics.trigger_watchdog();
     };
     Log.noticeln("Ending separation delay");
 
     // deploy antenna
-
-    // Start the watchdog timer
-    // watchdog.trigger();
-    // watchdog_reset_time = micros();
 
     Log.noticeln("Setup complete, starting process loop");
 };
@@ -137,13 +128,9 @@ void setup()
 
 void loop()
 {
-    // Trigger the watchdog if past lower boundary
+    // Trigger the watchdog
 
-    if (micros() - watchdog_reset_time > watchdog_lower_boundary)
-    {
-        // watchdog.trigger();
-        watchdog_reset_time = micros();
-    };
+    avionics.trigger_watchdog();
 
     // Send beacon
 

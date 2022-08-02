@@ -185,6 +185,8 @@ class CommandWatchdog : public Command
 {
 public:
     CommandWatchdog();
+    bool acknowledge_command() override;
+    bool execute_command() override;
 };
 
 /**

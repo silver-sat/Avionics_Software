@@ -91,22 +91,23 @@ private:
     CommandPicTimes pt2 = CommandPicTimes({2023, 1, 1, 10, 15, 30});
     CommandReportT rt{};
     CommandTweeSlee ts{};
+    CommandWatchdog wd{};
     size_t _command_index{COMMAND_QUEUE_SIZE};
     Command *_command_queue[COMMAND_QUEUE_SIZE] = {
         &sc1,
         &rt,
         &bs2,
+        &wd,
         &no,
         &pt1,
         &no,
         &no,
-        &no,
-        &no,
         &pc,
         &ts,
-        &no,
+        &pc,
         &ts,
         &pc,
+        &no,
         &no,
     };
 };

@@ -11,6 +11,7 @@
 #ifndef AVIONICSBOARD_H
 #define AVIONICSBOARD_H
 
+#include "Watchdog.h"
 #include <RTClib.h>
 
 class AvionicsBoard
@@ -31,6 +32,34 @@ public:
      */
 
     bool begin();
+
+    /**
+     * @brief Trigger the watchdog
+     *
+     * @return true successful
+     * @return false error
+     */
+
+    bool trigger_watchdog();
+
+    /**
+     * @brief Force the watchdog to reset the processor
+     *
+     * @return true successful
+     * @return false error
+     */
+
+    bool watchdog_force_reset();
+
+    /**
+     * @brief Set the external realtime clock
+     *
+     * @param time new time setting
+     * @return true successful
+     * @return false error
+     */
+
+    bool set_external_rtc(DateTime time);
 
     /**
      * @brief Return external realtime clock year
@@ -89,16 +118,6 @@ public:
     String get_timestamp();
 
     /**
-     * @brief Set the external realtime clock
-     *
-     * @param time new time setting
-     * @return true successful
-     * @return false error
-     */
-
-    bool set_external_rtc(DateTime time);
-
-    /**
      * @brief Set beacon interval
      *
      * @param seconds
@@ -132,14 +151,16 @@ public:
      * @return true successful
      * @return false error
      */
+
     bool check_photo();
 
 private:
-    const DateTime _future_invalid_date = DateTime(2050, 1, 1, 12, 0, 0);
     RTC_PCF8523 _external_rtc{};
     bool _external_rtc_is_set{false};
+    Watchdog _watchdog{};
     unsigned long _beacon_interval{2 * 60 * 1000 * 1000}; // 2 minutes
     unsigned long _last_beacon_time{0};
+    const DateTime _future_invalid_date = DateTime(2050, 1, 1, 12, 0, 0);
     DateTime _picture_time{_future_invalid_date};
 };
 
