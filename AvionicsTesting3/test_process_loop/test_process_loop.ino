@@ -89,7 +89,7 @@ void setup()
 
     Log.noticeln("Initializing Avionics Board");
     avionics.begin();
-    Log.noticeln("Avionics Board initialized");
+    Log.noticeln("Avionics Board initialization completed");
 
     // Initialize Power Board
 
@@ -99,13 +99,13 @@ void setup()
 
     Log.noticeln("Initializing mock Radio Board");
     radio.begin();
-    Log.noticeln("Mock Radio Board initialized");
+    Log.noticeln("Mock Radio Board initialization completed");
 
     // Initialize Payload Board
 
     Log.noticeln("Initializing mock Payload Board");
     payload.begin();
-    Log.noticeln("Mock Payload Board initialized");
+    Log.noticeln("Mock Payload Board initialization completed");
 
     // wait for separation delay
 

@@ -2,7 +2,7 @@
  * @file CommandFactory.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Generate the appropriate command object
- * @version 1.0.0
+ * @version 1.1.0
  * @date 2022-07-28
  *
  *
@@ -25,33 +25,33 @@ public:
      *
      */
 
-    CommandFactory();
+    CommandFactory(String tokens[], size_t token_count);
 
-    /**
-     * @brief Construct a new Command Factory object
-     *
-     * @param command operation
-     */
+    // /**
+    //  * @brief Construct a new Command Factory object
+    //  *
+    //  * @param command operation
+    //  */
 
-    CommandFactory(String command);
+    // CommandFactory(String command);
 
-    /**
-     * @brief Construct a new Command Factory object
-     *
-     * @param command operation
-     * @param value integer parameter
-     */
+    // /**
+    //  * @brief Construct a new Command Factory object
+    //  *
+    //  * @param command operation
+    //  * @param value integer parameter
+    //  */
 
-    CommandFactory(String command, int value);
+    // CommandFactory(String command, int value);
 
-    /**
-     * @brief Construct a new Command Factory object
-     *
-     * @param command operation
-     * @param time time value
-     */
+    // /**
+    //  * @brief Construct a new Command Factory object
+    //  *
+    //  * @param command operation
+    //  * @param time time value
+    //  */
 
-    CommandFactory(String command, time_value time);
+    // CommandFactory(String command, time_value time);
 
     /**
      * @brief Destroy the Command Factory object
@@ -70,6 +70,8 @@ public:
 
 private:
     Command *_command;
+    const size_t _token_limit {10};
+
 };
 
 #endif

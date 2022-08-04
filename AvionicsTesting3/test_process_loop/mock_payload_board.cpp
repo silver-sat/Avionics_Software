@@ -31,8 +31,8 @@ MockPayloadBoard::MockPayloadBoard(){
 bool MockPayloadBoard::begin()
 {
 
+    Log.noticeln("Payload Board initializing");
     power_down();
-    Log.verboseln("Payload initialized");
     return true;
 };
 
