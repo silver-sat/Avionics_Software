@@ -83,7 +83,7 @@ void setup()
     Log.begin(LOG_LEVEL_VERBOSE, &Serial);
     Log.setShowLevel(false);
 
-    Log.noticeln("Testing SilverSat Process Loop");
+    Log.noticeln("Initializing SilverSat Process Loop Test");
 
     // Initialize Avionics Board
 
@@ -118,7 +118,7 @@ void setup()
 
     // deploy antenna
 
-    Log.noticeln("Setup complete, starting process loop");
+    Log.noticeln("Process Loop Test initialization completed");
 };
 
 /**
