@@ -71,13 +71,13 @@ bool AvionicsBoard::begin()
         delay(500);
         trigger_watchdog(); // must occur within window
     };
-    Log.traceln("External realtime clock initialized");
+    Log.traceln("External realtime clock initialization completed");
 
     // Initialize Inertial Management Unit
 
     Log.traceln("Initializing inertial management unit");
     _imu.begin();
-    Log.traceln("Inertial measurement unit initialized");
+    Log.traceln("Inertial measurement unit initialization completed");
 
     // Initialize connection to FRAM
 
@@ -255,7 +255,7 @@ String AvionicsBoard::get_timestamp()
     }
     else
     {
-        Log.error("get_timestamp: external realtime clock not set");
+        Log.errorln("External realtime clock not set");
         return _future_invalid_date.timestamp();
     }
 

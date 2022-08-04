@@ -16,92 +16,124 @@
  *
  */
 
-CommandFactory::CommandFactory(){
-
-};
-
-/**
- * @brief Construct a new Command Factory:: Command Factory object with only an operation
- *
- * @param command operation
- */
-
-CommandFactory::CommandFactory(String command)
+CommandFactory::CommandFactory(String tokens[], size_t token_count)
 {
-    if (command == "NoOperate")
+
+    switch (token_count)
     {
-        _command = new CommandNoOperate();
+
+    case 0:
+
+    {
+        if (tokens[0] == "NoOperate")
+        {
+            _command = new CommandNoOperate();
+        }
+        else if (tokens[0] == "Invalid")
+        {
+            _command = new CommandInvalid();
+        }
+        else if (tokens[0] == "Unknown")
+        {
+            _command = new CommandUnknown();
+        }
+        else if (tokens[0] == "PayComms")
+        {
+            _command = new CommandPayComms();
+        }
+        else if (tokens[0] == "ReportT")
+        {
+            _command = new CommandReportT();
+        }
+        else if (tokens[0] == "TweeSlee")
+        {
+            _command = new CommandTweeSlee();
+        }
+        else if (tokens[0] == "Watchdog")
+        {
+            _command = new CommandWatchdog();
+        }
+        else if (tokens[0] == "GetPicTimes")
+        {
+            _command = new CommandGetPicTimes();
+        }
+        else if (tokens[0] == "GetTelemetry")
+        {
+            _command = new CommandGetTelemetry();
+        }
+        else if (tokens[0] == "GetPower")
+        {
+            _command = new CommandGetPower();
+        }
+        else if (tokens[0] == "GetPhotos")
+        {
+            _command = new CommandGetPhotos();
+        }
+        else if (tokens[0] == "GetComms")
+        {
+            _command = new CommandGetComms();
+        }
+        else if (tokens[0] == "GetBeaconInterval")
+        {
+            _command = new CommandGetBeaconInterval();
+        }
+        else
+        {
+            _command = new CommandUnknown();
+        };
+        break;
     }
-    else if (command == "Invalid")
+    case 1:
     {
+
+        if (tokens[0] == "BeaconSp")
+        {
+            _command = new CommandBeaconSp(tokens[1].toInt());
+        }
+        else
+        {
+            _command = new CommandUnknown();
+        };
+        break;
+    }
+
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+
         _command = new CommandInvalid();
-    }
-    else if (command == "Unknown")
-    {
-        _command = new CommandUnknown();
-    }
-    else if (command == "PayComms")
-    {
-        _command = new CommandPayComms();
-    }
-    else if (command == "ReportT")
-    {
-        _command = new CommandReportT();
-    }
-    else if (command == "TweeSlee")
-    {
-        _command = new CommandTweeSlee();
-    }
-    else if (command == "Watchdog")
-    {
-        _command = new CommandWatchdog();
-    }
-    else
-    {
-        _command = new CommandInvalid();
-    };
-};
+        break;
 
-/**
- * @brief Construct a new Command Factory:: Command Factory object with an operation and integer parameter
- *
- * @param command operation
- * @param value integer parameter
- */
+    case 6:
 
-CommandFactory::CommandFactory(String command, int value)
+        if (tokens[0] == "PicTimes")
+        {
 
-{
-    if (command == "BeaconSp")
-    {
-        _command = new CommandBeaconSp(value);
-    }
-    else
-    {
-        _command = new CommandInvalid();
-    };
-};
+            _command = new CommandPicTimes({tokens[1].toInt(),
+                                            tokens[2].toInt(),
+                                            tokens[3].toInt(),
+                                            tokens[4].toInt(),
+                                            tokens[5].toInt(),
+                                            tokens[6].toInt()});
+        }
+        else if (tokens[0] == "SetClock")
+        {
+            _command = new CommandSetClock({tokens[1].toInt(),
+                                            tokens[2].toInt(),
+                                            tokens[3].toInt(),
+                                            tokens[4].toInt(),
+                                            tokens[5].toInt(),
+                                            tokens[6].toInt()});
+        }
+        else
+        {
+            _command = new CommandUnknown();
+        }
+        break;
 
-/**
- * @brief Construct a new Command Factory:: Command Factory object with an operation and a time value parameter
- *
- * @param command
- * @param time time value
- */
+    default:
 
-CommandFactory::CommandFactory(String command, time_value time)
-
-{
-    if (command == "PicTimes")
-    {
-        _command = new CommandPicTimes(time);
-    }
-    else if (command == "SetClock")
-    {
-        _command = new CommandSetClock(time);
-    }
-    else
-    {
         _command = new CommandInvalid();
     }
 };

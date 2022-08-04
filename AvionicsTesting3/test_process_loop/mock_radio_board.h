@@ -2,7 +2,7 @@
  * @file mock_radio_board.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Mock Radio Board for Avionics testing
- * @version 1.0.2
+ * @version 1.1.0
  * @date 2022-07-24
  *
  *
@@ -33,13 +33,6 @@ public:
     bool begin();
 
     /**
-     * @brief Send beacon
-     *
-     */
-
-    void send_beacon(Beacon beacon);
-
-    /**
      * @brief Process commands
      *
      * @return true no command or successful
@@ -48,16 +41,6 @@ public:
 
     bool check_command();
 
-    /**
-     * @brief Send message
-     *
-     * @return true successful
-     * @return false error
-     */
-
-    bool send_message(Message message);
-
-private:
     /**
      * @brief Check for command
      *
@@ -75,46 +58,79 @@ private:
 
     Command *get_command();
 
+    /**
+     * @brief Make a command
+     * 
+     * @param buffer input string
+     * @return true successful
+     * @return false error
+     */
+
+    bool make_command(String buffer);
+
+
+    /**
+     * @brief Send beacon
+     *
+     */
+
+    void send_beacon(Beacon beacon);
+
+
+    /**
+     * @brief Send message
+     *
+     * @return true successful
+     * @return false error
+     */
+
+    bool send_message(Message message);
+
 private:
-    unsigned long _last_command_time{0};
-    unsigned long _command_interval{10 * 1000 * 1000};
-    CommandSetClock sc1 = CommandSetClock({2023, 1, 1, 10, 10, 0});
-    CommandSetClock sc2 = CommandSetClock({2024, 1, 1, 10, 10, 0});
-    CommandNoOperate no{};
-    CommandBeaconSp bs1{10};
-    CommandBeaconSp bs2{20};
-    CommandUnknown un{};
-    CommandInvalid in{};
-    CommandPayComms pc{};
-    CommandPicTimes pt1 = CommandPicTimes({2023, 1, 1, 10, 10, 30});
-    CommandPicTimes pt2 = CommandPicTimes({2023, 1, 1, 10, 15, 30});
-    CommandReportT rt{};
-    CommandTweeSlee ts{};
-    CommandWatchdog wd{};
-    CommandGetPicTimes gt{};
-    CommandGetTelemetry gy{};
-    CommandGetPower gp{};
-    CommandGetPhotos gc{};
-    CommandGetComms co{};
-    CommandGetBeaconInterval bi{};
-    size_t _command_index{COMMAND_QUEUE_SIZE};
-    Command *_command_queue[COMMAND_QUEUE_SIZE] = {
-        &co,
-        &sc1,
-        &pt1,
-        &bs2,
-        &bi,
-        &pt2,
-        &bs1,
-        &bi,
-        &gc,
-        &gc,
-        &gc,
-        &gc,
-        &gc,
-        &pc,
-        &gc,
-    };
+    // unsigned long _last_command_time{0};
+    // unsigned long _command_interval{10 * 1000 * 1000};
+    // CommandSetClock sc1 = CommandSetClock({2023, 1, 1, 10, 10, 0});
+    // CommandSetClock sc2 = CommandSetClock({2024, 1, 1, 10, 10, 0});
+    // CommandNoOperate no{};
+    // CommandBeaconSp bs1{10};
+    // CommandBeaconSp bs2{20};
+    // CommandUnknown un{};
+    // CommandInvalid in{};
+    // CommandPayComms pc{};
+    // CommandPicTimes pt1 = CommandPicTimes({2023, 1, 1, 10, 10, 30});
+    // CommandPicTimes pt2 = CommandPicTimes({2023, 1, 1, 10, 15, 30});
+    // CommandReportT rt{};
+    // CommandTweeSlee ts{};
+    // CommandWatchdog wd{};
+    // CommandGetPicTimes gt{};
+    // CommandGetTelemetry gy{};
+    // CommandGetPower gp{};
+    // CommandGetPhotos gc{};
+    // CommandGetComms co{};
+    // CommandGetBeaconInterval bi{};
+    // size_t _command_index{COMMAND_QUEUE_SIZE};
+    // Command *_command_queue[COMMAND_QUEUE_SIZE] = {
+    //     &co,
+    //     &sc1,
+    //     &pt1,
+    //     &bs2,
+    //     &bi,
+    //     &pt2,
+    //     &bs1,
+    //     &bi,
+    //     &gc,
+    //     &gc,
+    //     &gc,
+    //     &gc,
+    //     &gc,
+    //     &pc,
+    //     &gc,
+    // };
+    String _buffer{};
+    bool _end_of_line{false};
+    const size_t _token_limit {10};
+    CommandFactory* _factory{};
+    Command* _command{};
 };
 
 #endif
