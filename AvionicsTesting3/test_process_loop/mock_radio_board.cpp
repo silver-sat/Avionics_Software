@@ -41,8 +41,21 @@ MockRadioBoard::~MockRadioBoard()
 
 bool MockRadioBoard::begin()
 {
-    Log.noticeln("Radio Board initializing");
+    Log.traceln("Radio Board initializing");
     return true;
+};
+
+/**
+ * @brief Notify radio board to deploy antenna
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool MockRadioBoard::deploy_antenna()
+{
+    auto message = Message(Message::local_command, "DeployAntenna");
+    return send_message(message);
 };
 
 /**
@@ -56,7 +69,6 @@ bool MockRadioBoard::check_command()
 {
     if (command_received())
     {
-        // auto command = get_command();
         Log.verboseln("Command code: %d", _command->get_operation());
         _command->acknowledge_command();
         Log.traceln("Command acknowledged");
@@ -83,7 +95,6 @@ bool MockRadioBoard::check_command()
 
 bool MockRadioBoard::command_received()
 {
-    // return (micros() - _last_command_time > _command_interval);
     while (Serial.available())
     {
         char character = Serial.read();
@@ -111,7 +122,7 @@ bool MockRadioBoard::command_received()
 };
 
 /**
- * @brief Get command
+ * @brief Make command object
  *
  * @return next command to process
  *
@@ -119,28 +130,19 @@ bool MockRadioBoard::command_received()
 
 bool ::MockRadioBoard::make_command(String buffer)
 {
-    // _last_command_time = micros();
-
-    // return true;
-
-    // return _command_queue[_command_index++ % COMMAND_QUEUE_SIZE];
-
     Log.traceln("Constructing new command");
 
     // destroy the last factory
 
-     if(_factory)
+    if (_factory)
     {
         delete _factory;
         _factory = NULL;
     }
 
-    // trim the buffer
+    // trim and tokenize the buffer
 
     _buffer.trim();
-
-    // tokenize the buffer
-
     String tokens[_token_limit]{};
     size_t token_index{0};
     for (auto buffer_index = 0; buffer_index < _buffer.length(); buffer_index++)
@@ -164,12 +166,6 @@ bool ::MockRadioBoard::make_command(String buffer)
 
     _command = (new CommandFactory(tokens, token_index))->get_command();
 
-    // auto factory = new CommandFactory("SetClock", {2023, 1, 1, 10, 10, 0});
-    // _command1 = factory->get_command();
-    // _command2 = &sc2;
-    // auto factory = new CommandFactory("BeaconSp", 10);
-    // _factory = factory;
-    // _command_ready = true;
     return true;
 };
 

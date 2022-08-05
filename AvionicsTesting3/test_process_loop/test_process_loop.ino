@@ -29,26 +29,8 @@
 #include "mock_payload_board.h"
 #include "mock_radio_board.h"
 
-/**
- * @brief constants
- *
- */
-
 constexpr unsigned long separation_delay{5 * 1000 * 1000}; // todo: adjust to 45 minutes for full test
 const unsigned long separation_time{0};
-
-// int power_status_time{0};
-// int imu_colletion_time{0};
-// int power_adequate_time{0};
-
-/**
- * @brief global data
- *
- */
-
-// sensors_event_t acceleration;
-// sensors_event_t gyroscope;
-// sensors_event_t temperature;
 
 /**
  * @brief Create the boards
@@ -68,7 +50,7 @@ MockPowerBoard power;
 void setup()
 
 {
-    // Serial connection for test reporting
+    // Initialize serial connection for test reporting
 
     Serial.begin(115200);
     while (!Serial && !Serial.available())
@@ -76,7 +58,7 @@ void setup()
         avionics.trigger_watchdog();
     };
 
-    // Log utility for test reporting
+    // Initialize log utility for test reporting
 
     Log.setPrefix(printPrefix);
     Log.setSuffix(printSuffix);
@@ -93,7 +75,9 @@ void setup()
 
     // Initialize Power Board
 
-    // power.begin();
+    Log.noticeln("Initializing Power Board");
+    power.begin();
+    Log.noticeln("Mock Power Board initialization completed");
 
     // Initialize Radio Board
 
@@ -117,6 +101,10 @@ void setup()
     Log.noticeln("Ending separation delay");
 
     // deploy antenna
+
+    Log.noticeln("Notifying radio board to deploy antenna");
+    radio.deploy_antenna();
+
 
     Log.noticeln("Process Loop Test initialization completed");
 };

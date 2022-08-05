@@ -555,7 +555,7 @@ bool CommandGetPower::execute_command()
     Log.verboseln("GetPower");
     extern MockPowerBoard power;
     extern MockRadioBoard radio;
-    auto message = Message(Message::response, power.get_power_status());
+    auto message = Message(Message::response, power.get_power_detail());
     return radio.send_message(message) && status;
 };
 /**
