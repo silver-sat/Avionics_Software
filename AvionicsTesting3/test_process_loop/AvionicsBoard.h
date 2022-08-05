@@ -188,6 +188,7 @@ private:
     const DateTime _future_invalid_date = DateTime(2050, 1, 1, 12, 0, 0);
     DateTime _picture_time{_future_invalid_date}; // todo: sorted queue of picture times
     IMU _imu;
+    String _call_sign {"?????"}; // todo: replace with call sign
 };
 
 #endif

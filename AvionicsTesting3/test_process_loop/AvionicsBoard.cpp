@@ -285,7 +285,7 @@ bool AvionicsBoard::set_beacon_interval(int seconds)
 
 bool AvionicsBoard::check_beacon()
 {
-    if (micros() - _last_beacon_time > _beacon_interval)
+    if ((micros() - _last_beacon_time > _beacon_interval) && (_beacon_interval > 0))
     {
         // todo: get power status
         // todo: get payload status
