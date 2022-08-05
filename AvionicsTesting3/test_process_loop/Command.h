@@ -60,7 +60,7 @@ public:
         get_photos,
         get_comms,
         get_beacon_interval,
-        sent_test_packet,
+        send_test_packet,
         unknown,
         invalid
     };
@@ -312,6 +312,14 @@ class CommandGetBeaconInterval : public Command
 {
 public:
     CommandGetBeaconInterval();
+    bool acknowledge_command() override;
+    bool execute_command() override;
+};
+
+class CommandSendTestPacket : public Command
+{
+    public:
+    CommandSendTestPacket();
     bool acknowledge_command() override;
     bool execute_command() override;
 };

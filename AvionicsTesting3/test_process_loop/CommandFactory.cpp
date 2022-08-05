@@ -18,125 +18,79 @@
 
 CommandFactory::CommandFactory(String tokens[], size_t token_count)
 {
-    // todo: refactor switch
-    switch (token_count)
+    if (tokens[0] == "BeaconSp")
     {
-
-    case 0:
-
-        if (tokens[0] == "NoOperate")
-        {
-            _command = new CommandNoOperate();
-        }
-        else if (tokens[0] == "Invalid")
-        {
-            _command = new CommandInvalid();
-        }
-        else if (tokens[0] == "Unknown")
-        {
-            _command = new CommandUnknown();
-        }
-        else if (tokens[0] == "PayComms")
-        {
-            _command = new CommandPayComms();
-        }
-        else if (tokens[0] == "ReportT")
-        {
-            _command = new CommandReportT();
-        }
-        else if (tokens[0] == "TweeSlee")
-        {
-            _command = new CommandTweeSlee();
-        }
-        else if (tokens[0] == "Watchdog")
-        {
-            _command = new CommandWatchdog();
-        }
-        else if (tokens[0] == "GetPicTimes")
-        {
-            _command = new CommandGetPicTimes();
-        }
-        else if (tokens[0] == "GetTelemetry")
-        {
-            _command = new CommandGetTelemetry();
-        }
-        else if (tokens[0] == "GetPower")
-        {
-            _command = new CommandGetPower();
-        }
-        else if (tokens[0] == "GetPhotos")
-        {
-            _command = new CommandGetPhotos();
-        }
-        else if (tokens[0] == "GetComms")
-        {
-            _command = new CommandGetComms();
-        }
-        else if (tokens[0] == "GetBeaconInterval")
-        {
-            _command = new CommandGetBeaconInterval();
-        }
-        else if (tokens[0] == "BeaconSp")
-        {
-            _command = new CommandInvalid(); // No parameter
-        }
-        else if (tokens[0] == "PicTimes")
-        {
-            _command = new CommandInvalid(); // No parameter
-        }
-        else if (tokens[0] == "SetClock")
-        {
-            _command = new CommandInvalid(); // No parameter
-        }
-
-        else
-        {
-            _command = new CommandUnknown();
-        };
-        break;
-
-    case 1:
-
-        if (tokens[0] == "BeaconSp")
+        if (token_count == 1)
         {
             _command = new CommandBeaconSp(tokens[1].toInt());
+            return;
         }
-        else if (tokens[0] == "PicTimes")
-        {
-            _command = new CommandInvalid(); // Wrong number of parameters        }
-        }
-        else if (tokens[0] == "SetClock")
-        {
-            _command = new CommandInvalid(); // Wrong number of parameters
-        }
-
         else
         {
-            _command = new CommandUnknown();
-        };
-        break;
-
-    case 2:
-    case 3:
-    case 4:
-    case 5:
-
-        _command = new CommandInvalid();
-        break;
-
-    case 6:
-
-        if (tokens[0] == "PicTimes")
+            _command = new CommandInvalid(); // Wrong number of parameters
+            return;
+        }
+    }
+    else if (tokens[0] == "PayComms")
+    {
+        if (token_count == 0)
         {
-
+            _command = new CommandPayComms();
+            return;
+        }
+        else
+        {
+            _command = new CommandInvalid(); // Wrong number of parameters
+            return;
+        }
+    }
+    else if (tokens[0] == "PicTimes")
+    {
+        if (token_count == 6)
+        {
             _command = new CommandPicTimes({tokens[1].toInt(),
                                             tokens[2].toInt(),
                                             tokens[3].toInt(),
                                             tokens[4].toInt(),
                                             tokens[5].toInt(),
                                             tokens[6].toInt()});
+            return;
         }
-        else if (tokens[0] == "SetClock")
+        else
+        {
+            _command = new CommandInvalid(); // Wrong number of parameters
+            return;
+        }
+    }
+    else if (tokens[0] == "ReportT")
+    {
+        if (token_count == 0)
+        {
+            _command = new CommandReportT();
+            return;
+        }
+        else
+        {
+            _command = new CommandInvalid(); // Wrong number of parameters
+            return;
+        }
+    }
+    else if (tokens[0] == "NoOperate")
+    {
+        if (token_count == 0)
+        {
+            _command = new CommandNoOperate();
+            return;
+        }
+        else
+        {
+            _command = new CommandInvalid(); // Wrong number of parameters
+            return;
+        }
+    }
+    else if (tokens[0] == "SetClock")
+    {
+        if (token_count = 6)
         {
             _command = new CommandSetClock({tokens[1].toInt(),
                                             tokens[2].toInt(),
@@ -144,22 +98,150 @@ CommandFactory::CommandFactory(String tokens[], size_t token_count)
                                             tokens[4].toInt(),
                                             tokens[5].toInt(),
                                             tokens[6].toInt()});
+            return;
         }
-        else if (tokens[0] == "BeaconSp")
-        {
-            _command = new CommandInvalid(); // Wrong number of parameters
-        }
-
         else
         {
+            _command = new CommandInvalid(); // Wrong number of parameters
+            return;
+        }
+    }
+    else if (tokens[0] == "TweeSlee")
+    {
+        if (token_count == 0)
+
+        {
+            _command = new CommandTweeSlee();
+            return;
+        }
+        else
+        {
+            _command = new CommandInvalid(); // Wrong number of parameters
+            return;
+        }
+    }
+    else if (tokens[0] == "Watchdog")
+    {
+        if (token_count == 0)
+        {
+            _command = new CommandWatchdog();
+            return;
+        }
+        else
+        {
+            _command = new CommandInvalid(); // Wrong number of parameters
+            return;
+        }
+    }
+    else if (tokens[0] == "GetPicTimes")
+    {
+        if (token_count == 0)
+        {
+            _command = new CommandGetPicTimes();
+            return;
+        }
+        else
+        {
+            _command = new CommandInvalid(); // Wrong number of parameters
+            return;
+        }
+    }
+    else if (tokens[0] == "GetTelemetry")
+    {
+        if (token_count == 0)
+        {
+            _command = new CommandGetTelemetry();
+            return;
+        }
+        else
+        {
+            _command = new CommandInvalid(); // Wrong number of parameters
+            return;
+        }
+    }
+    else if (tokens[0] == "GetPower")
+    {
+        if (token_count == 0)
+        {
+            _command = new CommandGetPower();
+            return;
+        }
+        else
+        {
+            _command = new CommandInvalid(); // Wrong number of parameters
+            return;
+        }
+    }
+    else if (tokens[0] == "GetPhotos")
+    {
+        if (token_count == 0)
+        {
+            _command = new CommandGetPhotos();
+            return;
+        }
+        else
+        {
+            _command = new CommandInvalid(); // Wrong number of parameters
+            return;
+        }
+    }
+    else if (tokens[0] == "GetComms")
+    {
+        if (token_count == 0)
+        {
+            _command = new CommandGetComms();
+            return;
+        }
+        else
+        {
+            _command = new CommandInvalid(); // Wrong number of parameters
+            return;
+        }
+    }
+    else if (tokens[0] == "GetBeaconInterval")
+    {
+        if (token_count == 0)
+        {
+            _command = new CommandGetBeaconInterval();
+            return;
+        }
+        else
+        {
+            _command = new CommandInvalid(); // Wrong number of parameters
+            return;
+        }
+    }
+    else if (tokens[0] == "SendTestPacket")
+    {
+        if (token_count == 0)
+        {
+            _command = new CommandSendTestPacket();
+            return;
+        }
+        else
+        {
+            _command = new CommandInvalid(); // Wrong number of parameters
+            return;
+        }
+    }
+    else if (tokens[0] == "Unknown")
+    {
+        if (token_count == 0)
+        {
             _command = new CommandUnknown();
-        };
-        break;
-
-    default:
-
+            return;
+        }
+        else
+        {
+            _command = new CommandInvalid(); // Wrong number of parameters
+            return;
+        }
+    }
+    else
+    {
         _command = new CommandInvalid();
-    };
+        return;
+    }
 };
 
 /**

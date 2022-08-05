@@ -256,7 +256,7 @@ String AvionicsBoard::get_timestamp()
     else
     {
         Log.errorln("External realtime clock not set");
-        return _future_invalid_date.timestamp();
+        return "ERROR";
     }
 
     return _external_rtc.now().timestamp();
