@@ -7,7 +7,7 @@
     4 August 2022
 """
 
-import serial
+from serial import serial
 
 port = serial.Serial(port="/dev/ttyACM0", baudrate=115200)
 

@@ -18,13 +18,12 @@
 
 CommandFactory::CommandFactory(String tokens[], size_t token_count)
 {
-
+    // todo: refactor switch
     switch (token_count)
     {
 
     case 0:
 
-    {
         if (tokens[0] == "NoOperate")
         {
             _command = new CommandNoOperate();
@@ -77,25 +76,45 @@ CommandFactory::CommandFactory(String tokens[], size_t token_count)
         {
             _command = new CommandGetBeaconInterval();
         }
+        else if (tokens[0] == "BeaconSp")
+        {
+            _command = new CommandInvalid(); // No parameter
+        }
+        else if (tokens[0] == "PicTimes")
+        {
+            _command = new CommandInvalid(); // No parameter
+        }
+        else if (tokens[0] == "SetClock")
+        {
+            _command = new CommandInvalid(); // No parameter
+        }
+
         else
         {
             _command = new CommandUnknown();
         };
         break;
-    }
+
     case 1:
-    {
 
         if (tokens[0] == "BeaconSp")
         {
             _command = new CommandBeaconSp(tokens[1].toInt());
         }
+        else if (tokens[0] == "PicTimes")
+        {
+            _command = new CommandInvalid(); // Wrong number of parameters        }
+        }
+        else if (tokens[0] == "SetClock")
+        {
+            _command = new CommandInvalid(); // Wrong number of parameters
+        }
+
         else
         {
             _command = new CommandUnknown();
         };
         break;
-    }
 
     case 2:
     case 3:
@@ -126,16 +145,21 @@ CommandFactory::CommandFactory(String tokens[], size_t token_count)
                                             tokens[5].toInt(),
                                             tokens[6].toInt()});
         }
+        else if (tokens[0] == "BeaconSp")
+        {
+            _command = new CommandInvalid(); // Wrong number of parameters
+        }
+
         else
         {
             _command = new CommandUnknown();
-        }
+        };
         break;
 
     default:
 
         _command = new CommandInvalid();
-    }
+    };
 };
 
 /**
