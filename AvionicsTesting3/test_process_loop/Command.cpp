@@ -234,7 +234,7 @@ bool CommandReportT::execute_command()
     {
         status = false;
     };
-    auto message = Message(Message::response, avionics.get_timestamp());
+    auto message = Message(Message::response, timestamp);
     return radio.send_message(message) && status;
 };
 
