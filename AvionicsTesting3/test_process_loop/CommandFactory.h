@@ -17,6 +17,7 @@
  * @brief Factory for Command objects
  *
  */
+
 class CommandFactory
 {
 public:
@@ -26,32 +27,6 @@ public:
      */
 
     CommandFactory(String tokens[], size_t token_count);
-
-    // /**
-    //  * @brief Construct a new Command Factory object
-    //  *
-    //  * @param command operation
-    //  */
-
-    // CommandFactory(String command);
-
-    // /**
-    //  * @brief Construct a new Command Factory object
-    //  *
-    //  * @param command operation
-    //  * @param value integer parameter
-    //  */
-
-    // CommandFactory(String command, int value);
-
-    // /**
-    //  * @brief Construct a new Command Factory object
-    //  *
-    //  * @param command operation
-    //  * @param time time value
-    //  */
-
-    // CommandFactory(String command, time_value time);
 
     /**
      * @brief Destroy the Command Factory object
@@ -70,8 +45,7 @@ public:
 
 private:
     Command *_command;
-    const size_t _token_limit {10};
-
+    const size_t _token_limit{10};
 };
 
 #endif

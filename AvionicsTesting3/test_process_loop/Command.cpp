@@ -229,6 +229,11 @@ bool CommandReportT::execute_command()
     Log.verboseln("ReportT");
     extern AvionicsBoard avionics;
     extern MockRadioBoard radio;
+    auto timestamp = avionics.get_timestamp();
+    if (timestamp == "ERROR")
+    {
+        status = false;
+    };
     auto message = Message(Message::response, avionics.get_timestamp());
     return radio.send_message(message) && status;
 };
@@ -434,7 +439,7 @@ bool CommandSetClock::execute_command()
 
 /**
  * @brief Construct a new Command Get Pic Times:: Command Get Pic Times object
- * 
+ *
  */
 
 CommandGetPicTimes::CommandGetPicTimes()
@@ -444,7 +449,7 @@ CommandGetPicTimes::CommandGetPicTimes()
 
 /**
  * @brief Acknowledge GetPicTimes command
- * 
+ *
  * @return true successful
  * @return false error
  */
@@ -458,7 +463,7 @@ bool CommandGetPicTimes::acknowledge_command()
 
 /**
  * @brief  Execute GetPicTimes command
- * 
+ *
  * @return true successful
  * @return false error
  */
@@ -471,12 +476,11 @@ bool CommandGetPicTimes::execute_command()
     extern MockRadioBoard radio;
     auto message = Message(Message::response, avionics.get_pic_times());
     return radio.send_message(message) && status;
-
 };
 
 /**
  * @brief Construct a new Command Get Telemetry:: Command Get Telemetry object
- * 
+ *
  */
 
 CommandGetTelemetry::CommandGetTelemetry()
@@ -486,7 +490,7 @@ CommandGetTelemetry::CommandGetTelemetry()
 
 /**
  * @brief Acknowledge GetTelemetry command
- * 
+ *
  * @return true successful
  * @return false error
  */
@@ -500,7 +504,7 @@ bool CommandGetTelemetry::acknowledge_command()
 
 /**
  * @brief  Execute GetTelemetry command
- * 
+ *
  * @return true successful
  * @return false error
  */
@@ -513,11 +517,10 @@ bool CommandGetTelemetry::execute_command()
     extern MockRadioBoard radio;
     auto message = Message(Message::response, avionics.get_telemetry());
     return radio.send_message(message) && status;
-
 };
 /**
  * @brief Construct a new Command Get Power:: Command Get Power object
- * 
+ *
  */
 
 CommandGetPower::CommandGetPower()
@@ -527,7 +530,7 @@ CommandGetPower::CommandGetPower()
 
 /**
  * @brief Acknowledge GetPower command
- * 
+ *
  * @return true successful
  * @return false error
  */
@@ -541,7 +544,7 @@ bool CommandGetPower::acknowledge_command()
 
 /**
  * @brief  Execute GetPower command
- * 
+ *
  * @return true successful
  * @return false error
  */
@@ -554,11 +557,10 @@ bool CommandGetPower::execute_command()
     extern MockRadioBoard radio;
     auto message = Message(Message::response, power.get_power_status());
     return radio.send_message(message) && status;
-
 };
 /**
  * @brief Construct a new Command Get Photos:: Command Get Photos object
- * 
+ *
  */
 
 CommandGetPhotos::CommandGetPhotos()
@@ -568,7 +570,7 @@ CommandGetPhotos::CommandGetPhotos()
 
 /**
  * @brief Acknowledge GetPhotos command
- * 
+ *
  * @return true successful
  * @return false error
  */
@@ -582,7 +584,7 @@ bool CommandGetPhotos::acknowledge_command()
 
 /**
  * @brief  Execute GetPhotos command
- * 
+ *
  * @return true successful
  * @return false error
  */
@@ -595,12 +597,11 @@ bool CommandGetPhotos::execute_command()
     extern MockRadioBoard radio;
     auto message = Message(Message::response, String(payload.get_photo_count()).c_str());
     return radio.send_message(message) && status;
-
 };
 
 /**
  * @brief Construct a new Command Get Comms:: Command Get Comms object
- * 
+ *
  */
 
 CommandGetComms::CommandGetComms()
@@ -610,7 +611,7 @@ CommandGetComms::CommandGetComms()
 
 /**
  * @brief Acknowledge GetComms command
- * 
+ *
  * @return true successful
  * @return false error
  */
@@ -624,7 +625,7 @@ bool CommandGetComms::acknowledge_command()
 
 /**
  * @brief  Execute GetComms command
- * 
+ *
  * @return true successful
  * @return false error
  */
@@ -637,12 +638,11 @@ bool CommandGetComms::execute_command()
     extern MockRadioBoard radio;
     auto message = Message(Message::local_command, "GetComms");
     return radio.send_message(message) && status;
-
 };
 
 /**
  * @brief Construct a new Command Get Beacon Interval:: Command Get Beacon Interval object
- * 
+ *
  */
 
 CommandGetBeaconInterval::CommandGetBeaconInterval()
@@ -652,7 +652,7 @@ CommandGetBeaconInterval::CommandGetBeaconInterval()
 
 /**
  * @brief Acknowledge GetBeaconInterval command
- * 
+ *
  * @return true successful
  * @return false error
  */
@@ -666,7 +666,7 @@ bool CommandGetBeaconInterval::acknowledge_command()
 
 /**
  * @brief  Execute GetBeaconInterval command
- * 
+ *
  * @return true successful
  * @return false error
  */
@@ -679,5 +679,37 @@ bool CommandGetBeaconInterval::execute_command()
     extern MockRadioBoard radio;
     auto message = Message(Message::response, String(avionics.get_beacon_interval()).c_str());
     return radio.send_message(message) && status;
+};
 
+/**
+ * @brief Construct a new Command Send Test Packet:: Command Send Test Packet object
+ *
+ */
+
+CommandSendTestPacket::CommandSendTestPacket()
+{
+    _action = Command::send_test_packet;
+};
+
+/**
+ * @brief Acknowledge SendTestPacket command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandSendTestPacket::acknowledge_command()
+{
+    auto status = Command::acknowledge_command();
+    Log.verboseln("SendTestPacket");
+    return status;
+};
+
+bool CommandSendTestPacket::execute_command()
+{
+    auto status = Command::execute_command();
+    Log.verboseln("SendTestPacket");
+    extern MockRadioBoard radio;
+    auto message = Message(Message::response, "TEST");
+    return radio.send_message(message) && status;
 };

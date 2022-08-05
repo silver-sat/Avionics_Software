@@ -17,11 +17,11 @@ port = serial.Serial(port="/dev/ttyACM0", baudrate=115200)
 # Validate the commands
 
 
-def execute_command(command_string, error_expected):
+def execute_command(command_string, error_expected, failure_expected):
 
     # Send the command
 
-    port.write((command_string+"\n").encode('ascii'))
+    port.write((command_string + "\n").encode("ascii"))
 
     # Collect the response
 
@@ -41,7 +41,9 @@ def execute_command(command_string, error_expected):
 
         assert not any(
             [
-                (item.level == "FATAL") | (item.level == "ERROR") | (item.level == "WARNING")
+                (item.level == "FATAL")
+                | (item.level == "ERROR")
+                | (item.level == "WARNING")
                 for item in log
             ]
         )
@@ -50,14 +52,20 @@ def execute_command(command_string, error_expected):
 
         assert any(
             [
-                (item.level == "FATAL") | (item.level == "ERROR") | (item.level == "WARNING")
+                (item.level == "FATAL")
+                | (item.level == "ERROR")
+                | (item.level == "WARNING")
                 for item in log
             ]
         )
 
-    # Verify command executed
+    # Verify command executed or failed
 
-    assert any([item.detail == "Command executed" for item in log])
+    if not failure_expected:
+        assert any([item.detail == "Command executed" for item in log])
+
+    else:
+        assert any([item.detail == "Command failed" for item in log])
 
 
 def test_commands():
@@ -68,33 +76,35 @@ def test_commands():
     while "Process Loop Test initialization completed" not in log_data:
         log_data = port.readline().decode("utf-8").strip()
 
-        print (log_data)
-
+        print(log_data)
 
     # Test the commands
 
+    # Format: command and parameters, error expected, failure expected
+
     commands = [
-        ["BeaconSp 20", False],
-        ["PayComms", False],
-        ["PicTimes 2022 12 10 10 10 0", False],
-        ["ReportT", True], # error: realtime clock not set
-        ["NoOperate", False],
-        ["SetClock 2022 8 6 10 10 0", False],
-        ["TweeSlee", False],
-        ["Watchdog", True],
-        ["GetPicTimes", False],
-        ["GetTelemetry", False],
-        ["GetPower", False],
-        ["GetPhotos", False],
-        ["GetComms", False],
-        ["GetBeaconInterval", False],
-        ["SendTestPacket", False],
-        ["Unknown", True],
-        ["Invalid", True],
+        ["BeaconSp 20", False, False],
+        ["PayComms", False, False],
+        ["PicTimes 2022 12 10 10 10 0", False, False],
+        ["ReportT", True, True],  # error: realtime clock not set
+        ["NoOperate", False, False],
+        ["SetClock 2022 8 6 10 10 0", False, False],
+        ["TweeSlee", False, False],
+        ["Watchdog", True, False],
+        ["GetPicTimes", False, False],
+        ["GetTelemetry", False, False],
+        ["GetPower", False, False],
+        ["GetPhotos", False, False],
+        ["GetComms", False, False],
+        ["GetBeaconInterval", False, False],
+        ["SendTestPacket", False, False],
+        ["Unknown", True, True],
+        ["Invalid", True, True],
     ]
 
     for command_pair in commands:
         execute_command(*command_pair)
+
 
 # Initialization if run as script
 
