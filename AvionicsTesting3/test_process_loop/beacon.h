@@ -55,7 +55,7 @@ public:
     String get_code();
 
 private:
-    // todo: convert call sign to Morse code ('.' '-')
+    // todo: update call sign if needed and use sign in Avionics Board
     String _call_sign{"..--.. ..--.. ..--.. ..--.. ..--.. "}; // this is "?????"
     String _message {};
 };
