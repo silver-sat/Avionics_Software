@@ -8,7 +8,7 @@
  *
  */
 
-#include "beacon.h"
+#include "Beacon.h"
 
 /**
  * @brief Convert board status to string

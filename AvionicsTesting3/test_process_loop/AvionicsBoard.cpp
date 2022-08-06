@@ -10,7 +10,7 @@
 
 #include "AvionicsBoard.h"
 #include "log_utility.h"
-#include "beacon.h"
+#include "Beacon.h"
 #include "mock_radio_board.h"
 #include "mock_payload_board.h"
 
