@@ -22,7 +22,7 @@
  */
 
 #include "log_utility.h"
-#include "beacon.h"
+#include "Beacon.h"
 #include "Command.h"
 #include "AvionicsBoard.h"
 #include "mock_power_board.h"

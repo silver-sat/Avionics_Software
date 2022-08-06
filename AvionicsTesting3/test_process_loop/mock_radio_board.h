@@ -11,7 +11,7 @@
 #ifndef MOCK_RADIO_BOARD_H
 #define MOCK_RADIO_BOARD_H
 
-#include "beacon.h"
+#include "Beacon.h"
 #include "Message.h"
 #include "CommandFactory.h"
 
