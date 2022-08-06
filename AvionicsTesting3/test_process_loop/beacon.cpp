@@ -2,7 +2,7 @@
  * @file beacon.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat beacon messages
- * @version 1.0.0
+ * @version 1.1.0
  * @date 2022-07-25
  *
  *
@@ -11,64 +11,58 @@
 #include "beacon.h"
 
 /**
- * @brief convert status to Morse code
+ * @brief Convert board status to string
  * 
- * @param status 
- * @return String 
+ * @param status status of a board
+ * @return String status character
  */
 
-String toMorse(Beacon::status status)
+String to_board_code(Beacon::status status)
 {
     switch (status)
     {
     case Beacon::excellent:
-        return ".- "; // "A"
+        return "A";
     case Beacon::good:
-        return "-... "; // "B"
+        return "B";
     case Beacon::fair:
-        return "-.-. "; // "C"
+        return "C";
     case Beacon::poor:
-        return "-.. "; // "D"
+        return "D";
     case Beacon::critical:
-        return "..-. "; // "F"
+        return "F";
     case Beacon::unknown:
-        return "..--.. "; // "?"
+        return "U";
     default:
-        return "..--.. "; // "?"
+        return "U";
     }
-};
+}
+
 /**
  * @brief Construct a new Beacon:: Beacon object
- * 
+ *
  * @param avionics status
  * @param payload status
  * @param power status
- * @param radio status
- * @param reserved 
  */
-Beacon::Beacon(
 
+Beacon::Beacon(
     status avionics,
     status payload,
-    status power,
-    status radio,
-    status reserved)
+    status power)
 {
 
-    _message = (_call_sign +
-                toMorse(avionics) +
-                toMorse(payload) +
-                toMorse(power) +
-                toMorse(radio) +
-                toMorse(reserved));
+    _message = (to_board_code(avionics) +
+                to_board_code(payload) +
+                to_board_code(power));
 };
 
 /**
- * @brief get the Morse code for the beacon
- * 
- * @return String 
+ * @brief get the message for the beacon
+ *
+ * @return String
  */
-String Beacon::get_code()
+String Beacon::get_message()
 {
     return _message;
 };

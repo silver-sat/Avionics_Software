@@ -2,7 +2,7 @@
  * @file beacon.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat beacon messages
- * @version 1.0.0
+ * @version 1.1.0
  * @date 2022-07-25
  *
  *
@@ -16,11 +16,10 @@
 class Beacon
 {
 public:
-
-/**
- * @brief board status
- * 
- */
+    /**
+     * @brief board status
+     *
+     */
     enum status
     {
         excellent,
@@ -31,33 +30,29 @@ public:
         unknown,
     };
 
-/**
- * @brief Construct a new Beacon object
- * 
- * @param avionics status
- * @param payload status
- * @param power status
- * @param radio status
- * @param reserved
- */
+    /**
+     * @brief Construct a new Beacon object
+     *
+     * @param avionics status
+     * @param payload status
+     * @param power status
+     */
+
     Beacon(
         status avionics,
         status payload,
-        status power,
-        status radio,
-        status reserved);
-
-/**
- * @brief Get the Morse code for the beacon
- * 
- * @return String call sign and status for each board
- */
-    String get_code();
+        status power);
+    
+    /**
+     * @brief Get the message for the beacon
+     *
+     * @return String status for each board
+     */
+    
+    String get_message();
 
 private:
-    // todo: update call sign if needed and use sign in Avionics Board
-    String _call_sign{"..--.. ..--.. ..--.. ..--.. ..--.. "}; // this is "?????"
-    String _message {};
+    String _message{};
 };
 
 #endif

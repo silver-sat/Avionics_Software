@@ -289,8 +289,7 @@ bool AvionicsBoard::check_beacon()
     {
         // todo: get power status
         // todo: get payload status
-        // todo: format beacon message
-        Beacon message{Beacon::excellent, Beacon::good, Beacon::fair, Beacon::poor, Beacon::critical};
+        Beacon message{Beacon::excellent, Beacon::unknown, Beacon::unknown};
         extern MockRadioBoard radio;
         radio.send_beacon(message);
         _last_beacon_time = micros();
