@@ -99,6 +99,7 @@ private:
     const size_t _token_limit{10};
     CommandFactory *_factory{};
     Command *_command{};
+    String _call_sign {"?????"}; // todo: replace with call sign
 };
 
 #endif

@@ -178,7 +178,7 @@ bool ::MockRadioBoard::make_command(String buffer)
 
 void MockRadioBoard::send_beacon(Beacon beacon)
 {
-    Log.noticeln("Transmitting beacon %s", beacon.get_code().c_str());
+    Log.noticeln("Transmitting beacon %s %s", _call_sign.c_str(), beacon.get_message().c_str());
 };
 
 /**
