@@ -2,7 +2,7 @@
  * @file AvionicsBoard.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Test Avionics Board for SilverSat
- * @version 1.0.1
+ * @version 1.0.2
  * @date 2022-07-29
  *
  *
@@ -19,22 +19,7 @@
  *
  */
 
-AvionicsBoard::AvionicsBoard(){
-
-    /**
-     * @brief Create interface objects
-     *
-     */
-
-    // RTC_PCF8523 rtc;
-    // _external_rtc = rtc;
-    // Watchdog watchdog;
-    // _watchdog = watchdog;
-    // IMU imu{};
-    // FRAM fram{};
-    // BusSwitch bus_switch;
-    // Create serial buffer as serial_buffer;
-};
+AvionicsBoard::AvionicsBoard(){};
 
 /**
  * @brief Initialize the Avionics Board
@@ -46,54 +31,73 @@ AvionicsBoard::AvionicsBoard(){
 bool AvionicsBoard::begin()
 {
     // Critical I2C
-    // Disable I2C non crit links
-    // busswitch.disable();
-    // pinMode(EN_EXT_I2C, OUTPUT);
-    // digitalWrite(EN_EXT_I2C, LOW);
 
-    // Disconnect from the Payload serial port
-    // serial_buffer.disable(payload);
+    Log.traceln("Initializing critical I2C bus");
+    Wire.begin();
+    Log.traceln("Critical I2C bus initialization completed");
 
-    // Connect to the Radio Board serial port
-    // serial_buffer.enable(radio);
+    // Non-Critical I2C
 
-    // Enable external realtime clock
+    Log.traceln("Initializing non-critical I2C bus");
+    busswitch_begin();
+    busswitch_enable();
+    Wire1.begin();
+    pinPeripheral(SDA_NON_CRIT, PIO_SERCOM);
+    pinPeripheral(SCL_NON_CRIT, PIO_SERCOM);
+    busswitch_disable();
+    Log.traceln("Non-critical I2C bus initialization completed");
+
+    // Serial connections
+
+    Log.traceln("Initializing serial buffers");
+    serial_buffer_begin();
+    Log.traceln("Serial buffer initialization completed");
+
+    // External realtime clock
 
     Log.traceln("Initializing external realtime clock");
 
     // todo: replace with Avionics Board external realtime clock
 
-    _external_rtc.begin();
-
-    if (!_external_rtc.begin())
+    if (_external_rtc.begin(&Wire))
     {
-        Log.errorln("Cannot initialize realtime clock");
-        delay(500);
-        trigger_watchdog(); // must occur within window
+        Log.traceln("External realtime clock initialization completed");
+    }
+    else
+    {
+        Log.errorln("External realtime clock not initialized");
     };
-    Log.traceln("External realtime clock initialization completed");
 
-    // Initialize Inertial Management Unit
+    // Inertial Management Unit
 
     Log.traceln("Initializing inertial management unit");
-    _imu.begin();
-    Log.traceln("Inertial measurement unit initialization completed");
+    busswitch_enable();
+    auto status = _imu.begin(&Wire1);
+    busswitch_disable();
+    if (status)
+    {
+        Log.traceln("Inertial measurement unit initialization completed");
+    }
+    else
+    {
+        Log.errorln("Inertial management unit not initialized");
+    }
 
-    // Initialize connection to FRAM
+    // FRAM
 
-    return true;
-};
+    Log.traceln("Initializing FRAM");
+    busswitch_enable();
+    status = _fram.begin(FRAM_I2C_ADDRESS, &Wire1);
+    busswitch_disable();
+    if (status)
+    {
+        Log.traceln("FRAM initialization completed");
+    }
+    else
+    {
+        Log.errorln("FRAM not initialized");
+    }
 
-/**
- * @brief Trigger the watchdog
- *
- * @return true successful
- * @return false error
- */
-
-bool AvionicsBoard::trigger_watchdog()
-{
-    _watchdog.trigger();
     return true;
 };
 
@@ -120,146 +124,85 @@ bool AvionicsBoard::watchdog_force_reset()
 
 bool AvionicsBoard::set_external_rtc(DateTime time)
 {
-    _external_rtc.adjust(time);
-    _external_rtc.start();
-    _external_rtc_is_set = true;
+    _external_rtc.set_time(time);
     return true;
 };
 
 /**
  * @brief Return external realtime clock year
  *
- * @return int year
+ * @return String year
  */
 
-int AvionicsBoard::get_year()
-{
-    if (_external_rtc_is_set)
-    {
+// String AvionicsBoard::get_year()
+// {
+//     return String(_external_rtc.get_year());
+// };
 
-        return _external_rtc.now().year();
-    }
-    else
-    {
-        Log.error("get_year: external realtime clock not set");
-        return _future_invalid_date.year();
-    }
-};
+// /**
+//  * @brief Return external realtime clock month
+//  *
+//  * @return String month
+//  */
+
+// String AvionicsBoard::get_month()
+// {
+//     return String(_external_rtc.get_month());
+// };
+
+// /**
+//  * @brief Return external realtime clock day
+//  *
+//  * @return String day
+//  */
+
+// String AvionicsBoard::get_day()
+// {
+//     return String(_external_rtc.get_day());
+// };
+
+// /**
+//  * @brief Return external realtime clock hour
+//  *
+//  * @return String hour
+//  */
+
+// String AvionicsBoard::get_hour()
+// {
+//     return String(_external_rtc.get_hour());
+// };
+
+// /**
+//  * @brief Return external realtime clock minute
+//  *
+//  * @return String minute
+//  */
+
+// String AvionicsBoard::get_minute()
+// {
+//     return String(_external_rtc.get_minute());
+// };
+
+// /**
+//  * @brief Return external realtime clock second
+//  *
+//  * @return String second
+//  */
+
+// String AvionicsBoard::get_second()
+// {
+//     return String(_external_rtc.get_second());
+// };
 
 /**
- * @brief Return external realtime clock month
+ * @brief Return external realtime clock timestamp
  *
- * @return int month
+ * @return String
  */
-
-int AvionicsBoard::get_month()
-{
-    if (_external_rtc_is_set)
-    {
-
-        return _external_rtc.now().month();
-    }
-    else
-    {
-        Log.error("get_month: external realtime clock not set");
-        return _future_invalid_date.month();
-    }
-};
-
-/**
- * @brief Return external realtime clock day
- *
- * @return int day
- */
-
-int AvionicsBoard::get_day()
-{
-    if (_external_rtc_is_set)
-    {
-
-        return _external_rtc.now().day();
-    }
-    else
-    {
-        Log.error("get_day: external realtime clock not set");
-        return _future_invalid_date.day();
-    }
-};
-
-/**
- * @brief Return external realtime clock hour
- *
- * @return int hour
- */
-
-int AvionicsBoard::get_hour()
-{
-    if (_external_rtc_is_set)
-    {
-
-        return _external_rtc.now().hour();
-    }
-    else
-    {
-        Log.error("get_hour: external realtime clock not set");
-        return _future_invalid_date.hour();
-    }
-};
-
-/**
- * @brief Return external realtime clock minute
- *
- * @return int minute
- */
-
-int AvionicsBoard::get_minute()
-{
-    if (_external_rtc_is_set)
-    {
-
-        return _external_rtc.now().minute();
-    }
-    else
-    {
-        Log.error("get_minute: external realtime clock not set");
-        return _future_invalid_date.minute();
-    }
-};
-
-/**
- * @brief Return external realtime clock second
- *
- * @return int second
- */
-
-int AvionicsBoard::get_second()
-{
-    if (_external_rtc_is_set)
-    {
-
-        return _external_rtc.now().second();
-    }
-    else
-    {
-        Log.error("get_second: external realtime clock not set");
-        return _future_invalid_date.second();
-    }
-};
 
 String AvionicsBoard::get_timestamp()
 {
-    if (_external_rtc_is_set)
-    {
-
-        return _external_rtc.now().timestamp();
-    }
-    else
-    {
-        Log.errorln("External realtime clock not set");
-        return "ERROR";
-    }
-
-    return _external_rtc.now().timestamp();
+    return _external_rtc.get_timestamp();
 };
 
 /**
@@ -319,8 +262,9 @@ bool AvionicsBoard::set_picture_time(DateTime time)
  */
 
 bool AvionicsBoard::check_photo()
+// todo: error handling for realtime clock not set
 {
-    if (_external_rtc_is_set && (_external_rtc.now() >= _picture_time))
+    if (_external_rtc.get_time() >= _picture_time)
     {
         Log.traceln("Photo time reached %s", get_timestamp().c_str());
         _picture_time = _future_invalid_date;
@@ -349,10 +293,119 @@ String AvionicsBoard::get_pic_times()
 
 String AvionicsBoard::get_telemetry()
 {
+    busswitch_enable();
     return _imu.get_acceleration() + _imu.get_rotation() + _imu.get_temperature();
-}
+    busswitch_disable();
+};
 
 String AvionicsBoard::get_beacon_interval()
 {
     return String(_beacon_interval / 1000 / 1000);
-}
+};
+
+/**
+ * @brief Trigger the watchdog
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool AvionicsBoard::trigger_watchdog()
+{
+    _watchdog.trigger();
+    return true;
+};
+
+/**
+ * @brief Initialize I2C bus switch
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool AvionicsBoard::busswitch_begin()
+{
+    Log.verboseln("Initializing I2C bus switch");
+    pinMode(EN_EXT_I2C, OUTPUT);
+    return true;
+};
+
+/**
+ * @brief Enable I2C bus switch
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool AvionicsBoard::busswitch_enable()
+{
+    Log.verboseln("Enabling I2C bus switch");
+    digitalWrite(EN_EXT_I2C, LOW);
+    return true;
+};
+
+/**
+ * @brief Disable I2C bus switch
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool AvionicsBoard::busswitch_disable()
+{
+    Log.verboseln("Disabling I2C bus switch");
+    digitalWrite(EN_EXT_I2C, HIGH);
+    return true;
+};
+
+/**
+ * @brief Initialize serial buffers
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool AvionicsBoard::serial_buffer_begin()
+{
+    Log.verboseln("Disabling drivers to other boards");
+    pinMode(EN_PAYLOAD_SERIAL, OUTPUT);
+    digitalWrite(EN_PAYLOAD_SERIAL, LOW);
+    pinMode(EN_RADIO_SERIAL, OUTPUT);
+    digitalWrite(EN_RADIO_SERIAL, LOW);
+    return true;
+};
+
+/**
+ * @brief Enable serial buffer to Radio Board
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool AvionicsBoard::serial_buffer_enable()
+{
+    Log.verboseln("Enabling serial driver to Radio Board");
+    digitalWrite(EN_RADIO_SERIAL, HIGH);
+    return true;
+};
+
+/**
+ * @brief Disable serial buffer to Radio Board
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool AvionicsBoard::serial_buffer_disable()
+{
+    Log.verboseln("Disabling serial driver to Radio Board");
+    digitalWrite(EN_RADIO_SERIAL, LOW);
+    return true;
+};
+
+String AvionicsBoard::read_fram(size_t address)
+{
+    busswitch_enable();
+    return String(_fram.read(address));
+    busswitch_disable();
+};
