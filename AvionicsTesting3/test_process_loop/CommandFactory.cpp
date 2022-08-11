@@ -239,7 +239,7 @@ CommandFactory::CommandFactory(String tokens[], size_t token_count)
     }
     else
     {
-        _command = new CommandInvalid();
+        _command = new CommandUnknown();
         return;
     }
 };
