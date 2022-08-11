@@ -25,14 +25,11 @@ IMU::IMU(){
 
 bool IMU::begin(TwoWire* theWire)
 {
-    _mpu.begin(IMU_I2C_ADDRESS, theWire);
-    delay(100);
-
-    if (!_mpu.begin())
+    if (!_mpu.begin(IMU_I2C_ADDRESS, theWire))
     {
         Log.errorln("Cannot initialize inertial management unit");
-        delay(100);
-    }
+        return false;
+    };
 
     _mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
     String prefix {"Accelerometer range set to: "};

@@ -2,7 +2,7 @@
  * @file AvionicsBoard.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Test Avionics Board for SilverSat
- * @version 1.0.1
+ * @version 1.0.2
  * @date 2022-07-29
  *
  *
@@ -63,53 +63,53 @@ public:
      * @return int year
      */
 
-    String get_year();
+    // String get_year();
 
-    /**
-     * @brief Return external realtime clock month
-     *
-     * @return int month
-     */
+    // /**
+    //  * @brief Return external realtime clock month
+    //  *
+    //  * @return int month
+    //  */
 
-    String get_month();
+    // String get_month();
 
-    /**
-     * @brief Return external realtime clock day
-     *
-     * @return int day
-     */
+    // /**
+    //  * @brief Return external realtime clock day
+    //  *
+    //  * @return int day
+    //  */
 
-    String get_day();
+    // String get_day();
 
-    /**
-     * @brief Return external realtime clock hour
-     *
-     * @return int hour
-     */
+    // /**
+    //  * @brief Return external realtime clock hour
+    //  *
+    //  * @return int hour
+    //  */
 
-    String get_hour();
+    // String get_hour();
 
-    /**
-     * @brief Return external realtime clock minute
-     *
-     * @return int minute
-     */
+    // /**
+    //  * @brief Return external realtime clock minute
+    //  *
+    //  * @return int minute
+    //  */
 
-    String get_minute();
+    // String get_minute();
 
-    /**
-     * @brief Return external realtime clock second
-     *
-     * @return int second
-     */
+    // /**
+    //  * @brief Return external realtime clock second
+    //  *
+    //  * @return int second
+    //  */
 
-    String get_second();
+    // String get_second();
 
-    /**
-     * @brief Get the timestamp
-     *
-     * @return String timestamp
-     */
+    // /**
+    //  * @brief Get the timestamp
+    //  *
+    //  * @return String timestamp
+    //  */
 
     String get_timestamp();
 
@@ -238,9 +238,10 @@ private:
     unsigned long _last_beacon_time{0};
     const DateTime _future_invalid_date = DateTime(2050, 1, 1, 12, 0, 0);
     DateTime _picture_time{_future_invalid_date}; // todo: sorted queue of picture times
-    TwoWire _ncWire{&SERCOM_NON_CRIT, SDA_NON_CRIT, SCL_NON_CRIT};
+    // TwoWire _ncWire{&SERCOM_NON_CRIT, SDA_NON_CRIT, SCL_NON_CRIT};
     IMU _imu{};
+    // to consider: refactor FRAM as object
     Adafruit_FRAM_I2C _fram{};
 };
 
-#endif
+#endif // AVIONICSBOARD_H

@@ -2,7 +2,7 @@
  * @file AvionicsBoard.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Test Avionics Board for SilverSat
- * @version 1.0.1
+ * @version 1.0.2
  * @date 2022-07-29
  *
  *
@@ -38,12 +38,10 @@ bool AvionicsBoard::begin()
 
     // Non-Critical I2C
 
-    // todo: manage busswitch for non-critical I2C
-
     Log.traceln("Initializing non-critical I2C bus");
     busswitch_begin();
     busswitch_enable();
-    _ncWire.begin();
+    Wire1.begin();
     pinPeripheral(SDA_NON_CRIT, PIO_SERCOM);
     pinPeripheral(SCL_NON_CRIT, PIO_SERCOM);
     busswitch_disable();
@@ -61,30 +59,44 @@ bool AvionicsBoard::begin()
 
     // todo: replace with Avionics Board external realtime clock
 
-    if (_external_rtc.begin())
+    if (_external_rtc.begin(&Wire))
     {
         Log.traceln("External realtime clock initialization completed");
     }
     else
     {
-        Log.error("External realtime clock not initialized");
+        Log.errorln("External realtime clock not initialized");
     };
 
     // Inertial Management Unit
 
     Log.traceln("Initializing inertial management unit");
     busswitch_enable();
-    _imu.begin(&_ncWire);
+    auto status = _imu.begin(&Wire1);
     busswitch_disable();
-    Log.traceln("Inertial measurement unit initialization completed");
+    if (status)
+    {
+        Log.traceln("Inertial measurement unit initialization completed");
+    }
+    else
+    {
+        Log.errorln("Inertial management unit not initialized");
+    }
 
     // FRAM
 
     Log.traceln("Initializing FRAM");
     busswitch_enable();
-    _fram.begin();
+    status = _fram.begin(FRAM_I2C_ADDRESS, &Wire1);
     busswitch_disable();
-    Log.traceln("FRAM initialization completed");
+    if (status)
+    {
+        Log.traceln("FRAM initialization completed");
+    }
+    else
+    {
+        Log.errorln("FRAM not initialized");
+    }
 
     return true;
 };
@@ -122,65 +134,65 @@ bool AvionicsBoard::set_external_rtc(DateTime time)
  * @return String year
  */
 
-String AvionicsBoard::get_year()
-{
-    return String(_external_rtc.get_year());
-};
+// String AvionicsBoard::get_year()
+// {
+//     return String(_external_rtc.get_year());
+// };
 
-/**
- * @brief Return external realtime clock month
- *
- * @return String month
- */
+// /**
+//  * @brief Return external realtime clock month
+//  *
+//  * @return String month
+//  */
 
-String AvionicsBoard::get_month()
-{
-    return String(_external_rtc.get_month());
-};
+// String AvionicsBoard::get_month()
+// {
+//     return String(_external_rtc.get_month());
+// };
 
-/**
- * @brief Return external realtime clock day
- *
- * @return String day
- */
+// /**
+//  * @brief Return external realtime clock day
+//  *
+//  * @return String day
+//  */
 
-String AvionicsBoard::get_day()
-{
-    return String(_external_rtc.get_day());
-};
+// String AvionicsBoard::get_day()
+// {
+//     return String(_external_rtc.get_day());
+// };
 
-/**
- * @brief Return external realtime clock hour
- *
- * @return String hour
- */
+// /**
+//  * @brief Return external realtime clock hour
+//  *
+//  * @return String hour
+//  */
 
-String AvionicsBoard::get_hour()
-{
-    return String(_external_rtc.get_hour());
-};
+// String AvionicsBoard::get_hour()
+// {
+//     return String(_external_rtc.get_hour());
+// };
 
-/**
- * @brief Return external realtime clock minute
- *
- * @return String minute
- */
+// /**
+//  * @brief Return external realtime clock minute
+//  *
+//  * @return String minute
+//  */
 
-String AvionicsBoard::get_minute()
-{
-    return String(_external_rtc.get_minute());
-};
+// String AvionicsBoard::get_minute()
+// {
+//     return String(_external_rtc.get_minute());
+// };
 
-/**
- * @brief Return external realtime clock second
- *
- * @return String second
- */
+// /**
+//  * @brief Return external realtime clock second
+//  *
+//  * @return String second
+//  */
 
-String AvionicsBoard::get_second()
-{
-    return String(_external_rtc.get_second());
-};
+// String AvionicsBoard::get_second()
+// {
+//     return String(_external_rtc.get_second());
+// };
 
 /**
  * @brief Return external realtime clock timestamp

@@ -29,7 +29,7 @@
 #include "mock_radio_board.h"
 
 constexpr unsigned long separation_delay{5 * 1000 * 1000}; // todo: adjust to 45 minutes for full test
-const unsigned long separation_time{0};
+constexpr unsigned long separation_time{0};
 
 /**
  * @brief Create the boards
@@ -41,7 +41,6 @@ MockPayloadBoard payload;
 MockRadioBoard radio;
 MockPowerBoard power;
 
-// to consider: move watchdog trigger processing to test loop
 
 /**
  * @brief Initialize the devices and the boards

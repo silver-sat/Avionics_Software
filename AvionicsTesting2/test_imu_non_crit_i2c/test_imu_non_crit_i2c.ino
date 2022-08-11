@@ -14,22 +14,32 @@
 #include "wiring_private.h"
 
 Adafruit_MPU6050 imu;
-TwoWire non_crit_i2c(&sercom0, 4, 3);
+TwoWire non_crit_i2c(&sercom1, 11, 13);
+
+void SERCOM1_Handler(void){
+  non_crit_i2c.onService();
+}
 
 void setup()
 {
   Serial.begin(115200);
   while (!Serial)
     delay(10); // will pause Zero, Leonardo, etc until serial console opens
-
-  // non_crit_i2c.begin();
-  // pinPeripheral(4, PIO_SERCOM);
-  // pinPeripheral(3, PIO_SERCOM);
+  Wire.begin();
+  non_crit_i2c.begin();
+  pinPeripheral(11, PIO_SERCOM);
+  pinPeripheral(13, PIO_SERCOM);
 
   Serial.println("Adafruit MPU6050 test!");
 
   // Try to initialize!
-  Serial.println(imu.begin((uint8_t)104U, &non_crit_i2c));
+  if (!imu.begin(0x68, &non_crit_i2c))
+  {
+    Serial.println("IMU not found");
+    while (true)
+    {
+    };
+  };
   Serial.println("MPU6050 Found!");
 
   imu.setAccelerometerRange(MPU6050_RANGE_8_G);
@@ -93,7 +103,6 @@ void setup()
     Serial.println("5 Hz");
     break;
   }
-
 }
 void loop()
 {
@@ -126,6 +135,5 @@ void loop()
   Serial.println(" degC");
 
   Serial.println("");
-  delay(500);
-
+  delay(5000);
 }

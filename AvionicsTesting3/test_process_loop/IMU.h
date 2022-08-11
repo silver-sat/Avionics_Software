@@ -24,21 +24,17 @@ class IMU
 {
 public:
     IMU();
-    bool begin(TwoWire* theWire);
-
+    bool begin(TwoWire *theWire);
     String get_acceleration();
-
     String get_rotation();
-
     String get_temperature();
 
 private:
     bool refresh_data();
-
     sensors_event_t _a;
     sensors_event_t _g;
     sensors_event_t _temp;
     Adafruit_MPU6050 _mpu{};
 };
 
-#endif
+#endif // IMU_H

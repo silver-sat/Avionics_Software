@@ -11,9 +11,6 @@
 #ifndef BOARD_CONFIGURATION_H
 #define BOARD_CONFIGURATION_H
 
-// #define WDTICK_PIN PIN_PB23
-#define WDTICK_PIN 2  // for testing
-#define WDRESET_PIN 3 // for testing
 /**
  * @brief SAMD21 pin definitions
  *
@@ -25,8 +22,8 @@
 #define SERCOM_CRIT sercom3
 #define SDA_CRIT SDA
 #define SCL_CRIT SCL
-#define WDTICK 2
-#define RESET 3
+#define WDTICK 2 // for testing
+#define RESET 3 // for testing
 #define MOSI MOSI
 #define MISO MISO
 #define SCK SCK
@@ -52,7 +49,7 @@
 
 
 /** 
- * I2C Addresses
+ * @brief I2C Addresses
  * 
  */
 
@@ -60,4 +57,4 @@
 #define IMU_I2C_ADDRESS 0x68
 #define FRAM_I2C_ADDRESS 0x50
 
-#endif
+#endif // BOARD_CONFIGURATION_H
