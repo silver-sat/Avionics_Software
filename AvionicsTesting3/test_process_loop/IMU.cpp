@@ -21,10 +21,11 @@ IMU::IMU(){
  * @return true successful
  * @return false error
  */
+    // todo: manage busswitch for non-critical I2C
 
-bool IMU::begin()
+bool IMU::begin(TwoWire* theWire)
 {
-    _mpu.begin();
+    _mpu.begin(IMU_I2C_ADDRESS, theWire);
     delay(100);
 
     if (!_mpu.begin())

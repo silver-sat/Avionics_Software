@@ -12,8 +12,12 @@
 #define AVIONICSBOARD_H
 
 #include "Watchdog.h"
+#include "ExternalRTC.h"
 #include "IMU.h"
-#include <RTClib.h>
+#include <Wire.h>
+#include <wiring_private.h>
+#include <Adafruit_FRAM_I2C.h>
+
 
 class AvionicsBoard
 {
@@ -33,15 +37,6 @@ public:
      */
 
     bool begin();
-
-    /**
-     * @brief Trigger the watchdog
-     *
-     * @return true successful
-     * @return false error
-     */
-
-    bool trigger_watchdog();
 
     /**
      * @brief Force the watchdog to reset the processor
@@ -68,7 +63,7 @@ public:
      * @return int year
      */
 
-    int get_year();
+    String get_year();
 
     /**
      * @brief Return external realtime clock month
@@ -76,7 +71,7 @@ public:
      * @return int month
      */
 
-    int get_month();
+    String get_month();
 
     /**
      * @brief Return external realtime clock day
@@ -84,7 +79,7 @@ public:
      * @return int day
      */
 
-    int get_day();
+    String get_day();
 
     /**
      * @brief Return external realtime clock hour
@@ -92,7 +87,7 @@ public:
      * @return int hour
      */
 
-    int get_hour();
+    String get_hour();
 
     /**
      * @brief Return external realtime clock minute
@@ -100,7 +95,7 @@ public:
      * @return int minute
      */
 
-    int get_minute();
+    String get_minute();
 
     /**
      * @brief Return external realtime clock second
@@ -108,7 +103,7 @@ public:
      * @return int second
      */
 
-    int get_second();
+    String get_second();
 
     /**
      * @brief Get the timestamp
@@ -173,21 +168,79 @@ public:
 
     /**
      * @brief Get the beacon interval
-     * 
+     *
      * @return String interval
      */
-    
+
     String get_beacon_interval();
 
+    /**
+     * @brief Trigger the watchdog
+     *
+     * @return true successful
+     * @return false error
+     */
+    bool trigger_watchdog();
+
+    /**
+     * @brief Read a byte from the FRAM
+     *
+     */
+
+    String read_fram(size_t address);
+
 private:
-    RTC_PCF8523 _external_rtc{};
+    /**
+     * @brief Initialize I2C bus switch
+     *
+     */
+    bool busswitch_begin();
+
+    /**
+     * @brief Enable I2C bus switch
+     *
+     */
+
+    bool busswitch_enable();
+
+    /**
+     * @brief Disable I2C bus switch
+     *
+     */
+
+    bool busswitch_disable();
+
+    /**
+     * @brief Initialize serial buffers
+     *
+     */
+
+    bool serial_buffer_begin();
+
+    /**
+     * @brief Enable serial buffer to Radio Board
+     *
+     */
+
+    bool serial_buffer_enable();
+
+    /**
+     * @brief Disable serial buffer to Radio Board
+     *
+     */
+
+    bool serial_buffer_disable();
+
+    ExternalRTC _external_rtc{};
     bool _external_rtc_is_set{false};
     Watchdog _watchdog{};
     unsigned long _beacon_interval{2 * 60 * 1000 * 1000}; // 2 minutes
     unsigned long _last_beacon_time{0};
     const DateTime _future_invalid_date = DateTime(2050, 1, 1, 12, 0, 0);
     DateTime _picture_time{_future_invalid_date}; // todo: sorted queue of picture times
-    IMU _imu;
+    TwoWire _ncWire{&SERCOM_NON_CRIT, SDA_NON_CRIT, SCL_NON_CRIT};
+    IMU _imu{};
+    Adafruit_FRAM_I2C _fram{};
 };
 
 #endif

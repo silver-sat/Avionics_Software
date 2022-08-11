@@ -9,15 +9,14 @@
  *
  * This is the main process loop to test the SilverSat Avionics Board.
  *
- * The devices are implemented as classes interfacing to real hardware and include an external realtime clock, FRAM, inertial measurement
- * unit, watchdog timer, serial ports, I2C buses, and the SAMD21 processor.
+ * The on-board devices are implemented as classes interfacing to real hardware and include a watchdog timer, external realtime clock, inertial measurement
+ * unit, and FRAM. The board also includes serial ports, I2C buses, and a SAMD21 processor.
  *
- * The other boards: Power, Radio, and Payload are implemented as mock devices in software for these
- * tests. Each mock board performs a subset of the functionality provided by the actual board, as needed
- * to test the Avionics Board.
+ * The other boards: Power, Radio, and Payload, are implemented as mock devices in software for these
+ * tests. Each mock board performs a subset, as needed to test the Avionics Board, of the functionality provided by the actual board,.
  *
- * The beacon message which Avionics sends to the radio board and the command messages the Radio
- * Board sends to Avionics are also represented as classes.
+ * The beacon message which Avionics sends to the radio board, the command messages the Radio
+ * Board forwards to Avionics, and the response and local command messages sent to the Radio Board are also represented as classes.
  *
  */
 
@@ -41,6 +40,8 @@ AvionicsBoard avionics;
 MockPayloadBoard payload;
 MockRadioBoard radio;
 MockPowerBoard power;
+
+// to consider: move watchdog trigger processing to test loop
 
 /**
  * @brief Initialize the devices and the boards
@@ -75,7 +76,7 @@ void setup()
 
     // Initialize Power Board
 
-    Log.noticeln("Initializing Power Board");
+    Log.noticeln("Initializing mock Power Board");
     power.begin();
     Log.noticeln("Mock Power Board initialization completed");
 
@@ -91,7 +92,7 @@ void setup()
     payload.begin();
     Log.noticeln("Mock Payload Board initialization completed");
 
-    // wait for separation delay
+    // Wait for separation delay
 
     Log.noticeln("Beginning separation delay");
     while (micros() - separation_time < separation_delay)
@@ -100,9 +101,9 @@ void setup()
     };
     Log.noticeln("Ending separation delay");
 
-    // deploy antenna
+    // Deploy antenna
 
-    Log.noticeln("Notifying radio board to deploy antenna");
+    Log.noticeln("Notifying mock Radio Board to deploy antenna");
     radio.deploy_antenna();
 
 
@@ -110,7 +111,7 @@ void setup()
 };
 
 /**
- * @brief Run the Avionics functions
+ * @brief Execute the Avionics functions
  *
  */
 
