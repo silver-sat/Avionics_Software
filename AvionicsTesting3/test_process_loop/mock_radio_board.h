@@ -102,4 +102,4 @@ private:
     String _call_sign {"?????"}; // todo: replace with call sign
 };
 
-#endif
+#endif // MOCK_RADIO_BOARD_H

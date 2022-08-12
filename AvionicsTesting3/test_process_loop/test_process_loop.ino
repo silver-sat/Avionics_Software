@@ -28,7 +28,7 @@
 #include "mock_payload_board.h"
 #include "mock_radio_board.h"
 
-constexpr unsigned long separation_delay{5 * 1000 * 1000}; // todo: adjust to 45 minutes for full test
+constexpr unsigned long separation_delay{5 * SECONDS_TO_MILLISECONDS}; // todo: adjust to 45 minutes for full test
 constexpr unsigned long separation_time{0};
 
 /**
@@ -52,7 +52,7 @@ void setup()
 {
     // Initialize serial connection and log utility for test reporting
 
-    Serial.begin(115200);
+    Serial.begin(SERIAL_MONITOR_BAUD_RATE);
     while (!Serial && !Serial.available())
     {
         avionics.trigger_watchdog();
@@ -91,7 +91,7 @@ void setup()
     // Wait for separation delay
 
     Log.noticeln("Beginning separation delay");
-    while (micros() - separation_time < separation_delay)
+    while (millis() - separation_time < separation_delay)
     {
         avionics.trigger_watchdog();
     };

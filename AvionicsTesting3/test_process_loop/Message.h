@@ -52,4 +52,4 @@ private:
     String _content{};
 };
 
-#endif
+#endif // MESSAGE_H

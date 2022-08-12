@@ -19,7 +19,7 @@
 
 Watchdog::Watchdog()
 {
-    _last_action_time = micros();
+    _last_action_time = millis();
     pinMode(WDTICK, OUTPUT);
     pinMode(RESET, INPUT);
 }
@@ -51,11 +51,11 @@ bool Watchdog::trigger()
         _reset_pin_state = reset;
     };
 
-    if (!_force_reset && (micros() - _last_action_time > WATCHDOG_LOWER_BOUNDARY))
+    if (!_force_reset && (millis() - _last_action_time > WATCHDOG_LOWER_BOUNDARY))
     {
         digitalWrite(WDTICK, HIGH);
         digitalWrite(WDTICK, LOW);
-        _last_action_time = micros();
+        _last_action_time = millis();
     };
     return true;
 };

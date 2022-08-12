@@ -13,8 +13,8 @@
 
 #include "board_configuration.h"
 
-#define WATCHDOG_LOWER_BOUNDARY 23500   // 23.5 milliseconds
-#define WATCHDOG_UPPER_BOUNDARY 2000000 // 2 seconds
+#define WATCHDOG_LOWER_BOUNDARY 24   // 23.5 milliseconds
+#define WATCHDOG_UPPER_BOUNDARY 2000 // 2 seconds
 
 /**
  * @brief Watchdog

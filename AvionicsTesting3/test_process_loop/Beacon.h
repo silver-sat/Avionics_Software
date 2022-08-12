@@ -55,4 +55,4 @@ private:
     String _message{};
 };
 
-#endif
+#endif // BEACON_H

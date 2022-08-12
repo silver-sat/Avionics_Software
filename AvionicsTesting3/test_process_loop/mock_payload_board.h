@@ -11,6 +11,8 @@
 #ifndef MOCK_PAYLOAD_BOARD_H
 #define MOCK_PAYLOAD_BOARD_H
 
+#include "board_configuration.h"
+
 class MockPayloadBoard
 {
 public:
@@ -113,8 +115,8 @@ private:
     bool power_down_signal_is_set();
 
 private:
-    const unsigned long _tweet_duration{30 * 1000 * 1000};
-    const unsigned long _photo_duration{15 * 1000 * 1000};
+    const unsigned long _tweet_duration{30 * SECONDS_TO_MILLISECONDS};
+    const unsigned long _photo_duration{15 * SECONDS_TO_MILLISECONDS};
     unsigned long _last_activity_time{0};
     unsigned long _action_duration{};
     bool _payload_active{false};
@@ -122,4 +124,4 @@ private:
     int _photo_count{0};
 };
 
-#endif
+#endif // MOCK_PAYLOAD_BOARD_H
