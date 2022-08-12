@@ -62,7 +62,9 @@ public:
         get_beacon_interval,
         send_test_packet,
         unknown,
-        invalid
+        invalid,
+        // testing commands
+        unset_clock,
     };
 
     /**
@@ -316,6 +318,11 @@ public:
     bool execute_command() override;
 };
 
+/**
+ * @brief send_test_packet command
+ * 
+ */
+
 class CommandSendTestPacket : public Command
 {
     public:
@@ -324,4 +331,17 @@ class CommandSendTestPacket : public Command
     bool execute_command() override;
 };
 
-#endif
+/**
+ * @brief unset_clock command
+ * 
+ */
+
+class CommandUnsetClock : public Command
+{
+    public:
+    CommandUnsetClock();
+    bool acknowledge_command() override;
+    bool execute_command() override;
+};
+
+#endif // COMMAND_H

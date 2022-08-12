@@ -83,16 +83,28 @@ def test_time():
     # Format: command and parameters, error expected, failure expected
 
     commands = [
-        ["ReportT", True, True],  # error: realtime clock not set
+        ["ReportT", False, False], 
         ["SetClock 2022 8 6 10 10 0", False, False],
         ["ReportT", False, False],
         ["Watchdog", True, False],
         ["ReportT", False, False],
         ["SetClock 2022 12 12 10 10 0", False, False],
         ["ReportT", False, False],
+        ["SetClock -1 0 0 0 0 0", True, True],
+        ["ReportT", False, False],
+        ["UnsetClock", False, False],
+        ["ReportT", True, True],
+        ["PicTimes 2022 12 12 10 10 15", True, True],
+        ["ReportT", True, True],
+        ["SetClock 2022 12 12 10 10 0", False, False],
+        ["SetClock 2022 12 12 10 10 0", False, False],
+        ["ReportT", False, False],
+        ["PicTimes 2022 10 10 10 10 0", True, True],
+
     ]
 
     for command_pair in commands:
+        print(*command_pair)
         execute_command(*command_pair)
 
 

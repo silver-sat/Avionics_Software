@@ -50,16 +50,13 @@ MockPowerBoard power;
 void setup()
 
 {
-    // Initialize serial connection for test reporting
+    // Initialize serial connection and log utility for test reporting
 
     Serial.begin(115200);
     while (!Serial && !Serial.available())
     {
         avionics.trigger_watchdog();
     };
-
-    // Initialize log utility for test reporting
-
     Log.setPrefix(printPrefix);
     Log.setSuffix(printSuffix);
     Log.begin(LOG_LEVEL_VERBOSE, &Serial);
@@ -73,19 +70,19 @@ void setup()
     avionics.begin();
     Log.noticeln("Avionics Board initialization completed");
 
-    // Initialize Power Board
+    // Initialize mock Power Board
 
     Log.noticeln("Initializing mock Power Board");
     power.begin();
     Log.noticeln("Mock Power Board initialization completed");
 
-    // Initialize Radio Board
+    // Initialize mock Radio Board
 
     Log.noticeln("Initializing mock Radio Board");
     radio.begin();
     Log.noticeln("Mock Radio Board initialization completed");
 
-    // Initialize Payload Board
+    // Initialize mock Payload Board
 
     Log.noticeln("Initializing mock Payload Board");
     payload.begin();

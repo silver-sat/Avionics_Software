@@ -2,7 +2,7 @@
  * @file ExternalRTC.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief External Realtime Clock
- * @version 1.0.0
+ * @version 1.0.1
  * @date 2022-08-11
  *
  *
@@ -34,10 +34,12 @@ bool ExternalRTC::begin(TwoWire *theWire)
     };
     if (!_rtc.initialized() || _rtc.lostPower())
     {
+        _rtc_is_set = false;
         Log.verboseln("Realtime clock is not set");
     }
     else
     {
+        _rtc_is_set = true;
         Log.verboseln("Realtime clock is set");
     }
     _rtc.start();
@@ -55,14 +57,22 @@ bool ExternalRTC::begin(TwoWire *theWire)
 
 bool ExternalRTC::set_time(DateTime time)
 {
-    _rtc.adjust(time);
-    _rtc.start();
-    _rtc_is_set = true;
-    return true;
+    if (time.isValid())
+    {
+        _rtc.adjust(time);
+        _rtc.start();
+        _rtc_is_set = true;
+        return true;
+    }
+    else
+    {
+        Log.errorln("Invalid time");
+        return false;
+    }
 };
 
 /**
- * @brief Return the current external realtime clock time
+ * @brief Get the current external realtime clock time
  *
  * @return * DateTime current time
  */
@@ -73,126 +83,10 @@ DateTime ExternalRTC::get_time()
 };
 
 /**
- * @brief Return external realtime clock year
- *
- * @return int year
+ * @brief Get a timestamp
+ * 
+ * @return String timestamp
  */
-
-// todo: error reporting when realtime clock is not set
-
-// int ExternalRTC::get_year()
-// {
-//     if (_rtc_is_set)
-//     {
-
-//         return _rtc.now().year();
-//     }
-//     else
-//     {
-//         Log.error("get_year: external realtime clock not set");
-//         return -1;
-//     }
-// };
-
-// /**
-//  * @brief Return external realtime clock month
-//  *
-//  * @return int month
-//  */
-
-// int ExternalRTC::get_month()
-// {
-//     if (_rtc_is_set)
-//     {
-
-//         return _rtc.now().month();
-//     }
-//     else
-//     {
-//         Log.error("get_month: external realtime clock not set");
-//         return -1;
-//     }
-// };
-
-// /**
-//  * @brief Return external realtime clock day
-//  *
-//  * @return int day
-//  */
-
-// int ExternalRTC::get_day()
-// {
-//     if (_rtc_is_set)
-//     {
-
-//         return _rtc.now().day();
-//     }
-//     else
-//     {
-//         Log.error("get_day: external realtime clock not set");
-//         return -1;
-//     }
-// };
-
-// /**
-//  * @brief Return external realtime clock hour
-//  *
-//  * @return int hour
-//  */
-
-// int ExternalRTC::get_hour()
-// {
-//     if (_rtc_is_set)
-//     {
-
-//         return _rtc.now().hour();
-//     }
-//     else
-//     {
-//         Log.error("get_hour: external realtime clock not set");
-//         return -1;
-//     }
-// };
-
-// /**
-//  * @brief Return external realtime clock minute
-//  *
-//  * @return int minute
-//  */
-
-// int ExternalRTC::get_minute()
-// {
-//     if (_rtc_is_set)
-//     {
-
-//         return _rtc.now().minute();
-//     }
-//     else
-//     {
-//         Log.error("get_minute: external realtime clock not set");
-//         return -1;
-//     }
-// };
-
-// /**
-//  * @brief Return external realtime clock second
-//  *
-//  * @return int second
-//  */
-
-// int ExternalRTC::get_second()
-// {
-//     if (_rtc_is_set)
-//     {
-
-//         return _rtc.now().second();
-//     }
-//     else
-//     {
-//         Log.error("get_second: external realtime clock not set");
-//         return -1;
-//     }
-// };
 
 String ExternalRTC::get_timestamp()
 {
@@ -206,4 +100,30 @@ String ExternalRTC::get_timestamp()
         Log.errorln("External realtime clock not set");
         return "ERROR";
     }
+};
+
+/**
+ * @brief Unset the realtime clock
+ * 
+ * @return true successful
+ * @return false error
+ */
+
+// todo: for testing only, remove from flight software
+
+bool ExternalRTC::unset_clock()
+{
+    _rtc_is_set = false;
+    return true;
+};
+
+/**
+ * @brief Get status of realtime clock
+ * 
+ * @return true 
+ * @return false 
+ */
+bool ExternalRTC::is_set()
+{
+    return _rtc_is_set;
 };
