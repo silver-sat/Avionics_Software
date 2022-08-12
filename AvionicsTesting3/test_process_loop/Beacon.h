@@ -13,6 +13,10 @@
 
 #include <Arduino.h>
 
+/**
+ * @brief Beacon format sent by the Avionics Board
+ * 
+ */
 class Beacon
 {
 public:

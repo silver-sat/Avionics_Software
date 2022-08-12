@@ -14,8 +14,12 @@ Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
 
 port = serial.Serial(port="/dev/ttyACM0", baudrate=115200)
 
-# Validate the commands
-
+## Validate the commands
+#
+# @param command_string command to be executed
+# @param error_expected true if command will generate error
+# @param failure_expected true if command will generate failure log entry
+#
 
 def execute_command(command_string, error_expected, failure_expected):
 
@@ -67,6 +71,8 @@ def execute_command(command_string, error_expected, failure_expected):
     else:
         assert any([item.detail == "Command failed" for item in log])
 
+## Test each command
+#
 
 def test_commands():
 

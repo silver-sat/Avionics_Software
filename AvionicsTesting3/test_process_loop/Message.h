@@ -13,6 +13,10 @@
 
 #include <Arduino.h>
 
+/**
+ * @brief Messages sent by the Avionics Board
+ * 
+ */
 class Message
 {
 public:

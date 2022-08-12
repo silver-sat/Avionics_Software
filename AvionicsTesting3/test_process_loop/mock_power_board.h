@@ -13,6 +13,11 @@
 
 #include <Arduino.h>
 
+/**
+ * @brief Mock Power Board for testing the Avionics Board
+ * 
+ */
+
 class MockPowerBoard
 {
 public:

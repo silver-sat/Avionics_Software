@@ -13,6 +13,10 @@
 
 #include <RTClib.h>
 
+/**
+ * @brief External realtime clock for testing the Avionics Board
+ * 
+ */
 class ExternalRTC
 {
 public:

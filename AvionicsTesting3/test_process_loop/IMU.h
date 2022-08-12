@@ -13,8 +13,6 @@
 
 #include <Adafruit_MPU6050.h>
 
-#define IMU_I2C_ADDRESS 0x68
-
 /**
  * @brief Inertial Management Unit
  *

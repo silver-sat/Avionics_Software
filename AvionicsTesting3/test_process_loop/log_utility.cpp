@@ -1,5 +1,5 @@
 /**
- * @file test_logger.cpp
+ * @file log_utility.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Test logging support routines
  * @version 1.0.0
@@ -10,10 +10,23 @@
 
 #include "log_utility.h"
 
+/**
+ * @brief Print log prefix
+ * 
+ * @param _logOutput output
+ * @param logLevel log level
+ */
+
 void printPrefix(Print* _logOutput, int logLevel) {
     printTimestamp(_logOutput);
     printLogLevel (_logOutput, logLevel);
 }
+
+/**
+ * @brief Print log timestamp
+ * 
+ * @param _logOutput output
+ */
 
 void printTimestamp(Print* _logOutput) {
 
@@ -39,9 +52,14 @@ void printTimestamp(Print* _logOutput) {
   _logOutput->print(timestamp);
 }
 
+/**
+ * @brief Print log description based on level
+ * 
+ * @param _logOutput output
+ * @param logLevel log level
+ */
 
 void printLogLevel(Print* _logOutput, int logLevel) {
-    /// Show log description based on log level
     switch (logLevel)
     {
         default:
@@ -55,6 +73,12 @@ void printLogLevel(Print* _logOutput, int logLevel) {
     }   
 }
 
+/**
+ * @brief Print log suffix
+ * 
+ * @param _logOutput output 
+ * @param logLevel log level
+ */
 void printSuffix(Print* _logOutput, int logLevel) {
   _logOutput->print("");
 }

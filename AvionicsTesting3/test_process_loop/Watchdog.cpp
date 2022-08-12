@@ -1,5 +1,5 @@
 /**
- * @file test_watchdog_hardware.cpp
+ * @file Watchdog.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Watchdog for SilverSat
  * @version 1.0.0

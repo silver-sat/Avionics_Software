@@ -13,6 +13,11 @@
 
 #include "board_configuration.h"
 
+/**
+ * @brief Mock Payload Board for testing the Avionics Board
+ * 
+ */
+
 class MockPayloadBoard
 {
 public:

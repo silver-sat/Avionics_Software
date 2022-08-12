@@ -18,6 +18,10 @@
 #include <wiring_private.h>
 #include <Adafruit_FRAM_I2C.h>
 
+/**
+ * @brief Avionics Board for testing the microcontroller and peripherals
+ * 
+ */
 class AvionicsBoard
 {
 public:

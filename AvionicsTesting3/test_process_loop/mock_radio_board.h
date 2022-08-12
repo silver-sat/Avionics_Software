@@ -15,8 +15,10 @@
 #include "Message.h"
 #include "CommandFactory.h"
 
-#define COMMAND_QUEUE_SIZE 15
-
+/**
+ * @brief Mock Radio Board for testing the Avionics Board
+ * 
+ */
 class MockRadioBoard
 {
 public:

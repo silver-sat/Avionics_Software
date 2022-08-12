@@ -128,7 +128,7 @@ bool MockRadioBoard::command_received()
  *
  */
 
-bool ::MockRadioBoard::make_command(String buffer)
+bool MockRadioBoard::make_command(String buffer)
 {
     Log.traceln("Constructing new command");
 
