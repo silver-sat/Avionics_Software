@@ -18,7 +18,6 @@
 #include <wiring_private.h>
 #include <Adafruit_FRAM_I2C.h>
 
-
 class AvionicsBoard
 {
 public:
@@ -56,60 +55,6 @@ public:
      */
 
     bool set_external_rtc(DateTime time);
-
-    /**
-     * @brief Return external realtime clock year
-     *
-     * @return int year
-     */
-
-    // String get_year();
-
-    // /**
-    //  * @brief Return external realtime clock month
-    //  *
-    //  * @return int month
-    //  */
-
-    // String get_month();
-
-    // /**
-    //  * @brief Return external realtime clock day
-    //  *
-    //  * @return int day
-    //  */
-
-    // String get_day();
-
-    // /**
-    //  * @brief Return external realtime clock hour
-    //  *
-    //  * @return int hour
-    //  */
-
-    // String get_hour();
-
-    // /**
-    //  * @brief Return external realtime clock minute
-    //  *
-    //  * @return int minute
-    //  */
-
-    // String get_minute();
-
-    // /**
-    //  * @brief Return external realtime clock second
-    //  *
-    //  * @return int second
-    //  */
-
-    // String get_second();
-
-    // /**
-    //  * @brief Get the timestamp
-    //  *
-    //  * @return String timestamp
-    //  */
 
     String get_timestamp();
 
@@ -185,15 +130,26 @@ public:
     /**
      * @brief Read a byte from the FRAM
      *
+     * @return String byte read
      */
 
     String read_fram(size_t address);
+
+    /**
+     * @brief Unset the realtime clock
+     *
+     * @return true successful
+     * @return false error
+     */
+
+    bool unset_clock();
 
 private:
     /**
      * @brief Initialize I2C bus switch
      *
      */
+
     bool busswitch_begin();
 
     /**

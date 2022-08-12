@@ -42,8 +42,8 @@ bool AvionicsBoard::begin()
     busswitch_begin();
     busswitch_enable();
     Wire1.begin();
-    pinPeripheral(SDA_NON_CRIT, PIO_SERCOM);
-    pinPeripheral(SCL_NON_CRIT, PIO_SERCOM);
+    // pinPeripheral(SDA_NON_CRIT, PIO_SERCOM);
+    // pinPeripheral(SCL_NON_CRIT, PIO_SERCOM);
     busswitch_disable();
     Log.traceln("Non-critical I2C bus initialization completed");
 
@@ -124,81 +124,8 @@ bool AvionicsBoard::watchdog_force_reset()
 
 bool AvionicsBoard::set_external_rtc(DateTime time)
 {
-    _external_rtc.set_time(time);
-    return true;
+    return _external_rtc.set_time(time);
 };
-
-/**
- * @brief Return external realtime clock year
- *
- * @return String year
- */
-
-// String AvionicsBoard::get_year()
-// {
-//     return String(_external_rtc.get_year());
-// };
-
-// /**
-//  * @brief Return external realtime clock month
-//  *
-//  * @return String month
-//  */
-
-// String AvionicsBoard::get_month()
-// {
-//     return String(_external_rtc.get_month());
-// };
-
-// /**
-//  * @brief Return external realtime clock day
-//  *
-//  * @return String day
-//  */
-
-// String AvionicsBoard::get_day()
-// {
-//     return String(_external_rtc.get_day());
-// };
-
-// /**
-//  * @brief Return external realtime clock hour
-//  *
-//  * @return String hour
-//  */
-
-// String AvionicsBoard::get_hour()
-// {
-//     return String(_external_rtc.get_hour());
-// };
-
-// /**
-//  * @brief Return external realtime clock minute
-//  *
-//  * @return String minute
-//  */
-
-// String AvionicsBoard::get_minute()
-// {
-//     return String(_external_rtc.get_minute());
-// };
-
-// /**
-//  * @brief Return external realtime clock second
-//  *
-//  * @return String second
-//  */
-
-// String AvionicsBoard::get_second()
-// {
-//     return String(_external_rtc.get_second());
-// };
-
-/**
- * @brief Return external realtime clock timestamp
- *
- * @return String
- */
 
 String AvionicsBoard::get_timestamp()
 {
@@ -250,8 +177,24 @@ bool AvionicsBoard::check_beacon()
 
 bool AvionicsBoard::set_picture_time(DateTime time)
 {
-    _picture_time = time;
-    return true;
+    if (_external_rtc.is_set())
+    {
+        if (time > _external_rtc.get_time())
+        {
+            _picture_time = time;
+            return true;
+        }
+        else
+        {
+            Log.errorln("Picture time is before current time");
+            return false;
+        }
+    }
+    else
+    {
+        Log.errorln("External realtime clock is not set");
+        return false;
+    }
 };
 
 /**
@@ -265,6 +208,8 @@ bool AvionicsBoard::check_photo()
 // todo: error handling for realtime clock not set
 {
     if (_external_rtc.get_time() >= _picture_time)
+
+    // todo: discard photo time if payload board is busy
     {
         Log.traceln("Photo time reached %s", get_timestamp().c_str());
         _picture_time = _future_invalid_date;
@@ -325,6 +270,7 @@ bool AvionicsBoard::trigger_watchdog()
 
 bool AvionicsBoard::busswitch_begin()
 {
+    // todo: consider making busswitch object
     Log.verboseln("Initializing I2C bus switch");
     pinMode(EN_EXT_I2C, OUTPUT);
     return true;
@@ -367,6 +313,7 @@ bool AvionicsBoard::busswitch_disable()
 
 bool AvionicsBoard::serial_buffer_begin()
 {
+    // todo: consider making serial buffer object
     Log.verboseln("Disabling drivers to other boards");
     pinMode(EN_PAYLOAD_SERIAL, OUTPUT);
     digitalWrite(EN_PAYLOAD_SERIAL, LOW);
@@ -403,9 +350,30 @@ bool AvionicsBoard::serial_buffer_disable()
     return true;
 };
 
+/**
+ * @brief Read byte from FRAM
+ *
+ * @param address address of data
+ * @return String byte read
+ */
+
 String AvionicsBoard::read_fram(size_t address)
 {
+    // todo: consider making FRAM object
     busswitch_enable();
     return String(_fram.read(address));
     busswitch_disable();
 };
+
+/**
+ * @brief Unset the realtime clock
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool AvionicsBoard::unset_clock()
+{
+    Log.verboseln("Unsetting the realtime clock");
+    return _external_rtc.unset_clock();
+}

@@ -705,6 +705,13 @@ bool CommandSendTestPacket::acknowledge_command()
     return status;
 };
 
+/**
+ * @brief Execute SendTestPacket command
+ * 
+ * @return true successful
+ * @return false error
+ */
+
 bool CommandSendTestPacket::execute_command()
 {
     auto status = Command::execute_command();
@@ -713,3 +720,35 @@ bool CommandSendTestPacket::execute_command()
     auto message = Message(Message::response, "TEST");
     return radio.send_message(message) && status;
 };
+
+/**
+ * @brief Construct a new Command Unset Clock:: Command Unset Clock object
+ * 
+ */
+
+CommandUnsetClock::CommandUnsetClock()
+{
+    _action = Command::unset_clock;
+};
+
+/**
+ * @brief Acknowledge UnsetClock command
+ * 
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandUnsetClock::acknowledge_command()
+{
+    auto status = Command::acknowledge_command();
+    Log.verboseln("Unset clock");
+    return status;
+}
+
+bool CommandUnsetClock::execute_command()
+{
+    auto status = Command::execute_command();
+    Log.verboseln("Unset clock");
+    extern AvionicsBoard avionics;
+    return avionics.unset_clock() && status;
+}
