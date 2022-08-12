@@ -45,6 +45,8 @@ bool MockPayloadBoard::begin()
 
 bool MockPayloadBoard::photo()
 {
+
+    // todo: check for adequate power
     if (!_payload_active)
     {
 
@@ -72,6 +74,7 @@ bool MockPayloadBoard::photo()
 
 bool MockPayloadBoard::tweet()
 {
+    // todo: check for adequate power
     if (!_payload_active)
     {
 
@@ -114,13 +117,6 @@ bool MockPayloadBoard::check_shutdown()
 }
 
 /**
- * @brief Power down Payload Board
- *
- * @return true successful
- * @return false error
- */
-
-/**
  * @brief End payload session
  *
  * @return true successful
@@ -134,6 +130,13 @@ bool MockPayloadBoard::end_activity()
     _power_down_signal = true;
     return true;
 };
+
+/**
+ * @brief Power down Payload Board
+ *
+ * @return true successful
+ * @return false error
+ */
 
 bool MockPayloadBoard::power_down()
 {
