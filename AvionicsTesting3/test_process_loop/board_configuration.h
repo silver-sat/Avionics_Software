@@ -57,4 +57,12 @@
 #define IMU_I2C_ADDRESS 0x68
 #define FRAM_I2C_ADDRESS 0x50
 
+/**
+ * @brief Constants
+ * 
+ */
+
+#define SECONDS_TO_MILLISECONDS 1000
+#define SERIAL_MONITOR_BAUD_RATE 115200
+
 #endif // BOARD_CONFIGURATION_H

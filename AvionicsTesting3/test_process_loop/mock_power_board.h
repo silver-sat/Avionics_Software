@@ -55,4 +55,4 @@ private:
     PowerStatus _power_status{fair};
 };
 
-#endif
+#endif // MOCK_POWER_BOARD_H

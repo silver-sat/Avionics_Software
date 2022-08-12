@@ -48,4 +48,4 @@ private:
     const size_t _token_limit{10};
 };
 
-#endif
+#endif // COMMANDFACTORY_H

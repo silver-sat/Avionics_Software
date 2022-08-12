@@ -142,7 +142,7 @@ String AvionicsBoard::get_timestamp()
 
 bool AvionicsBoard::set_beacon_interval(int seconds)
 {
-    _beacon_interval = seconds * 1000 * 1000;
+    _beacon_interval = seconds * SECONDS_TO_MILLISECONDS;
     return true;
 };
 
@@ -155,14 +155,14 @@ bool AvionicsBoard::set_beacon_interval(int seconds)
 
 bool AvionicsBoard::check_beacon()
 {
-    if ((micros() - _last_beacon_time > _beacon_interval) && (_beacon_interval > 0))
+    if ((millis() - _last_beacon_time > _beacon_interval) && (_beacon_interval > 0))
     {
         // todo: get power status
         // todo: get payload status
         Beacon message{Beacon::excellent, Beacon::unknown, Beacon::unknown};
         extern MockRadioBoard radio;
         radio.send_beacon(message);
-        _last_beacon_time = micros();
+        _last_beacon_time = millis();
     };
     return true;
 };
@@ -245,7 +245,7 @@ String AvionicsBoard::get_telemetry()
 
 String AvionicsBoard::get_beacon_interval()
 {
-    return String(_beacon_interval / 1000 / 1000);
+    return String(_beacon_interval / SECONDS_TO_MILLISECONDS);
 };
 
 /**

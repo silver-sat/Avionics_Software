@@ -85,8 +85,8 @@ def test_commands():
     commands = [
         ["BeaconSp 20", False, False],
         ["PayComms", False, False],
-        ["PicTimes 2022 12 10 10 10 0", False, False],
-        ["ReportT", True, True],  # error: realtime clock not set
+        ["PicTimes 2023 8 8 10 10 0", False, False],
+        ["ReportT", False, False],
         ["NoOperate", False, False],
         ["SetClock 2022 8 6 10 10 0", False, False],
         ["TweeSlee", False, False],
@@ -103,6 +103,7 @@ def test_commands():
     ]
 
     for command_pair in commands:
+        print(*command_pair)
         execute_command(*command_pair)
 
 
