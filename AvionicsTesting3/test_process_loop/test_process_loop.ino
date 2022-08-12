@@ -102,6 +102,7 @@ void setup()
     Log.noticeln("Notifying mock Radio Board to deploy antenna");
     radio.deploy_antenna();
 
+    // Initialization complete
 
     Log.noticeln("Process Loop Test initialization completed");
 };
