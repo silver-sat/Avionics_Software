@@ -15,7 +15,7 @@
 
 /**
  * @brief Mock Power Board for testing the Avionics Board
- * 
+ *
  */
 
 class MockPowerBoard
@@ -23,6 +23,11 @@ class MockPowerBoard
 public:
     MockPowerBoard();
 
+    /**
+     * @brief Status of the Power Board
+     *
+     */
+    
     enum PowerStatus
     {
         excellent,
@@ -35,7 +40,7 @@ public:
 
     /**
      * @brief Initialize the Power Board
-     * 
+     *
      * @return true successful
      * @return false error
      */

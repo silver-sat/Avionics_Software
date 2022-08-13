@@ -358,7 +358,7 @@ bool CommandBeaconSp::execute_command()
  * @param time time value
  */
 
-CommandPicTimes::CommandPicTimes(time_value time)
+CommandPicTimes::CommandPicTimes(TimeValue time)
 {
     _action = Command::pic_times;
     _time = time;
@@ -400,7 +400,7 @@ bool CommandPicTimes::execute_command()
  * @param time time value
  */
 
-CommandSetClock::CommandSetClock(time_value time)
+CommandSetClock::CommandSetClock(TimeValue time)
 {
     _action = Command::set_clock;
     _time = time;

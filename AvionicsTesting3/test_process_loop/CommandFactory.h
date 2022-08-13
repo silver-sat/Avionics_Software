@@ -1,7 +1,7 @@
 /**
  * @file CommandFactory.h
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief Generate the appropriate command object
+ * @brief Generate command object
  * @version 1.1.0
  * @date 2022-07-28
  *
