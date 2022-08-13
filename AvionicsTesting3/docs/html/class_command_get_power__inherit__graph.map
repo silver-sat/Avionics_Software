@@ -1,0 +1,4 @@
+<map id="CommandGetPower" name="CommandGetPower">
+<area shape="rect" id="node1" title="get_power command" alt="" coords="5,80,157,107"/>
+<area shape="rect" id="node2" href="$class_command.html" title="Command structure and processing." alt="" coords="37,5,126,32"/>
+</map>

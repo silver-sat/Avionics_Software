@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['sck_113',['SCK',['../board__configuration_8h.html#a2dd443a4430713d325ab86895a4a45eb',1,'board_configuration.h']]],
+  ['scl_5fcrit_114',['SCL_CRIT',['../board__configuration_8h.html#abab494bd1a5f30f5b7f2d732bd30a3a4',1,'board_configuration.h']]],
+  ['scl_5fnon_5fcrit_115',['SCL_NON_CRIT',['../board__configuration_8h.html#a688fab3c979709e27126e54464705950',1,'board_configuration.h']]],
+  ['sda_5fcrit_116',['SDA_CRIT',['../board__configuration_8h.html#a0acca4b4e7504ee0ddd9b0b2b4c737ad',1,'board_configuration.h']]],
+  ['sda_5fnon_5fcrit_117',['SDA_NON_CRIT',['../board__configuration_8h.html#a315047dfde5bc172a82857601d35c73e',1,'board_configuration.h']]],
+  ['second_118',['second',['../struct_time_value.html#a989dfa1d92daaff6788f7be2522834a8',1,'TimeValue']]],
+  ['seconds_5fto_5fmilliseconds_119',['SECONDS_TO_MILLISECONDS',['../board__configuration_8h.html#adb0d25390bacdbb6ae884be0dc60af77',1,'board_configuration.h']]],
+  ['send_5fbeacon_120',['send_beacon',['../class_mock_radio_board.html#a90d68f5550a126679bb8efe604aaca2b',1,'MockRadioBoard']]],
+  ['send_5fmessage_121',['send_message',['../class_mock_radio_board.html#aa215f5a4d3732f0931de923e1d9f7afc',1,'MockRadioBoard']]],
+  ['sercom_5fcrit_122',['SERCOM_CRIT',['../board__configuration_8h.html#afcb36a202f25773f4f03fab01c4ecc0a',1,'board_configuration.h']]],
+  ['sercom_5fnon_5fcrit_123',['SERCOM_NON_CRIT',['../board__configuration_8h.html#a55946ea1341c5604229c30206cfbb51b',1,'board_configuration.h']]],
+  ['serial_5fmonitor_5fbaud_5frate_124',['SERIAL_MONITOR_BAUD_RATE',['../board__configuration_8h.html#afb9142a0237dac6d091134faffab3a5e',1,'board_configuration.h']]],
+  ['set_5fbeacon_5finterval_125',['set_beacon_interval',['../class_avionics_board.html#a51fbaf2f9d676ad69b42a63fcc13094d',1,'AvionicsBoard']]],
+  ['set_5fexternal_5frtc_126',['set_external_rtc',['../class_avionics_board.html#a75dacb75648dc274c0f993c0197f80cd',1,'AvionicsBoard']]],
+  ['set_5fforce_5freset_127',['set_force_reset',['../class_watchdog.html#ab85704bc8dd55463604ad18e1405c987',1,'Watchdog']]],
+  ['set_5fpicture_5ftime_128',['set_picture_time',['../class_avionics_board.html#af4769d43c636d82d457afc2037f447d7',1,'AvionicsBoard']]],
+  ['set_5ftime_129',['set_time',['../class_external_r_t_c.html#a0139438abdb2c3b867ef12ae50bd9063',1,'ExternalRTC']]],
+  ['shutdown_5fa_130',['SHUTDOWN_A',['../board__configuration_8h.html#a37f0a0a3cbe84270f2f25770166aae24',1,'board_configuration.h']]],
+  ['shutdown_5fb_131',['SHUTDOWN_B',['../board__configuration_8h.html#a0a9cc78d21dc832f02f3597de714f03c',1,'board_configuration.h']]],
+  ['shutdown_5fc_132',['SHUTDOWN_C',['../board__configuration_8h.html#a9578afd21e6533275aa9fd348ec14537',1,'board_configuration.h']]],
+  ['states_5fa_5fint_133',['STATES_A_INT',['../board__configuration_8h.html#ad3d04c83dc8ff6b22b34b0bb9e9d873d',1,'board_configuration.h']]],
+  ['states_5fb_5fint_134',['STATES_B_INT',['../board__configuration_8h.html#ad07817d0a3ed0dd2421bfbf8539310f4',1,'board_configuration.h']]],
+  ['states_5fc_5fint_135',['STATES_C_INT',['../board__configuration_8h.html#a63760a5963932f3ca1a3526c1c4a0dd1',1,'board_configuration.h']]],
+  ['status_136',['status',['../class_beacon.html#accdec749ee2895eb9f8abbd1038cd0fe',1,'Beacon']]]
+];

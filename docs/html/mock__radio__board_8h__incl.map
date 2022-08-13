@@ -1,7 +1,0 @@
-<map id="AvionicsTesting3/test_process_loop/mock_radio_board.h" name="AvionicsTesting3/test_process_loop/mock_radio_board.h">
-<area shape="rect" id="node1" title="Mock Radio Board for Avionics testing." alt="" coords="27,5,222,61"/>
-<area shape="rect" id="node2" href="$beacon_8h.html" title="SilverSat beacon messages." alt="" coords="5,184,87,211"/>
-<area shape="rect" id="node3" title=" " alt="" coords="83,259,167,285"/>
-<area shape="rect" id="node4" href="$CommandFactory_8h.html" title="Generate the appropriate command object." alt="" coords="162,109,309,136"/>
-<area shape="rect" id="node5" href="$Command_8h.html" title="SilverSat commands." alt="" coords="174,184,275,211"/>
-</map>

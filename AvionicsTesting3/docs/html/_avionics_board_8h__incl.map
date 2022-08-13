@@ -1,0 +1,12 @@
+<map id="test_process_loop/AvionicsBoard.h" name="test_process_loop/AvionicsBoard.h">
+<area shape="rect" id="node1" title="Test Avionics Board for SilverSat." alt="" coords="284,5,481,47"/>
+<area shape="rect" id="node2" href="$_watchdog_8h.html" title="Watchdog for SilverSat." alt="" coords="44,95,143,121"/>
+<area shape="rect" id="node4" href="$_external_r_t_c_8h.html" title="External Realtime Clock." alt="" coords="173,95,285,121"/>
+<area shape="rect" id="node6" href="$_i_m_u_8h.html" title="Implement inertial management unit." alt="" coords="310,95,370,121"/>
+<area shape="rect" id="node8" title=" " alt="" coords="395,95,459,121"/>
+<area shape="rect" id="node9" title=" " alt="" coords="483,95,610,121"/>
+<area shape="rect" id="node10" title=" " alt="" coords="634,95,793,121"/>
+<area shape="rect" id="node3" href="$board__configuration_8h.html" title="Hardware definitions for Avionics Board." alt="" coords="5,169,168,196"/>
+<area shape="rect" id="node5" title=" " alt="" coords="192,169,267,196"/>
+<area shape="rect" id="node7" title=" " alt="" coords="291,169,445,196"/>
+</map>

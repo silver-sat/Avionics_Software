@@ -1,0 +1,8 @@
+<map id="test_process_loop/IMU.cpp" name="test_process_loop/IMU.cpp">
+<area shape="rect" id="node1" title="Implement inertial management unit." alt="" coords="126,5,322,32"/>
+<area shape="rect" id="node2" href="$_i_m_u_8h.html" title="Implement inertial management unit." alt="" coords="78,80,138,107"/>
+<area shape="rect" id="node4" href="$log__utility_8h.html" title="Test logging support routines." alt="" coords="175,80,273,107"/>
+<area shape="rect" id="node6" href="$board__configuration_8h.html" title="Hardware definitions for Avionics Board." alt="" coords="297,80,460,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,155,160,181"/>
+<area shape="rect" id="node5" title=" " alt="" coords="184,155,291,181"/>
+</map>

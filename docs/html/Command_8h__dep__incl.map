@@ -1,8 +1,0 @@
-<map id="AvionicsTesting3/test_process_loop/Command.h" name="AvionicsTesting3/test_process_loop/Command.h">
-<area shape="rect" id="node1" title="SilverSat commands." alt="" coords="76,5,273,47"/>
-<area shape="rect" id="node2" href="$test__command_8ino.html" title="Test the SilverSat command class." alt="" coords="5,191,224,233"/>
-<area shape="rect" id="node3" href="$Command_8cpp.html" title="SilverSat commands." alt="" coords="69,95,281,136"/>
-<area shape="rect" id="node4" href="$CommandFactory_8h.html" title="Generate the appropriate command object." alt="" coords="305,95,548,136"/>
-<area shape="rect" id="node5" href="$mock__radio__board_8h.html" title="Mock Radio Board for Avionics testing." alt="" coords="329,184,524,240"/>
-<area shape="rect" id="node6" href="$mock__radio__board_8cpp.html" title="Mock Radio Board for Avionics testing." alt="" coords="329,288,524,344"/>
-</map>
