@@ -1,0 +1,10 @@
+<map id="test_process_loop/board_configuration.h" name="test_process_loop/board_configuration.h">
+<area shape="rect" id="node1" title="Hardware definitions for Avionics Board." alt="" coords="235,5,415,47"/>
+<area shape="rect" id="node2" href="$_watchdog_8h.html" title="Watchdog for SilverSat." alt="" coords="216,95,435,121"/>
+<area shape="rect" id="node7" href="$mock__payload__board_8h.html" title="Test the Avionics Board mock Payload Board." alt="" coords="5,169,184,211"/>
+<area shape="rect" id="node8" href="$_i_m_u_8cpp.html" title="Implement inertial management unit." alt="" coords="459,95,655,121"/>
+<area shape="rect" id="node3" href="$_avionics_board_8h.html" title="Test Avionics Board for SilverSat." alt="" coords="467,169,664,211"/>
+<area shape="rect" id="node6" href="$_watchdog_8cpp.html" title="Watchdog for SilverSat." alt="" coords="208,177,443,203"/>
+<area shape="rect" id="node4" href="$_avionics_board_8cpp.html" title="Test Avionics Board for SilverSat." alt="" coords="111,259,308,300"/>
+<area shape="rect" id="node5" href="$_command_8cpp.html" title="SilverSat commands." alt="" coords="389,266,627,293"/>
+</map>

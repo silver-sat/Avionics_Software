@@ -1,4 +1,0 @@
-<map id="ExternalRTC" name="ExternalRTC">
-<area shape="rect" id="node1" title="RTC based on the DS1307 chip connected via I2C and the Wire library." alt="" coords="5,80,105,107"/>
-<area shape="rect" id="node2" href="$classRTC__I2C.html" title="A generic I2C RTC base class. DO NOT USE DIRECTLY." alt="" coords="18,5,93,32"/>
-</map>

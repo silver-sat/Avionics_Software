@@ -1,5 +1,0 @@
-<map id="AvionicsTesting1/SilverSat_Bus_Switch_Mock/src/SilverSat_Bus_Switch_mock.h" name="AvionicsTesting1/SilverSat_Bus_Switch_Mock/src/SilverSat_Bus_Switch_mock.h">
-<area shape="rect" id="node1" title="Header for mock bus switch for testing and demonstration." alt="" coords="123,5,353,61"/>
-<area shape="rect" id="node2" href="$SilverSat__Bus__Switch__mock_8cpp.html" title="Implementation of mock bus switch for testing and demonstration." alt="" coords="5,117,236,173"/>
-<area shape="rect" id="node3" href="$Test__Avionics__Board__Bus__Switch__Mock_8cpp.html" title="Test the I2C bus switch." alt="" coords="261,109,450,180"/>
-</map>
