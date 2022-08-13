@@ -117,7 +117,7 @@ bool AvionicsBoard::watchdog_force_reset()
 /**
  * @brief Set the external realtime clock
  *
- * @param time
+ * @param time new time setting
  * @return true successful
  * @return false error
  */
@@ -126,6 +126,12 @@ bool AvionicsBoard::set_external_rtc(DateTime time)
 {
     return _external_rtc.set_time(time);
 };
+
+/**
+ * @brief Get a timestamp
+ *
+ * @return String timestamp
+ */
 
 String AvionicsBoard::get_timestamp()
 {

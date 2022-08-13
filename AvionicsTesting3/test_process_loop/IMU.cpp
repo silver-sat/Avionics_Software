@@ -10,6 +10,7 @@
 
 #include "IMU.h"
 #include "log_utility.h"
+#include "board_configuration.h"
 
 IMU::IMU(){
 

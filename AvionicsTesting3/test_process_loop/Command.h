@@ -18,14 +18,14 @@
  *
  */
 
-struct time_value
+struct TimeValue
 {
-    int year;
-    int month;
-    int day;
-    int hour;
-    int minute;
-    int second;
+    int year;   /**< year */
+    int month;  /**< month */
+    int day;    /**< day */
+    int hour;   /**< hour */
+    int minute; /**< minute */
+    int second; /**< second */
 };
 
 /**
@@ -43,28 +43,28 @@ public:
 
     enum operation
     {
-        beacon_sp,
-        // s_call_sig, deprecated
-        pay_comms, // also Begin tweet
-        pic_times,
-        report_t,   // also GetTime
-        no_operate, // also Ping
-        set_clock,  // also SetTime
-        twee_slee,  // also Halt
-        watchdog,
-        // g_call_sig, deprecated
-        // halt, see TweeSlee
-        get_pic_times,
-        get_telemetry,
-        get_power,
-        get_photos,
-        get_comms,
-        get_beacon_interval,
-        send_test_packet,
-        unknown,
-        invalid,
-        // testing commands
-        unset_clock,
+        beacon_sp, /*< BeaconSP: set beacon spacing */
+        /* s_call_sig, deprecated */
+        pay_comms,  /*< PayComms, subsumes Begin tweet : start payload in comms mode */
+        pic_times,  /*< PicTimes: set times for photos */
+        report_t,   /*< ReportT, subsumes GetTime: reply with realtime clock setting */
+        no_operate, /*< NoOperate, subsumes Ping: acknowlege */
+        set_clock,  /*< SetClock, subsumes SetTime: set realtime clock */
+        twee_slee,  /*< TweeSlee, subsumes Halt: stop tweeting */
+        watchdog,   /*< Watchdog: force watchdog timeout (reset SAMD21) */
+        /* g_call_sig, deprecated */
+        /* halt, see TweeSlee */
+        get_pic_times,       /*< GetPicTimes: reply with picture schedule */
+        get_telemetry,       /*< GetTelemetry: reply with telemetry */
+        get_power,           /*< GetPower: reply with power status */
+        get_photos,          /*< GetPhotos: reply with number of photos */
+        get_comms,           /*< GetComms: reply with Radio Board status */
+        get_beacon_interval, /*< GetBeaconInternal: reply with beacon interval */
+        send_test_packet,    /*< SendTestPacket: reply with test message */
+        unknown,             /*< Unknown: unknown command, error */
+        invalid,             /*< Invalid: invalid command, error */
+        /* testing commands */
+        unset_clock, /*< UnsetClock: change the realtime clock status to unset for testing */
     };
 
     /**
@@ -97,6 +97,10 @@ public:
     virtual bool execute_command();
 
 protected:
+    /**
+     * @brief Command operation
+     *
+     */
     operation _action{invalid};
 };
 
@@ -215,12 +219,12 @@ private:
 class CommandPicTimes : public Command
 {
 public:
-    CommandPicTimes(time_value time);
+    CommandPicTimes(TimeValue time);
     bool acknowledge_command() override;
     bool execute_command() override;
 
 private:
-    time_value _time;
+    TimeValue _time;
 };
 
 /**
@@ -231,17 +235,17 @@ private:
 class CommandSetClock : public Command
 {
 public:
-    CommandSetClock(time_value time);
+    CommandSetClock(TimeValue time);
     bool acknowledge_command() override;
     bool execute_command() override;
 
 private:
-    time_value _time;
+    TimeValue _time;
 };
 
 /**
  * @brief get_pic_times command
- * 
+ *
  */
 
 class CommandGetPicTimes : public Command
@@ -254,9 +258,8 @@ public:
 
 /**
  * @brief get_telemetry command
- * 
+ *
  */
-
 
 class CommandGetTelemetry : public Command
 {
@@ -268,7 +271,7 @@ public:
 
 /**
  * @brief get_power command
- * 
+ *
  */
 
 class CommandGetPower : public Command
@@ -281,7 +284,7 @@ public:
 
 /**
  * @brief get_photos command
- * 
+ *
  */
 
 class CommandGetPhotos : public Command
@@ -294,7 +297,7 @@ public:
 
 /**
  * @brief get_comms command
- * 
+ *
  */
 
 class CommandGetComms : public Command
@@ -307,7 +310,7 @@ public:
 
 /**
  * @brief get_beacon_interval command
- * 
+ *
  */
 
 class CommandGetBeaconInterval : public Command
@@ -320,12 +323,12 @@ public:
 
 /**
  * @brief send_test_packet command
- * 
+ *
  */
 
 class CommandSendTestPacket : public Command
 {
-    public:
+public:
     CommandSendTestPacket();
     bool acknowledge_command() override;
     bool execute_command() override;
@@ -333,12 +336,12 @@ class CommandSendTestPacket : public Command
 
 /**
  * @brief unset_clock command
- * 
+ *
  */
 
 class CommandUnsetClock : public Command
 {
-    public:
+public:
     CommandUnsetClock();
     bool acknowledge_command() override;
     bool execute_command() override;

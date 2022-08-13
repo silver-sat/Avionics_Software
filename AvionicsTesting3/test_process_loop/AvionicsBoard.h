@@ -20,7 +20,7 @@
 
 /**
  * @brief Avionics Board for testing the microcontroller and peripherals
- * 
+ *
  */
 class AvionicsBoard
 {
@@ -59,6 +59,12 @@ public:
      */
 
     bool set_external_rtc(DateTime time);
+
+    /**
+     * @brief Get a timestamp
+     *
+     * @return String timestamp
+     */
 
     String get_timestamp();
 

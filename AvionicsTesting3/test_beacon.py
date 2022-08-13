@@ -1,20 +1,24 @@
 #!/usr/bin/env python3
+"""! @brief Unit test Avionics Board beacon"""
 
-"""Unit test Avionics Board beacon
-   
-Lee A. Congdon
-lee@silversat.org
-5 August 2022
-"""
+##
+# @file test_beacon.py   
+# @brief Unit test Avionics Board beacon
+# @author Lee A. Congdon (lee@silversat.org)
+# @version 1.0.0
+# @date 5 August 2022
 
+## Imports
 from collections import namedtuple
 import serial
 
+## Field names for response
 Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
 
+## Access serial port
 port = serial.Serial(port="/dev/ttyACM0", baudrate=115200)
 
-## Validate the commands
+## Validate commands
 #
 # @param command_string command to be executed
 # @param error_expected true if command will generate error
@@ -23,11 +27,11 @@ port = serial.Serial(port="/dev/ttyACM0", baudrate=115200)
 
 def execute_command(command_string, error_expected, failure_expected):
 
-    # Send the command
+    # Send command
 
     port.write((command_string + "\n").encode("ascii"))
 
-    # Collect the response
+    # Collect response
 
     log = []
     log_data = ""
@@ -71,7 +75,7 @@ def execute_command(command_string, error_expected, failure_expected):
     else:
         assert any([item.detail == "Command failed" for item in log])
 
-## Test the beacon functions
+## Test beacon functions
 #
 
 def test_beacon():
@@ -84,7 +88,7 @@ def test_beacon():
 
         print(log_data)
 
-    # Test the commands
+    # Test commands
 
     # Format: command and parameters, error expected, failure expected
 

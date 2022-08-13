@@ -1,12 +1,16 @@
 /**
- * @mainpage Test Process Loop
- * @section overview Overview
  * @file test_process_loop.ino
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Test the Avionics Board
  * @version 1.2.0
  * @date 2022-07-24
  *
+ */
+ 
+ /** 
+ * @mainpage Test Process Loop
+ * @section overview Overview
+ * 
  * This is the main process loop to test the SilverSat Avionics Board.
  *
  * The on-board devices are implemented as classes interfacing to real hardware and include a watchdog timer, external realtime clock, inertial measurement
