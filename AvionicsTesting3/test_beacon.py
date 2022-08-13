@@ -104,6 +104,7 @@ def test_beacon():
     ]
 
     for command_pair in commands:
+        print(*command_pair)
         execute_command(*command_pair)
 
 

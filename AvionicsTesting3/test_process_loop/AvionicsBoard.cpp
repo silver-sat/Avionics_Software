@@ -42,8 +42,6 @@ bool AvionicsBoard::begin()
     busswitch_begin();
     busswitch_enable();
     Wire1.begin();
-    // pinPeripheral(SDA_NON_CRIT, PIO_SERCOM);
-    // pinPeripheral(SCL_NON_CRIT, PIO_SERCOM);
     busswitch_disable();
     Log.traceln("Non-critical I2C bus initialization completed");
 
@@ -71,9 +69,7 @@ bool AvionicsBoard::begin()
     // Inertial Management Unit
 
     Log.traceln("Initializing inertial management unit");
-    busswitch_enable();
     auto status = _imu.begin(&Wire1);
-    busswitch_disable();
     if (status)
     {
         Log.traceln("Inertial measurement unit initialization completed");
@@ -86,9 +82,7 @@ bool AvionicsBoard::begin()
     // FRAM
 
     Log.traceln("Initializing FRAM");
-    busswitch_enable();
     status = _fram.begin(FRAM_I2C_ADDRESS, &Wire1);
-    busswitch_disable();
     if (status)
     {
         Log.traceln("FRAM initialization completed");
@@ -244,9 +238,7 @@ String AvionicsBoard::get_pic_times()
 
 String AvionicsBoard::get_telemetry()
 {
-    busswitch_enable();
     return _imu.get_acceleration() + _imu.get_rotation() + _imu.get_temperature();
-    busswitch_disable();
 };
 
 String AvionicsBoard::get_beacon_interval()
@@ -366,9 +358,7 @@ bool AvionicsBoard::serial_buffer_disable()
 String AvionicsBoard::read_fram(size_t address)
 {
     // todo: consider making FRAM object
-    busswitch_enable();
     return String(_fram.read(address));
-    busswitch_disable();
 };
 
 /**
