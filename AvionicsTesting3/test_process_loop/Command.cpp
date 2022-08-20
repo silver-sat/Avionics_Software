@@ -228,12 +228,12 @@ bool CommandReportT::execute_command()
     auto status = Command::execute_command();
     Log.verboseln("ReportT");
     extern AvionicsBoard avionics;
-    extern MockRadioBoard radio;
     auto timestamp = avionics.get_timestamp();
     if (timestamp == "ERROR")
     {
         status = false;
     };
+    extern MockRadioBoard radio;
     auto message = Message(Message::response, timestamp);
     return radio.send_message(message) && status;
 };
@@ -259,9 +259,7 @@ bool CommandTweeSlee::acknowledge_command()
 {
     auto status = Command::acknowledge_command();
     Log.verboseln("TweeSlee");
-    extern MockRadioBoard radio;
-    auto message = Message(Message::local_command, "STOP");
-    return radio.send_message(message) && status;
+    return status;
 };
 
 /**
@@ -275,6 +273,9 @@ bool CommandTweeSlee::execute_command()
 {
     auto status = Command::execute_command();
     Log.verboseln("TweeSlee");
+    extern MockRadioBoard radio;
+    auto message = Message(Message::local_command, "STOP");
+    status = radio.send_message(message) && status;
     extern MockPayloadBoard payload;
     return payload.end_activity() && status;
 };

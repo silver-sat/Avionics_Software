@@ -177,23 +177,25 @@ bool AvionicsBoard::check_beacon()
 
 bool AvionicsBoard::set_picture_time(DateTime time)
 {
-    if (_external_rtc.is_set())
-    {
-        if (time > _external_rtc.get_time())
-        {
-            _picture_time = time;
-            return true;
-        }
-        else
-        {
-            Log.errorln("Picture time is before current time");
-            return false;
-        }
-    }
-    else
+    if (!_external_rtc.is_set())
     {
         Log.errorln("External realtime clock is not set");
         return false;
+    }
+    if ((time.year() < 2000) || (time.year() > 2099))
+    {
+        Log.errorln("Picture time must be after 1999 and before 2100");
+        return false;
+    }
+    if (time < _external_rtc.get_time())
+    {
+        Log.errorln("Picture time is before current time");
+        return false;
+    }
+    else
+    {
+        _picture_time = time;
+        return true;
     }
 };
 

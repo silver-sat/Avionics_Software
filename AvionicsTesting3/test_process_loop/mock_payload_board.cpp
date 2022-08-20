@@ -125,7 +125,14 @@ bool MockPayloadBoard::check_shutdown()
 
 bool MockPayloadBoard::end_activity()
 {
-    Log.traceln("Payload activity ending");
+    if (!_payload_active)
+    {
+        Log.traceln("No payload activity");
+    }
+    else
+    {
+        Log.traceln("Payload activity ending");
+    }
     _payload_active = false;
     _power_down_signal = true;
     return true;
