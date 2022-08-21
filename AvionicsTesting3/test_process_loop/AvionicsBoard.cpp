@@ -118,6 +118,12 @@ bool AvionicsBoard::watchdog_force_reset()
 
 bool AvionicsBoard::set_external_rtc(DateTime time)
 {
+    if ((time.year() < 2021) || (time.year() > 2099))
+    {
+        Log.errorln("Time must be after 2020 and before 2100");
+        return false;
+    }
+
     return _external_rtc.set_time(time);
 };
 

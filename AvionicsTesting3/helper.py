@@ -10,6 +10,7 @@
 import serial
 from collections import namedtuple
 from datetime import timedelta
+import re
 
 PORT = "/dev/ttyACM0"
 BAUDRATE = 115200
@@ -61,9 +62,9 @@ def executed(log):
 
 ## Collect through power off check
 #
-def collect_through_power_off(command):
+def collect_through_power_off(command, interval=60):
 
-    s = serial.Serial(PORT, BAUDRATE, timeout=TIMEOUT)
+    s = serial.Serial(PORT, BAUDRATE, timeout=interval + TIMEOUT)
     s.write((command + "\n").encode("utf-8"))
     log = []
     log_data = ""
@@ -122,12 +123,14 @@ def beacon_interval(length, log):
         seconds=int(seconds2),
         milliseconds=int(milliseconds2),
     )
-    return (timedelta1 - timedelta2 - timedelta(seconds=length)) < timedelta(seconds=0.5)
+    return (timedelta1 - timedelta2 - timedelta(seconds=length)) < timedelta(
+        seconds=0.5
+    )
 
 
 ## Collect beacons with timeout
 #
-def collect_timeout(interval = 60):
+def collect_timeout(interval=60):
 
     s = serial.Serial(PORT, BAUDRATE, timeout=interval)
     index = 0
@@ -139,3 +142,12 @@ def collect_timeout(interval = 60):
         index += 1
     s.close()
     return beacons_found == 0
+
+
+## Verify timestamp sent
+#
+def timestamp_sent(log):
+    pattern = re.compile(
+        r"RES20[0-9][0-9]-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T(0[1-9]|1[0-9]|2[0-4]):(0[1-9]|[1-5][0-9]):(0[1-9]|[1-5][0-9])"
+    )
+    return any([pattern.search(item.detail) for item in log])

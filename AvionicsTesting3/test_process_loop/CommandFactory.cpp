@@ -110,21 +110,32 @@ CommandFactory::CommandFactory(String tokens[], size_t token_count)
     }
     else if (tokens[0] == "SetClock")
     {
-        if (token_count = 6)
+        if (token_count == 6)
         {
-            _command = new CommandSetClock({tokens[1].toInt(),
-                                            tokens[2].toInt(),
-                                            tokens[3].toInt(),
-                                            tokens[4].toInt(),
-                                            tokens[5].toInt(),
-                                            tokens[6].toInt()});
-            return;
+            auto tokens_are_digits = true;
+            for (auto token = 1; token <= token_count; token++)
+            {
+                for (auto index = 0; index < tokens[token].length(); index++)
+                {
+                    if (!isDigit(tokens[token][index]))
+                    {
+                        tokens_are_digits = false;
+                    }
+                }
+            }
+            if (tokens_are_digits)
+            {
+                _command = new CommandSetClock({tokens[1].toInt(),
+                                                tokens[2].toInt(),
+                                                tokens[3].toInt(),
+                                                tokens[4].toInt(),
+                                                tokens[5].toInt(),
+                                                tokens[6].toInt()});
+                return;
+            }
         }
-        else
-        {
-            _command = new CommandInvalid(); // Wrong number of parameters
-            return;
-        }
+        _command = new CommandInvalid(); // Wrong number of parameters or bad parameter
+        return;
     }
     else if (tokens[0] == "TweeSlee")
     {

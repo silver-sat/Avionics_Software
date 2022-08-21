@@ -379,7 +379,7 @@ CommandPicTimes::CommandPicTimes(TimeValue time)
 bool CommandPicTimes::acknowledge_command()
 {
     auto status = Command::acknowledge_command();
-    Log.verboseln("PicTimes: Year: %d Month: %d Day: %d Hour: %d Minute %d Second %d",
+    Log.verboseln("PicTimes: Year: %d Month: %d Day: %d Hour: %d Minute: %d Second: %d",
                   _time.year, _time.month, _time.day, _time.hour, _time.minute, _time.second);
     return status;
 }
@@ -421,7 +421,7 @@ CommandSetClock::CommandSetClock(TimeValue time)
 bool CommandSetClock::acknowledge_command()
 {
     auto status = Command::acknowledge_command();
-    Log.verboseln("SetClock: Year: %d Month: %d Day: %d Hour: %d Minute %d Second %d",
+    Log.verboseln("SetClock: Year: %d Month: %d Day: %d Hour: %d Minute: %d Second: %d",
                   _time.year, _time.month, _time.day, _time.hour, _time.minute, _time.second);
     return status;
 }
