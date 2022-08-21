@@ -43,7 +43,11 @@ Command::operation Command::get_operation()
 bool Command::acknowledge_command()
 {
     Log.traceln("Acknowledging command");
-    auto message = Message(Message::acknowledgement, "");
+    Message message{Message::acknowledgement, ""};
+    if (_action == Command::invalid)
+    {
+        message = Message(Message::negative_acknowledgement, "");
+    }
     extern MockRadioBoard radio;
     return radio.send_message(message);
 };
@@ -708,7 +712,7 @@ bool CommandSendTestPacket::acknowledge_command()
 
 /**
  * @brief Execute SendTestPacket command
- * 
+ *
  * @return true successful
  * @return false error
  */
@@ -724,7 +728,7 @@ bool CommandSendTestPacket::execute_command()
 
 /**
  * @brief Construct a new Command Unset Clock:: Command Unset Clock object
- * 
+ *
  */
 
 CommandUnsetClock::CommandUnsetClock()
@@ -734,7 +738,7 @@ CommandUnsetClock::CommandUnsetClock()
 
 /**
  * @brief Acknowledge UnsetClock command
- * 
+ *
  * @return true successful
  * @return false error
  */

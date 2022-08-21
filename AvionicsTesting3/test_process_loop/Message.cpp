@@ -32,6 +32,9 @@ String Message::get_message()
     case acknowledgement:
         return "ACK" + _content;
 
+    case negative_acknowledgement:
+        return "NACK" + _content;
+
     case response:
         return "RES" + _content;
 

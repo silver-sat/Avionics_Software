@@ -19,12 +19,13 @@
 MockRadioBoard::MockRadioBoard(){};
 
 /**
- * @brief Free storage for command
+ * @brief Mock Radio Board Destructor
  *
  */
 
 MockRadioBoard::~MockRadioBoard()
 {
+    // Free storage for command
     if (_factory)
     {
         delete _factory;

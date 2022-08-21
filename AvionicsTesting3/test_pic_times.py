@@ -55,14 +55,14 @@ class TestPicTimes:
 
     def test_pic_times_time_too_early(self):
 
-        log = helper.collect("PicTimes 1900 10 10 10 10 10")
+        log = helper.collect("PicTimes 2020 10 10 10 10 10")
         assert helper.acknowledged(log)
         assert not helper.no_logged_errors(log)
         assert not helper.executed(log)
 
     def test_pic_times_time_too_late(self):
 
-        log = helper.collect("PicTimes 2101 3 4 5 6 7")
+        log = helper.collect("PicTimes 2100 3 4 5 6 7")
         assert helper.acknowledged(log)
         assert not helper.no_logged_errors(log)
         assert not helper.executed(log)

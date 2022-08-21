@@ -182,9 +182,9 @@ bool AvionicsBoard::set_picture_time(DateTime time)
         Log.errorln("External realtime clock is not set");
         return false;
     }
-    if ((time.year() < 2000) || (time.year() > 2099))
+    if ((time.year() < 2021) || (time.year() > 2099))
     {
-        Log.errorln("Picture time must be after 1999 and before 2100");
+        Log.errorln("Picture time must be after 2020 and before 2100");
         return false;
     }
     if (time < _external_rtc.get_time())
