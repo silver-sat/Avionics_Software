@@ -148,6 +148,32 @@ def collect_timeout(interval=60):
 #
 def timestamp_sent(log):
     pattern = re.compile(
-        r"RES20[0-9][0-9]-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T(0[1-9]|1[0-9]|2[0-4]):(0[1-9]|[1-5][0-9]):(0[1-9]|[1-5][0-9])"
+        r"RES20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T(0[1-9]|1\d|2[0-4]):([0-5]\d):([0:5]\d)"
     )
     return any([pattern.search(item.detail) for item in log])
+
+## Collect through reset pin cleared
+#
+def collect_through_reset_pin_cleared(command, interval=60):
+
+    s = serial.Serial(PORT, BAUDRATE, timeout=interval + TIMEOUT)
+    s.write((command + "\n").encode("utf-8"))
+    log = []
+    log_data = ""
+    while "Reset pin changed state to 1" not in log_data:
+        log_data = s.readline().decode("utf-8").strip()
+        log.append(Entry(*(log_data.split(maxsplit=2))))
+    s.close()
+    return log
+
+## Verify reset pin set
+#
+def reset_pin_set(log):
+
+    return any([item.detail == "Reset pin changed state to 0" for item in log])
+
+## Verify reset pin cleared
+#
+def reset_pin_cleared(log):
+
+    return any([item.detail == "Reset pin changed state to 1" for item in log])
