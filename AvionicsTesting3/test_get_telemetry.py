@@ -1,5 +1,5 @@
 ##
-# @file test_get_telemetry.py   
+# @file test_get_telemetry.py
 # @brief Unit test Avionics Board GetTelemetry command
 # @author Lee A. Congdon (lee@silversat.org)
 # @version 1.0.0
@@ -10,14 +10,19 @@
 import helper
 import serial
 from collections import namedtuple
+
+## log entry field names
 Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
 
 ## Test GetTelemetry command
 #
 
+
 class TestGetTelemetry:
     """Test GetTelemetry command"""
-    
+
+    ## get inertial telemetry
+    #
     def test_get_telemetry(self):
 
         log = helper.collect("GetTelemetry")
@@ -26,6 +31,8 @@ class TestGetTelemetry:
         assert helper.telemetry_sent(log)
         assert helper.executed(log)
 
+    ## error: invalid parameter
+    #
     def test_get_telemetry_param(self):
         log = helper.collect("GetTelemetry test")
         assert helper.acknowledged(log)

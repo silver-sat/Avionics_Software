@@ -1,5 +1,5 @@
 ##
-# @file test_report_t.py   
+# @file test_report_t.py
 # @brief Unit test Avionics Board ReportT command
 # @author Lee A. Congdon (lee@silversat.org)
 # @version 1.0.0
@@ -10,14 +10,19 @@
 import helper
 import serial
 from collections import namedtuple
+
+## log entry field names
 Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
 
 ## Test ReportT command
 #
 
+
 class TestReportT:
     """Test ReportT command"""
-    
+
+    ## report realtime clock time
+    #
     def test_report_t(self):
 
         log = helper.collect("ReportT")
@@ -26,6 +31,8 @@ class TestReportT:
         assert helper.timestamp_sent(log)
         assert helper.executed(log)
 
+    ## error: invalid parameter
+    #
     def test_report_t_param(self):
         log = helper.collect("ReportT test")
         assert helper.acknowledged(log)

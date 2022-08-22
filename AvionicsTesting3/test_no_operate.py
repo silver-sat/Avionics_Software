@@ -1,5 +1,5 @@
 ##
-# @file test_no_operate.py   
+# @file test_no_operate.py
 # @brief Unit test Avionics Board NoOperate command
 # @author Lee A. Congdon (lee@silversat.org)
 # @version 1.0.0
@@ -10,14 +10,19 @@
 import helper
 import serial
 from collections import namedtuple
+
+## log entry field names
 Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
 
 ## Test NoOperate command
 #
 
+
 class TestNoOperate:
     """Test NoOperate command"""
-    
+
+    ## no operation
+    #
     def test_no_operate(self):
 
         log = helper.collect("NoOperate")
@@ -25,12 +30,16 @@ class TestNoOperate:
         assert helper.no_logged_errors(log)
         assert helper.executed(log)
 
+    ## error: invalid parameter
+    #
     def test_no_operate_param(self):
         log = helper.collect("NoOperate test")
         assert helper.acknowledged(log)
         assert not helper.no_logged_errors(log)
         assert not helper.executed(log)
-        
+
+    ## error: invalid parameters
+    #
     def test_no_operate_six_param(self):
         log = helper.collect("NoOperate test1 test2 test3 test4 test5 test6")
         assert helper.acknowledged(log)

@@ -12,10 +12,14 @@ from collections import namedtuple
 from datetime import timedelta
 import re
 
+## port for Avionics Board
 PORT = "/dev/ttyACM0"
-BAUDRATE = 115200
-TIMEOUT = 5
-Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
+## serial transmission speed
+BAUDRATE = 115200  
+## default timeout for readline
+TIMEOUT = 5  
+## log entry field names
+Entry = namedtuple("Entry", ["timestamp", "level", "detail"])  
 
 ## Issue command and collect response
 #
@@ -216,6 +220,7 @@ def integer_sent(log):
 def local_get_comms_sent(log):
 
     return any([item.detail == "Sending message: LOCGetComms" for item in log])
+
 
 ## Verify test packet sent
 #
