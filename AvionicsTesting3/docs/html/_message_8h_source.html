@@ -83,22 +83,23 @@ $(function() {
 <div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="class_message.html#a9b98fc6fc1adc8e3ea80ddc348e7efaf">   28</a></span>&#160;    <span class="keyword">enum</span> <a class="code" href="class_message.html#a9b98fc6fc1adc8e3ea80ddc348e7efaf">message_type</a></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    {</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        acknowledgement,</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        response,</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        local_command,</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        beacon, <span class="comment">// reserved</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        invalid,</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    };</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="class_message.html#a07b03ccc9013fe0cfa8bd3f92afdf675">Message</a>(<a class="code" href="class_message.html#a9b98fc6fc1adc8e3ea80ddc348e7efaf">message_type</a> header, String content);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    String <a class="code" href="class_message.html#a5c91e845d82a314db8a8decc6fb9af14">get_message</a>();</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <a class="code" href="class_message.html#a9b98fc6fc1adc8e3ea80ddc348e7efaf">message_type</a> _header{};</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    String _content{};</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;};</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#endif // MESSAGE_H</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        negative_acknowledgement,</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        response,</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        local_command,</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        beacon, <span class="comment">// reserved</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        invalid,</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    };</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <a class="code" href="class_message.html#a07b03ccc9013fe0cfa8bd3f92afdf675">Message</a>(<a class="code" href="class_message.html#a9b98fc6fc1adc8e3ea80ddc348e7efaf">message_type</a> header, String content);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    String <a class="code" href="class_message.html#a5c91e845d82a314db8a8decc6fb9af14">get_message</a>();</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="class_message.html#a9b98fc6fc1adc8e3ea80ddc348e7efaf">message_type</a> _header{};</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    String _content{};</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;};</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#endif // MESSAGE_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclass_message_html_a9b98fc6fc1adc8e3ea80ddc348e7efaf"><div class="ttname"><a href="class_message.html#a9b98fc6fc1adc8e3ea80ddc348e7efaf">Message::message_type</a></div><div class="ttdeci">message_type</div><div class="ttdoc">message types</div><div class="ttdef"><b>Definition:</b> Message.h:28</div></div>
 <div class="ttc" id="aclass_message_html_a5c91e845d82a314db8a8decc6fb9af14"><div class="ttname"><a href="class_message.html#a5c91e845d82a314db8a8decc6fb9af14">Message::get_message</a></div><div class="ttdeci">String get_message()</div><div class="ttdoc">Get the message.</div><div class="ttdef"><b>Definition:</b> Message.cpp:28</div></div>

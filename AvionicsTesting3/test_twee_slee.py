@@ -1,5 +1,5 @@
 ##
-# @file test_twee_slee.py   
+# @file test_twee_slee.py
 # @brief Unit test Avionics Board TweeSlee command
 # @author Lee A. Congdon (lee@silversat.org)
 # @version 1.0.0
@@ -10,14 +10,19 @@
 import helper
 import serial
 from collections import namedtuple
+
+## log entry field names
 Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
 
 ## Test TweeSlee command
 #
 
+
 class TestTweeSlee:
     """Test TweeSlee command"""
-    
+
+    ## active payload to sleep
+    #
     def test_twee_slee(self):
 
         log = helper.collect_through_power_off("TweeSlee")
@@ -27,6 +32,8 @@ class TestTweeSlee:
         assert helper.local_stop_message_sent(log)
         assert helper.payload_power_off(log)
 
+    ## error: invalid parameter
+    #
     def test_twee_slee_param(self):
         log = helper.collect("TweeSlee test")
         assert helper.acknowledged(log)

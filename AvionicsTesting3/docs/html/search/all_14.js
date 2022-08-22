@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['_7ecommandfactory_161',['~CommandFactory',['../class_command_factory.html#a7bb4a37a7903caf0e42207b7ec8a6ad6',1,'CommandFactory']]],
-  ['_7emockradioboard_162',['~MockRadioBoard',['../class_mock_radio_board.html#ac785584c9975350fc52af35c89f2eecd',1,'MockRadioBoard']]]
+  ['year_262',['year',['../struct_time_value.html#a71719783f88f475af131acc46e072a6d',1,'TimeValue']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['read_5ffram_284',['read_fram',['../class_avionics_board.html#a342a2471691d87d01954e8a0a809e218',1,'AvionicsBoard']]]
+  ['no_5flogged_5ferrors_418',['no_logged_errors',['../helper_8py.html#a6f9db028b5daf4273c3728c467dd7f99',1,'helper']]]
 ];

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['_7ecommandfactory_303',['~CommandFactory',['../class_command_factory.html#a7bb4a37a7903caf0e42207b7ec8a6ad6',1,'CommandFactory']]],
-  ['_7emockradioboard_304',['~MockRadioBoard',['../class_mock_radio_board.html#ac785584c9975350fc52af35c89f2eecd',1,'MockRadioBoard']]]
+  ['unset_5fclock_498',['unset_clock',['../class_avionics_board.html#a97a4f0bebf2d9977067ca934a3a4ebe6',1,'AvionicsBoard::unset_clock()'],['../class_external_r_t_c.html#a60d4289656d8db3c642299cd4daa25f8',1,'ExternalRTC::unset_clock()']]]
 ];

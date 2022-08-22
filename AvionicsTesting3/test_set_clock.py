@@ -1,5 +1,5 @@
 ##
-# @file test_set_clock.py   
+# @file test_set_clock.py
 # @brief Unit test Avionics Board SetClock command
 # @author Lee A. Congdon (lee@silversat.org)
 # @version 1.0.0
@@ -13,14 +13,18 @@ from collections import namedtuple
 from datetime import datetime
 from datetime import timezone
 
+## log entry field names
 Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
 
 ## Test SetClock command
 #
 
+
 class TestSetClock:
     """Test SetClock command"""
 
+    ## set realtime clock
+    #
     def test_set_clock_early(self):
 
         log = helper.collect("SetClock 2022 1 1 10 10 0")
@@ -28,6 +32,8 @@ class TestSetClock:
         assert helper.no_logged_errors(log)
         assert helper.executed(log)
 
+    ## set realtime clock with current time
+    #
     def test_set_clock(self):
 
         utc_time = datetime.now(timezone.utc)
@@ -36,6 +42,8 @@ class TestSetClock:
         assert helper.no_logged_errors(log)
         assert helper.executed(log)
 
+    ## error: incorrect number of parameters
+    #
     def test_set_clock_no_param(self):
 
         log = helper.collect("SetClock")
@@ -43,13 +51,17 @@ class TestSetClock:
         assert not helper.no_logged_errors(log)
         assert not helper.executed(log)
 
+    ## error: incorrect number of parameters
+    #
     def test_set_clock_three_param(self):
 
         log = helper.collect("SetClock 2023 12 12")
         assert helper.acknowledged(log)
         assert not helper.no_logged_errors(log)
         assert not helper.executed(log)
-        
+
+    ## error: invalid parameters
+    #
     def test_set_clock_six_param_invalid(self):
 
         log = helper.collect("SetClock test1 test2 test3 test4 test5 test6")
@@ -57,6 +69,8 @@ class TestSetClock:
         assert not helper.no_logged_errors(log)
         assert not helper.executed(log)
 
+    ## error: invalid parameters
+    #
     def test_set_clock_six_zeros(self):
 
         log = helper.collect("SetClock 0 0 0 0 0 0")
@@ -64,6 +78,8 @@ class TestSetClock:
         assert not helper.no_logged_errors(log)
         assert not helper.executed(log)
 
+    ## error: time to early
+    #
     def test_set_clock_time_too_early(self):
 
         log = helper.collect("SetClock 2020 10 10 10 10 10")
@@ -71,6 +87,8 @@ class TestSetClock:
         assert not helper.no_logged_errors(log)
         assert not helper.executed(log)
 
+    ## error: time too late
+    #
     def test_set_clock_time_too_late(self):
 
         log = helper.collect("SetClock 2100 3 4 5 6 7")
