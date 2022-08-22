@@ -216,3 +216,9 @@ def integer_sent(log):
 def local_get_comms_sent(log):
 
     return any([item.detail == "Sending message: LOCGetComms" for item in log])
+
+## Verify test packet sent
+#
+def test_packet_sent(log):
+
+    return any([item.detail == "Sending message: RESTEST" for item in log])
