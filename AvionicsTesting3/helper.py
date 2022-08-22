@@ -148,7 +148,7 @@ def collect_timeout(interval=60):
 #
 def timestamp_sent(log):
     pattern = re.compile(
-        r"\sRES20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T(0[1-9]|1\d|2[0-4]):([0-5]\d):([0:5]\d)$"
+        r"\sRES20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T(0[1-9]|1\d|2[0-4]):([0-5]\d):([0-5]\d)$"
     )
     return any([pattern.search(item.detail) for item in log])
 
