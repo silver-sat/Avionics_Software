@@ -28,6 +28,7 @@ public:
     enum message_type
     {
         acknowledgement,
+        negative_acknowledgement,
         response,
         local_command,
         beacon, // reserved

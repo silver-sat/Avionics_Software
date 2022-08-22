@@ -17,7 +17,7 @@
 
 /**
  * @brief Mock Radio Board for testing the Avionics Board
- * 
+ *
  */
 class MockRadioBoard
 {
@@ -26,7 +26,7 @@ public:
     ~MockRadioBoard();
 
     /**
-     * @brief initialize the Radio Board
+     * @brief Initialize the Radio Board
      *
      * @return true successful
      * @return false error
@@ -101,7 +101,7 @@ private:
     const size_t _token_limit{10};
     CommandFactory *_factory{};
     Command *_command{};
-    String _call_sign {"?????"}; // todo: replace with call sign
+    String _call_sign{"?????"}; // todo: replace with call sign
 };
 
 #endif // MOCK_RADIO_BOARD_H

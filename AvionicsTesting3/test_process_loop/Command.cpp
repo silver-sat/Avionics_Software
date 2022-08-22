@@ -43,7 +43,11 @@ Command::operation Command::get_operation()
 bool Command::acknowledge_command()
 {
     Log.traceln("Acknowledging command");
-    auto message = Message(Message::acknowledgement, "");
+    Message message{Message::acknowledgement, ""};
+    if (_action == Command::invalid)
+    {
+        message = Message(Message::negative_acknowledgement, "");
+    }
     extern MockRadioBoard radio;
     return radio.send_message(message);
 };
@@ -228,12 +232,12 @@ bool CommandReportT::execute_command()
     auto status = Command::execute_command();
     Log.verboseln("ReportT");
     extern AvionicsBoard avionics;
-    extern MockRadioBoard radio;
     auto timestamp = avionics.get_timestamp();
     if (timestamp == "ERROR")
     {
         status = false;
     };
+    extern MockRadioBoard radio;
     auto message = Message(Message::response, timestamp);
     return radio.send_message(message) && status;
 };
@@ -259,9 +263,7 @@ bool CommandTweeSlee::acknowledge_command()
 {
     auto status = Command::acknowledge_command();
     Log.verboseln("TweeSlee");
-    extern MockRadioBoard radio;
-    auto message = Message(Message::local_command, "STOP");
-    return radio.send_message(message) && status;
+    return status;
 };
 
 /**
@@ -275,6 +277,9 @@ bool CommandTweeSlee::execute_command()
 {
     auto status = Command::execute_command();
     Log.verboseln("TweeSlee");
+    extern MockRadioBoard radio;
+    auto message = Message(Message::local_command, "STOP");
+    status = radio.send_message(message) && status;
     extern MockPayloadBoard payload;
     return payload.end_activity() && status;
 };
@@ -374,7 +379,7 @@ CommandPicTimes::CommandPicTimes(TimeValue time)
 bool CommandPicTimes::acknowledge_command()
 {
     auto status = Command::acknowledge_command();
-    Log.verboseln("PicTimes: Year: %d Month: %d Day: %d Hour: %d Minute %d Second %d",
+    Log.verboseln("PicTimes: Year: %d Month: %d Day: %d Hour: %d Minute: %d Second: %d",
                   _time.year, _time.month, _time.day, _time.hour, _time.minute, _time.second);
     return status;
 }
@@ -416,7 +421,7 @@ CommandSetClock::CommandSetClock(TimeValue time)
 bool CommandSetClock::acknowledge_command()
 {
     auto status = Command::acknowledge_command();
-    Log.verboseln("SetClock: Year: %d Month: %d Day: %d Hour: %d Minute %d Second %d",
+    Log.verboseln("SetClock: Year: %d Month: %d Day: %d Hour: %d Minute: %d Second: %d",
                   _time.year, _time.month, _time.day, _time.hour, _time.minute, _time.second);
     return status;
 }
@@ -707,7 +712,7 @@ bool CommandSendTestPacket::acknowledge_command()
 
 /**
  * @brief Execute SendTestPacket command
- * 
+ *
  * @return true successful
  * @return false error
  */
@@ -723,7 +728,7 @@ bool CommandSendTestPacket::execute_command()
 
 /**
  * @brief Construct a new Command Unset Clock:: Command Unset Clock object
- * 
+ *
  */
 
 CommandUnsetClock::CommandUnsetClock()
@@ -733,7 +738,7 @@ CommandUnsetClock::CommandUnsetClock()
 
 /**
  * @brief Acknowledge UnsetClock command
- * 
+ *
  * @return true successful
  * @return false error
  */
