@@ -29,7 +29,7 @@ def collect(command):
     s.write((command + "\n").encode("utf-8"))
     log = []
     log_data = ""
-    while ("Command executed" not in log_data) & ("Command failed" not in log_data):
+    while ("Executed (" not in log_data) & ("Failed (" not in log_data):
         log_data = s.readline().decode("utf-8").strip()
         log.append(Entry(*(log_data.split(maxsplit=2))))
     s.close()
@@ -61,7 +61,7 @@ def no_logged_errors(log):
 #
 def executed(log):
 
-    return any([item.detail == "Command executed" for item in log])
+    return any([item.detail.startswith("Executed (") for item in log])
 
 
 ## Collect through power off check

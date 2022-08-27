@@ -75,12 +75,12 @@ bool MockRadioBoard::check_command()
         Log.traceln("Command acknowledged");
         if (_command->execute_command())
         {
-            Log.traceln("Command executed");
+            Log.traceln("Executed (%l executed, %l failed)", ++_successful_commands, _failed_commands);
             return true;
         }
         else
         {
-            Log.errorln("Command failed");
+            Log.errorln("Failed (%l executed, %l failed)", _successful_commands, ++_failed_commands);
             return false;
         };
     };
@@ -112,7 +112,7 @@ bool MockRadioBoard::command_received()
 
     if (_end_of_line)
     {
-        Log.verboseln("Remote command received: %s", _buffer.c_str());
+        Log.verboseln("Remote command %l received: %s", ++_commands_received, _buffer.c_str());
         make_command(_buffer);
         _buffer = "";
         _end_of_line = false;

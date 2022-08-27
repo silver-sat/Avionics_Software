@@ -101,7 +101,10 @@ private:
     const size_t _token_limit{10};
     CommandFactory *_factory{};
     Command *_command{};
-    String _call_sign{"?????"}; // todo: replace with call sign
+    long _commands_received{0};
+    long _successful_commands{0};
+    long _failed_commands{0};
+    String _call_sign{"KC3CQJ"};
 };
 
 #endif // MOCK_RADIO_BOARD_H
