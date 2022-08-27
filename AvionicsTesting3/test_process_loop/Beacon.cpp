@@ -46,6 +46,8 @@ String to_board_code(Beacon::status status)
  * @param power status
  */
 
+// todo: add status for Radio Board
+
 Beacon::Beacon(
     status avionics,
     status payload,
