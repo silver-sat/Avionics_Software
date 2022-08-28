@@ -112,7 +112,7 @@ bool MockRadioBoard::command_received()
 
     if (_end_of_line)
     {
-        Log.verboseln("Remote command %l received: %s", ++_commands_received, _buffer.c_str());
+        Log.verboseln("Command received (sequence %l): %s", ++_commands_received, _buffer.c_str());
         make_command(_buffer);
         _buffer = "";
         _end_of_line = false;
