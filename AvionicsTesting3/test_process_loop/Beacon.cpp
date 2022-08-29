@@ -2,7 +2,7 @@
  * @file beacon.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat beacon messages
- * @version 1.1.0
+ * @version 1.2.0
  * @date 2022-07-25
  *
  *
@@ -41,22 +41,23 @@ String to_board_code(Beacon::status status)
 /**
  * @brief Construct a new Beacon:: Beacon object
  *
- * @param avionics status
- * @param payload status
  * @param power status
+ * @param avionics status
+ * @param radio status
+ * @param payload status
  */
 
-// todo: add status for Radio Board
-
 Beacon::Beacon(
+    status power,
     status avionics,
-    status payload,
-    status power)
+    status radio,
+    status payload)
 {
 
-    _message = (to_board_code(avionics) +
-                to_board_code(payload) +
-                to_board_code(power));
+    _message = (to_board_code(power) +
+                to_board_code(avionics) +
+                to_board_code(radio) +
+                to_board_code(payload));
 };
 
 /**
