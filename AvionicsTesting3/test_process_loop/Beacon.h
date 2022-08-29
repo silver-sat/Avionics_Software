@@ -2,7 +2,7 @@
  * @file beacon.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat beacon messages
- * @version 1.1.0
+ * @version 1.2.0
  * @date 2022-07-25
  *
  *
@@ -37,15 +37,17 @@ public:
     /**
      * @brief Construct a new Beacon object
      *
-     * @param avionics status
-     * @param payload status
      * @param power status
+     * @param avionics status
+     * @param radio status
+     * @param payload status
      */
 
     Beacon(
+        status power,
         status avionics,
-        status payload,
-        status power);
+        status radio,
+        status payload);
     
     /**
      * @brief Get the message for the beacon

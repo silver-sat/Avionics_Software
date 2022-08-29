@@ -2,7 +2,7 @@
  * @file AvionicsBoard.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Test Avionics Board for SilverSat
- * @version 1.0.2
+ * @version 1.0.3
  * @date 2022-07-29
  *
  *
@@ -10,7 +10,6 @@
 
 #include "AvionicsBoard.h"
 #include "log_utility.h"
-#include "Beacon.h"
 #include "mock_radio_board.h"
 #include "mock_payload_board.h"
 
@@ -80,6 +79,8 @@ bool AvionicsBoard::begin()
     }
 
     // FRAM
+
+    // todo: replace with Avionics Board FRAM
 
     Log.traceln("Initializing FRAM");
     status = _fram.begin(FRAM_I2C_ADDRESS, &Wire1);
@@ -164,8 +165,11 @@ bool AvionicsBoard::check_beacon()
     if ((millis() - _last_beacon_time > _beacon_interval) && (_beacon_interval > 0))
     {
         // todo: get power status
+        // todo: set avionics status
+        // todo: get radio status
         // todo: get payload status
-        Beacon message{Beacon::excellent, Beacon::unknown, Beacon::unknown};
+
+        Beacon message{_power_status, _avionics_status, _radio_status, _payload_status};
         extern MockRadioBoard radio;
         radio.send_beacon(message);
         _last_beacon_time = millis();

@@ -2,7 +2,7 @@
  * @file AvionicsBoard.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Test Avionics Board for SilverSat
- * @version 1.0.2
+ * @version 1.0.3
  * @date 2022-07-29
  *
  *
@@ -14,6 +14,7 @@
 #include "Watchdog.h"
 #include "ExternalRTC.h"
 #include "IMU.h"
+#include "Beacon.h"
 #include <Wire.h>
 #include <wiring_private.h>
 #include <Adafruit_FRAM_I2C.h>
@@ -208,6 +209,10 @@ private:
     IMU _imu{};
     // to consider: refactor FRAM as object
     Adafruit_FRAM_I2C _fram{};
+    Beacon::status _power_status{Beacon::status::unknown};
+    Beacon::status _avionics_status{Beacon::status::excellent};
+    Beacon::status _radio_status{Beacon::status::unknown};
+    Beacon::status _payload_status{Beacon::status::unknown};
 };
 
 #endif // AVIONICSBOARD_H
