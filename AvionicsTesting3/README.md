@@ -15,7 +15,7 @@ The test_process_loop sketch sends log data, messages, and beacons to the serial
 
 You can then use the serial port to send commands to the Avionics Board and observe the responses. Note that the microcontroller does not echo keystrokes. You may also close the serial connection and launch a Python program which communicates through the serial interface. A sample Python program, example.py, is provided. Attempting to use the terminal and a program simultaneously will result in errors.
 
-The AvionicsTesting3 folder includes python programs for unit testing each of the Avionics Board commands. These programs are designed to be managed and executed using pytest. After verifying the microcontroller has initialized properly, you may run the entire suite of command unit tests by entering ```pytest``` on the command line while in the AvionicsTesting3 directory. pytest also allows selective execution of tests. See https://docs.pytest.org/ for additional information. 
+The AvionicsTesting3/tests folder includes python programs for unit testing each of the Avionics Board commands. These programs are designed to be managed and executed using pytest. After verifying the microcontroller has initialized properly, you may run the entire suite of command unit tests by entering ```pytest``` on the command line while in the AvionicsTesting3 directory. pytest also allows selective execution of tests. See https://docs.pytest.org/ for additional information. 
 
 Documentation for the software and tests can be viewed by opening docs/index.html in a browser.
 
