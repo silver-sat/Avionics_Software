@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 ##
-# @file: verify_command.py
-# @brief: Verify command
+# @file verify_command.py
+# @brief Verify command
 # @author Lee A. Congdon (lee@silversat.org)
 # @version 1.0.0
 # @date 1 September 2022
@@ -49,11 +49,9 @@ def get_args():
     )
 
     args = parser.parse_args()
-# todo: read secret from file
-    if os.path.isfile(args.secret):
-        args.secret = open(args.secret).read().rstrip()
 
-    args.secret = b"\x16]\xaa\xb3\x9a\xb4\xb6\xc7\r\xf6t(\x9a\x9d\x10\xe0"
+    if os.path.isfile(args.secret):
+        args.secret = open(args.secret, 'rb').read()
 
     return args
 
@@ -63,11 +61,11 @@ def main():
 
     args = get_args()
     args.message = args.message.split(args.separator)
-
+# todo: no os exit
     if len(args.message) != 4:
         print("Invalid separator")
         os.exit()
-
+# todo: no os exit
     if int(args.message[0]) != args.sequence:
         print("Invalid sequence number")
         os.exit()
@@ -76,7 +74,6 @@ def main():
     salt = args.message[1].encode("utf-8")
     separator = args.separator.encode("utf-8")
     command = args.message[2].encode("utf-8")
-    args = get_args()
     command_hmac = hmac.new(args.secret, digestmod=hashlib.blake2s)
     command_hmac.update(sequence)
     command_hmac.update(separator)
@@ -87,7 +84,6 @@ def main():
         print("Command validated")
     else:
         print("Command not valid")
-
 
 if __name__ == "__main__":
     main()

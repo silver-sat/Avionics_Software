@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 ##
-# @file: sign_command.py
-# @brief: Sign command
+# @file sign_command.py
+# @brief Sign command
 # @author Lee A. Congdon (lee@silversat.org)
 # @version 1.0.0
 # @date 1 September 2022
@@ -50,13 +50,10 @@ def get_args():
     )
 
     args = parser.parse_args()
-# todo: read secret from file
 
     if os.path.isfile(args.secret):
-        args.secret = open(args.secret).read().rstrip()
-
+        args.secret = open(args.secret, "rb").read()
     args.command = args.command.encode("utf-8")
-    args.secret = b"\x16]\xaa\xb3\x9a\xb4\xb6\xc7\r\xf6t(\x9a\x9d\x10\xe0"
     args.sequence = repr(args.sequence).encode("utf-8")
     args.separator = args.separator.encode("utf-8")
 

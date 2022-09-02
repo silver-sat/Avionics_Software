@@ -4,54 +4,71 @@
 import os
 from subprocess import getstatusoutput, getoutput
 
-prg = "./sign_command.py"
+sign_prg = "./sign_command.py"
+verify_prg = "./verify_command.py"
+secret = "./secret.txt"
+
 
 class TestSignCommand:
     """Test command signing"""
 
+    def test_sign_exists(self):
+        """sign program exists"""
 
-    def test_exists():
-        """exists"""
+        assert os.path.isfile(sign_prg)
 
-        assert os.path.isfile(prg)
+    def test_verify_exists(self):
+        """verify program exists"""
 
+        assert os.path.isfile(verify_prg)
 
-    def test_usage():
-        """usage"""
+    def test_sign_usage(self):
+        """sign program usage"""
 
         for flag in ["-h", "--help"]:
-            rv, out = getstatusoutput(f"{prg} {flag}")
+            rv, out = getstatusoutput(f"{sign_prg} {flag}")
             assert rv == 0
             assert out.lower().startswith("usage")
 
+    def test_verify_usage(self):
+        """verify program usage"""
 
-    def test_no_operate():
+        for flag in ["-h", "--help"]:
+            rv, out = getstatusoutput(f"{verify_prg} {flag}")
+            assert rv == 0
+            assert out.lower().startswith("usage")
+
+    def test_no_operate(self):
         """NoOperate"""
 
-        arg = "'NoOperate' './secret.txt'"
-        out = getoutput(f"{prg} {arg}")
-        assert out.strip() == "????????????????"
+        command = "NoOperate"
+        signed_message = getoutput(f"{sign_prg} '{command}' {secret}")
+        out = getoutput(f"{verify_prg} '{signed_message}' {secret}")
+        assert out.strip() == "Command validated"
 
-    def test_beacon_sp():
+    def test_beacon_sp(self):
         """BeaconSp"""
 
-        arg = "'BeaconSp 10' './secret.txt'" 
-        out = getoutput(f"{prg} {arg}")
-        assert out.strip() == "????????????????"
+        command = "BeaconSp 10"
+        signed_message = getoutput(f"{sign_prg} '{command}' {secret}")
+        out = getoutput(f"{verify_prg} '{signed_message}' {secret}")
+        assert out.strip() == "Command validated"
 
-
-    def test_sequence():
+    def test_sequence(self):
         """sequence number"""
 
-        arg = "'No Operate' './secret.txt' '-q 2'" 
-        out = getoutput(f"{prg} {arg}")
-        assert out.strip() == "????????????????"
+        command = "NoOperate"
+        flag = "-q 5"
+        signed_message = getoutput(f"{sign_prg} {flag} '{command}' {secret}")
+        out = getoutput(f"{verify_prg} {flag} '{signed_message}' {secret}")
+        assert out.strip() == "Command validated"
 
 
-    def test_separator():
+    def test_separator(self):
         """field separator"""
 
-        arg = "'No Operate' './secret.txt' '-p +'" 
-        out = getoutput(f"{prg} {arg}")
-        assert out.strip() == "????????????????"
-
+        command = "BeaconSp 10"
+        flag = "--separator \|" # backslash to disable shell treatment of pipe
+        signed_message = getoutput(f"{sign_prg} {flag} '{command}' {secret}")
+        out = getoutput(f"{verify_prg} {flag} '{signed_message}' {secret}")
+        assert out.strip() == "Command validated"
