@@ -68,7 +68,7 @@ class TestSignCommand:
         """field separator"""
 
         command = "BeaconSp 10"
-        flag = "--separator \|" # backslash to disable shell treatment of pipe
+        flag = "--separator \:"
         signed_message = getoutput(f"{sign_prg} {flag} '{command}' {secret}")
         out = getoutput(f"{verify_prg} {flag} '{signed_message}' {secret}")
         assert out.strip() == "Command validated"

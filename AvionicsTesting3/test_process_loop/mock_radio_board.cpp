@@ -9,7 +9,9 @@
  */
 
 #include "mock_radio_board.h"
+#include "arduino_secrets.h"
 #include "log_utility.h"
+#include <BLAKE2s.h>
 
 /**
  * @brief Construct a new Mock Radio Board:: Mock Radio Board object
@@ -112,7 +114,7 @@ bool MockRadioBoard::command_received()
 
     if (_end_of_line)
     {
-        Log.verboseln("Command received (sequence %l): %s", ++_commands_received, _buffer.c_str());
+        Log.infoln("Command received (sequence %l): %s", ++_commands_received, _buffer.c_str());
         make_command(_buffer);
         _buffer = "";
         _end_of_line = false;
@@ -131,7 +133,6 @@ bool MockRadioBoard::command_received()
 
 bool MockRadioBoard::make_command(String buffer)
 {
-    Log.traceln("Constructing new command");
 
     // destroy the last factory
 
@@ -141,32 +142,117 @@ bool MockRadioBoard::make_command(String buffer)
         _factory = NULL;
     }
 
-    // trim and tokenize the buffer
+    buffer.trim();
+    String command_string{};
+    size_t buffer_index = buffer.indexOf(_command_message_separator);
 
-    _buffer.trim();
-    String tokens[_token_limit]{};
-    size_t token_index{0};
-    for (auto buffer_index = 0; buffer_index < _buffer.length(); buffer_index++)
+    if (buffer_index == -1)
     {
-        if (_buffer.charAt(buffer_index) != ' ')
+        Log.verboseln("Command is not signed");
+        command_string = buffer;
+    }
+    else
+    {
+        Log.verboseln("Command has signature separator %s", _command_message_separator);
+
+        // tokenize the buffer
+
+        String buffer_tokens[_buffer_token_limit]{};
+        size_t buffer_token_index{0};
+        size_t token_start_index{0};
+        for (auto buffer_token_index = 0; buffer_token_index < _buffer_token_limit; buffer_token_index++)
         {
-            tokens[token_index] += _buffer.charAt(buffer_index);
+            auto token_end_index = buffer.indexOf(_command_message_separator, token_start_index);
+            buffer_tokens[buffer_token_index] = buffer.substring(token_start_index, token_end_index++);
+            token_start_index = token_end_index;
+        }
+        command_string = buffer_tokens[2];
+        Log.verboseln("Sequence: %s", buffer_tokens[0].c_str());
+        Log.verboseln("Salt: %s", buffer_tokens[1].c_str());
+        Log.verboseln("Command: %s", buffer_tokens[2].c_str());
+        Log.verboseln("Source  HMAC: %s", buffer_tokens[3].c_str());
+
+        // todo: check for validation requirement
+        // todo: assess ascii versus utf-8
+        // todo: refactor token lengths
+
+        char sequence[10];
+        size_t sequence_length = buffer_tokens[0].length();
+        buffer_tokens[0].toCharArray(sequence, 10);
+
+        char salt[16];
+        size_t salt_length = 16;
+        buffer_tokens[1].toCharArray(salt, 16);
+
+        char command[50];
+        size_t command_length = buffer_tokens[2].length();
+        buffer_tokens[2].toCharArray(command, 50);
+
+        char sourceHMAC[_hash_size];
+        buffer_tokens[3].toCharArray(sourceHMAC, _hash_size);
+
+        const byte secret[]{SECRET_HASH_KEY};
+        char hash[_hash_size];
+        
+        BLAKE2s blake{};
+        blake.resetHMAC(&secret, sizeof(secret));
+        blake.update(&sequence, sequence_length);
+        blake.update(&_command_message_separator, sizeof(_command_message_separator));
+        blake.update(&salt, salt_length);
+        blake.update(&_command_message_separator, sizeof(_command_message_separator));
+        blake.update(&command, command_length);
+        blake.finalizeHMAC(secret, sizeof(secret), hash, _hash_size);
+        String HMAC{};
+        for (auto index = 0; index < _hash_size; index++)
+        {
+            if (hash[index]<0x10) {HMAC+="0";};
+            HMAC += String(hash[index], HEX);
+        }
+        Log.verboseln("Computed HMAC: %s", HMAC.c_str());
+        if (HMAC == buffer_tokens[3])
+        {
+            Log.traceln("Command signature validated");
         }
         else
         {
-            token_index++;
-            if (token_index > _token_limit)
+            if (_validation_required)
+            {
+                Log.errorln("Command signature invalid");
+                command_string = "Invalid";
+            }
+            else
+            {
+                Log.warningln("Command signature invalid");
+            }
+        }
+    }
+
+    // tokenize the command string
+
+    Log.verboseln("Parsing the command parameters");
+    String command_tokens[_command_token_limit]{};
+    size_t command_token_index{0};
+    for (auto string_index = 0; string_index < command_string.length(); string_index++)
+    {
+        if (command_string.charAt(string_index) != ' ')
+        {
+            command_tokens[command_token_index] += command_string.charAt(string_index);
+        }
+        else
+        {
+            command_token_index++;
+            if (command_token_index > _command_token_limit)
             {
                 Log.warningln("Too many command parameters");
                 break;
             }
         }
     }
+    Log.traceln("Constructing new command");
 
     // Return the new command
 
-    _command = (new CommandFactory(tokens, token_index))->get_command();
-
+    _command = (new CommandFactory(command_tokens, command_token_index))->get_command();
     return true;
 };
 

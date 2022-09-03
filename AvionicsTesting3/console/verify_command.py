@@ -18,7 +18,7 @@ import hmac
 # @param str string string to sign
 # @param str secret secret for signing
 # @param int sequence optioanl sequence number, default = 1
-# @param str separator optional separator, default = ':'
+# @param str separator optional separator, default = '|'
 #
 
 
@@ -44,7 +44,7 @@ def get_args():
         "--separator",
         type=str,
         metavar="separator",
-        default=":",
+        default="|",
         help="Field separator",
     )
 

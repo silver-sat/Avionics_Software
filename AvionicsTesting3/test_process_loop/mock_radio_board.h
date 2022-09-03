@@ -98,13 +98,17 @@ public:
 private:
     String _buffer{};
     bool _end_of_line{false};
-    const size_t _token_limit{10};
+    const byte _command_message_separator{'|'};
+    const size_t _buffer_token_limit{4};
+    bool _validation_required{false};
+    const size_t _hash_size{32};
+    const size_t _command_token_limit{10};
     CommandFactory *_factory{};
     Command *_command{};
     long _commands_received{0};
     long _successful_commands{0};
     long _failed_commands{0};
-    String _call_sign{"KC3CQJ"};
+    const String _call_sign{"KC3CQJ"};
 };
 
 #endif // MOCK_RADIO_BOARD_H
