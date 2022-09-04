@@ -55,6 +55,8 @@ bool AvionicsBoard::begin()
     Log.traceln("Initializing external realtime clock");
 
     // todo: replace with Avionics Board external realtime clock
+    // todo: does not fail if no clock attached
+    // todo: clock fails on power change (e.g. adding 5v to board)
 
     if (_external_rtc.begin(&Wire))
     {
@@ -68,7 +70,10 @@ bool AvionicsBoard::begin()
     // Inertial Management Unit
 
     Log.traceln("Initializing inertial management unit");
-    auto status = _imu.begin(&Wire1);
+    // todo: reenable
+    // todo: initialization hangs if no IMU present
+    // auto status = _imu.begin(&Wire1);
+    auto status = false;
     if (status)
     {
         Log.traceln("Inertial measurement unit initialization completed");
@@ -83,7 +88,10 @@ bool AvionicsBoard::begin()
     // todo: replace with Avionics Board FRAM
 
     Log.traceln("Initializing FRAM");
-    status = _fram.begin(FRAM_I2C_ADDRESS, &Wire1);
+    // todo: reenable
+    // todo: initialization hangs if no FRAM present
+    // status = _fram.begin(FRAM_I2C_ADDRESS, &Wire1);
+    status = false;
     if (status)
     {
         Log.traceln("FRAM initialization completed");

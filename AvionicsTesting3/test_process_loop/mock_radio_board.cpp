@@ -11,6 +11,7 @@
 #include "mock_radio_board.h"
 #include "arduino_secrets.h"
 #include "log_utility.h"
+#include "hexToByteArray.h"
 #include <BLAKE2s.h>
 
 /**
@@ -153,7 +154,7 @@ bool MockRadioBoard::make_command(String buffer)
     }
     else
     {
-        Log.verboseln("Command has signature separator %s", _command_message_separator);
+        Log.verboseln("Command has signature separator %c", _command_message_separator);
 
         // tokenize the buffer
 
@@ -167,40 +168,55 @@ bool MockRadioBoard::make_command(String buffer)
             token_start_index = token_end_index;
         }
         command_string = buffer_tokens[2];
-        Log.verboseln("Sequence: %s", buffer_tokens[0].c_str());
-        Log.verboseln("Salt: %s", buffer_tokens[1].c_str());
-        Log.verboseln("Command: %s", buffer_tokens[2].c_str());
-        Log.verboseln("Source  HMAC: %s", buffer_tokens[3].c_str());
+        Log.verboseln("tokens[0]: %s", buffer_tokens[0].c_str());
+        Log.verboseln("tokens[1]: %s", buffer_tokens[1].c_str());
+        Log.verboseln("tokens[2]: %s", buffer_tokens[2].c_str());
+        Log.verboseln("tokens[3]: %s", buffer_tokens[3].c_str());
 
         // todo: check for validation requirement
-        // todo: assess ascii versus utf-8
-        // todo: refactor token lengths
+        // todo: handle variable length sequence
+        // todo: refactor lengths
 
-        char sequence[10];
         size_t sequence_length = buffer_tokens[0].length();
-        buffer_tokens[0].toCharArray(sequence, 10);
+        Serial.print("sequence_length: "); Serial.println(sequence_length);
+        byte sequence[1]{'1'};
+        Serial.println("sequence");
+        dumpByteArray(sequence, sequence_length);
 
-        char salt[16];
-        size_t salt_length = 16;
-        buffer_tokens[1].toCharArray(salt, 16);
+        size_t salt_length = buffer_tokens[1].length();
+        Serial.print("salt_length: "); Serial.println(salt_length);
+        byte salt[16] = {0};
+        hexCharacterStringToBytes(salt, buffer_tokens[1].c_str());
+        Serial.println("salt");
+        dumpByteArray(salt, salt_length / 2);
 
-        char command[50];
         size_t command_length = buffer_tokens[2].length();
-        buffer_tokens[2].toCharArray(command, 50);
-
-        char sourceHMAC[_hash_size];
-        buffer_tokens[3].toCharArray(sourceHMAC, _hash_size);
+        Serial.print("command_length: "); Serial.println(command_length);
+        Serial.print("command: "); Serial.println(buffer_tokens[2]);
+        
+        size_t sourceHMAC_length = buffer_tokens[3].length();
+        Serial.print("sourceHMAC_length: "); Serial.println(sourceHMAC_length);
+        byte sourceHMAC[32] = {0};
+        hexCharacterStringToBytes(sourceHMAC, buffer_tokens[3].c_str());
+        Serial.println("sourceHMAC");
+        dumpByteArray(sourceHMAC, (sourceHMAC_length + 1) / 2);
 
         const byte secret[]{SECRET_HASH_KEY};
-        char hash[_hash_size];
+        size_t secret_length = sizeof(secret);
+        Serial.print("secret_length: "); Serial.println(secret_length);
+        Serial.println("secret: ");
+        dumpByteArray(secret, secret_length);
+
+        byte hash[_hash_size];
+        Serial.print("hash_size: "); Serial.println(_hash_size);
         
         BLAKE2s blake{};
-        blake.resetHMAC(&secret, sizeof(secret));
+        blake.resetHMAC(&secret, secret_length);
         blake.update(&sequence, sequence_length);
-        blake.update(&_command_message_separator, sizeof(_command_message_separator));
-        blake.update(&salt, salt_length);
-        blake.update(&_command_message_separator, sizeof(_command_message_separator));
-        blake.update(&command, command_length);
+        // blake.update(&_command_message_separator, sizeof(_command_message_separator));
+        // blake.update(&salt, salt_length);
+        // blake.update(&_command_message_separator, sizeof(_command_message_separator));
+        // blake.update(&command, command_length);
         blake.finalizeHMAC(secret, sizeof(secret), hash, _hash_size);
         String HMAC{};
         for (auto index = 0; index < _hash_size; index++)

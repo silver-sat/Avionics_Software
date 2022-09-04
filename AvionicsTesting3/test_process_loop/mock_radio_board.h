@@ -98,7 +98,7 @@ public:
 private:
     String _buffer{};
     bool _end_of_line{false};
-    const byte _command_message_separator{'|'};
+    const char _command_message_separator{'|'};
     const size_t _buffer_token_limit{4};
     bool _validation_required{false};
     const size_t _hash_size{32};
