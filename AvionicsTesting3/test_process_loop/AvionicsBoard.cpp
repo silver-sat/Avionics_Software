@@ -40,7 +40,8 @@ bool AvionicsBoard::begin()
     Log.traceln("Initializing non-critical I2C bus");
     busswitch_begin();
     busswitch_enable();
-    Wire1.begin();
+    // todo: reenable
+    // Wire1.begin();
     busswitch_disable();
     Log.traceln("Non-critical I2C bus initialization completed");
 
