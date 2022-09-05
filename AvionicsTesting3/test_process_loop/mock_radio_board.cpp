@@ -154,7 +154,7 @@ bool MockRadioBoard::make_command(String buffer)
     }
     else
     {
-        Log.verboseln("Command has signature separator %c", _command_message_separator);
+        Log.verboseln("Command is signed", _command_message_separator);
 
         // tokenize the buffer
 
@@ -168,62 +168,77 @@ bool MockRadioBoard::make_command(String buffer)
             token_start_index = token_end_index;
         }
         command_string = buffer_tokens[2];
-        Log.verboseln("tokens[0]: %s", buffer_tokens[0].c_str());
-        Log.verboseln("tokens[1]: %s", buffer_tokens[1].c_str());
-        Log.verboseln("tokens[2]: %s", buffer_tokens[2].c_str());
-        Log.verboseln("tokens[3]: %s", buffer_tokens[3].c_str());
+        // Log.verboseln("tokens[0]: %s", buffer_tokens[0].c_str());
+        // Log.verboseln("tokens[1]: %s", buffer_tokens[1].c_str());
+        // Log.verboseln("tokens[2]: %s", buffer_tokens[2].c_str());
+        // Log.verboseln("tokens[3]: %s", buffer_tokens[3].c_str());
 
         // todo: check for validation requirement
         // todo: handle variable length sequence
         // todo: refactor lengths
+        // todo: check for valid lengths
 
-        size_t sequence_length = buffer_tokens[0].length();
-        Serial.print("sequence_length: "); Serial.println(sequence_length);
-        byte sequence[1]{'1'};
-        Serial.println("sequence");
-        dumpByteArray(sequence, sequence_length);
+        const size_t sequence_length{buffer_tokens[0].length()};
+        // Serial.print("sequence_length: ");
+        // Serial.println(sequence_length);
+        byte sequence[10]{};
+        buffer_tokens[0].getBytes(sequence, 10);
+        // Serial.println("sequence");
+        // dumpByteArray(sequence, sequence_length);
 
-        size_t salt_length = buffer_tokens[1].length();
-        Serial.print("salt_length: "); Serial.println(salt_length);
-        byte salt[16] = {0};
+        const size_t salt_length{buffer_tokens[1].length()};
+        // Serial.print("salt_length: ");
+        // Serial.println(salt_length);
+        byte salt[17]{};
         hexCharacterStringToBytes(salt, buffer_tokens[1].c_str());
-        Serial.println("salt");
-        dumpByteArray(salt, salt_length / 2);
+        // Serial.println("salt");
+        // dumpByteArray(salt, salt_length / 2);
 
-        size_t command_length = buffer_tokens[2].length();
-        Serial.print("command_length: "); Serial.println(command_length);
-        Serial.print("command: "); Serial.println(buffer_tokens[2]);
-        
-        size_t sourceHMAC_length = buffer_tokens[3].length();
-        Serial.print("sourceHMAC_length: "); Serial.println(sourceHMAC_length);
-        byte sourceHMAC[32] = {0};
+        const size_t command_length{buffer_tokens[2].length()};
+        // Serial.print("command_length: ");
+        // Serial.println(command_length);
+        byte command[50]{};
+        buffer_tokens[2].getBytes(command, 50);
+        // Serial.print("command: ");
+        // dumpByteArray(command, command_length);
+
+        const size_t sourceHMAC_length = buffer_tokens[3].length();
+        // Serial.print("sourceHMAC_length: ");
+        // Serial.println(sourceHMAC_length);
+        byte sourceHMAC[33]{};
         hexCharacterStringToBytes(sourceHMAC, buffer_tokens[3].c_str());
-        Serial.println("sourceHMAC");
-        dumpByteArray(sourceHMAC, (sourceHMAC_length + 1) / 2);
+        // Serial.println("sourceHMAC");
+        // dumpByteArray(sourceHMAC, sourceHMAC_length / 2);
 
+        const size_t secret_length = 16;
+        // Serial.print("secret_length: ");
+        // Serial.println(secret_length);
         const byte secret[]{SECRET_HASH_KEY};
-        size_t secret_length = sizeof(secret);
-        Serial.print("secret_length: "); Serial.println(secret_length);
-        Serial.println("secret: ");
-        dumpByteArray(secret, secret_length);
+        // Serial.println("secret: ");
+        // dumpByteArray(secret, secret_length);
 
         byte hash[_hash_size];
-        Serial.print("hash_size: "); Serial.println(_hash_size);
-        
+        // Serial.print("hash_size: ");
+        // Serial.println(_hash_size);
+
         BLAKE2s blake{};
-        blake.resetHMAC(&secret, secret_length);
+        blake.resetHMAC(&secret, 16);
         blake.update(&sequence, sequence_length);
-        // blake.update(&_command_message_separator, sizeof(_command_message_separator));
-        // blake.update(&salt, salt_length);
-        // blake.update(&_command_message_separator, sizeof(_command_message_separator));
-        // blake.update(&command, command_length);
-        blake.finalizeHMAC(secret, sizeof(secret), hash, _hash_size);
+        blake.update(&_command_message_separator, 1);
+        blake.update(&salt, 16);
+        blake.update(&_command_message_separator, 1);
+        blake.update(&command, command_length);
+        blake.finalizeHMAC(secret, 16, hash, _hash_size);
         String HMAC{};
         for (auto index = 0; index < _hash_size; index++)
         {
-            if (hash[index]<0x10) {HMAC+="0";};
+            if (hash[index] < 0x10)
+            {
+                HMAC += "0";
+            };
             HMAC += String(hash[index], HEX);
         }
+        // dumpByteArray(hash, _hash_size);
         Log.verboseln("Computed HMAC: %s", HMAC.c_str());
         if (HMAC == buffer_tokens[3])
         {
@@ -245,7 +260,7 @@ bool MockRadioBoard::make_command(String buffer)
 
     // tokenize the command string
 
-    Log.verboseln("Parsing the command parameters");
+    Log.verboseln("Parsing command parameters");
     String command_tokens[_command_token_limit]{};
     size_t command_token_index{0};
     for (auto string_index = 0; string_index < command_string.length(); string_index++)
@@ -264,7 +279,7 @@ bool MockRadioBoard::make_command(String buffer)
             }
         }
     }
-    Log.traceln("Constructing new command");
+    Log.traceln("Constructing command object");
 
     // Return the new command
 

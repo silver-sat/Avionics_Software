@@ -74,7 +74,7 @@ for (int i = 0; i < arraySize; i++)
   if (byteArray[i] < 0x10)
     Serial.print("0");
   Serial.print(byteArray[i], HEX);
-  Serial.print(", ");
+  Serial.print(" ");
 }
 Serial.println();
 }

@@ -69,9 +69,9 @@ def main():
     if int(args.message[0]) != args.sequence:
         print("Invalid sequence number")
         os.exit()
-
+# todo: implement sequence support
     sequence = repr(args.sequence).encode("utf-8")
-    salt = args.message[1].encode("utf-8")
+    salt = bytearray.fromhex(args.message[1])
     separator = args.separator.encode("utf-8")
     command = args.message[2].encode("utf-8")
     command_hmac = hmac.new(args.secret, digestmod=hashlib.blake2s)

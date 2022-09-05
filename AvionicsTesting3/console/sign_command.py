@@ -63,7 +63,7 @@ def get_args():
 def main():
     """Generate and display authentication string"""
     args = get_args()
-    salt = secrets.token_hex(16).encode("utf-8")
+    salt = secrets.token_bytes(16)
     command_hmac = hmac.new(args.secret, digestmod=hashlib.blake2s)
     command_hmac.update(args.sequence)
     command_hmac.update(args.separator)
@@ -73,7 +73,7 @@ def main():
     print(
         f"{args.sequence.decode(encoding='utf-8')}"
         f"{args.separator.decode(encoding='utf-8')}"
-        f"{salt.decode(encoding='utf-8')}"
+        f"{salt.hex()}"
         f"{args.separator.decode(encoding='utf-8')}"
         f"{args.command.decode(encoding='utf-8')}"
         f"{args.separator.decode(encoding='utf-8')}"
