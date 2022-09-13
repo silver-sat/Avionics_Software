@@ -19,8 +19,6 @@
 
 CommandFactory::CommandFactory(String tokens[], size_t token_count)
 {
-    Log.verboseln("token_count: %d", token_count);
-    Log.verboseln("tokens[0]: %s", tokens[0].c_str());
     if (tokens[0] == "BeaconSp")
     {
         if (token_count == 1)

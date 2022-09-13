@@ -328,11 +328,12 @@ bool AvionicsBoard::busswitch_disable()
 bool AvionicsBoard::serial_buffer_begin()
 {
     // todo: consider making serial buffer object
-    Log.verboseln("Disabling drivers to other boards");
+    Log.verboseln("Disabling serial connection to payload board");
     pinMode(EN_PAYLOAD_SERIAL, OUTPUT);
     digitalWrite(EN_PAYLOAD_SERIAL, LOW);
-    pinMode(EN_RADIO_SERIAL, OUTPUT);
-    digitalWrite(EN_RADIO_SERIAL, LOW);
+    // todo: verify connection to radio board should always be active
+    // pinMode(EN_RADIO_SERIAL, OUTPUT);
+    // digitalWrite(EN_RADIO_SERIAL, LOW);
     return true;
 };
 
