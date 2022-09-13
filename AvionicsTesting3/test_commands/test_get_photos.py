@@ -17,7 +17,6 @@ Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
 ## Test GetPhotos command
 #
 
-
 class TestGetPhotos:
     """Test GetPhotos command"""
 

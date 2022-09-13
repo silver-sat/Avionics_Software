@@ -128,7 +128,7 @@ void loop()
 
     // Process command
 
-    radio.check_command();
+    radio.check_for_command();
 
     // Take photo
     // todo: reenable

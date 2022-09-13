@@ -2,7 +2,7 @@
  * @file mock_radio_board.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Mock Radio Board for Avionics testing
- * @version 1.1.0
+ * @version 1.2.0
  * @date 2022-07-24
  *
  *
@@ -63,13 +63,13 @@ bool MockRadioBoard::deploy_antenna()
 };
 
 /**
- * @brief Process commands
+ * @brief Check for command
  *
  * @return true no command or successful
  * @return false error
  */
 
-bool MockRadioBoard::check_command()
+bool MockRadioBoard::check_for_command()
 {
     if (command_received())
     {
@@ -91,7 +91,7 @@ bool MockRadioBoard::check_command()
 };
 
 /**
- * @brief Check for command
+ * @brief Assemble command from serial port
  *
  * @return true command available
  * @return false no command available
@@ -109,6 +109,7 @@ bool MockRadioBoard::command_received()
         }
         else
         {
+            // todo: check for buffer overflow
             _buffer += character;
         }
     };
@@ -126,25 +127,59 @@ bool MockRadioBoard::command_received()
 };
 
 /**
- * @brief Make command object
+ * @brief Parse command parameters
  *
- * @return next command to process
- *
+ * @param command_string command string
+ * @param command_tokens output: tokens
+ * @param token_count output: number of tokens
+ * @return true successful
+ * @return false failure
  */
 
-bool MockRadioBoard::make_command(String buffer)
+bool MockRadioBoard::parse_parameters(const String &command_string, String command_tokens[], size_t &token_index)
 {
 
-    // destroy the last factory
-
-    if (_factory)
+    Log.verboseln("Parsing command");
+    token_index = 0;
+    for (auto string_index = 0; string_index < command_string.length(); string_index++)
     {
-        delete _factory;
-        _factory = NULL;
+        if (command_string.charAt(string_index) != ' ')
+        {
+            // todo: check for buffer overflow
+            command_tokens[token_index] += command_string.charAt(string_index);
+        }
+        else
+        {
+            Log.verboseln("Token processed: %s", command_tokens[token_index].c_str());
+            if (token_index++ > _command_token_limit)
+            {
+                Log.warningln("Too many command parameters");
+                return false;
+            }
+        }
     }
 
+    Log.verboseln("Token processed: %s", command_tokens[token_index].c_str());
+    if (token_index > _command_token_limit)
+    {
+        Log.warningln("Too many command parameters");
+        return false;
+    }
+    return true;
+}
+
+/**
+ * @brief Validate the commmand signature
+ *
+ * @param buffer sequence, salt, command and HMAC
+ * @param command_string output: command and parameters
+ * @return true if valid
+ * @return false if invalid
+ */
+
+bool MockRadioBoard::validate_signature(String &buffer, String &command_string)
+{
     buffer.trim();
-    String command_string{};
     size_t buffer_index = buffer.indexOf(_command_message_separator);
 
     if (buffer_index == -1)
@@ -154,6 +189,7 @@ bool MockRadioBoard::make_command(String buffer)
     }
     else
     {
+
         Log.verboseln("Command is signed", _command_message_separator);
 
         // tokenize the buffer
@@ -168,10 +204,6 @@ bool MockRadioBoard::make_command(String buffer)
             token_start_index = token_end_index;
         }
         command_string = buffer_tokens[2];
-        // Log.verboseln("tokens[0]: %s", buffer_tokens[0].c_str());
-        // Log.verboseln("tokens[1]: %s", buffer_tokens[1].c_str());
-        // Log.verboseln("tokens[2]: %s", buffer_tokens[2].c_str());
-        // Log.verboseln("tokens[3]: %s", buffer_tokens[3].c_str());
 
         // todo: check for validation requirement
         // todo: handle variable length sequence
@@ -179,47 +211,25 @@ bool MockRadioBoard::make_command(String buffer)
         // todo: check for valid lengths
 
         const size_t sequence_length{buffer_tokens[0].length()};
-        // Serial.print("sequence_length: ");
-        // Serial.println(sequence_length);
         byte sequence[10]{};
         buffer_tokens[0].getBytes(sequence, 10);
-        // Serial.println("sequence");
-        // dumpByteArray(sequence, sequence_length);
 
         const size_t salt_length{buffer_tokens[1].length()};
-        // Serial.print("salt_length: ");
-        // Serial.println(salt_length);
         byte salt[17]{};
         hexCharacterStringToBytes(salt, buffer_tokens[1].c_str());
-        // Serial.println("salt");
-        // dumpByteArray(salt, salt_length / 2);
 
         const size_t command_length{buffer_tokens[2].length()};
-        // Serial.print("command_length: ");
-        // Serial.println(command_length);
         byte command[50]{};
         buffer_tokens[2].getBytes(command, 50);
-        // Serial.print("command: ");
-        // dumpByteArray(command, command_length);
 
         const size_t sourceHMAC_length = buffer_tokens[3].length();
-        // Serial.print("sourceHMAC_length: ");
-        // Serial.println(sourceHMAC_length);
         byte sourceHMAC[33]{};
         hexCharacterStringToBytes(sourceHMAC, buffer_tokens[3].c_str());
-        // Serial.println("sourceHMAC");
-        // dumpByteArray(sourceHMAC, sourceHMAC_length / 2);
 
         const size_t secret_length = 16;
-        // Serial.print("secret_length: ");
-        // Serial.println(secret_length);
         const byte secret[]{SECRET_HASH_KEY};
-        // Serial.println("secret: ");
-        // dumpByteArray(secret, secret_length);
 
         byte hash[_hash_size];
-        // Serial.print("hash_size: ");
-        // Serial.println(_hash_size);
 
         BLAKE2s blake{};
         blake.resetHMAC(&secret, 16);
@@ -238,53 +248,67 @@ bool MockRadioBoard::make_command(String buffer)
             };
             HMAC += String(hash[index], HEX);
         }
-        // dumpByteArray(hash, _hash_size);
+
         Log.verboseln("Computed HMAC: %s", HMAC.c_str());
         if (HMAC == buffer_tokens[3])
         {
-            Log.traceln("Command signature validated");
+            Log.traceln("Command signature valid");
+            return true;
         }
         else
         {
             if (_validation_required)
             {
                 Log.errorln("Command signature invalid");
-                command_string = "Invalid";
+                return false;
             }
             else
             {
                 Log.warningln("Command signature invalid");
+                return true;
             }
         }
     }
-
-    // tokenize the command string
-
-    Log.verboseln("Parsing command parameters");
-    String command_tokens[_command_token_limit]{};
-    size_t command_token_index{0};
-    for (auto string_index = 0; string_index < command_string.length(); string_index++)
-    {
-        if (command_string.charAt(string_index) != ' ')
-        {
-            command_tokens[command_token_index] += command_string.charAt(string_index);
-        }
-        else
-        {
-            command_token_index++;
-            if (command_token_index > _command_token_limit)
-            {
-                Log.warningln("Too many command parameters");
-                break;
-            }
-        }
-    }
-    Log.traceln("Constructing command object");
-
-    // Return the new command
-
-    _command = (new CommandFactory(command_tokens, command_token_index))->get_command();
     return true;
+};
+
+/**
+ * @brief Make command object
+ *
+ * @return next command to process
+ *
+ */
+
+bool MockRadioBoard::make_command(String buffer)
+{
+
+    // destroy the previous factory
+
+    if (_factory)
+    {
+        delete _factory;
+        _factory = NULL;
+    }
+
+    // validate signature
+
+    String command_string;
+    validate_signature(buffer, command_string);
+
+    // tokenize the command string and create the command object
+
+    String command_tokens[_command_token_limit]{};
+    size_t token_count{0};
+    if (parse_parameters(command_string, command_tokens, token_count))
+    {
+        Log.traceln("Constructing command object");
+        _command = (new CommandFactory(command_tokens, token_count))->get_command();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 };
 
 /**

@@ -44,16 +44,16 @@ public:
     bool deploy_antenna();
 
     /**
-     * @brief Process commands
+     * @brief Check for command
      *
      * @return true no command or successful
      * @return false error
      */
 
-    bool check_command();
+    bool check_for_command();
 
     /**
-     * @brief Check for command
+     * @brief Assemble command from serial port
      *
      * @return true no command or successful
      * @return false error
@@ -68,6 +68,29 @@ public:
      */
 
     Command *get_command();
+
+    /**
+     * @brief Parse command parameters
+     *
+     * @param command_string command string
+     * @param command_tokens output: tokens
+     * @param token_count output: number of tokens
+     * @return true successful
+     * @return false failure
+     */
+
+    bool parse_parameters(const String &command_string, String command_tokens[], size_t &token_index);
+
+    /**
+     * @brief Validate the commmand signature
+     *
+     * @param buffer sequence, salt, command and HMAC
+     * @param command_string output: command and parameters
+     * @return true if valid
+     * @return false if invalid
+     */
+
+    bool validate_signature(String &buffer, String& command_string);
 
     /**
      * @brief Make a command
