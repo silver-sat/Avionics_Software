@@ -45,6 +45,7 @@ public:
 
 private:
     Command *_command;
+    // todo: single token limit for radio board and command factory
     const size_t _token_limit{10};
 };
 

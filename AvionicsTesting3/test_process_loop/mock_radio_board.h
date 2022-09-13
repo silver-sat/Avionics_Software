@@ -44,16 +44,16 @@ public:
     bool deploy_antenna();
 
     /**
-     * @brief Process commands
+     * @brief Check for command
      *
      * @return true no command or successful
      * @return false error
      */
 
-    bool check_command();
+    bool check_for_command();
 
     /**
-     * @brief Check for command
+     * @brief Assemble command from serial port
      *
      * @return true no command or successful
      * @return false error
@@ -68,6 +68,29 @@ public:
      */
 
     Command *get_command();
+
+    /**
+     * @brief Parse command parameters
+     *
+     * @param command_string command string
+     * @param command_tokens output: tokens
+     * @param token_count output: number of tokens
+     * @return true successful
+     * @return false failure
+     */
+
+    bool parse_parameters(const String &command_string, String command_tokens[], size_t &token_index);
+
+    /**
+     * @brief Validate the commmand signature
+     *
+     * @param buffer sequence, salt, command and HMAC
+     * @param command_string output: command and parameters
+     * @return true if valid
+     * @return false if invalid
+     */
+
+    bool validate_signature(String &buffer, String& command_string);
 
     /**
      * @brief Make a command
@@ -98,13 +121,17 @@ public:
 private:
     String _buffer{};
     bool _end_of_line{false};
-    const size_t _token_limit{10};
+    const char _command_message_separator{'|'};
+    const size_t _buffer_token_limit{4};
+    bool _validation_required{false};
+    const size_t _hash_size{32};
+    const size_t _command_token_limit{10};
     CommandFactory *_factory{};
     Command *_command{};
     long _commands_received{0};
     long _successful_commands{0};
     long _failed_commands{0};
-    String _call_sign{"KC3CQJ"};
+    const String _call_sign{"KC3CQJ"};
 };
 
 #endif // MOCK_RADIO_BOARD_H

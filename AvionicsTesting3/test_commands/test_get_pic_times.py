@@ -2,7 +2,7 @@
 # @file test_get_pic_times.py
 # @brief Unit test Avionics Board GetPicTimes command
 # @author Lee A. Congdon (lee@silversat.org)
-# @version 1.0.0
+# @version 1.1.0
 # @date 21 August 2022
 
 """Unit test Avionics Board GetPicTimes command"""
@@ -26,6 +26,7 @@ class TestGetPicTimes:
     def test_get_pic_times(self):
 
         log = helper.collect("GetPicTimes")
+        assert helper.not_signed(log)
         assert helper.acknowledged(log)
         assert helper.no_logged_errors(log)
         assert helper.timestamp_sent(log)
@@ -35,6 +36,29 @@ class TestGetPicTimes:
     #
     def test_get_pic_times_param(self):
         log = helper.collect("GetPicTimes test")
+        assert helper.not_signed(log)
+        assert helper.acknowledged(log)
+        assert not helper.no_logged_errors(log)
+        assert not helper.executed(log)
+
+    ## get picture times signed
+    #
+    def test_get_pic_times_signed(self):
+
+        log = helper.collect(helper.generate_signed("GetPicTimes"))
+        assert helper.signed(log)
+        assert helper.signature_valid(log)
+        assert helper.acknowledged(log)
+        assert helper.no_logged_errors(log)
+        assert helper.timestamp_sent(log)
+        assert helper.executed(log)
+
+    ## error: invalid parameter signed
+    #
+    def test_get_pic_times_param_signed(self):
+        log = helper.collect(helper.generate_signed("GetPicTimes test"))
+        assert helper.signed(log)
+        assert helper.signature_valid(log)
         assert helper.acknowledged(log)
         assert not helper.no_logged_errors(log)
         assert not helper.executed(log)

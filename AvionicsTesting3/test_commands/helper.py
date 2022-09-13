@@ -2,7 +2,7 @@
 # @file helper.py
 # @brief Unit test Avionics Board helper functions
 # @author Lee A. Congdon (lee@silversat.org)
-# @version 1.0.0
+# @version 1.1.0
 # @date 20 August 2022
 
 """Unit test Avionics Board helper functions"""
@@ -11,29 +11,88 @@ import serial
 from collections import namedtuple
 from datetime import timedelta
 import re
+import secrets
+import hashlib
+import hmac
 
 ## port for Avionics Board
 PORT = "/dev/ttyACM0"
 ## serial transmission speed
-BAUDRATE = 115200  
+BAUDRATE = 115200
 ## default timeout for readline
-TIMEOUT = 5  
+TIMEOUT = 5
 ## log entry field names
-Entry = namedtuple("Entry", ["timestamp", "level", "detail"])  
+Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
+
+## Generate signed command
+#
+def generate_signed(command):
+    secret = open("secret.txt", "rb").read()
+    salt = secrets.token_bytes(16)
+    # todo: implement sequence number testing
+    sequence = "0".encode("utf-8")
+    separator = "|".encode("utf-8")
+    command = command.encode("utf-")
+    command_hmac = hmac.new(secret, digestmod=hashlib.blake2s)
+    command_hmac.update(sequence)
+    command_hmac.update(separator)
+    command_hmac.update(salt)
+    command_hmac.update(separator)
+    command_hmac.update(command)
+    return (
+        f"{sequence.decode(encoding='utf-8')}"
+        f"{separator.decode(encoding='utf-8')}"
+        f"{salt.hex()}"
+        f"{separator.decode(encoding='utf-8')}"
+        f"{command.decode(encoding='utf-8')}"
+        f"{separator.decode(encoding='utf-8')}"
+        f"{command_hmac.hexdigest()}"
+    )
+
 
 ## Issue command and collect response
 #
 def collect(command):
 
     s = serial.Serial(PORT, BAUDRATE, timeout=TIMEOUT)
+    print(f"command: {command}")
     s.write((command + "\n").encode("utf-8"))
     log = []
     log_data = ""
     while ("Executed (" not in log_data) & ("Failed (" not in log_data):
         log_data = s.readline().decode("utf-8").strip()
+        print(f"log data: {log_data}")
         log.append(Entry(*(log_data.split(maxsplit=2))))
     s.close()
     return log
+
+
+## Verify command not signed
+#
+def not_signed(log):
+
+    return any([item.detail == "Command is not signed" for item in log])
+
+
+## Verify command signed
+#
+def signed(log):
+
+    return any([item.detail == "Command is signed" for item in log])
+
+
+## Verify signature valid
+#
+def signature_valid(log):
+
+    return any([item.detail == "Command signature valid" for item in log])
+
+
+## Verify signature invalid
+#
+def signature_invalid(log):
+
+    return any([item.detail == "Command signature invalid" for item in log])
 
 
 ## Verify command acknowledged

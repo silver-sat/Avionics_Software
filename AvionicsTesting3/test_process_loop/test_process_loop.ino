@@ -128,10 +128,10 @@ void loop()
 
     // Process command
 
-    radio.check_command();
+    radio.check_for_command();
 
     // Take photo
-
+    
     avionics.check_photo();
 
     // Shut off Payload Board if ready to sleep

@@ -79,6 +79,7 @@ bool ExternalRTC::set_time(DateTime time)
 
 DateTime ExternalRTC::get_time()
 {
+    // todo: sanity check on RTC value
     return _rtc.now();
 };
 
