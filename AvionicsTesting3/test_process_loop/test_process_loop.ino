@@ -6,11 +6,11 @@
  * @date 2022-07-24
  *
  */
- 
- /** 
+
+/**
  * @mainpage Test Process Loop
  * @section overview Overview
- * 
+ *
  * This is the main process loop to test the SilverSat Avionics Board.
  *
  * The on-board devices are implemented as classes interfacing to real hardware and include a watchdog timer, external realtime clock, inertial measurement
@@ -45,7 +45,6 @@ MockPayloadBoard payload;
 MockRadioBoard radio;
 MockPowerBoard power;
 
-
 /**
  * @brief Initialize the devices and the boards
  *
@@ -54,10 +53,10 @@ MockPowerBoard power;
 void setup()
 
 {
-    // Initialize serial connection and log utility for test reporting
+    // Initialize serial connections and log utility for test reporting
 
     Serial.begin(SERIAL_MONITOR_BAUD_RATE);
-    while (!Serial && !Serial.available())
+    while (!Serial)
     {
         avionics.trigger_watchdog();
     };
@@ -84,6 +83,12 @@ void setup()
 
     Log.noticeln("Initializing mock Radio Board");
     radio.begin();
+    Serial1.begin(SERIAL_MONITOR_BAUD_RATE);
+    while (!Serial1)
+    {
+        avionics.trigger_watchdog();
+    }
+    Log.traceln("Serial1 (command) port initialized");
     Log.noticeln("Mock Radio Board initialization completed");
 
     // Initialize mock Payload Board
@@ -131,7 +136,7 @@ void loop()
     radio.check_for_command();
 
     // Take photo
-    
+
     avionics.check_photo();
 
     // Shut off Payload Board if ready to sleep

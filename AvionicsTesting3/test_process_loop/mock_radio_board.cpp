@@ -91,7 +91,7 @@ bool MockRadioBoard::check_for_command()
 };
 
 /**
- * @brief Assemble command from serial port
+ * @brief Assemble command from Serial1 port
  *
  * @return true command available
  * @return false no command available
@@ -99,9 +99,9 @@ bool MockRadioBoard::check_for_command()
 
 bool MockRadioBoard::command_received()
 {
-    while (Serial.available())
+    while (Serial1.available())
     {
-        char character = Serial.read();
+        char character = Serial1.read();
         if (character == '\n')
         {
             _end_of_line = true;

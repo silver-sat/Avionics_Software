@@ -53,7 +53,7 @@ public:
     bool check_for_command();
 
     /**
-     * @brief Assemble command from serial port
+     * @brief Assemble command from Serial1 port
      *
      * @return true no command or successful
      * @return false error
