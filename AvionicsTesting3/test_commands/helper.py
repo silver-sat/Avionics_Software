@@ -2,7 +2,7 @@
 # @file helper.py
 # @brief Unit test Avionics Board helper functions
 # @author Lee A. Congdon (lee@silversat.org)
-# @version 1.0.0
+# @version 1.1.0
 # @date 20 August 2022
 
 """Unit test Avionics Board helper functions"""
@@ -55,11 +55,13 @@ def generate_signed(command):
 def collect(command):
 
     s = serial.Serial(PORT, BAUDRATE, timeout=TIMEOUT)
+    print(f"command: {command}")
     s.write((command + "\n").encode("utf-8"))
     log = []
     log_data = ""
     while ("Executed (" not in log_data) & ("Failed (" not in log_data):
         log_data = s.readline().decode("utf-8").strip()
+        print(f"log data: {log_data}")
         log.append(Entry(*(log_data.split(maxsplit=2))))
     s.close()
     return log

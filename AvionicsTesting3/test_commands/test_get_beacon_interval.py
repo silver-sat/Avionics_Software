@@ -2,7 +2,7 @@
 # @file test_get_beacon_interval.py
 # @brief Unit test Avionics Board GetBeaconInterval command
 # @author Lee A. Congdon (lee@silversat.org)
-# @version 1.0.0
+# @version 1.1.0
 # @date 22 August 2022
 
 """Unit test Avionics Board GetBeaconInterval command"""

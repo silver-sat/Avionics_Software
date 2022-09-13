@@ -131,8 +131,8 @@ void loop()
     radio.check_for_command();
 
     // Take photo
-    // todo: reenable
-    // avionics.check_photo();
+    
+    avionics.check_photo();
 
     // Shut off Payload Board if ready to sleep
 

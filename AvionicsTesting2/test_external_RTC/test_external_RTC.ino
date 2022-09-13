@@ -1,5 +1,5 @@
 /**
- * @file test__external_RTC.ino
+ * @file test_external_RTC.ino
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Test external RTC
  * @version 1.0.0
@@ -17,12 +17,14 @@ char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursd
 
 void setup()
 {
-  Serial.begin(57600);
+  Serial.begin(115200);
 
 #ifndef ESP8266
   while (!Serial)
     ; // wait for serial port to connect. Needed for native USB
 #endif
+
+Serial.println("Starting RTC test");
 
   if (!rtc.begin())
   {

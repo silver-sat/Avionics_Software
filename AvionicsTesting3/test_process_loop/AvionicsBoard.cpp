@@ -40,8 +40,7 @@ bool AvionicsBoard::begin()
     Log.traceln("Initializing non-critical I2C bus");
     busswitch_begin();
     busswitch_enable();
-    // todo: reenable
-    // Wire1.begin();
+    Wire1.begin();
     busswitch_disable();
     Log.traceln("Non-critical I2C bus initialization completed");
 
@@ -71,10 +70,8 @@ bool AvionicsBoard::begin()
     // Inertial Management Unit
 
     Log.traceln("Initializing inertial management unit");
-    // todo: reenable
     // todo: initialization hangs if no IMU present
-    // auto status = _imu.begin(&Wire1);
-    auto status = false;
+    auto status = _imu.begin(&Wire1);
     if (status)
     {
         Log.traceln("Inertial measurement unit initialization completed");
@@ -89,10 +86,8 @@ bool AvionicsBoard::begin()
     // todo: replace with Avionics Board FRAM
 
     Log.traceln("Initializing FRAM");
-    // todo: reenable
     // todo: initialization hangs if no FRAM present
-    // status = _fram.begin(FRAM_I2C_ADDRESS, &Wire1);
-    status = false;
+    status = _fram.begin(FRAM_I2C_ADDRESS, &Wire1);
     if (status)
     {
         Log.traceln("FRAM initialization completed");
