@@ -132,6 +132,7 @@ private:
     long _successful_commands{0};
     long _failed_commands{0};
     const String _call_sign{"KC3CQJ"};
+    long _command_sequence{0};
 };
 
 #endif // MOCK_RADIO_BOARD_H

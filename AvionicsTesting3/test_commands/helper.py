@@ -14,9 +14,13 @@ import re
 import secrets
 import hashlib
 import hmac
+import time
+import random
 
-## port for Avionics Board
-PORT = "/dev/ttyACM0"
+## port for log output
+LOG_PORT = "/dev/ttyACM0"
+## port for command input
+COMMAND_PORT = "/dev/ttyUSB0"
 ## serial transmission speed
 BAUDRATE = 115200
 ## default timeout for readline
@@ -24,13 +28,19 @@ TIMEOUT = 5
 ## log entry field names
 Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
 
+command_port = serial.Serial(COMMAND_PORT, BAUDRATE, timeout=TIMEOUT)
+log_port = serial.Serial(LOG_PORT, BAUDRATE, timeout=TIMEOUT)
+command_counter = 0
+
 ## Generate signed command
 #
 def generate_signed(command):
     secret = open("secret.txt", "rb").read()
     salt = secrets.token_bytes(16)
     # todo: implement sequence number testing
-    sequence = "0".encode("utf-8")
+    global command_counter
+    sequence = repr(command_counter).encode("utf-8")
+    command_counter += 1
     separator = "|".encode("utf-8")
     command = command.encode("utf-")
     command_hmac = hmac.new(secret, digestmod=hashlib.blake2s)
@@ -54,16 +64,13 @@ def generate_signed(command):
 #
 def collect(command):
 
-    s = serial.Serial(PORT, BAUDRATE, timeout=TIMEOUT)
-    print(f"command: {command}")
-    s.write((command + "\n").encode("utf-8"))
+    command_port.write((command + "\n").encode("utf-8"))
     log = []
     log_data = ""
+    l = serial.Serial(LOG_PORT, BAUDRATE, timeout=TIMEOUT)
     while ("Executed (" not in log_data) & ("Failed (" not in log_data):
-        log_data = s.readline().decode("utf-8").strip()
-        print(f"log data: {log_data}")
+        log_data = log_port.readline().decode("utf-8").strip()
         log.append(Entry(*(log_data.split(maxsplit=2))))
-    s.close()
     return log
 
 
@@ -127,14 +134,13 @@ def executed(log):
 #
 def collect_through_power_off(command, interval=60):
 
-    s = serial.Serial(PORT, BAUDRATE, timeout=interval + TIMEOUT)
-    s.write((command + "\n").encode("utf-8"))
+    command_port.write((command + "\n").encode("utf-8"))
     log = []
     log_data = ""
+    time.sleep(interval)
     while "Payload power off" not in log_data:
-        log_data = s.readline().decode("utf-8").strip()
+        log_data = log_port.readline().decode("utf-8").strip()
         log.append(Entry(*(log_data.split(maxsplit=2))))
-    s.close()
     return log
 
 
@@ -156,13 +162,13 @@ def payload_power_off(log):
 #
 def collect_two_beacons(interval):
 
-    s = serial.Serial(PORT, BAUDRATE, timeout=interval + TIMEOUT)
     log = []
-    log_data = s.readline().decode("utf-8").strip()
+    time.sleep(interval)
+    log_data = log_port.readline().decode("utf-8").strip()
     log.append(Entry(*(log_data.split(maxsplit=2))))
-    log_data = s.readline().decode("utf-8").strip()
+    time.sleep(interval)
+    log_data = log_port.readline().decode("utf-8").strip()
     log.append(Entry(*(log_data.split(maxsplit=2))))
-    s.close()
     return log
 
 
@@ -195,15 +201,13 @@ def beacon_interval(length, log):
 #
 def collect_timeout(interval=60):
 
-    s = serial.Serial(PORT, BAUDRATE, timeout=interval)
     index = 0
     beacons_found = 0
     while index < 2:
-        log_data = s.readline().decode("utf-8").strip()
+        log_data = log_port.readline().decode("utf-8").strip()
         if "Transmitting beacon" in log_data:
             beacons_found += 1
         index += 1
-    s.close()
     return beacons_found == 0
 
 
@@ -220,14 +224,12 @@ def timestamp_sent(log):
 #
 def collect_through_reset_pin_cleared(command, interval=60):
 
-    s = serial.Serial(PORT, BAUDRATE, timeout=interval + TIMEOUT)
-    s.write((command + "\n").encode("utf-8"))
+    command_port.write((command + "\n").encode("utf-8"))
     log = []
     log_data = ""
     while "Reset pin changed state to 1" not in log_data:
-        log_data = s.readline().decode("utf-8").strip()
+        log_data = log_port.readline().decode("utf-8").strip()
         log.append(Entry(*(log_data.split(maxsplit=2))))
-    s.close()
     return log
 
 

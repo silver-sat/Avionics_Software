@@ -205,6 +205,45 @@ bool MockRadioBoard::validate_signature(String &buffer, String &command_string)
         }
         command_string = buffer_tokens[2];
 
+        // validate sequence number
+
+        for (auto index = 0; index < buffer_tokens[0].length(); index++)
+        {
+            if (!isDigit(buffer_tokens[0].charAt(index)))
+            {
+                if (_validation_required)
+                {
+                    Log.errorln("Sequence is not a digit");
+                    return false;
+                }
+                else
+                {
+                    Log.warningln("Sequence is not a digit");
+                    break;
+                }
+            }
+        }
+
+        long command_sequence{buffer_tokens[0].toInt()};
+        if (command_sequence != _command_sequence)
+        {
+            if (_validation_required)
+            {
+
+                Log.errorln("Command sequence invalid");
+                return false;
+            }
+            else
+            {
+                Log.warningln("Command sequence invalid");
+            }
+        }
+        else
+        {
+            Log.verboseln("Command sequence is valid");
+            _command_sequence++;
+        }
+
         // todo: check for validation requirement
         // todo: handle variable length sequence
         // todo: refactor lengths
