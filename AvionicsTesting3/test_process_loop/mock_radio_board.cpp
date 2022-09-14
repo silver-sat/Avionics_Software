@@ -78,12 +78,12 @@ bool MockRadioBoard::check_for_command()
         Log.traceln("Command acknowledged");
         if (_command->execute_command())
         {
-            Log.traceln("Executed (%l executed, %l failed)", ++_successful_commands, _failed_commands);
+            Log.traceln("Executed (%l executed, %l failed, next sequence %l)", ++_successful_commands, _failed_commands, _command_sequence);
             return true;
         }
         else
         {
-            Log.errorln("Failed (%l executed, %l failed)", _successful_commands, ++_failed_commands);
+            Log.errorln("Failed (%l executed, %l failed, next sequence %i)", _successful_commands, ++_failed_commands, _command_sequence);
             return false;
         };
     };
@@ -116,7 +116,7 @@ bool MockRadioBoard::command_received()
 
     if (_end_of_line)
     {
-        Log.infoln("Command received (sequence %l): %s", ++_commands_received, _buffer.c_str());
+        Log.infoln("Command received (count %l): %s", ++_commands_received, _buffer.c_str());
         make_command(_buffer);
         _buffer = "";
         _end_of_line = false;

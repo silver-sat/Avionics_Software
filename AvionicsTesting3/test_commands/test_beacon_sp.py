@@ -8,7 +8,6 @@
 """Unit test Avionics Board BeaconSp command"""
 
 import helper
-import serial
 from collections import namedtuple
 
 ## log entry field names
