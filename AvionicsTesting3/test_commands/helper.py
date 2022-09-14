@@ -32,6 +32,24 @@ command_port = serial.Serial(COMMAND_PORT, BAUDRATE, timeout=TIMEOUT)
 log_port = serial.Serial(LOG_PORT, BAUDRATE, timeout=TIMEOUT)
 command_counter = 0
 
+## Collect initialization
+#
+def collect_initialization():
+
+    log = []
+    log_data = ""
+    while "Payload power off" not in log_data:
+        log_data = log_port.readline().decode("utf-8").strip()
+        log.append(Entry(*(log_data.split(maxsplit=2))))
+        print(log_data)
+    return log
+
+## Verify initialization complete
+#
+def initialization_complete(log):
+
+    return any([item.detail == "Process Loop Test initialization completed" for item in log])
+
 ## Generate signed command
 #
 def generate_signed(command):
@@ -67,7 +85,6 @@ def collect(command):
     command_port.write((command + "\n").encode("utf-8"))
     log = []
     log_data = ""
-    l = serial.Serial(LOG_PORT, BAUDRATE, timeout=TIMEOUT)
     while ("Executed (" not in log_data) & ("Failed (" not in log_data):
         log_data = log_port.readline().decode("utf-8").strip()
         log.append(Entry(*(log_data.split(maxsplit=2))))
@@ -215,7 +232,7 @@ def collect_timeout(interval=60):
 #
 def timestamp_sent(log):
     pattern = re.compile(
-        r"\sRES20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T(0[1-9]|1\d|2[0-4]):([0-5]\d):([0-5]\d)$"
+        r"\sRES20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)$"
     )
     return any([pattern.search(item.detail) for item in log])
 
