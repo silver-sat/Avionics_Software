@@ -171,7 +171,15 @@ bool AvionicsBoard::check_beacon()
         // todo: get power status
         _avionics_status = Beacon::excellent;
         extern MockRadioBoard radio;
-        _radio_status = radio.get_status();
+        // todo: retrieve and store radio status
+        if (radio.get_status() == "unknown")
+        {
+            _radio_status = Beacon::unknown;
+        }
+        else
+        {
+            _radio_status = Beacon::unknown;
+        }
         extern MockPayloadBoard payload;
         if (payload.get_payload_active())
         {

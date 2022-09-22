@@ -27,6 +27,7 @@ constexpr byte TFESC{'\xDD'};
 constexpr byte KISS_BEACON{'\x07'};
 constexpr byte KISS_DEPLOY_ANTENNA{'\x08'};
 constexpr byte KISS_GET_STATUS{'\x09'};
+constexpr byte KISS_HALT('\x0A');
 
 /**
  * @brief Mock Radio Board for testing the Avionics Board
@@ -137,7 +138,7 @@ public:
      * @return Beacon::status status
      */
 
-    Beacon::status get_status();
+    String get_status();
 
 private:
     String _buffer{};

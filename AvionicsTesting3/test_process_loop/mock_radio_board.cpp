@@ -58,8 +58,11 @@ bool MockRadioBoard::begin()
 
 bool MockRadioBoard::deploy_antenna()
 {
-    auto message = Message(Message::local_command, "DeployAntenna");
-    return send_message(message);
+    Log.traceln("Sending local command: deploy antenna");
+    Serial1.write(FEND);
+    Serial1.write(KISS_DEPLOY_ANTENNA);
+    Serial1.write(FEND);
+    return true;
 };
 
 /**
@@ -98,51 +101,10 @@ bool MockRadioBoard::check_for_command()
 
 bool MockRadioBoard::command_received()
 {
-    // while (Serial1.available())
-    // {
-    //     char character = Serial1.read();
-    //     if (character == '\n')
-    //     {
-    //         _end_of_line = true;
-    //         break;
-    //     }
-    //     else
-    //     {
-    //         // todo: check for buffer overflow
-    //         _buffer += character;
-    //     }
-    // };
-
-    // if (_end_of_line)
-    // {
-    //     Log.infoln("Command received (count %l): %s", ++_commands_received, _buffer.c_str());
-    //     make_command(_buffer);
-    //     _buffer = "";
-    //     _end_of_line = false;
-    //     return true;
-    // };
-
-    // return false;
 
     while (Serial1.available())
     {
         char character = Serial1.read();
-        // Serial.print("Character: ");
-        // if (isPrintable(character))
-        // {
-        //     Serial.print(character);
-        // }
-        // else
-        // {
-        //     Serial.print(' ');
-        // }
-        // Serial.print(' ');
-        // if (character <= '\x0F')
-        // {
-        //     Serial.print('0');
-        // }
-        // Serial.println(byte(character), HEX);
-
         if (_received_start)
         {
             if (_receiving_type)
@@ -438,7 +400,7 @@ bool MockRadioBoard::make_command(String buffer)
 
 void MockRadioBoard::send_beacon(Beacon beacon)
 {
-    Log.noticeln("Sending beacon %s %s", _call_sign.c_str(), beacon.get_message().c_str());
+    Log.noticeln("Sending local command: beacon %s %s", _call_sign.c_str(), beacon.get_message().c_str());
     Serial1.write(FEND);
     Serial1.write(KISS_BEACON);
     Serial1.write(_call_sign.c_str());
@@ -459,18 +421,18 @@ bool MockRadioBoard::send_message(Message message)
     return true;
 };
 
-    /**
-     * @brief Get Radio Board status
-     * 
-     * @return String status
-     */
-    
-    Beacon::status MockRadioBoard::get_status() {
-        Log.traceln("Requesting Radio Board Status");
-        Serial1.write(FEND);
-        Serial1.write(KISS_GET_STATUS);
-        Serial1.write(FEND);
-        // todo: retrieve and store Radio Board status
-        return Beacon::unknown;
-    };
+/**
+ * @brief Get Radio Board status
+ *
+ * @return String status
+ */
 
+String MockRadioBoard::get_status()
+{
+    Log.traceln("Sending local command: requesting Radio Board status");
+    Serial1.write(FEND);
+    Serial1.write(KISS_GET_STATUS);
+    Serial1.write(FEND);
+    // todo: retrieve and store Radio Board status
+    return "unknown";
+};
