@@ -280,7 +280,7 @@ bool CommandTweeSlee::execute_command()
     extern MockRadioBoard radio;
     Log.traceln("Sending local command: halt");
     Serial1.write(FEND);
-    Serial1.write(KISS_HALT);
+    Serial1.write(HALT);
     Serial1.write(FEND);
     extern MockPayloadBoard payload;
     return payload.end_activity() && status;
@@ -644,8 +644,7 @@ bool CommandGetComms::execute_command()
     extern MockPayloadBoard payload;
     extern MockRadioBoard radio;
     auto message = Message(Message::response, radio.get_status().c_str());
-
-    return status;
+    return radio.send_message(message) && status;
 };
 
 /**

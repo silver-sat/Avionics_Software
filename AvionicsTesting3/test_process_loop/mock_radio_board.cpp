@@ -60,7 +60,7 @@ bool MockRadioBoard::deploy_antenna()
 {
     Log.traceln("Sending local command: deploy antenna");
     Serial1.write(FEND);
-    Serial1.write(KISS_DEPLOY_ANTENNA);
+    Serial1.write(DEPLOY_ANTENNA);
     Serial1.write(FEND);
     return true;
 };
@@ -110,7 +110,7 @@ bool MockRadioBoard::command_received()
             if (_receiving_type)
             {
                 _receiving_type = false;
-                if (character != 0)
+                if (character != DATA_FRAME)
                 {
                     Log.errorln("Type is not 0: 0x%x", character);
                 }
@@ -402,7 +402,7 @@ void MockRadioBoard::send_beacon(Beacon beacon)
 {
     Log.noticeln("Sending local command: beacon %s %s", _call_sign.c_str(), beacon.get_message().c_str());
     Serial1.write(FEND);
-    Serial1.write(KISS_BEACON);
+    Serial1.write(BEACON);
     Serial1.write(_call_sign.c_str());
     Serial1.write(beacon.get_message().c_str());
     Serial1.write(FEND);
@@ -418,6 +418,10 @@ void MockRadioBoard::send_beacon(Beacon beacon)
 bool MockRadioBoard::send_message(Message message)
 {
     Log.noticeln("Sending message: %s", message.get_message().c_str());
+    Serial1.write(FEND);
+    Serial1.write(DATA_FRAME);
+    Serial1.write(message.get_message().c_str());
+    Serial1.write(FEND);
     return true;
 };
 
@@ -431,7 +435,7 @@ String MockRadioBoard::get_status()
 {
     Log.traceln("Sending local command: requesting Radio Board status");
     Serial1.write(FEND);
-    Serial1.write(KISS_GET_STATUS);
+    Serial1.write(GET_RADIO_STATUS);
     Serial1.write(FEND);
     // todo: retrieve and store Radio Board status
     return "unknown";

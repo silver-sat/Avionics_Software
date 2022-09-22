@@ -15,7 +15,6 @@ import secrets
 import hashlib
 import hmac
 import time
-import random
 
 ## port for log output
 LOG_PORT = "/dev/ttyACM0"
@@ -28,7 +27,7 @@ TIMEOUT = 5
 ## KISS frame end
 FEND = b"\xC0"
 ## KISS frame type
-KISS_TYPE = b"\x00"
+DATA_FRAME = b"\x00"
 ## log entry field names
 Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
 
@@ -90,11 +89,12 @@ def generate_signed(command):
 #
 def collect(command):
 
-    command_port.write(FEND + KISS_TYPE + command.encode("utf-8") + FEND)
+    command_port.write(FEND + DATA_FRAME + command.encode("utf-8") + FEND)
     log = []
     log_data = ""
     while ("Executed (" not in log_data) & ("Failed (" not in log_data):
         log_data = log_port.readline().decode("utf-8").strip()
+        print(log_data)
         log.append(Entry(*(log_data.split(maxsplit=2))))
     return log
 
@@ -159,7 +159,7 @@ def executed(log):
 #
 def collect_through_power_off(command, interval=60):
 
-    command_port.write(FEND + KISS_TYPE + command.encode("utf-8") + FEND)
+    command_port.write(FEND + DATA_FRAME + command.encode("utf-8") + FEND)
     log = []
     log_data = ""
     time.sleep(interval)
@@ -173,7 +173,7 @@ def collect_through_power_off(command, interval=60):
 #
 def local_stop_message_sent(log):
 
-    return any([item.detail == "Sending message: LOCSTOP" for item in log])
+    return any([item.detail == "Sending local command: halt" for item in log])
 
 
 ## Verify payload power off
@@ -249,7 +249,7 @@ def timestamp_sent(log):
 #
 def collect_through_reset_pin_cleared(command, interval=60):
 
-    command_port.write(FEND + KISS_TYPE + command.encode("utf-8") + FEND)
+    command_port.write(FEND + DATA_FRAME + command.encode("utf-8") + FEND)
     log = []
     log_data = ""
     while "Reset pin changed state to 1" not in log_data:
@@ -305,7 +305,7 @@ def integer_sent(log):
 #
 def local_get_comms_sent(log):
 
-    return any([item.detail == "Sending message: LOCGetComms" for item in log])
+    return any([item.detail == "Sending local command: requesting Radio Board status" for item in log])
 
 
 ## Verify test packet sent

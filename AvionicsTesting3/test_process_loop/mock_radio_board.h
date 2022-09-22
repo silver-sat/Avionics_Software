@@ -15,19 +15,24 @@
 #include "Message.h"
 #include "CommandFactory.h"
 
+/**
+ * @brief KISS defined constants
+ *
+ */
 constexpr byte FEND{'\xC0'};
 constexpr byte FESC{'\xDB'};
 constexpr byte TFEND{'\xDC'};
 constexpr byte TFESC{'\xDD'};
+constexpr byte DATA_FRAME{'\x00'};
 
 /**
  * @brief SilverSat defined KISS local command types
- * 
+ *
  */
-constexpr byte KISS_BEACON{'\x07'};
-constexpr byte KISS_DEPLOY_ANTENNA{'\x08'};
-constexpr byte KISS_GET_STATUS{'\x09'};
-constexpr byte KISS_HALT('\x0A');
+constexpr byte BEACON{'\x07'};
+constexpr byte DEPLOY_ANTENNA{'\x08'};
+constexpr byte GET_RADIO_STATUS{'\x09'};
+constexpr byte HALT('\x0A');
 
 /**
  * @brief Mock Radio Board for testing the Avionics Board
@@ -104,7 +109,7 @@ public:
      * @return false if invalid
      */
 
-    bool validate_signature(String &buffer, String& command_string);
+    bool validate_signature(String &buffer, String &command_string);
 
     /**
      * @brief Make a command
@@ -134,7 +139,7 @@ public:
 
     /**
      * @brief Get Radio Board status
-     * 
+     *
      * @return Beacon::status status
      */
 
