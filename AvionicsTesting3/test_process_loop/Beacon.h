@@ -2,7 +2,7 @@
  * @file beacon.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat beacon messages
- * @version 1.2.0
+ * @version 1.3.0
  * @date 2022-07-25
  *
  *
@@ -15,7 +15,7 @@
 
 /**
  * @brief Beacon format sent by the Avionics Board
- * 
+ *
  */
 class Beacon
 {
@@ -31,6 +31,8 @@ public:
         fair,
         poor,
         critical,
+        on,
+        off,
         unknown,
     };
 
@@ -48,13 +50,22 @@ public:
         status avionics,
         status radio,
         status payload);
-    
+
+    /**
+     * @brief Convert board status to string
+     *
+     * @param status status of a board
+     * @return String status character
+     */
+
+    String to_board_code(Beacon::status status);
+
     /**
      * @brief Get the message for the beacon
      *
      * @return String status for each board
      */
-    
+
     String get_message();
 
 private:

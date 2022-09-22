@@ -438,7 +438,12 @@ bool MockRadioBoard::make_command(String buffer)
 
 void MockRadioBoard::send_beacon(Beacon beacon)
 {
-    Log.noticeln("Transmitting beacon %s %s", _call_sign.c_str(), beacon.get_message().c_str());
+    Log.noticeln("Sending beacon %s %s", _call_sign.c_str(), beacon.get_message().c_str());
+    Serial1.write(FEND);
+    Serial1.write(KISS_BEACON);
+    Serial1.write(_call_sign.c_str());
+    Serial1.write(beacon.get_message().c_str());
+    Serial1.write(FEND);
 };
 
 /**

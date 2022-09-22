@@ -21,6 +21,12 @@ constexpr byte TFEND{'\xDC'};
 constexpr byte TFESC{'\xDD'};
 
 /**
+ * @brief SilverSat defined KISS local command types
+ * 
+ */
+constexpr byte KISS_BEACON{'\x07'};
+
+/**
  * @brief Mock Radio Board for testing the Avionics Board
  *
  */
