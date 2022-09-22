@@ -208,9 +208,27 @@ bool MockPayloadBoard::power_down_signal_is_set()
     return _power_down_signal;
 };
 
+/**
+ * @brief Get the photo count
+ *
+ * @return int photo count
+ */
+
 int MockPayloadBoard::get_photo_count()
 {
     // todo: provide I2C interface to FRAM to access photo count
 
     return _photo_count;
 }
+
+/**
+ * @brief Get the payload activity status
+ *
+ * @return true active
+ * @return false powered down
+ */
+
+bool MockPayloadBoard::get_payload_active()
+{
+    return _payload_active;
+};

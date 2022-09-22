@@ -458,3 +458,19 @@ bool MockRadioBoard::send_message(Message message)
     Log.noticeln("Sending message: %s", message.get_message().c_str());
     return true;
 };
+
+    /**
+     * @brief Get Radio Board status
+     * 
+     * @return String status
+     */
+    
+    Beacon::status MockRadioBoard::get_status() {
+        Log.traceln("Requesting Radio Board Status");
+        Serial1.write(FEND);
+        Serial1.write(KISS_GET_STATUS);
+        Serial1.write(FEND);
+        // todo: retrieve and store Radio Board status
+        return Beacon::unknown;
+    };
+

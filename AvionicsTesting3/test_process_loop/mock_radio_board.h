@@ -25,6 +25,8 @@ constexpr byte TFESC{'\xDD'};
  * 
  */
 constexpr byte KISS_BEACON{'\x07'};
+constexpr byte KISS_DEPLOY_ANTENNA{'\x08'};
+constexpr byte KISS_GET_STATUS{'\x09'};
 
 /**
  * @brief Mock Radio Board for testing the Avionics Board
@@ -129,6 +131,14 @@ public:
 
     bool send_message(Message message);
 
+    /**
+     * @brief Get Radio Board status
+     * 
+     * @return Beacon::status status
+     */
+
+    Beacon::status get_status();
+
 private:
     String _buffer{};
     bool _received_start{false};
@@ -144,8 +154,8 @@ private:
     long _commands_received{0};
     long _successful_commands{0};
     long _failed_commands{0};
-    const String _call_sign{"KC3CQJ"};
     long _command_sequence{1};
+    const String _call_sign{"KC3CQJ"};
 };
 
 #endif // MOCK_RADIO_BOARD_H
