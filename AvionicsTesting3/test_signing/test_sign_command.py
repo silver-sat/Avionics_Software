@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Test for sign_ciommand.py"""
+"""Test for sign_command.py"""
 
 import os
 from subprocess import getstatusoutput, getoutput

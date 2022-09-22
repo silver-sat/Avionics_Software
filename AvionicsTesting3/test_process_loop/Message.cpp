@@ -38,12 +38,6 @@ String Message::get_message()
     case response:
         return "RES" + _content;
 
-    case local_command:
-        return "LOC" + _content;
-
-    case beacon:
-        return "INV" + _content;
-
     case invalid:
         return "INV" + _content;
 

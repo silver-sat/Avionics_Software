@@ -169,12 +169,27 @@ bool AvionicsBoard::check_beacon()
     if ((millis() - _last_beacon_time > _beacon_interval) && (_beacon_interval > 0))
     {
         // todo: get power status
-        // todo: set avionics status
-        // todo: get radio status
-        // todo: get payload status
-
-        Beacon message{_power_status, _avionics_status, _radio_status, _payload_status};
+        _avionics_status = Beacon::excellent;
         extern MockRadioBoard radio;
+        // todo: retrieve and store radio status
+        if (radio.get_status() == "unknown")
+        {
+            _radio_status = Beacon::unknown;
+        }
+        else
+        {
+            _radio_status = Beacon::unknown;
+        }
+        extern MockPayloadBoard payload;
+        if (payload.get_payload_active())
+        {
+            _payload_status = Beacon::on;
+        }
+        else
+        {
+            _payload_status = Beacon::off;
+        }
+        Beacon message{_power_status, _avionics_status, _radio_status, _payload_status};
         radio.send_beacon(message);
         _last_beacon_time = millis();
     };

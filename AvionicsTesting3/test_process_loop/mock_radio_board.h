@@ -16,6 +16,25 @@
 #include "CommandFactory.h"
 
 /**
+ * @brief KISS defined constants
+ *
+ */
+constexpr byte FEND{'\xC0'};
+constexpr byte FESC{'\xDB'};
+constexpr byte TFEND{'\xDC'};
+constexpr byte TFESC{'\xDD'};
+constexpr byte DATA_FRAME{'\x00'};
+
+/**
+ * @brief SilverSat defined KISS local command types
+ *
+ */
+constexpr byte BEACON{'\x07'};
+constexpr byte DEPLOY_ANTENNA{'\x08'};
+constexpr byte GET_RADIO_STATUS{'\x09'};
+constexpr byte HALT('\x0A');
+
+/**
  * @brief Mock Radio Board for testing the Avionics Board
  *
  */
@@ -90,7 +109,7 @@ public:
      * @return false if invalid
      */
 
-    bool validate_signature(String &buffer, String& command_string);
+    bool validate_signature(String &buffer, String &command_string);
 
     /**
      * @brief Make a command
@@ -118,9 +137,19 @@ public:
 
     bool send_message(Message message);
 
+    /**
+     * @brief Get Radio Board status
+     *
+     * @return Beacon::status status
+     */
+
+    String get_status();
+
 private:
     String _buffer{};
-    bool _end_of_line{false};
+    bool _received_start{false};
+    bool _receiving_type{false};
+    bool _received_escape{false};
     const char _command_message_separator{'|'};
     const size_t _buffer_token_limit{4};
     bool _validation_required{false};
@@ -131,8 +160,8 @@ private:
     long _commands_received{0};
     long _successful_commands{0};
     long _failed_commands{0};
+    long _command_sequence{1};
     const String _call_sign{"KC3CQJ"};
-    long _command_sequence{0};
 };
 
 #endif // MOCK_RADIO_BOARD_H

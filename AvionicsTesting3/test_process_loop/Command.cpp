@@ -278,8 +278,10 @@ bool CommandTweeSlee::execute_command()
     auto status = Command::execute_command();
     Log.verboseln("TweeSlee");
     extern MockRadioBoard radio;
-    auto message = Message(Message::local_command, "STOP");
-    status = radio.send_message(message) && status;
+    Log.traceln("Sending local command: halt");
+    Serial1.write(FEND);
+    Serial1.write(HALT);
+    Serial1.write(FEND);
     extern MockPayloadBoard payload;
     return payload.end_activity() && status;
 };
@@ -641,7 +643,7 @@ bool CommandGetComms::execute_command()
     Log.verboseln("GetComms");
     extern MockPayloadBoard payload;
     extern MockRadioBoard radio;
-    auto message = Message(Message::local_command, "GetComms");
+    auto message = Message(Message::response, radio.get_status().c_str());
     return radio.send_message(message) && status;
 };
 

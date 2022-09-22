@@ -2,41 +2,13 @@
  * @file beacon.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat beacon messages
- * @version 1.2.0
+ * @version 1.3.0
  * @date 2022-07-25
  *
  *
  */
 
 #include "Beacon.h"
-
-/**
- * @brief Convert board status to string
- * 
- * @param status status of a board
- * @return String status character
- */
-
-String to_board_code(Beacon::status status)
-{
-    switch (status)
-    {
-    case Beacon::excellent:
-        return "A";
-    case Beacon::good:
-        return "B";
-    case Beacon::fair:
-        return "C";
-    case Beacon::poor:
-        return "D";
-    case Beacon::critical:
-        return "F";
-    case Beacon::unknown:
-        return "U";
-    default:
-        return "U";
-    }
-}
 
 /**
  * @brief Construct a new Beacon:: Beacon object
@@ -60,6 +32,37 @@ Beacon::Beacon(
                 to_board_code(payload));
 };
 
+/**
+ * @brief Convert board status to string
+ *
+ * @param status status of a board
+ * @return String status character
+ */
+
+String Beacon::to_board_code(status status)
+{
+    switch (status)
+    {
+    case excellent:
+        return "A";
+    case good:
+        return "B";
+    case fair:
+        return "C";
+    case poor:
+        return "D";
+    case critical:
+        return "F";
+    case on:
+        return "1";
+    case off:
+        return "0";
+    case unknown:
+        return "U";
+    default:
+        return "U";
+    }
+}
 /**
  * @brief get the message for the beacon
  *

@@ -1,5 +1,5 @@
 ##
-# @file test_aviation_initialization.py
+# @file test_avionics_initialization.py
 # @brief Validate Avionics Board initialization log entries
 # @author Lee A. Congdon (lee@silversat.org)
 # @version 1.0.0

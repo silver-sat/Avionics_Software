@@ -30,8 +30,6 @@ public:
         acknowledgement,
         negative_acknowledgement,
         response,
-        local_command,
-        beacon, // reserved
         invalid,
     };
 

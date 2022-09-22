@@ -15,7 +15,7 @@
 
 /**
  * @brief Mock Payload Board for testing the Avionics Board
- * 
+ *
  */
 
 class MockPayloadBoard
@@ -73,10 +73,20 @@ public:
 
     /**
      * @brief Get the photo count
-     * 
+     *
+     * @return int photo count
      */
 
     int get_photo_count();
+
+    /**
+     * @brief Get the payload activity status
+     *
+     * @return true active
+     * @return false powered down
+     */
+
+    bool get_payload_active();
 
 private:
     /**
