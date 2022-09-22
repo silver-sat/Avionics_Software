@@ -73,7 +73,6 @@ bool MockRadioBoard::check_for_command()
 {
     if (command_received())
     {
-        Log.verboseln("Command code: %d", _command->get_operation());
         _command->acknowledge_command();
         Log.traceln("Command acknowledged");
         if (_command->execute_command())
@@ -99,33 +98,113 @@ bool MockRadioBoard::check_for_command()
 
 bool MockRadioBoard::command_received()
 {
+    // while (Serial1.available())
+    // {
+    //     char character = Serial1.read();
+    //     if (character == '\n')
+    //     {
+    //         _end_of_line = true;
+    //         break;
+    //     }
+    //     else
+    //     {
+    //         // todo: check for buffer overflow
+    //         _buffer += character;
+    //     }
+    // };
+
+    // if (_end_of_line)
+    // {
+    //     Log.infoln("Command received (count %l): %s", ++_commands_received, _buffer.c_str());
+    //     make_command(_buffer);
+    //     _buffer = "";
+    //     _end_of_line = false;
+    //     return true;
+    // };
+
+    // return false;
+
     while (Serial1.available())
     {
         char character = Serial1.read();
-        if (character == '\n')
+        // Serial.print("Character: ");
+        // if (isPrintable(character))
+        // {
+        //     Serial.print(character);
+        // }
+        // else
+        // {
+        //     Serial.print(' ');
+        // }
+        // Serial.print(' ');
+        // if (character <= '\x0F')
+        // {
+        //     Serial.print('0');
+        // }
+        // Serial.println(byte(character), HEX);
+
+        if (_received_start)
         {
-            _end_of_line = true;
-            break;
+            if (_receiving_type)
+            {
+                _receiving_type = false;
+                if (character != 0)
+                {
+                    Log.errorln("Type is not 0: 0x%x", character);
+                }
+            }
+
+            else if (_received_escape)
+            {
+                switch (character)
+                {
+                case TFEND:
+                    _buffer += FEND;
+                    _received_escape = false;
+                    break;
+                case TFESC:
+                    _buffer += FESC;
+                    _received_escape = false;
+                    break;
+                default:
+                    Log.errorln("FESC followed by invalid character, ignored: 0x%x", character);
+                    _buffer += character;
+                    _received_escape = false;
+                    break;
+                }
+            }
+
+            else if (character == FESC)
+            {
+                _received_escape = true;
+            }
+
+            else if (character == FEND)
+            {
+                Log.infoln("Command received (count %l): %s", ++_commands_received, _buffer.c_str());
+                make_command(_buffer);
+                _buffer = "";
+                _received_start = false;
+                return true;
+            }
+
+            else
+            {
+                _buffer += character;
+            }
+        }
+        else if (character == FEND)
+        {
+            _received_start = true;
+            _receiving_type = true;
         }
         else
         {
-            // todo: check for buffer overflow
-            _buffer += character;
+            Log.errorln("FEND is not first character of command: 0x%x", character);
         }
-    };
-
-    if (_end_of_line)
-    {
-        Log.infoln("Command received (count %l): %s", ++_commands_received, _buffer.c_str());
-        make_command(_buffer);
-        _buffer = "";
-        _end_of_line = false;
-        return true;
-    };
-
+    }
     return false;
 };
-
 /**
  * @brief Parse command parameters
  *
@@ -235,7 +314,7 @@ bool MockRadioBoard::validate_signature(String &buffer, String &command_string)
             }
             else
             {
-                Log.warningln("Command sequence invalid");
+                Log.infoln("Command sequence invalid");
             }
         }
         else

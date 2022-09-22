@@ -15,6 +15,11 @@
 #include "Message.h"
 #include "CommandFactory.h"
 
+constexpr byte FEND{'\xC0'};
+constexpr byte FESC{'\xDB'};
+constexpr byte TFEND{'\xDC'};
+constexpr byte TFESC{'\xDD'};
+
 /**
  * @brief Mock Radio Board for testing the Avionics Board
  *
@@ -120,7 +125,9 @@ public:
 
 private:
     String _buffer{};
-    bool _end_of_line{false};
+    bool _received_start{false};
+    bool _receiving_type{false};
+    bool _received_escape{false};
     const char _command_message_separator{'|'};
     const size_t _buffer_token_limit{4};
     bool _validation_required{false};
@@ -132,7 +139,7 @@ private:
     long _successful_commands{0};
     long _failed_commands{0};
     const String _call_sign{"KC3CQJ"};
-    long _command_sequence{0};
+    long _command_sequence{1};
 };
 
 #endif // MOCK_RADIO_BOARD_H

@@ -25,6 +25,10 @@ COMMAND_PORT = "/dev/ttyUSB0"
 BAUDRATE = 115200
 ## default timeout for readline
 TIMEOUT = 5
+## KISS frame end
+FEND = b"\xC0"
+## KISS frame type
+KISS_TYPE = b"\x00"
 ## log entry field names
 Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
 
@@ -44,11 +48,15 @@ def collect_initialization():
         print(log_data)
     return log
 
+
 ## Verify initialization complete
 #
 def initialization_complete(log):
 
-    return any([item.detail == "Process Loop Test initialization completed" for item in log])
+    return any(
+        [item.detail == "Process Loop Test initialization completed" for item in log]
+    )
+
 
 ## Generate signed command
 #
@@ -60,7 +68,7 @@ def generate_signed(command):
     sequence = repr(command_counter).encode("utf-8")
     command_counter += 1
     separator = "|".encode("utf-8")
-    command = command.encode("utf-")
+    command = command.encode("utf-8")
     command_hmac = hmac.new(secret, digestmod=hashlib.blake2s)
     command_hmac.update(sequence)
     command_hmac.update(separator)
@@ -82,7 +90,7 @@ def generate_signed(command):
 #
 def collect(command):
 
-    command_port.write((command + "\n").encode("utf-8"))
+    command_port.write(FEND + KISS_TYPE + command.encode("utf-8") + FEND)
     log = []
     log_data = ""
     while ("Executed (" not in log_data) & ("Failed (" not in log_data):
@@ -151,7 +159,7 @@ def executed(log):
 #
 def collect_through_power_off(command, interval=60):
 
-    command_port.write((command + "\n").encode("utf-8"))
+    command_port.write(FEND + KISS_TYPE + command.encode("utf-8") + FEND)
     log = []
     log_data = ""
     time.sleep(interval)
@@ -241,7 +249,7 @@ def timestamp_sent(log):
 #
 def collect_through_reset_pin_cleared(command, interval=60):
 
-    command_port.write((command + "\n").encode("utf-8"))
+    command_port.write(FEND + KISS_TYPE + command.encode("utf-8") + FEND)
     log = []
     log_data = ""
     while "Reset pin changed state to 1" not in log_data:
