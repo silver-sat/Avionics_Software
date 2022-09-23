@@ -11,7 +11,6 @@
 #include "mock_radio_board.h"
 #include "arduino_secrets.h"
 #include "log_utility.h"
-#include "hexToByteArray.h"
 #include <CRC32.h>
 #include <BLAKE2s.h>
 
@@ -218,6 +217,43 @@ bool MockRadioBoard::parse_parameters(const String &command_string, String comma
 }
 
 /**
+ * @brief Helper function for hexadecimal text to binary conversion
+ *
+ * @param input a character in one of the ranges 0-9, a-f, or A-F
+ * @return int value of the hexadecimal representation (e.g. "A" == 0x0A, decimal 10)
+ */
+
+int char2int(const char input)
+{
+    if (input >= '0' && input <= '9')
+        return input - '0';
+    if (input >= 'A' && input <= 'F')
+        return input - 'A' + 10;
+    if (input >= 'a' && input <= 'f')
+        return input - 'a' + 10;
+    return 0; // invalid data
+};
+
+/**
+ * @brief Convert hexadecimal text representation to binary values
+ *
+ * @param src hexadecimal representation
+ * @param target binary values
+ */
+
+// This function assumes src to be a zero terminated sanitized string with
+// an even number of [0-9a-f] characters, and target to be sufficiently large
+
+void hex2bin(const char *src, byte *target)
+{
+    while (*src && src[1])
+    {
+        *(target++) = (char2int(*src) << 4) + char2int(src[1]);
+        src += 2;
+    }
+};
+
+/**
  * @brief Validate the commmand signature
  *
  * @param buffer sequence, salt, command and HMAC
@@ -304,7 +340,7 @@ bool MockRadioBoard::validate_signature(String &buffer, String &command_string)
 
         const size_t salt_length{buffer_tokens[1].length()};
         byte salt[17]{};
-        hexCharacterStringToBytes(salt, buffer_tokens[1].c_str());
+        hex2bin(buffer_tokens[1].c_str(), salt);
 
         const size_t command_length{buffer_tokens[2].length()};
         byte command[50]{};
@@ -312,7 +348,7 @@ bool MockRadioBoard::validate_signature(String &buffer, String &command_string)
 
         const size_t sourceHMAC_length = buffer_tokens[3].length();
         byte sourceHMAC[33]{};
-        hexCharacterStringToBytes(sourceHMAC, buffer_tokens[3].c_str());
+        hex2bin(buffer_tokens[3].c_str(), sourceHMAC);
 
         const size_t secret_length = 16;
         const byte secret[]{SECRET_HASH_KEY};
