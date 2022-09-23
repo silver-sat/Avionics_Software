@@ -35,6 +35,14 @@ constexpr byte GET_RADIO_STATUS{'\x09'};
 constexpr byte HALT('\x0A');
 
 /**
+ * @brief Dummy AX.25 header
+ * 
+ */
+
+constexpr char HEADER[] {0x88, 0x40, 0x40, 0x40, 0x40, 0x40, 0xE0, 0xA6, 
+                         0x40, 0x40, 0x40, 0x40, 0x40, 0xE1, 0x30, 0xF0};
+
+/**
  * @brief Mock Radio Board for testing the Avionics Board
  *
  */

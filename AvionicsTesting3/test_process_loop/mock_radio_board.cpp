@@ -12,6 +12,7 @@
 #include "arduino_secrets.h"
 #include "log_utility.h"
 #include "hexToByteArray.h"
+#include <CRC32.h>
 #include <BLAKE2s.h>
 
 /**
@@ -143,7 +144,14 @@ bool MockRadioBoard::command_received()
 
             else if (character == FEND)
             {
+                _buffer.remove(0, 16);
                 Log.infoln("Command received (count %l): %s", ++_commands_received, _buffer.c_str());
+                // auto length = _buffer.length();
+                // for (auto index = 0; index < length; index++) {
+                //     Serial.print(byte(_buffer.charAt(index)), HEX);
+                //     Serial.print(' ');
+                // };
+                // Serial.println();
                 make_command(_buffer);
                 _buffer = "";
                 _received_start = false;
@@ -417,10 +425,16 @@ void MockRadioBoard::send_beacon(Beacon beacon)
 
 bool MockRadioBoard::send_message(Message message)
 {
-    Log.noticeln("Sending message: %s", message.get_message().c_str());
+    String message_data = message.get_message();
+    size_t message_length = message_data.length();
+    uint32_t checksum = CRC32::calculate(message_data.c_str(), message_length);
+    Log.noticeln("Sending message: %s", message_data.c_str());
+    Log.verboseln("Checksum: 0x%x", checksum);
     Serial1.write(FEND);
     Serial1.write(DATA_FRAME);
-    Serial1.write(message.get_message().c_str());
+    Serial1.write(HEADER, 16);
+    Serial1.write(message_data.c_str());
+    Serial1.print(checksum, HEX);
     Serial1.write(FEND);
     return true;
 };
