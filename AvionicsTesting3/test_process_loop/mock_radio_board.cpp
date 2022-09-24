@@ -143,14 +143,8 @@ bool MockRadioBoard::command_received()
 
             else if (character == FEND)
             {
-                _buffer.remove(0, 16);
+                _buffer.remove(0, header_size);
                 Log.infoln("Command received (count %l): %s", ++_commands_received, _buffer.c_str());
-                // auto length = _buffer.length();
-                // for (auto index = 0; index < length; index++) {
-                //     Serial.print(byte(_buffer.charAt(index)), HEX);
-                //     Serial.print(' ');
-                // };
-                // Serial.println();
                 make_command(_buffer);
                 _buffer = "";
                 _received_start = false;
@@ -174,47 +168,6 @@ bool MockRadioBoard::command_received()
     }
     return false;
 };
-/**
- * @brief Parse command parameters
- *
- * @param command_string command string
- * @param command_tokens output: tokens
- * @param token_count output: number of tokens
- * @return true successful
- * @return false failure
- */
-
-bool MockRadioBoard::parse_parameters(const String &command_string, String command_tokens[], size_t &token_index)
-{
-
-    Log.verboseln("Parsing command");
-    token_index = 0;
-    for (auto string_index = 0; string_index < command_string.length(); string_index++)
-    {
-        if (command_string.charAt(string_index) != ' ')
-        {
-            // todo: check for buffer overflow
-            command_tokens[token_index] += command_string.charAt(string_index);
-        }
-        else
-        {
-            Log.verboseln("Token processed: %s", command_tokens[token_index].c_str());
-            if (token_index++ > _command_token_limit)
-            {
-                Log.warningln("Too many command parameters");
-                return false;
-            }
-        }
-    }
-
-    Log.verboseln("Token processed: %s", command_tokens[token_index].c_str());
-    if (token_index > _command_token_limit)
-    {
-        Log.warningln("Too many command parameters");
-        return false;
-    }
-    return true;
-}
 
 /**
  * @brief Helper function for hexadecimal text to binary conversion
@@ -330,51 +283,49 @@ bool MockRadioBoard::validate_signature(String &buffer, String &command_string)
         }
 
         // todo: check for validation requirement
-        // todo: handle variable length sequence
-        // todo: refactor lengths
         // todo: check for valid lengths
 
         const size_t sequence_length{buffer_tokens[0].length()};
-        byte sequence[10]{};
-        buffer_tokens[0].getBytes(sequence, 10);
+        byte sequence[_maximum_sequence_length]{};
+        buffer_tokens[0].getBytes(sequence, _maximum_sequence_length);
 
         const size_t salt_length{buffer_tokens[1].length()};
-        byte salt[17]{};
+        byte salt[_salt_size]{};
         hex2bin(buffer_tokens[1].c_str(), salt);
 
         const size_t command_length{buffer_tokens[2].length()};
-        byte command[50]{};
-        buffer_tokens[2].getBytes(command, 50);
+        byte command[_maximum_command_length]{};
+        buffer_tokens[2].getBytes(command, _maximum_command_length);
 
         const size_t sourceHMAC_length = buffer_tokens[3].length();
-        byte sourceHMAC[33]{};
+        byte sourceHMAC[_HMAC_size]{};
         hex2bin(buffer_tokens[3].c_str(), sourceHMAC);
 
         const size_t secret_length = 16;
         const byte secret[]{SECRET_HASH_KEY};
 
-        byte hash[_hash_size];
+        byte HMAC[_HMAC_size];
+        String hexHMAC{};
 
         BLAKE2s blake{};
-        blake.resetHMAC(&secret, 16);
+        blake.resetHMAC(&secret, _secret_size);
         blake.update(&sequence, sequence_length);
         blake.update(&_command_message_separator, 1);
-        blake.update(&salt, 16);
+        blake.update(&salt, _salt_size);
         blake.update(&_command_message_separator, 1);
         blake.update(&command, command_length);
-        blake.finalizeHMAC(secret, 16, hash, _hash_size);
-        String HMAC{};
-        for (auto index = 0; index < _hash_size; index++)
+        blake.finalizeHMAC(secret, _secret_size, HMAC, _HMAC_size);
+        for (auto index = 0; index < _HMAC_size; index++)
         {
-            if (hash[index] < 0x10)
+            if (HMAC[index] < 0x10)
             {
-                HMAC += "0";
+                hexHMAC += "0";
             };
-            HMAC += String(hash[index], HEX);
+            hexHMAC += String(HMAC[index], HEX);
         }
 
-        Log.verboseln("Computed HMAC: %s", HMAC.c_str());
-        if (HMAC == buffer_tokens[3])
+        Log.verboseln("Computed HMAC: %s", hexHMAC.c_str());
+        if (hexHMAC == buffer_tokens[3])
         {
             Log.traceln("Command signature valid");
             return true;
@@ -392,6 +343,47 @@ bool MockRadioBoard::validate_signature(String &buffer, String &command_string)
                 return true;
             }
         }
+    }
+    return true;
+};
+
+/**
+ * @brief Parse command parameters
+ *
+ * @param command_string command string
+ * @param command_tokens output: tokens
+ * @param token_count output: number of tokens
+ * @return true successful
+ * @return false failure
+ */
+
+bool MockRadioBoard::parse_parameters(const String &command_string, String command_tokens[], size_t &token_index)
+{
+
+    Log.verboseln("Parsing command");
+    token_index = 0;
+    for (auto string_index = 0; string_index < command_string.length(); string_index++)
+    {
+        if (command_string.charAt(string_index) != ' ')
+        {
+            command_tokens[token_index] += command_string.charAt(string_index);
+        }
+        else
+        {
+            Log.verboseln("Token processed: %s", command_tokens[token_index].c_str());
+            if (token_index++ > _command_token_limit)
+            {
+                Log.warningln("Too many command parameters");
+                return false;
+            }
+        }
+    }
+
+    Log.verboseln("Token processed: %s", command_tokens[token_index].c_str());
+    if (token_index > _command_token_limit)
+    {
+        Log.warningln("Too many command parameters");
+        return false;
     }
     return true;
 };
