@@ -51,46 +51,45 @@ void setup()
     {
     }
 
-// C string
+    // C string
 
     char data[]{"F0E010"};
 
     Serial.println(data);
 
-//    for (auto index = 0; index < sizeof(data); index++)
-//    {
-//        Serial.print(data[index], HEX);
-//        Serial.print(' ');
-//    }
-//    Serial.println();
+    for (auto index = 0; index < sizeof(data); index++)
+    {
+        Serial.print(data[index], HEX);
+        Serial.print(' ');
+    }
+    Serial.println();
 
     byte target[20]{0};
     hex2bin(data, target);
-//    for (auto index = 0; index < 20; index++)
-//    {
-//        Serial.print(target[index], HEX);
-//    }
-//    Serial.println();
+    for (auto index = 0; index < 20; index++)
+    {
+        Serial.print(target[index], HEX);
+    }
+    Serial.println();
 
-// Arduino String class
+    // Arduino String class
 
     String string_data{"F0E010"};
+
+       Serial.println(string_data);
     
-//    Serial.println(string_data);
-//
-//    for (auto index = 0; index < sizeof(data); index++)
-//    {
-//        Serial.print(string_data.charAt(index), HEX);
-//        Serial.print(' ');
-//    }
-//    Serial.println();
+       for (auto index = 0; index < string_data.length(); index++)
+       {
+           Serial.print(string_data.charAt(index), HEX);
+           Serial.print(' ');
+       }
+       Serial.println();
 
     hex2bin(string_data.c_str(), target);
-//    for (auto index = 0; index < 20; index++)
-//    {
-//        Serial.print(target[index], HEX);
-//    }
-    
+       for (auto index = 0; index < 20; index++)
+       {
+           Serial.print(target[index], HEX);
+       }
 }
 
 void loop() {}
