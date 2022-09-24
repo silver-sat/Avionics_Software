@@ -46,6 +46,43 @@ MockRadioBoard radio;
 MockPowerBoard power;
 
 /**
+ * @brief Test instrumentation values
+ *
+ */
+
+unsigned long _loop_start{};
+unsigned long _loop_maximum{0};
+unsigned long _loop_maximum_timestamp{};
+unsigned long _memory_minimum{32768};
+unsigned long _memory_minimum_timestamp{};
+unsigned long _display_start{};
+constexpr int _display_interval{30 * 1000};
+
+/**
+ * @brief Helper function for memory use
+ *
+ */
+
+#ifdef __arm__
+// should use uinstd.h to define sbrk but Due causes a conflict
+extern "C" char *sbrk(int incr);
+#else  // __ARM__
+extern char *__brkval;
+#endif // __arm__
+
+int freeMemory()
+{
+    char top;
+#ifdef __arm__
+    return &top - reinterpret_cast<char *>(sbrk(0));
+#elif defined(CORE_TEENSY) || (ARDUINO > 103 && ARDUINO != 151)
+    return &top - __brkval;
+#else  // __arm__
+    return __brkval ? &top - __brkval : &top - __malloc_heap_start;
+#endif // __arm__
+}
+
+/**
  * @brief Initialize the devices and the boards
  *
  */
@@ -114,6 +151,11 @@ void setup()
     // Initialization complete
 
     Log.noticeln("Process Loop Test initialization completed");
+
+    // Set up instrumentation
+
+    _loop_start = millis();
+    _display_start = millis();
 };
 
 /**
@@ -126,6 +168,38 @@ void loop()
     // Trigger the watchdog
 
     avionics.trigger_watchdog();
+
+    // Record loop time
+
+    unsigned long loop_time = millis();
+    if (loop_time - _loop_start > _loop_maximum)
+    {
+        _loop_maximum = loop_time - _loop_start;
+        _loop_maximum_timestamp = millis();
+        _loop_start = loop_time;
+    }
+
+    // Record free memory
+
+    long free_memory{freeMemory()};
+    if (free_memory < _memory_minimum)
+    {
+        _memory_minimum = free_memory;
+        _memory_minimum_timestamp = millis();
+    }
+
+    // Check instrumentation display
+
+    if (millis() - _display_start > _display_interval)
+    {
+        char timestamp[20]{};
+        formatTimestamp(timestamp, _loop_maximum_timestamp);
+        Log.verboseln("Maximum loop time %l ms at %s", _loop_maximum, timestamp);
+        formatTimestamp(timestamp, _memory_minimum_timestamp);
+        Log.verboseln("Minimum free memory %l bytes at %s", _memory_minimum, timestamp);
+        _display_start = millis();
+        Log.verboseln("Current free memory %l bytes", freeMemory());
+    }
 
     // Send beacon
 
