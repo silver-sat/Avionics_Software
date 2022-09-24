@@ -36,11 +36,33 @@ constexpr byte HALT('\x0A');
 
 /**
  * @brief Dummy AX.25 header
- * 
+ *
  */
 
-constexpr char HEADER[] {0x88, 0x40, 0x40, 0x40, 0x40, 0x40, 0xE0, 0xA6, 
-                         0x40, 0x40, 0x40, 0x40, 0x40, 0xE1, 0x30, 0xF0};
+constexpr byte HEADER[]{0x88, 0x40, 0x40, 0x40, 0x40, 0x40, 0xE0, 0xA6,
+                        0x40, 0x40, 0x40, 0x40, 0x40, 0xE1, 0x30, 0xF0};
+constexpr size_t header_size{sizeof(HEADER)};
+
+/**
+ * @brief Command parameters
+ *
+ */
+
+constexpr char _command_message_separator{'|'};
+constexpr size_t _buffer_token_limit{4};
+constexpr size_t _maximum_sequence_length{10};
+constexpr size_t _maximum_command_length{200};
+constexpr size_t _command_token_limit{10};
+constexpr size_t _salt_size{16};
+constexpr size_t _secret_size{16};
+constexpr size_t _HMAC_size{32};
+
+/**
+ * @brief Amateur radio call sign
+ *
+ */
+
+const String _call_sign{"KC3CQJ"};
 
 /**
  * @brief Mock Radio Board for testing the Avionics Board
@@ -158,18 +180,13 @@ private:
     bool _received_start{false};
     bool _receiving_type{false};
     bool _received_escape{false};
-    const char _command_message_separator{'|'};
-    const size_t _buffer_token_limit{4};
     bool _validation_required{false};
-    const size_t _hash_size{32};
-    const size_t _command_token_limit{10};
     CommandFactory *_factory{};
     Command *_command{};
     long _commands_received{0};
     long _successful_commands{0};
     long _failed_commands{0};
     long _command_sequence{1};
-    const String _call_sign{"KC3CQJ"};
 };
 
 #endif // MOCK_RADIO_BOARD_H
