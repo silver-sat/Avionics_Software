@@ -31,6 +31,15 @@ void printPrefix(Print *_logOutput, int logLevel);
 void printTimestamp(Print *_logOutput);
 
 /**
+ * @brief Format timestamp
+ *
+ * @param timestamp output
+ * @param msecs optional, default is current value of millis()
+ */
+
+void formatTimestamp(char *timestamp, const unsigned long msecs = millis());
+
+/**
  * @brief Print log description based on level
  *
  * @param _logOutput output
