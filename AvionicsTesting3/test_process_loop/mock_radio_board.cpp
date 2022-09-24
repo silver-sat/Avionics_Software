@@ -438,7 +438,6 @@ void MockRadioBoard::send_beacon(Beacon beacon)
 {
     String beacon_data = _call_sign + beacon.get_message();
     size_t beacon_length = beacon_data.length();
-    u_int32_t checksum = CRC32::calculate(beacon_data.c_str(), beacon_length);
     Log.noticeln("Sending local command: beacon %s %s", _call_sign.c_str(), beacon.get_message().c_str());
     Serial1.write(FEND);
     Serial1.write(BEACON);
