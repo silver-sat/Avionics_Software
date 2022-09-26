@@ -24,6 +24,8 @@
  *
  */
 
+#define INSTRUMENTATION // Instrumentation for processor and memory usage
+
 #include "log_utility.h"
 #include "Beacon.h"
 #include "Command.h"
@@ -45,18 +47,32 @@ MockPayloadBoard payload;
 MockRadioBoard radio;
 MockPowerBoard power;
 
+#ifdef INSTRUMENTATION
 /**
  * @brief Test instrumentation values
  *
  */
 
-unsigned long _loop_start{};
-unsigned long _loop_maximum{0};
-unsigned long _loop_maximum_timestamp{};
-unsigned long _memory_minimum{32768};
-unsigned long _memory_minimum_timestamp{};
-unsigned long _display_start{};
-constexpr int _display_interval{30 * 1000};
+unsigned long previous_time{};
+unsigned long current_time{};
+unsigned long duration{};
+unsigned long loop_start_time{};
+unsigned long loop_maximum{0};
+unsigned long loop_maximum_timestamp{};
+unsigned long watchdog_maximum{0};
+unsigned long watchdog_maximum_timestamp{};
+unsigned long beacon_maximum{0};
+unsigned long beacon_maximum_timestamp{};
+unsigned long command_maximum{0};
+unsigned long command_maximum_timestamp{};
+unsigned long photo_maximum{0};
+unsigned long photo_maximum_timestamp{};
+unsigned long payload_maximum{0};
+unsigned long payload_maximum_timestamp{};
+unsigned long memory_minimum{32768};
+unsigned long memory_minimum_timestamp{};
+unsigned long display_start_time{};
+constexpr int display_interval{30 * 1000};
 
 /**
  * @brief Helper function for memory use
@@ -81,6 +97,7 @@ int freeMemory()
     return __brkval ? &top - __brkval : &top - __malloc_heap_start;
 #endif // __arm__
 }
+#endif // INSTRUMENTATION
 
 /**
  * @brief Initialize the devices and the boards
@@ -152,10 +169,12 @@ void setup()
 
     Log.noticeln("Process Loop Test initialization completed");
 
+#ifdef INSTRUMENTATION
     // Set up instrumentation
 
-    _loop_start = millis();
-    _display_start = millis();
+    loop_start_time = micros();
+    display_start_time = millis();
+#endif // INSTRUMENTATION
 };
 
 /**
@@ -165,55 +184,119 @@ void setup()
 
 void loop()
 {
+
+#ifdef INSTRUMENTATION
+    previous_time = micros();
+#endif // INSTRUMENTATION
+
     // Trigger the watchdog
 
     avionics.trigger_watchdog();
 
-    // Record loop time
-
-    unsigned long loop_time = millis();
-    if (loop_time - _loop_start > _loop_maximum)
+#ifdef INSTRUMENTATION
+    duration = micros() - previous_time;
+    if (duration > watchdog_maximum)
     {
-        _loop_maximum = loop_time - _loop_start;
-        _loop_maximum_timestamp = millis();
-        _loop_start = loop_time;
+        watchdog_maximum = duration;
+        watchdog_maximum_timestamp = millis();
     }
-
-    // Record free memory
-
-    long free_memory{freeMemory()};
-    if (free_memory < _memory_minimum)
-    {
-        _memory_minimum = free_memory;
-        _memory_minimum_timestamp = millis();
-    }
-
-    // Check instrumentation display
-
-    if (millis() - _display_start > _display_interval)
-    {
-        char timestamp[20]{};
-        formatTimestamp(timestamp, _loop_maximum_timestamp);
-        Log.verboseln("Maximum loop time %l ms at %s", _loop_maximum, timestamp);
-        formatTimestamp(timestamp, _memory_minimum_timestamp);
-        Log.verboseln("Minimum free memory %l bytes at %s", _memory_minimum, timestamp);
-        _display_start = millis();
-        Log.verboseln("Current free memory %l bytes", freeMemory());
-    }
+    previous_time = micros();
+#endif // INSTRUMENTATION
 
     // Send beacon
 
     avionics.check_beacon();
 
+#ifdef INSTRUMENTATION
+    duration = micros() - previous_time;
+    if (duration > beacon_maximum)
+    {
+        beacon_maximum = duration;
+        beacon_maximum_timestamp = millis();
+    }
+    previous_time = micros();
+#endif // INSTRUMENTATION
+
     // Process command
 
     radio.check_for_command();
+
+#ifdef INSTRUMENTATION
+    duration = micros() - previous_time;
+    if (duration > command_maximum)
+    {
+        command_maximum = duration;
+        command_maximum_timestamp = millis();
+    }
+    previous_time = micros();
+#endif // INSTRUMENTATION
 
     // Take photo
 
     avionics.check_photo();
 
+#ifdef INSTRUMENTATION
+    duration = micros() - previous_time;
+    if (duration > photo_maximum)
+    {
+        photo_maximum = duration;
+        photo_maximum_timestamp = millis();
+    }
+    previous_time = micros();
+#endif // INSTRUMENTATION
+
     // Shut off Payload Board if ready to sleep
 
     payload.check_shutdown();
+
+#ifdef INSTRUMENTATION
+    duration = micros() - previous_time;
+    if (duration > payload_maximum)
+    {
+        payload_maximum = duration;
+        payload_maximum_timestamp = millis();
+    }
+#endif // INSTRUMENTATION
+
+#ifdef INSTRUMENTATION
+    if (millis() - display_start_time > display_interval)
+    {
+        char timestamp[20]{};
+        formatTimestamp(timestamp, loop_maximum_timestamp);
+        Log.verboseln("Maximum loop time %l microseconds at %s", loop_maximum, timestamp);
+        formatTimestamp(timestamp, watchdog_maximum_timestamp);
+        Log.verboseln("Maximum watchdog processing duration %l microseconds at %s", watchdog_maximum, timestamp);
+        formatTimestamp(timestamp, beacon_maximum_timestamp);
+        Log.verboseln("Maximum beacon processing time %l microseconds at %s", beacon_maximum, timestamp);
+        formatTimestamp(timestamp, command_maximum_timestamp);
+        Log.verboseln("Maximum command processing time %l microseconds at %s", command_maximum, timestamp);
+        formatTimestamp(timestamp, photo_maximum_timestamp);
+        Log.verboseln("Maximum photo processing time %l microseconds at %s", photo_maximum, timestamp);
+        formatTimestamp(timestamp, payload_maximum_timestamp);
+        Log.verboseln("Maximum payload processing time %l microseconds at %s", payload_maximum, timestamp);
+        formatTimestamp(timestamp, memory_minimum_timestamp);
+        Log.verboseln("Minimum free memory %l bytes at %s", memory_minimum, timestamp);
+        display_start_time = millis();
+        Log.verboseln("Current free memory %l bytes", freeMemory());
+    }
+
+    // Record free memory
+
+    long free_memory{freeMemory()};
+    if (free_memory < memory_minimum)
+    {
+        memory_minimum = free_memory;
+        memory_minimum_timestamp = millis();
+    }
+
+    // Record loop time
+
+    duration = micros() - loop_start_time;
+    if (duration > loop_maximum)
+    {
+        loop_maximum = duration;
+        loop_maximum_timestamp = millis();
+    }
+    loop_start_time = micros();
+#endif // INSTRUMENTATION
 };
