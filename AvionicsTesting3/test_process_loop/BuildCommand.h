@@ -11,7 +11,7 @@
 #ifndef BUILDCOMMAND_H
 #define BUILDCOMMAND_H
 
-#include "Command.h"
+#include "ExecuteCommand.h"
 
 /**
  * @brief Factory for Command objects
@@ -38,13 +38,13 @@ public:
     /**
      * @brief Get the command object
      *
-     * @return Command*
+     * @return ExecuteCommand*
      */
 
-    Command *get_command();
+    ExecuteCommand *get_command();
 
 private:
-    Command *_command;
+    ExecuteCommand *_command;
     // todo: single token limit for radio board and command factory
     const size_t _token_limit{10};
 };

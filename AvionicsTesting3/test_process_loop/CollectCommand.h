@@ -59,7 +59,7 @@ public:
      * @return next command to process
      */
 
-    Command *get_command();
+    ExecuteCommand *get_command();
 
     /**
      * @brief Parse command parameters
@@ -98,7 +98,7 @@ private:
     char _command_buffer[_maximum_command_length + 1]{""};
     bool _validation_required{false};
     BuildCommand *_factory{};
-    Command *_command{};
+    ExecuteCommand *_command{};
     long _successful_commands{0};
     long _failed_commands{0};
     long _command_sequence{1};

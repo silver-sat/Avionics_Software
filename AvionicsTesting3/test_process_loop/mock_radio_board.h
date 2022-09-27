@@ -77,6 +77,9 @@ public:
     /**
      * @brief Assemble command from Serial1 port
      *
+     * @param buffer buffer to assemble command
+     * @param length maximum length of command
+     * 
      * @return true no command or successful
      * @return false error
      */
@@ -86,6 +89,7 @@ public:
     /**
      * @brief Send beacon
      *
+     * @param beacon beacon data 
      */
 
     void send_beacon(Beacon beacon);

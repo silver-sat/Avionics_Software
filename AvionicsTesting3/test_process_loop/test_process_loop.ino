@@ -28,7 +28,7 @@
 
 #include "log_utility.h"
 #include "Beacon.h"
-#include "Command.h"
+#include "ExecuteCommand.h"
 #include "AvionicsBoard.h"
 #include "mock_power_board.h"
 #include "mock_payload_board.h"

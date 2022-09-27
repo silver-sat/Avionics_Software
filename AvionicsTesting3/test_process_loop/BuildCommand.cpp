@@ -13,7 +13,7 @@
 #include <Arduino.h>
 
 /**
- * @brief Construct a new  BuildCommandy::BuildCommand object
+ * @brief Construct a new  BuildCommand::BuildCommand object
  *
  */
 
@@ -309,7 +309,7 @@ BuildCommand::~BuildCommand()
  * @return Command*
  */
 
-Command *BuildCommand::get_command()
+ExecuteCommand *BuildCommand::get_command()
 {
     return _command;
 };

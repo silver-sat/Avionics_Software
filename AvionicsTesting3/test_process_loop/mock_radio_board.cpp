@@ -26,7 +26,7 @@ bool MockRadioBoard::begin()
 };
 
 /**
- * @brief Notify radio board to deploy antenna
+ * @brief Local command to deploy antenna
  *
  * @return true successful
  * @return false error
@@ -44,8 +44,11 @@ bool MockRadioBoard::deploy_antenna()
 /**
  * @brief Assemble command from Serial1 port
  *
- * @return true command available
- * @return false no command available
+ * @param buffer buffer to assemble command
+ * @param length maximum length of command
+ *
+ * @return true no command or successful
+ * @return false error
  */
 
 bool MockRadioBoard::receive_command(char *buffer, const size_t length)
@@ -139,8 +142,7 @@ bool MockRadioBoard::receive_command(char *buffer, const size_t length)
 /**
  * @brief Send beacon
  *
- * @return true successful
- * @return false error
+ * @param beacon beacon data
  */
 
 void MockRadioBoard::send_beacon(Beacon beacon)
