@@ -1,7 +1,0 @@
-<map id="test_process_loop/IMU.h" name="test_process_loop/IMU.h">
-<area shape="rect" id="node1" title="Implement inertial management unit." alt="" coords="244,5,425,32"/>
-<area shape="rect" id="node2" href="$_avionics_board_8h.html" title="Test Avionics Board for SilverSat." alt="" coords="125,80,323,121"/>
-<area shape="rect" id="node5" href="$_i_m_u_8cpp.html" title="Implement inertial management unit." alt="" coords="347,87,543,114"/>
-<area shape="rect" id="node3" href="$_avionics_board_8cpp.html" title="Test Avionics Board for SilverSat." alt="" coords="5,169,203,211"/>
-<area shape="rect" id="node4" href="$_command_8cpp.html" title="SilverSat commands." alt="" coords="227,177,464,203"/>
-</map>

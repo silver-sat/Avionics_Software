@@ -1,4 +1,0 @@
-<map id="CommandBeaconSp" name="CommandBeaconSp">
-<area shape="rect" id="node1" title="beacon_sp command" alt="" coords="5,80,159,107"/>
-<area shape="rect" id="node2" href="$class_command.html" title="Command structure and processing." alt="" coords="37,5,127,32"/>
-</map>

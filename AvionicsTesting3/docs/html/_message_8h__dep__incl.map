@@ -1,8 +1,0 @@
-<map id="test_process_loop/Message.h" name="test_process_loop/Message.h">
-<area shape="rect" id="node1" title="Avionics outbound messages." alt="" coords="415,5,628,32"/>
-<area shape="rect" id="node2" href="$mock__radio__board_8h.html" title="Mock Radio Board for Avionics testing." alt="" coords="279,80,457,121"/>
-<area shape="rect" id="node4" href="$_command_8cpp.html" title="SilverSat commands." alt="" coords="429,177,667,203"/>
-<area shape="rect" id="node6" href="$_message_8cpp.html" title="Avionics outbound messages." alt="" coords="559,87,787,114"/>
-<area shape="rect" id="node3" href="$_avionics_board_8cpp.html" title="Test Avionics Board for SilverSat." alt="" coords="5,169,203,211"/>
-<area shape="rect" id="node5" href="$mock__radio__board_8cpp.html" title="Mock Radio Board for Avionics testing." alt="" coords="227,169,405,211"/>
-</map>

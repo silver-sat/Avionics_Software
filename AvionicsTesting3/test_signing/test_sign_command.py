@@ -4,8 +4,11 @@
 import os
 from subprocess import getstatusoutput, getoutput
 
+##Signing program
 sign_prg = "./sign_command.py"
+##Verification program
 verify_prg = "./verify_command.py"
+##Shared secret
 secret = "./secret.txt"
 
 
