@@ -23,9 +23,10 @@ FESC = b'\xDB'
 TFEND = b'\xDC'
 ## KISS transposed frame escape
 TFESC = b'\xDD'
-
+## serial port for commands and responses
 command_port = serial.Serial(COMMAND_PORT, BAUDRATE)
 
+## convert command to KISS format
 def to_kiss(command):
     output = FEND
     output += b'x00'
@@ -41,6 +42,7 @@ def to_kiss(command):
                 output += bytes(entry)
     output += FEND
 
+## Send sample NoOperate in KISS format
 def main():
     command = "N".encode("utf-8")
 # 

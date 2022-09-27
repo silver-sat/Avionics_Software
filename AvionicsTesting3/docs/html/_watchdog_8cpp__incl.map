@@ -1,8 +1,0 @@
-<map id="test_process_loop/Watchdog.cpp" name="test_process_loop/Watchdog.cpp">
-<area shape="rect" id="node1" title="Watchdog for SilverSat." alt="" coords="119,5,353,32"/>
-<area shape="rect" id="node2" href="$_watchdog_8h.html" title="Watchdog for SilverSat." alt="" coords="55,80,153,107"/>
-<area shape="rect" id="node4" href="$log__utility_8h.html" title="Test logging support routines." alt="" coords="187,80,285,107"/>
-<area shape="rect" id="node6" title=" " alt="" coords="309,80,393,107"/>
-<area shape="rect" id="node3" href="$board__configuration_8h.html" title="Hardware definitions for Avionics Board." alt="" coords="5,155,168,181"/>
-<area shape="rect" id="node5" title=" " alt="" coords="192,155,299,181"/>
-</map>

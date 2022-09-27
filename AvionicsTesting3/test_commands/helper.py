@@ -32,9 +32,11 @@ DATA_FRAME = b"\x00"
 HEADER = bytearray.fromhex("88 40 40 40 40 40 E0 A6 40 40 40 40 40 E1 30 F0")
 ## log entry field names
 Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
-
+## serial port for commands and responses
 command_port = serial.Serial(COMMAND_PORT, BAUDRATE, timeout=TIMEOUT)
+## serial port for logging
 log_port = serial.Serial(LOG_PORT, BAUDRATE, timeout=TIMEOUT)
+## counter for sequencing commands
 command_counter = 0
 
 ## Collect initialization

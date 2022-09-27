@@ -9,7 +9,7 @@
  */
 
 #include "mock_radio_board.h"
-#include "arduino_secrets.h"
+#include "arduino_secrets.h"    /**< shared secret with ground station */
 #include "log_utility.h"
 #include <CRC32.h>
 #include <BLAKE2s.h>
@@ -352,7 +352,7 @@ bool MockRadioBoard::validate_signature(String &buffer, String &command_string)
  *
  * @param command_string command string
  * @param command_tokens output: tokens
- * @param token_count output: number of tokens
+ * @param token_index output: number of tokens
  * @return true successful
  * @return false failure
  */

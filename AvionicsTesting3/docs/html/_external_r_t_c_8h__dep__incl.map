@@ -1,7 +1,0 @@
-<map id="test_process_loop/ExternalRTC.h" name="test_process_loop/ExternalRTC.h">
-<area shape="rect" id="node1" title="External Realtime Clock." alt="" coords="236,5,433,47"/>
-<area shape="rect" id="node2" href="$_avionics_board_8h.html" title="Test Avionics Board for SilverSat." alt="" coords="125,95,323,136"/>
-<area shape="rect" id="node5" href="$_external_r_t_c_8cpp.html" title="External Realtime Clock." alt="" coords="347,95,544,136"/>
-<area shape="rect" id="node3" href="$_avionics_board_8cpp.html" title="Test Avionics Board for SilverSat." alt="" coords="5,184,203,225"/>
-<area shape="rect" id="node4" href="$_command_8cpp.html" title="SilverSat commands." alt="" coords="227,191,464,218"/>
-</map>

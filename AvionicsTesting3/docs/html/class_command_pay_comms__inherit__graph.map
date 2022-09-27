@@ -1,4 +1,0 @@
-<map id="CommandPayComms" name="CommandPayComms">
-<area shape="rect" id="node1" title="pay_comms command" alt="" coords="5,80,168,107"/>
-<area shape="rect" id="node2" href="$class_command.html" title="Command structure and processing." alt="" coords="42,5,131,32"/>
-</map>
