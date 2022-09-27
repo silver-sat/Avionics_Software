@@ -13,7 +13,7 @@
 
 #include "Beacon.h"
 #include "Message.h"
-#include "CommandFactory.h"
+#include "BuildCommand.h"
 
 /**
  * @brief KISS defined constants
@@ -181,7 +181,7 @@ private:
     bool _receiving_type{false};
     bool _received_escape{false};
     bool _validation_required{false};
-    CommandFactory *_factory{};
+    BuildCommand *_factory{};
     Command *_command{};
     long _commands_received{0};
     long _successful_commands{0};

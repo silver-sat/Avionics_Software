@@ -418,7 +418,7 @@ bool MockRadioBoard::make_command(String buffer)
     if (parse_parameters(command_string, command_tokens, token_count))
     {
         Log.traceln("Constructing command object");
-        _command = (new CommandFactory(command_tokens, token_count))->get_command();
+        _command = (new BuildCommand(command_tokens, token_count))->get_command();
         return true;
     }
     else
