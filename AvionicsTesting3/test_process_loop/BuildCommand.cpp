@@ -1,23 +1,23 @@
 /**
- * @file CommandFactory.cpp
+ * @file BuildCommand.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Generate command object
- * @version 1.0.0
+ * @version 1.1.0
  * @date 2022-07-28
  *
  *
  */
 
-#include "CommandFactory.h"
+#include "BuildCommand.h"
 #include "log_utility.h"
 #include <Arduino.h>
 
 /**
- * @brief Construct a new Command Factory:: Command Factory object
+ * @brief Construct a new  BuildCommand::BuildCommand object
  *
  */
 
-CommandFactory::CommandFactory(String tokens[], size_t token_count)
+BuildCommand::BuildCommand(String tokens[], size_t token_count)
 {
     if (tokens[0] == "BeaconSp")
     {
@@ -290,11 +290,11 @@ CommandFactory::CommandFactory(String tokens[], size_t token_count)
 };
 
 /**
- * @brief Destroy the Command Factory:: Command Factory object and the associated command
+ * @brief Destroy the BuildCommand::BuildCommand object and the associated command
  *
  */
 
-CommandFactory::~CommandFactory()
+BuildCommand::~BuildCommand()
 {
     if (_command)
     {
@@ -309,7 +309,7 @@ CommandFactory::~CommandFactory()
  * @return Command*
  */
 
-Command *CommandFactory::get_command()
+ExecuteCommand *BuildCommand::get_command()
 {
     return _command;
 };

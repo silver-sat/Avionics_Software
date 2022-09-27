@@ -28,17 +28,18 @@
 
 #include "log_utility.h"
 #include "Beacon.h"
-#include "Command.h"
+#include "ExecuteCommand.h"
 #include "AvionicsBoard.h"
 #include "mock_power_board.h"
 #include "mock_payload_board.h"
 #include "mock_radio_board.h"
+#include "CollectCommand.h"
 
 constexpr unsigned long separation_delay{5 * SECONDS_TO_MILLISECONDS}; // todo: adjust to 45 minutes for full test
 constexpr unsigned long separation_time{0};
 
 /**
- * @brief Create the boards
+ * @brief Create the boards and command processor
  *
  */
 
@@ -46,6 +47,7 @@ AvionicsBoard avionics;
 MockPayloadBoard payload;
 MockRadioBoard radio;
 MockPowerBoard power;
+CollectCommand command_processor;
 
 #ifdef INSTRUMENTATION
 /**
@@ -219,7 +221,7 @@ void loop()
 
     // Process command
 
-    radio.check_for_command();
+    command_processor.check_for_command();
 
 #ifdef INSTRUMENTATION
     duration = micros() - previous_time;

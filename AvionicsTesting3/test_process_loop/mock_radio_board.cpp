@@ -2,39 +2,15 @@
  * @file mock_radio_board.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Mock Radio Board for Avionics testing
- * @version 1.2.0
+ * @version 1.3.0
  * @date 2022-07-24
  *
  *
  */
 
 #include "mock_radio_board.h"
-#include "arduino_secrets.h"    /**< shared secret with ground station */
 #include "log_utility.h"
 #include <CRC32.h>
-#include <BLAKE2s.h>
-
-/**
- * @brief Construct a new Mock Radio Board:: Mock Radio Board object
- *
- */
-
-MockRadioBoard::MockRadioBoard(){};
-
-/**
- * @brief Mock Radio Board Destructor
- *
- */
-
-MockRadioBoard::~MockRadioBoard()
-{
-    // Free storage for command
-    if (_factory)
-    {
-        delete _factory;
-        _factory = NULL;
-    }
-};
 
 /**
  * @brief initialize the Radio Board
@@ -50,7 +26,7 @@ bool MockRadioBoard::begin()
 };
 
 /**
- * @brief Notify radio board to deploy antenna
+ * @brief Local command to deploy antenna
  *
  * @return true successful
  * @return false error
@@ -66,40 +42,16 @@ bool MockRadioBoard::deploy_antenna()
 };
 
 /**
- * @brief Check for command
+ * @brief Assemble command from Serial1 port
+ *
+ * @param buffer buffer to assemble command
+ * @param length maximum length of command
  *
  * @return true no command or successful
  * @return false error
  */
 
-bool MockRadioBoard::check_for_command()
-{
-    if (command_received())
-    {
-        _command->acknowledge_command();
-        Log.traceln("Command acknowledged");
-        if (_command->execute_command())
-        {
-            Log.traceln("Executed (%l executed, %l failed, next sequence %l)", ++_successful_commands, _failed_commands, _command_sequence);
-            return true;
-        }
-        else
-        {
-            Log.errorln("Failed (%l executed, %l failed, next sequence %i)", _successful_commands, ++_failed_commands, _command_sequence);
-            return false;
-        };
-    };
-    return true;
-};
-
-/**
- * @brief Assemble command from Serial1 port
- *
- * @return true command available
- * @return false no command available
- */
-
-bool MockRadioBoard::command_received()
+bool MockRadioBoard::receive_command(char *buffer, const size_t length)
 {
 
     while (Serial1.available())
@@ -118,21 +70,25 @@ bool MockRadioBoard::command_received()
 
             else if (_received_escape)
             {
-                switch (character)
+                _received_escape = false;
+                if (_buffer_index < length)
                 {
-                case TFEND:
-                    _buffer += FEND;
-                    _received_escape = false;
-                    break;
-                case TFESC:
-                    _buffer += FESC;
-                    _received_escape = false;
-                    break;
-                default:
-                    Log.errorln("FESC followed by invalid character, ignored: 0x%x", character);
-                    _buffer += character;
-                    _received_escape = false;
-                    break;
+                    switch (character)
+                    {
+                    case TFEND:
+                        buffer[_buffer_index++] = FEND;
+                        break;
+                    case TFESC:
+                        buffer[_buffer_index++] = FESC;
+                        break;
+                    default:
+                        Log.errorln("FESC followed by invalid character, ignored: 0x%x", character);
+                        break;
+                    }
+                }
+                else
+                {
+                    Log.errorln("Buffer overflow, ignored: 0x%x", character);
                 }
             }
 
@@ -143,21 +99,35 @@ bool MockRadioBoard::command_received()
 
             else if (character == FEND)
             {
-                _buffer.remove(0, header_size);
-                Log.infoln("Command received (count %l): %s", ++_commands_received, _buffer.c_str());
-                make_command(_buffer);
-                _buffer = "";
-                _received_start = false;
-                return true;
+                if (_buffer_index > header_size + 1)
+                {
+                    buffer[_buffer_index++] = '\0';
+                    memmove(buffer, buffer + header_size, _buffer_index - header_size);
+                    Log.infoln("Command received (count %l): %s", ++_commands_received, buffer);
+                    _received_start = false;
+                    return true;
+                }
+                else
+                {
+                    Log.errorln("No command received");
+                }
             }
 
             else
             {
-                _buffer += character;
+                if (_buffer_index < length)
+                {
+                    buffer[_buffer_index++] = character;
+                }
+                else
+                {
+                    Log.errorln("Buffer overflow, ignored: 0x%x", character);
+                }
             }
         }
         else if (character == FEND)
         {
+            _buffer_index = 0;
             _received_start = true;
             _receiving_type = true;
         }
@@ -170,268 +140,9 @@ bool MockRadioBoard::command_received()
 };
 
 /**
- * @brief Helper function for hexadecimal text to binary conversion
- *
- * @param input a character in one of the ranges 0-9, a-f, or A-F
- * @return int value of the hexadecimal representation (e.g. "A" == 0x0A, decimal 10)
- */
-
-int char2int(const char input)
-{
-    if (input >= '0' && input <= '9')
-        return input - '0';
-    if (input >= 'A' && input <= 'F')
-        return input - 'A' + 10;
-    if (input >= 'a' && input <= 'f')
-        return input - 'a' + 10;
-    return 0; // invalid data
-};
-
-/**
- * @brief Convert hexadecimal text representation to binary values
- *
- * @param src hexadecimal representation
- * @param target binary values
- */
-
-// This function assumes src to be a zero terminated sanitized string with
-// an even number of [0-9a-f] characters, and target to be sufficiently large
-
-void hex2bin(const char *src, byte *target)
-{
-    while (*src && src[1])
-    {
-        *(target++) = (char2int(*src) << 4) + char2int(src[1]);
-        src += 2;
-    }
-};
-
-/**
- * @brief Validate the commmand signature
- *
- * @param buffer sequence, salt, command and HMAC
- * @param command_string output: command and parameters
- * @return true if valid
- * @return false if invalid
- */
-
-bool MockRadioBoard::validate_signature(String &buffer, String &command_string)
-{
-    buffer.trim();
-    size_t buffer_index = buffer.indexOf(_command_message_separator);
-
-    if (buffer_index == -1)
-    {
-        Log.verboseln("Command is not signed");
-        command_string = buffer;
-    }
-    else
-    {
-
-        Log.verboseln("Command is signed", _command_message_separator);
-
-        // tokenize the buffer
-
-        String buffer_tokens[_buffer_token_limit]{};
-        size_t buffer_token_index{0};
-        size_t token_start_index{0};
-        for (auto buffer_token_index = 0; buffer_token_index < _buffer_token_limit; buffer_token_index++)
-        {
-            auto token_end_index = buffer.indexOf(_command_message_separator, token_start_index);
-            buffer_tokens[buffer_token_index] = buffer.substring(token_start_index, token_end_index++);
-            token_start_index = token_end_index;
-        }
-        command_string = buffer_tokens[2];
-
-        // validate sequence number
-
-        for (auto index = 0; index < buffer_tokens[0].length(); index++)
-        {
-            if (!isDigit(buffer_tokens[0].charAt(index)))
-            {
-                if (_validation_required)
-                {
-                    Log.errorln("Sequence is not a digit");
-                    return false;
-                }
-                else
-                {
-                    Log.warningln("Sequence is not a digit");
-                    break;
-                }
-            }
-        }
-
-        long command_sequence{buffer_tokens[0].toInt()};
-        if (command_sequence != _command_sequence)
-        {
-            if (_validation_required)
-            {
-
-                Log.errorln("Command sequence invalid");
-                return false;
-            }
-            else
-            {
-                Log.infoln("Command sequence invalid");
-            }
-        }
-        else
-        {
-            Log.verboseln("Command sequence is valid");
-            _command_sequence++;
-        }
-
-        // todo: check for validation requirement
-        // todo: check for valid lengths
-
-        const size_t sequence_length{buffer_tokens[0].length()};
-        byte sequence[_maximum_sequence_length]{};
-        buffer_tokens[0].getBytes(sequence, _maximum_sequence_length);
-
-        const size_t salt_length{buffer_tokens[1].length()};
-        byte salt[_salt_size]{};
-        hex2bin(buffer_tokens[1].c_str(), salt);
-
-        const size_t command_length{buffer_tokens[2].length()};
-        byte command[_maximum_command_length]{};
-        buffer_tokens[2].getBytes(command, _maximum_command_length);
-
-        const size_t sourceHMAC_length = buffer_tokens[3].length();
-        byte sourceHMAC[_HMAC_size]{};
-        hex2bin(buffer_tokens[3].c_str(), sourceHMAC);
-
-        const size_t secret_length = 16;
-        const byte secret[]{SECRET_HASH_KEY};
-
-        byte HMAC[_HMAC_size];
-        String hexHMAC{};
-
-        BLAKE2s blake{};
-        blake.resetHMAC(&secret, _secret_size);
-        blake.update(&sequence, sequence_length);
-        blake.update(&_command_message_separator, 1);
-        blake.update(&salt, _salt_size);
-        blake.update(&_command_message_separator, 1);
-        blake.update(&command, command_length);
-        blake.finalizeHMAC(secret, _secret_size, HMAC, _HMAC_size);
-        for (auto index = 0; index < _HMAC_size; index++)
-        {
-            if (HMAC[index] < 0x10)
-            {
-                hexHMAC += "0";
-            };
-            hexHMAC += String(HMAC[index], HEX);
-        }
-
-        Log.verboseln("Computed HMAC: %s", hexHMAC.c_str());
-        if (hexHMAC == buffer_tokens[3])
-        {
-            Log.traceln("Command signature valid");
-            return true;
-        }
-        else
-        {
-            if (_validation_required)
-            {
-                Log.errorln("Command signature invalid");
-                return false;
-            }
-            else
-            {
-                Log.warningln("Command signature invalid");
-                return true;
-            }
-        }
-    }
-    return true;
-};
-
-/**
- * @brief Parse command parameters
- *
- * @param command_string command string
- * @param command_tokens output: tokens
- * @param token_index output: number of tokens
- * @return true successful
- * @return false failure
- */
-
-bool MockRadioBoard::parse_parameters(const String &command_string, String command_tokens[], size_t &token_index)
-{
-
-    Log.verboseln("Parsing command");
-    token_index = 0;
-    for (auto string_index = 0; string_index < command_string.length(); string_index++)
-    {
-        if (command_string.charAt(string_index) != ' ')
-        {
-            command_tokens[token_index] += command_string.charAt(string_index);
-        }
-        else
-        {
-            Log.verboseln("Token processed: %s", command_tokens[token_index].c_str());
-            if (token_index++ > _command_token_limit)
-            {
-                Log.warningln("Too many command parameters");
-                return false;
-            }
-        }
-    }
-
-    Log.verboseln("Token processed: %s", command_tokens[token_index].c_str());
-    if (token_index > _command_token_limit)
-    {
-        Log.warningln("Too many command parameters");
-        return false;
-    }
-    return true;
-};
-
-/**
- * @brief Make command object
- *
- * @return next command to process
- *
- */
-
-bool MockRadioBoard::make_command(String buffer)
-{
-
-    // destroy the previous factory
-
-    if (_factory)
-    {
-        delete _factory;
-        _factory = NULL;
-    }
-
-    // validate signature
-
-    String command_string;
-    validate_signature(buffer, command_string);
-
-    // tokenize the command string and create the command object
-
-    String command_tokens[_command_token_limit]{};
-    size_t token_count{0};
-    if (parse_parameters(command_string, command_tokens, token_count))
-    {
-        Log.traceln("Constructing command object");
-        _command = (new CommandFactory(command_tokens, token_count))->get_command();
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-};
-
-/**
  * @brief Send beacon
  *
- * @return true successful
- * @return false error
+ * @param beacon beacon data
  */
 
 void MockRadioBoard::send_beacon(Beacon beacon)

@@ -1,15 +1,15 @@
 /**
- * @file Command.h
+ * @file ExecuteCommand.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat commands
- * @version 1.0.1
+ * @version 1.1.0
  * @date 2022-07-25
  *
  *
  */
 
-#ifndef COMMAND_H
-#define COMMAND_H
+#ifndef EXECUTECOMMAND_H
+#define EXECUTECOMMAND_H
 
 #include <Arduino.h>
 
@@ -33,7 +33,7 @@ struct TimeValue
  *
  */
 
-class Command
+class ExecuteCommand
 {
 public:
     /**
@@ -72,7 +72,7 @@ public:
      *
      */
 
-    Command();
+    ExecuteCommand();
 
     /**
      * @brief Get the operation
@@ -109,7 +109,7 @@ protected:
  *
  */
 
-class CommandUnknown : public Command
+class CommandUnknown : public ExecuteCommand
 {
 public:
     CommandUnknown();
@@ -122,7 +122,7 @@ public:
  *
  */
 
-class CommandInvalid : public Command
+class CommandInvalid : public ExecuteCommand
 {
 public:
     CommandInvalid();
@@ -135,7 +135,7 @@ public:
  *
  */
 
-class CommandNoOperate : public Command
+class CommandNoOperate : public ExecuteCommand
 {
 public:
     CommandNoOperate();
@@ -148,7 +148,7 @@ public:
  *
  */
 
-class CommandPayComms : public Command
+class CommandPayComms : public ExecuteCommand
 {
 public:
     CommandPayComms();
@@ -161,7 +161,7 @@ public:
  *
  */
 
-class CommandReportT : public Command
+class CommandReportT : public ExecuteCommand
 {
 public:
     CommandReportT();
@@ -174,7 +174,7 @@ public:
  *
  */
 
-class CommandTweeSlee : public Command
+class CommandTweeSlee : public ExecuteCommand
 {
 public:
     CommandTweeSlee();
@@ -187,7 +187,7 @@ public:
  *
  */
 
-class CommandWatchdog : public Command
+class CommandWatchdog : public ExecuteCommand
 {
 public:
     CommandWatchdog();
@@ -200,7 +200,7 @@ public:
  *
  */
 
-class CommandBeaconSp : public Command
+class CommandBeaconSp : public ExecuteCommand
 {
 public:
     CommandBeaconSp(int seconds);
@@ -216,7 +216,7 @@ private:
  *
  */
 
-class CommandPicTimes : public Command
+class CommandPicTimes : public ExecuteCommand
 {
 public:
     CommandPicTimes(TimeValue time);
@@ -232,7 +232,7 @@ private:
  *
  */
 
-class CommandSetClock : public Command
+class CommandSetClock : public ExecuteCommand
 {
 public:
     CommandSetClock(TimeValue time);
@@ -248,7 +248,7 @@ private:
  *
  */
 
-class CommandGetPicTimes : public Command
+class CommandGetPicTimes : public ExecuteCommand
 {
 public:
     CommandGetPicTimes();
@@ -261,7 +261,7 @@ public:
  *
  */
 
-class CommandGetTelemetry : public Command
+class CommandGetTelemetry : public ExecuteCommand
 {
 public:
     CommandGetTelemetry();
@@ -274,7 +274,7 @@ public:
  *
  */
 
-class CommandGetPower : public Command
+class CommandGetPower : public ExecuteCommand
 {
 public:
     CommandGetPower();
@@ -287,7 +287,7 @@ public:
  *
  */
 
-class CommandGetPhotos : public Command
+class CommandGetPhotos : public ExecuteCommand
 {
 public:
     CommandGetPhotos();
@@ -300,7 +300,7 @@ public:
  *
  */
 
-class CommandGetComms : public Command
+class CommandGetComms : public ExecuteCommand
 {
 public:
     CommandGetComms();
@@ -313,7 +313,7 @@ public:
  *
  */
 
-class CommandGetBeaconInterval : public Command
+class CommandGetBeaconInterval : public ExecuteCommand
 {
 public:
     CommandGetBeaconInterval();
@@ -326,7 +326,7 @@ public:
  *
  */
 
-class CommandSendTestPacket : public Command
+class CommandSendTestPacket : public ExecuteCommand
 {
 public:
     CommandSendTestPacket();
@@ -339,7 +339,7 @@ public:
  *
  */
 
-class CommandUnsetClock : public Command
+class CommandUnsetClock : public ExecuteCommand
 {
 public:
     CommandUnsetClock();
@@ -347,4 +347,4 @@ public:
     bool execute_command() override;
 };
 
-#endif // COMMAND_H
+#endif // EXECUTECOMMAND_H
