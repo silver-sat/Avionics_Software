@@ -239,7 +239,7 @@ bool AvionicsBoard::check_photo()
 // todo: error handling for realtime clock not set
 {
     if (_external_rtc.get_time() >= _picture_time)
-
+    // todo: check for invalid value from external RTC
     // todo: discard photo time if payload board is busy
     {
         Log.traceln("Photo time reached %s", get_timestamp().c_str());

@@ -8,8 +8,8 @@
  *
  */
 
-#ifndef COMMANDFACTORY_H
-#define COMMANDFACTORY_H
+#ifndef BUILDCOMMAND_H
+#define BUILDCOMMAND_H
 
 #include "Command.h"
 
@@ -22,14 +22,14 @@ class BuildCommand
 {
 public:
     /**
-     * @brief Construct a new Command Factory object
+     * @brief Construct a new BuildCommand object
      *
      */
 
     BuildCommand(String tokens[], size_t token_count);
 
     /**
-     * @brief Destroy the Command Factory object
+     * @brief Destroy the BuildCommand object
      *
      */
 
@@ -49,4 +49,4 @@ private:
     const size_t _token_limit{10};
 };
 
-#endif // COMMANDFACTORY_H
+#endif // BUILDCOMMAND_H

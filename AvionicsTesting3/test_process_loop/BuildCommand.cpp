@@ -13,7 +13,7 @@
 #include <Arduino.h>
 
 /**
- * @brief Construct a new Command Factory:: Command Factory object
+ * @brief Construct a new  BuildCommandy::BuildCommand object
  *
  */
 
@@ -290,7 +290,7 @@ BuildCommand::BuildCommand(String tokens[], size_t token_count)
 };
 
 /**
- * @brief Destroy the Command Factory:: Command Factory object and the associated command
+ * @brief Destroy the BuildCommand::BuildCommand object and the associated command
  *
  */
 
