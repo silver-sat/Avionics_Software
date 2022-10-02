@@ -94,6 +94,14 @@ public:
 
     bool make_command(String buffer);
 
+    /**
+     * @brief Delete the command and the factory
+     *
+     * @return true successful
+     * @return false erroe
+     */
+    bool delete_command();
+
 private:
     char _command_buffer[_maximum_command_length + 1]{""};
     bool _validation_required{false};
