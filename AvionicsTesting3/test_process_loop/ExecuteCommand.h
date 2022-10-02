@@ -61,6 +61,7 @@ public:
         get_comms,           /*< GetComms: reply with Radio Board status */
         get_beacon_interval, /*< GetBeaconInternal: reply with beacon interval */
         send_test_packet,    /*< SendTestPacket: reply with test message */
+        clear_pic_times,     /*< ClearPicTimes: empty PicTimes queue */
         unknown,             /*< Unknown: unknown command, error */
         invalid,             /*< Invalid: invalid command, error */
         /* testing commands */
@@ -330,6 +331,19 @@ class CommandSendTestPacket : public ExecuteCommand
 {
 public:
     CommandSendTestPacket();
+    bool acknowledge_command() override;
+    bool execute_command() override;
+};
+
+/**
+ * @brief clear_pic_times command
+ *
+ */
+
+class CommandClearPicTimes : public ExecuteCommand
+{
+public:
+    CommandClearPicTimes();
     bool acknowledge_command() override;
     bool execute_command() override;
 };
