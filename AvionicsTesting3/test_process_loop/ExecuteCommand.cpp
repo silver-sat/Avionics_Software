@@ -729,6 +729,45 @@ bool CommandSendTestPacket::execute_command()
 };
 
 /**
+ * @brief Construct a new Command Clear Pic Times:: Command Clear Pic Times object
+ *
+ */
+
+CommandClearPicTimes::CommandClearPicTimes()
+{
+    _action = ExecuteCommand::clear_pic_times;
+};
+
+/**
+ * @brief Acknowledge ClearPicTimes command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandClearPicTimes::acknowledge_command()
+{
+    auto status = ExecuteCommand::acknowledge_command();
+    Log.verboseln("ClearPicTimes");
+    return status;
+};
+
+/**
+ * @brief Execute ClearPicTimes command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandClearPicTimes::execute_command()
+{
+    auto status = ExecuteCommand::execute_command();
+    Log.verboseln("ClearPicTimes");
+    extern AvionicsBoard avionics;
+    return avionics.clear_pic_times() && status;
+};
+
+/**
  * @brief Construct a new Command Unset Clock:: Command Unset Clock object
  *
  */

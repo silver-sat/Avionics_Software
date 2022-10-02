@@ -256,6 +256,19 @@ BuildCommand::BuildCommand(String tokens[], size_t token_count)
             return;
         }
     }
+    else if (tokens[0] == "ClearPicTimes")
+    {
+        if (token_count == 0)
+        {
+            _command = new CommandClearPicTimes();
+            return;
+        }
+        else
+        {
+            _command = new CommandInvalid(); // Wrong number of parameters
+            return;
+        }
+    }
     else if (tokens[0] == "UnsetClock")
     {
         if (token_count == 0)

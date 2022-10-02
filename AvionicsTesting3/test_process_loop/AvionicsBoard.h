@@ -21,7 +21,7 @@
 
 /**
  * @brief Avionics Board constants
- * 
+ *
  */
 
 constexpr size_t maximum_scheduled_pictures{5}; /**< Maximum number of pictimes in queue */
@@ -120,6 +120,15 @@ public:
      */
 
     String get_pic_times();
+
+    /**
+     * @brief Clear picture times
+     *
+     * @return true successful
+     * @return false error
+     */
+
+    bool clear_pic_times();
 
     /**
      * @brief Get telemetry

@@ -306,6 +306,19 @@ String AvionicsBoard::get_pic_times()
 };
 
 /**
+ * @brief Clear picture times
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool AvionicsBoard::clear_pic_times()
+{
+    _picture_count = 0;
+    return true;
+};
+
+/**
  * @brief Get telemetry
  *
  * @return String telemetry

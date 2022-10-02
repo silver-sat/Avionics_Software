@@ -258,6 +258,13 @@ def pictimes_sent(log):
     return any([pattern.search(item.detail) for item in log])
 
 
+## Verify zero pictimes sent
+#
+def pictimes_zero_sent(log):
+
+    return any([item.detail == "Sending message: RES0" for item in log])
+
+
 ## Collect through reset pin cleared
 #
 def collect_through_reset_pin_cleared(command, interval=60):
