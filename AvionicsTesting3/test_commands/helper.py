@@ -249,6 +249,15 @@ def timestamp_sent(log):
     return any([pattern.search(item.detail) for item in log])
 
 
+## Verify pictimes sent
+#
+def pictimes_sent(log):
+    pattern = re.compile(
+        r"\sRES[0-5](20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)){0,5}$"
+    )
+    return any([pattern.search(item.detail) for item in log])
+
+
 ## Collect through reset pin cleared
 #
 def collect_through_reset_pin_cleared(command, interval=60):

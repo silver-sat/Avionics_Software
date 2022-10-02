@@ -20,6 +20,13 @@
 #include <Adafruit_FRAM_I2C.h>
 
 /**
+ * @brief Avionics Board constants
+ * 
+ */
+
+constexpr size_t maximum_scheduled_pictures{5}; /**< Maximum number of pictimes in queue */
+
+/**
  * @brief Avionics Board for testing the microcontroller and peripherals
  *
  */
@@ -199,13 +206,11 @@ private:
     bool serial_buffer_disable();
 
     ExternalRTC _external_rtc{};
-    bool _external_rtc_is_set{false};
     Watchdog _watchdog{};
     unsigned long _beacon_interval{2 * 60 * SECONDS_TO_MILLISECONDS};
     unsigned long _last_beacon_time{0};
-    // todo: refactor future invalid date
-    const DateTime _future_invalid_date = DateTime(2050, 1, 1, 12, 0, 0);
-    DateTime _picture_time{_future_invalid_date}; // todo: sorted queue of picture times
+    size_t _picture_count{0};
+    DateTime _picture_times[maximum_scheduled_pictures]{};
     IMU _imu{};
     // to consider: refactor FRAM as object
     Adafruit_FRAM_I2C _fram{};
