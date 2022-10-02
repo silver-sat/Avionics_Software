@@ -28,12 +28,7 @@ CollectCommand::CollectCommand(){};
 
 CollectCommand::~CollectCommand()
 {
-    // Free storage for command
-    if (_factory)
-    {
-        delete _factory;
-        _factory = NULL;
-    }
+    delete_command();
 };
 
 /**
@@ -55,11 +50,13 @@ bool CollectCommand::check_for_command()
         if (_command->execute_command())
         {
             Log.traceln("Executed (%l executed, %l failed, next sequence %l)", ++_successful_commands, _failed_commands, _command_sequence);
+            delete_command();
             return true;
         }
         else
         {
             Log.errorln("Failed (%l executed, %l failed, next sequence %i)", _successful_commands, ++_failed_commands, _command_sequence);
+            delete_command();
             return false;
         };
     };
@@ -295,14 +292,6 @@ bool CollectCommand::parse_parameters(const String &command_string, String comma
 bool CollectCommand::make_command(String buffer)
 {
 
-    // destroy the previous factory
-
-    if (_factory)
-    {
-        delete _factory;
-        _factory = NULL;
-    }
-
     // validate signature
 
     String command_string;
@@ -315,7 +304,8 @@ bool CollectCommand::make_command(String buffer)
     if (parse_parameters(command_string, command_tokens, token_count))
     {
         Log.traceln("Constructing command object");
-        _command = (new BuildCommand(command_tokens, token_count))->get_command();
+        _factory = new BuildCommand(command_tokens, token_count);
+        _command = _factory->get_command();
         return true;
     }
     else
@@ -323,3 +313,31 @@ bool CollectCommand::make_command(String buffer)
         return false;
     }
 };
+
+/**
+ * @brief Delete the command and the factory
+ *
+ * @return true successful
+ * @return false erroe
+ */
+bool CollectCommand::delete_command()
+{
+
+    // destroy the command
+
+    if (_command)
+    {
+        delete _command;
+        _command = NULL;
+    }
+
+    // destroy the factory
+
+    if (_factory)
+    {
+        delete _factory;
+        _factory = NULL;
+    }
+
+    return true;
+}
