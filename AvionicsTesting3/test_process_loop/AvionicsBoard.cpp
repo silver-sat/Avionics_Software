@@ -14,6 +14,14 @@
 #include "mock_payload_board.h"
 
 /**
+ * @brief Avionics Board constants
+ * 
+ */
+
+constexpr uint16_t minimum_valid_year{2020};
+constexpr uint16_t maximum_valid_year{2040};
+
+/**
  * @brief Construct a new Avionics Board:: Avionics Board object
  *
  */
@@ -123,9 +131,9 @@ bool AvionicsBoard::watchdog_force_reset()
 
 bool AvionicsBoard::set_external_rtc(DateTime time)
 {
-    if ((time.year() < 2021) || (time.year() > 2099))
+    if ((time.year() <= minimum_valid_year) || (time.year() >= maximum_valid_year))
     {
-        Log.errorln("Time must be after 2020 and before 2100");
+        Log.errorln("Time must be between %d and %d, inclusive", minimum_valid_year, maximum_valid_year);
         return false;
     }
 
@@ -211,9 +219,9 @@ bool AvionicsBoard::set_picture_time(DateTime time)
         Log.errorln("External realtime clock is not set");
         return false;
     }
-    if ((time.year() < 2021) || (time.year() > 2099))
+    if ((time.year() <= minimum_valid_year) || (time.year() >= maximum_valid_year))
     {
-        Log.errorln("Picture time must be after 2020 and before 2100");
+        Log.errorln("Picture time must be between %d and %d, inclusive", minimum_valid_year, maximum_valid_year);
         return false;
     }
     if (time < _external_rtc.get_time())
@@ -221,11 +229,25 @@ bool AvionicsBoard::set_picture_time(DateTime time)
         Log.errorln("Picture time is before current time");
         return false;
     }
-    else
+    if (_picture_count + 1 > maximum_scheduled_pictures)
     {
-        _picture_time = time;
-        return true;
+        Log.errorln("Too many picture times");
+        return false;
     }
+    size_t index{_picture_count++};
+    for (; index > 0; index--)
+    {
+        if (time > _picture_times[index - 1])
+        {
+            break;
+        }
+        else
+        {
+            _picture_times[index] = _picture_times[index - 1];
+        }
+    }
+    _picture_times[index] = time;
+    return true;
 };
 
 /**
@@ -236,16 +258,33 @@ bool AvionicsBoard::set_picture_time(DateTime time)
  */
 
 bool AvionicsBoard::check_photo()
-// todo: error handling for realtime clock not set
 {
-    if (_external_rtc.get_time() >= _picture_time)
-    // todo: check for invalid value from external RTC
-    // todo: discard photo time if payload board is busy
+    if (!_external_rtc.is_set())
+    {
+        return false;
+    }
+    if ((_external_rtc.get_time().year() < minimum_valid_year) || (_external_rtc.get_time().year() > maximum_valid_year )) {
+        Log.errorln("Invalid time from external real time clock: %x", _external_rtc.get_time());
+        return false;
+    }
+    if ((_picture_count > 0) && (_external_rtc.get_time() >= _picture_times[0]))
     {
         Log.traceln("Photo time reached %s", get_timestamp().c_str());
-        _picture_time = _future_invalid_date;
+        for (size_t index = 0; index < _picture_count; index++)
+        {
+            _picture_times[index] = _picture_times[index + 1];
+        }
+        _picture_count--;
         extern MockPayloadBoard payload;
-        payload.photo();
+        if (payload.get_payload_active())
+        {
+            Log.errorln("Payload board active, picture time ignored");
+            return false;
+        }
+        else
+        {
+            payload.photo();
+        }
     };
     return true;
 };
@@ -253,12 +292,17 @@ bool AvionicsBoard::check_photo()
 /**
  * @brief Get picture times
  *
- * @return String picture time
+ * @return String count and timestamps
  */
 
 String AvionicsBoard::get_pic_times()
 {
-    return _picture_time.timestamp();
+    String response{_picture_count};
+    for (size_t index = 0; index < _picture_count; index++)
+    {
+        response += _picture_times[index].timestamp();
+    }
+    return response;
 };
 
 /**

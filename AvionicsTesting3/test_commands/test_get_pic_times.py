@@ -25,11 +25,12 @@ class TestGetPicTimes:
     #
     def test_get_pic_times(self):
 
+        log = helper.collect("PicTimes 2023 11 11 10 10 0")
         log = helper.collect("GetPicTimes")
         assert helper.not_signed(log)
         assert helper.acknowledged(log)
         assert helper.no_logged_errors(log)
-        assert helper.timestamp_sent(log)
+        assert helper.pictimes_sent(log)
         assert helper.executed(log)
 
     ## error: invalid parameter
@@ -50,7 +51,7 @@ class TestGetPicTimes:
         assert helper.signature_valid(log)
         assert helper.acknowledged(log)
         assert helper.no_logged_errors(log)
-        assert helper.timestamp_sent(log)
+        assert helper.pictimes_sent(log)
         assert helper.executed(log)
 
     ## error: invalid parameter signed
