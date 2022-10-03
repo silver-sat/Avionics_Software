@@ -160,7 +160,7 @@ bool MockPayloadBoard::power_down()
 
 bool MockPayloadBoard::power_up()
 {
-    // toto: set GPIO pins for power up
+    // todo: set GPIO pins for power up
     Log.verboseln("Payload power on");
     return true;
 };
