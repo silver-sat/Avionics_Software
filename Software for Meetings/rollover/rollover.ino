@@ -17,9 +17,9 @@ void setup()
 
     // Difference before rollover
 
-    uint8_t counter{'\xFE'};
-    uint8_t start{'\xEE'};
-    uint8_t difference{counter - start};
+    uint32_t counter{0xFFFFFFFE};
+    uint32_t start{0xFFFFFFF2};
+    uint32_t difference{counter - start};
 
     Serial.println("Before rollover");
     Serial.print("counter: ");
