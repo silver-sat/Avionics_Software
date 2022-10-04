@@ -12,6 +12,11 @@
 #include "log_utility.h"
 #include "board_configuration.h"
 
+/**
+ * @brief Construct a new IMU::IMU object
+ *
+ */
+
 IMU::IMU(){
 
 };
@@ -23,7 +28,7 @@ IMU::IMU(){
  * @return false error
  */
 
-bool IMU::begin(TwoWire* theWire)
+bool IMU::begin(TwoWire *theWire)
 {
     if (!m_mpu.begin(IMU_I2C_ADDRESS, theWire))
     {
@@ -32,7 +37,7 @@ bool IMU::begin(TwoWire* theWire)
     };
 
     m_mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
-    String prefix {"Accelerometer range set to: "};
+    String prefix{"Accelerometer range set to: "};
     switch (m_mpu.getAccelerometerRange())
     {
     case MPU6050_RANGE_2_G:
@@ -153,6 +158,13 @@ String IMU::get_temperature()
 
     return data;
 };
+
+/**
+ * @brief Update the data from the IMU
+ *
+ * @return true
+ * @return false
+ */
 
 bool IMU::refresh_data()
 {

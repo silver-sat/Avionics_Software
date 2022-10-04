@@ -66,6 +66,7 @@ bool ExternalRTC::set_time(DateTime time)
     }
     else
     {
+        // todo: reconcile invalidate time from RTC and invalid range in Avionics Board
         Log.errorln("Invalid time");
         return false;
     }

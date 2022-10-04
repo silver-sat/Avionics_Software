@@ -14,6 +14,14 @@
 #include "board_configuration.h"
 
 /**
+ * @brief Mock Payload Board constants
+ *
+ */
+
+constexpr unsigned long tweet_duration{30 * SECONDS_TO_MILLISECONDS};
+constexpr unsigned long photo_duration{15 * SECONDS_TO_MILLISECONDS};
+
+/**
  * @brief Mock Payload Board for testing the Avionics Board
  *
  */
@@ -130,8 +138,6 @@ private:
     bool power_down_signal_is_set();
 
 private:
-    const unsigned long m_tweet_duration{30 * SECONDS_TO_MILLISECONDS};
-    const unsigned long m_photo_duration{15 * SECONDS_TO_MILLISECONDS};
     unsigned long m_last_activity_time{0};
     unsigned long m_action_duration{};
     bool m_payload_active{false};

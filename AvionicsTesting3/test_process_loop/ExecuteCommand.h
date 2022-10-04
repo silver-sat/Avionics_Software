@@ -18,6 +18,7 @@
  *
  */
 
+// todo: consider refactor as DateTime
 struct TimeValue
 {
     int year;   /**< year */

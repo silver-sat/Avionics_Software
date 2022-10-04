@@ -14,7 +14,7 @@
 #include "BuildCommand.h"
 
 /**
- * @brief Command parameters
+ * @brief CollectCommand constants
  *
  */
 

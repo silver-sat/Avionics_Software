@@ -14,14 +14,6 @@
 #include "mock_payload_board.h"
 
 /**
- * @brief Avionics Board constants
- * 
- */
-
-constexpr uint16_t minimum_valid_year{2020};
-constexpr uint16_t maximum_valid_year{2040};
-
-/**
  * @brief Construct a new Avionics Board:: Avionics Board object
  *
  */
@@ -264,6 +256,7 @@ bool AvionicsBoard::check_photo()
         return false;
     }
     if ((m_external_rtc.get_time().year() < minimum_valid_year) || (m_external_rtc.get_time().year() > maximum_valid_year )) {
+        // todo: error recovery from invalid time
         Log.errorln("Invalid time from external real time clock: %x", m_external_rtc.get_time());
         return false;
     }
