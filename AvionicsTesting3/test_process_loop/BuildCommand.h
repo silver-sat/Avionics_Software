@@ -14,14 +14,6 @@
 #include "ExecuteCommand.h"
 
 /**
- * @brief BuildCommand constants
- *
- */
-
-// todo: single token limit for radio board and command factory
-constexpr size_t m_token_limit{10};
-
-/**
  * @brief Factory for Command objects
  *
  */
