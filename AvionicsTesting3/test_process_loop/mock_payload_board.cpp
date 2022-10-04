@@ -51,7 +51,7 @@ bool MockPayloadBoard::photo()
 
         Log.noticeln("Starting photo session");
         m_payload_active = true;
-        m_action_duration = m_photo_duration;
+        m_action_duration = photo_duration;
         m_last_activity_time = millis();
         set_mode_photo();
         power_up();
@@ -79,7 +79,7 @@ bool MockPayloadBoard::tweet()
 
         Log.noticeln("Starting Twitter session");
         m_payload_active = true;
-        m_action_duration = m_tweet_duration;
+        m_action_duration = tweet_duration;
         m_last_activity_time = millis();
         set_mode_comms();
         power_up();

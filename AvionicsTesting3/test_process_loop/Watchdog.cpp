@@ -51,7 +51,7 @@ bool Watchdog::trigger()
         m_reset_pin_state = reset;
     };
 
-    if (!m_force_reset && (millis() - m_last_action_time > WATCHDOG_LOWER_BOUNDARY))
+    if (!m_force_reset && (millis() - m_last_action_time > watchdog_lower_boundary))
     {
         digitalWrite(WDTICK, HIGH);
         digitalWrite(WDTICK, LOW);

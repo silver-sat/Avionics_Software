@@ -21,18 +21,60 @@
 class IMU
 {
 public:
+    /**
+     * @brief Construct a new IMU::IMU object
+     *
+     */
+
     IMU();
+    
+    /**
+     * @brief Initialize inertial management unit
+     *
+     * @return true successful
+     * @return false error
+     */
+    
     bool begin(TwoWire *theWire);
+    
+    /**
+     * @brief Get acceleration
+     *
+     * @return String acceleration in m/s^2
+     */
+    
     String get_acceleration();
+    
+    /**
+     * @brief Get rotation
+     *
+     * @return String rotation in rad/s
+     */
+    
     String get_rotation();
+    
+    /**
+     * @brief Get temperature
+     *
+     * @return String temperature in degC
+     */
+    
     String get_temperature();
 
 private:
+    /**
+     * @brief Update the data from the IMU
+     *
+     * @return true
+     * @return false
+     */
+    
     bool refresh_data();
+    
+    Adafruit_MPU6050 m_mpu{};
     sensors_event_t m_a;
     sensors_event_t m_g;
     sensors_event_t m_temp;
-    Adafruit_MPU6050 m_mpu{};
 };
 
 #endif // IMU_H

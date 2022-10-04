@@ -24,7 +24,9 @@
  *
  */
 
-constexpr size_t maximum_scheduled_pictures{5}; /**< Maximum number of pictimes in queue */
+constexpr size_t maximum_scheduled_pictures{5}; /**< Assume small number of pictures in one orbit */
+constexpr uint16_t minimum_valid_year{2020};    /**< Restrict to reasonable value */
+constexpr uint16_t maximum_valid_year{2040};    /**< Restrict to reasonable value */
 
 /**
  * @brief Avionics Board for testing the microcontroller and peripherals
@@ -213,6 +215,11 @@ private:
      */
 
     bool serial_buffer_disable();
+
+    /**
+     * @brief Avionics Board member variables
+     * 
+     */
 
     ExternalRTC m_external_rtc{};
     Watchdog m_watchdog{};
