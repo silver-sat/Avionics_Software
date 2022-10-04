@@ -18,8 +18,8 @@
  *
  */
 
-constexpr unsigned long tweet_duration{30 * SECONDS_TO_MILLISECONDS};
-constexpr unsigned long photo_duration{15 * SECONDS_TO_MILLISECONDS};
+constexpr unsigned long tweet_duration{30 * seconds_to_milliseconds};
+constexpr unsigned long photo_duration{15 * seconds_to_milliseconds};
 
 /**
  * @brief Mock Payload Board for testing the Avionics Board

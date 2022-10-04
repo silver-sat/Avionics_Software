@@ -153,7 +153,7 @@ String AvionicsBoard::get_timestamp()
 
 bool AvionicsBoard::set_beacon_interval(int seconds)
 {
-    m_beacon_interval = seconds * SECONDS_TO_MILLISECONDS;
+    m_beacon_interval = seconds * seconds_to_milliseconds;
     return true;
 };
 
@@ -324,7 +324,7 @@ String AvionicsBoard::get_telemetry()
 
 String AvionicsBoard::get_beacon_interval()
 {
-    return String(m_beacon_interval / SECONDS_TO_MILLISECONDS);
+    return String(m_beacon_interval / seconds_to_milliseconds);
 };
 
 /**
