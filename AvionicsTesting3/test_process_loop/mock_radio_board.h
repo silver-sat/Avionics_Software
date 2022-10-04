@@ -47,7 +47,7 @@ constexpr size_t header_size{sizeof(HEADER)};                            /**< AX
  *
  */
 
-const String _call_sign{"KC3CQJ-2"};
+const String call_sign{"KC3CQJ-2"};
 
 /**
  * @brief Mock Radio Board for testing the Avionics Board

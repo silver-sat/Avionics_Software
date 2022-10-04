@@ -209,7 +209,7 @@ public:
     bool execute_command() override;
 
 private:
-    int _seconds;
+    int m_seconds;
 };
 
 /**
@@ -225,7 +225,7 @@ public:
     bool execute_command() override;
 
 private:
-    TimeValue _time;
+    TimeValue m_time;
 };
 
 /**
@@ -241,7 +241,7 @@ public:
     bool execute_command() override;
 
 private:
-    TimeValue _time;
+    TimeValue m_time;
 };
 
 /**

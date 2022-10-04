@@ -327,7 +327,7 @@ bool CommandWatchdog::execute_command()
 CommandBeaconSp::CommandBeaconSp(int seconds)
 {
     m_action = ExecuteCommand::beacon_sp;
-    _seconds = seconds;
+    m_seconds = seconds;
 };
 
 /**
@@ -340,7 +340,7 @@ CommandBeaconSp::CommandBeaconSp(int seconds)
 bool CommandBeaconSp::acknowledge_command()
 {
     auto status = ExecuteCommand::acknowledge_command();
-    Log.verboseln("BeaconSp: %d seconds", _seconds);
+    Log.verboseln("BeaconSp: %d seconds", m_seconds);
     return status;
 };
 
@@ -356,7 +356,7 @@ bool CommandBeaconSp::execute_command()
     auto status = ExecuteCommand::execute_command();
     Log.verboseln("BeaconSp");
     extern AvionicsBoard avionics;
-    return avionics.set_beacon_interval(_seconds) && status;
+    return avionics.set_beacon_interval(m_seconds) && status;
 };
 
 /**
@@ -368,7 +368,7 @@ bool CommandBeaconSp::execute_command()
 CommandPicTimes::CommandPicTimes(TimeValue time)
 {
     m_action = ExecuteCommand::pic_times;
-    _time = time;
+    m_time = time;
 };
 
 /**
@@ -382,7 +382,7 @@ bool CommandPicTimes::acknowledge_command()
 {
     auto status = ExecuteCommand::acknowledge_command();
     Log.verboseln("PicTimes: Year: %d Month: %d Day: %d Hour: %d Minute: %d Second: %d",
-                  _time.year, _time.month, _time.day, _time.hour, _time.minute, _time.second);
+                  m_time.year, m_time.month, m_time.day, m_time.hour, m_time.minute, m_time.second);
     return status;
 }
 
@@ -397,7 +397,7 @@ bool CommandPicTimes::execute_command()
     auto status = ExecuteCommand::execute_command();
     Log.verboseln("PicTimes");
     extern AvionicsBoard avionics;
-    DateTime time = DateTime(_time.year, _time.month, _time.day, _time.hour, _time.minute, _time.second);
+    DateTime time = DateTime(m_time.year, m_time.month, m_time.day, m_time.hour, m_time.minute, m_time.second);
     return avionics.set_picture_time(time) && status;
 };
 
@@ -410,7 +410,7 @@ bool CommandPicTimes::execute_command()
 CommandSetClock::CommandSetClock(TimeValue time)
 {
     m_action = ExecuteCommand::set_clock;
-    _time = time;
+    m_time = time;
 };
 
 /**
@@ -424,7 +424,7 @@ bool CommandSetClock::acknowledge_command()
 {
     auto status = ExecuteCommand::acknowledge_command();
     Log.verboseln("SetClock: Year: %d Month: %d Day: %d Hour: %d Minute: %d Second: %d",
-                  _time.year, _time.month, _time.day, _time.hour, _time.minute, _time.second);
+                  m_time.year, m_time.month, m_time.day, m_time.hour, m_time.minute, m_time.second);
     return status;
 }
 
@@ -440,7 +440,7 @@ bool CommandSetClock::execute_command()
     auto status = ExecuteCommand::execute_command();
     Log.verboseln("SetClock");
     extern AvionicsBoard avionics;
-    DateTime time = DateTime(_time.year, _time.month, _time.day, _time.hour, _time.minute, _time.second);
+    DateTime time = DateTime(m_time.year, m_time.month, m_time.day, m_time.hour, m_time.minute, m_time.second);
     return avionics.set_external_rtc(time) && status;
 }
 
