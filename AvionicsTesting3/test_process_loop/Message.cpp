@@ -17,7 +17,7 @@
  * @param content message body
  */
 
-Message::Message(message_type header, String content) : _header{header}, _content{content} {};
+Message::Message(message_type header, String content) : m_header{header}, m_content{content} {};
 
 /**
  * @brief Get the message
@@ -27,21 +27,21 @@ Message::Message(message_type header, String content) : _header{header}, _conten
 
 String Message::get_message()
 {
-    switch (_header)
+    switch (m_header)
     {
     case acknowledgement:
-        return "ACK" + _content;
+        return "ACK" + m_content;
 
     case negative_acknowledgement:
-        return "NACK" + _content;
+        return "NACK" + m_content;
 
     case response:
-        return "RES" + _content;
+        return "RES" + m_content;
 
     case invalid:
-        return "INV" + _content;
+        return "INV" + m_content;
 
     default:
-        return "INV" + _content;
+        return "INV" + m_content;
     }
 };

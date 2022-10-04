@@ -25,15 +25,15 @@ IMU::IMU(){
 
 bool IMU::begin(TwoWire* theWire)
 {
-    if (!_mpu.begin(IMU_I2C_ADDRESS, theWire))
+    if (!m_mpu.begin(IMU_I2C_ADDRESS, theWire))
     {
         Log.errorln("Cannot initialize inertial management unit");
         return false;
     };
 
-    _mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
+    m_mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
     String prefix {"Accelerometer range set to: "};
-    switch (_mpu.getAccelerometerRange())
+    switch (m_mpu.getAccelerometerRange())
     {
     case MPU6050_RANGE_2_G:
         Log.verboseln((prefix + "+-2G").c_str());
@@ -49,9 +49,9 @@ bool IMU::begin(TwoWire* theWire)
         break;
     };
 
-    _mpu.setGyroRange(MPU6050_RANGE_500_DEG);
+    m_mpu.setGyroRange(MPU6050_RANGE_500_DEG);
     prefix = {"Gyro range set to: "};
-    switch (_mpu.getGyroRange())
+    switch (m_mpu.getGyroRange())
     {
     case MPU6050_RANGE_250_DEG:
         Log.verboseln((prefix + "+-250 deg/s").c_str());
@@ -67,9 +67,9 @@ bool IMU::begin(TwoWire* theWire)
         break;
     };
 
-    _mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
+    m_mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
     prefix = {"Filter bandwidth set to: "};
-    switch (_mpu.getFilterBandwidth())
+    switch (m_mpu.getFilterBandwidth())
     {
     case MPU6050_BAND_260_HZ:
         Log.verboseln((prefix + "260 Hz").c_str());
@@ -107,13 +107,13 @@ String IMU::get_acceleration()
 {
     refresh_data();
     Log.verboseln("Acceleration X: %F, Y: %F, Z: %F m/s^2",
-                  _a.acceleration.x, _a.acceleration.y, _a.acceleration.z);
+                  m_a.acceleration.x, m_a.acceleration.y, m_a.acceleration.z);
     String data = String("AX") +
-                  String(_a.acceleration.x, 3) +
+                  String(m_a.acceleration.x, 3) +
                   String("AY") +
-                  String(_a.acceleration.y, 3) +
+                  String(m_a.acceleration.y, 3) +
                   String("AZ") +
-                  String(_a.acceleration.z, 3);
+                  String(m_a.acceleration.z, 3);
 
     return data;
 };
@@ -127,13 +127,13 @@ String IMU::get_acceleration()
 String IMU::get_rotation()
 {
     refresh_data();
-    Log.verboseln("Rotation X: %F, Y: %F, Z: %F rad/s", _g.gyro.x, _g.gyro.y, _g.gyro.z);
+    Log.verboseln("Rotation X: %F, Y: %F, Z: %F rad/s", m_g.gyro.x, m_g.gyro.y, m_g.gyro.z);
     String data = String("RX") +
-                  String(_g.gyro.x, 3) +
+                  String(m_g.gyro.x, 3) +
                   String("RY") +
-                  String(_g.gyro.y, 3) +
+                  String(m_g.gyro.y, 3) +
                   String("RZ") +
-                  String(_g.gyro.z, 3);
+                  String(m_g.gyro.z, 3);
 
     return data;
 };
@@ -147,15 +147,15 @@ String IMU::get_rotation()
 String IMU::get_temperature()
 {
     refresh_data();
-    Log.verboseln("Temperature: %F degC", _temp.temperature);
+    Log.verboseln("Temperature: %F degC", m_temp.temperature);
     String data = String("T") +
-                  String(_temp.temperature, 3);
+                  String(m_temp.temperature, 3);
 
     return data;
 };
 
 bool IMU::refresh_data()
 {
-    _mpu.getEvent(&_a, &_g, &_temp);
+    m_mpu.getEvent(&m_a, &m_g, &m_temp);
     return true;
 }

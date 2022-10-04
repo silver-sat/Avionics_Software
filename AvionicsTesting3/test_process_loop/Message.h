@@ -51,8 +51,8 @@ public:
     String get_message();
 
 private:
-    message_type _header{};
-    String _content{};
+    message_type m_header{};
+    String m_content{};
 };
 
 #endif // MESSAGE_H

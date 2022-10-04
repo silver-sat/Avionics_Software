@@ -19,7 +19,7 @@
 
 Watchdog::Watchdog()
 {
-    _last_action_time = millis();
+    m_last_action_time = millis();
     pinMode(WDTICK, OUTPUT);
     pinMode(RESET, INPUT);
 }
@@ -34,28 +34,28 @@ Watchdog::Watchdog()
 bool Watchdog::trigger()
 {
     auto reset = digitalRead(RESET);
-    if (reset != _reset_pin_state)
+    if (reset != m_reset_pin_state)
     {
         if (!reset)
         {
             Log.fatalln("Reset pin changed state to %d ", reset);
-            if (_force_reset)
+            if (m_force_reset)
             {
-                _force_reset = false;
+                m_force_reset = false;
             };
         }
         else
         {
             Log.infoln("Reset pin changed state to %d ", reset);
         };
-        _reset_pin_state = reset;
+        m_reset_pin_state = reset;
     };
 
-    if (!_force_reset && (millis() - _last_action_time > WATCHDOG_LOWER_BOUNDARY))
+    if (!m_force_reset && (millis() - m_last_action_time > WATCHDOG_LOWER_BOUNDARY))
     {
         digitalWrite(WDTICK, HIGH);
         digitalWrite(WDTICK, LOW);
-        _last_action_time = millis();
+        m_last_action_time = millis();
     };
     return true;
 };
@@ -69,6 +69,6 @@ bool Watchdog::trigger()
 
 bool Watchdog::set_force_reset()
 {
-    _force_reset = true;
+    m_force_reset = true;
     return true;
 };

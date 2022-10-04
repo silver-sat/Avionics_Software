@@ -62,7 +62,7 @@ public:
     String get_power_detail();
 
 private:
-    PowerStatus _power_status{fair};
+    PowerStatus m_power_status{fair};
 };
 
 #endif // MOCK_POWER_BOARD_H

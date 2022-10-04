@@ -47,7 +47,7 @@ constexpr size_t header_size{sizeof(HEADER)};                            /**< AX
  *
  */
 
-const String _call_sign{"KC3CQJ-2"};
+const String call_sign{"KC3CQJ-2"};
 
 /**
  * @brief Mock Radio Board for testing the Avionics Board
@@ -112,11 +112,11 @@ public:
     String get_status();
 
 private:
-    size_t _buffer_index{0};
-    bool _received_start{false};
-    bool _receiving_type{false};
-    bool _received_escape{false};
-    long _commands_received{0};
+    size_t m_buffer_index{0};
+    bool m_received_start{false};
+    bool m_receiving_type{false};
+    bool m_received_escape{false};
+    long m_commands_received{0};
 };
 
 #endif // MOCK_RADIO_BOARD_H

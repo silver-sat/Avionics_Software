@@ -69,7 +69,7 @@ public:
     String get_message();
 
 private:
-    String _message{};
+    String m_message{};
 };
 
 #endif // BEACON_H

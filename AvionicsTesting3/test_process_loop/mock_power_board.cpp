@@ -37,7 +37,7 @@ String MockPowerBoard::get_power_status()
 
     // todo: open non-critical I2C bus, access power data from Power Board
 
-    switch (_power_status)
+    switch (m_power_status)
     {
     case excellent:
         return "A";

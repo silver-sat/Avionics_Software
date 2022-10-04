@@ -28,21 +28,21 @@ ExternalRTC::ExternalRTC(){};
 bool ExternalRTC::begin(TwoWire *theWire)
 {
     Log.verboseln("Starting external realtime clock");
-    if (!_rtc.begin(theWire))
+    if (!m_rtc.begin(theWire))
     {
         return false;
     };
-    if (!_rtc.initialized() || _rtc.lostPower())
+    if (!m_rtc.initialized() || m_rtc.lostPower())
     {
-        _rtc_is_set = false;
+        m_rtc_is_set = false;
         Log.verboseln("Realtime clock is not set");
     }
     else
     {
-        _rtc_is_set = true;
+        m_rtc_is_set = true;
         Log.verboseln("Realtime clock is set");
     }
-    _rtc.start();
+    m_rtc.start();
     Log.verboseln("Realtime clock is running");
     return true;
 };
@@ -59,9 +59,9 @@ bool ExternalRTC::set_time(DateTime time)
 {
     if (time.isValid())
     {
-        _rtc.adjust(time);
-        _rtc.start();
-        _rtc_is_set = true;
+        m_rtc.adjust(time);
+        m_rtc.start();
+        m_rtc_is_set = true;
         return true;
     }
     else
@@ -80,7 +80,7 @@ bool ExternalRTC::set_time(DateTime time)
 DateTime ExternalRTC::get_time()
 {
     // todo: sanity check on RTC value
-    return _rtc.now();
+    return m_rtc.now();
 };
 
 /**
@@ -91,10 +91,10 @@ DateTime ExternalRTC::get_time()
 
 String ExternalRTC::get_timestamp()
 {
-    if (_rtc_is_set)
+    if (m_rtc_is_set)
     {
 
-        return _rtc.now().timestamp();
+        return m_rtc.now().timestamp();
     }
     else
     {
@@ -114,7 +114,7 @@ String ExternalRTC::get_timestamp()
 
 bool ExternalRTC::unset_clock()
 {
-    _rtc_is_set = false;
+    m_rtc_is_set = false;
     return true;
 };
 
@@ -126,5 +126,5 @@ bool ExternalRTC::unset_clock()
  */
 bool ExternalRTC::is_set()
 {
-    return _rtc_is_set;
+    return m_rtc_is_set;
 };

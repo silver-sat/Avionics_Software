@@ -29,10 +29,10 @@ public:
 
 private:
     bool refresh_data();
-    sensors_event_t _a;
-    sensors_event_t _g;
-    sensors_event_t _temp;
-    Adafruit_MPU6050 _mpu{};
+    sensors_event_t m_a;
+    sensors_event_t m_g;
+    sensors_event_t m_temp;
+    Adafruit_MPU6050 m_mpu{};
 };
 
 #endif // IMU_H

@@ -48,9 +48,9 @@ public:
   bool set_force_reset();
 
 private:
-  unsigned long _last_action_time{0};
-  bool _force_reset{false};
-  int _reset_pin_state{};
+  unsigned long m_last_action_time{0};
+  bool m_force_reset{false};
+  int m_reset_pin_state{};
 };
 
 #endif // TEST_WATCHDOG_H

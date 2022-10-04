@@ -14,6 +14,14 @@
 #include "ExecuteCommand.h"
 
 /**
+ * @brief BuildCommand constants
+ *
+ */
+
+// todo: single token limit for radio board and command factory
+constexpr size_t m_token_limit{10};
+
+/**
  * @brief Factory for Command objects
  *
  */
@@ -44,9 +52,7 @@ public:
     ExecuteCommand *get_command();
 
 private:
-    ExecuteCommand *_command;
-    // todo: single token limit for radio board and command factory
-    const size_t _token_limit{10};
+    ExecuteCommand *m_command;
 };
 
 #endif // BUILDCOMMAND_H

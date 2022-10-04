@@ -32,7 +32,7 @@ ExecuteCommand::ExecuteCommand(){
  */
 ExecuteCommand::operation ExecuteCommand::get_operation()
 {
-    return _action;
+    return m_action;
 };
 
 /**
@@ -44,7 +44,7 @@ bool ExecuteCommand::acknowledge_command()
 {
     Log.traceln("Acknowledging command");
     Message message{Message::acknowledgement, ""};
-    if (_action == ExecuteCommand::invalid)
+    if (m_action == ExecuteCommand::invalid)
     {
         message = Message(Message::negative_acknowledgement, "");
     }
@@ -72,7 +72,7 @@ bool ExecuteCommand::execute_command()
 
 CommandUnknown::CommandUnknown()
 {
-    _action = ExecuteCommand::unknown;
+    m_action = ExecuteCommand::unknown;
 };
 
 /**
@@ -108,7 +108,7 @@ bool CommandUnknown::execute_command()
 
 CommandInvalid::CommandInvalid()
 {
-    _action = ExecuteCommand::invalid;
+    m_action = ExecuteCommand::invalid;
 };
 
 /**
@@ -144,7 +144,7 @@ bool CommandInvalid::execute_command()
 
 CommandNoOperate::CommandNoOperate()
 {
-    _action = ExecuteCommand::no_operate;
+    m_action = ExecuteCommand::no_operate;
 };
 
 /**
@@ -181,7 +181,7 @@ bool CommandNoOperate::execute_command()
 
 CommandPayComms::CommandPayComms()
 {
-    _action = ExecuteCommand::pay_comms;
+    m_action = ExecuteCommand::pay_comms;
 };
 
 /**
@@ -212,7 +212,7 @@ bool CommandPayComms::execute_command()
 
 CommandReportT::CommandReportT()
 {
-    _action = ExecuteCommand::report_t;
+    m_action = ExecuteCommand::report_t;
 };
 
 /**
@@ -249,7 +249,7 @@ bool CommandReportT::execute_command()
 
 CommandTweeSlee::CommandTweeSlee()
 {
-    _action = CommandTweeSlee::twee_slee;
+    m_action = CommandTweeSlee::twee_slee;
 };
 
 /**
@@ -293,7 +293,7 @@ bool CommandTweeSlee::execute_command()
 
 CommandWatchdog::CommandWatchdog()
 {
-    _action = ExecuteCommand::watchdog;
+    m_action = ExecuteCommand::watchdog;
 };
 
 /**
@@ -326,8 +326,8 @@ bool CommandWatchdog::execute_command()
 
 CommandBeaconSp::CommandBeaconSp(int seconds)
 {
-    _action = ExecuteCommand::beacon_sp;
-    _seconds = seconds;
+    m_action = ExecuteCommand::beacon_sp;
+    m_seconds = seconds;
 };
 
 /**
@@ -340,7 +340,7 @@ CommandBeaconSp::CommandBeaconSp(int seconds)
 bool CommandBeaconSp::acknowledge_command()
 {
     auto status = ExecuteCommand::acknowledge_command();
-    Log.verboseln("BeaconSp: %d seconds", _seconds);
+    Log.verboseln("BeaconSp: %d seconds", m_seconds);
     return status;
 };
 
@@ -356,7 +356,7 @@ bool CommandBeaconSp::execute_command()
     auto status = ExecuteCommand::execute_command();
     Log.verboseln("BeaconSp");
     extern AvionicsBoard avionics;
-    return avionics.set_beacon_interval(_seconds) && status;
+    return avionics.set_beacon_interval(m_seconds) && status;
 };
 
 /**
@@ -367,8 +367,8 @@ bool CommandBeaconSp::execute_command()
 
 CommandPicTimes::CommandPicTimes(TimeValue time)
 {
-    _action = ExecuteCommand::pic_times;
-    _time = time;
+    m_action = ExecuteCommand::pic_times;
+    m_time = time;
 };
 
 /**
@@ -382,7 +382,7 @@ bool CommandPicTimes::acknowledge_command()
 {
     auto status = ExecuteCommand::acknowledge_command();
     Log.verboseln("PicTimes: Year: %d Month: %d Day: %d Hour: %d Minute: %d Second: %d",
-                  _time.year, _time.month, _time.day, _time.hour, _time.minute, _time.second);
+                  m_time.year, m_time.month, m_time.day, m_time.hour, m_time.minute, m_time.second);
     return status;
 }
 
@@ -397,7 +397,7 @@ bool CommandPicTimes::execute_command()
     auto status = ExecuteCommand::execute_command();
     Log.verboseln("PicTimes");
     extern AvionicsBoard avionics;
-    DateTime time = DateTime(_time.year, _time.month, _time.day, _time.hour, _time.minute, _time.second);
+    DateTime time = DateTime(m_time.year, m_time.month, m_time.day, m_time.hour, m_time.minute, m_time.second);
     return avionics.set_picture_time(time) && status;
 };
 
@@ -409,8 +409,8 @@ bool CommandPicTimes::execute_command()
 
 CommandSetClock::CommandSetClock(TimeValue time)
 {
-    _action = ExecuteCommand::set_clock;
-    _time = time;
+    m_action = ExecuteCommand::set_clock;
+    m_time = time;
 };
 
 /**
@@ -424,7 +424,7 @@ bool CommandSetClock::acknowledge_command()
 {
     auto status = ExecuteCommand::acknowledge_command();
     Log.verboseln("SetClock: Year: %d Month: %d Day: %d Hour: %d Minute: %d Second: %d",
-                  _time.year, _time.month, _time.day, _time.hour, _time.minute, _time.second);
+                  m_time.year, m_time.month, m_time.day, m_time.hour, m_time.minute, m_time.second);
     return status;
 }
 
@@ -440,7 +440,7 @@ bool CommandSetClock::execute_command()
     auto status = ExecuteCommand::execute_command();
     Log.verboseln("SetClock");
     extern AvionicsBoard avionics;
-    DateTime time = DateTime(_time.year, _time.month, _time.day, _time.hour, _time.minute, _time.second);
+    DateTime time = DateTime(m_time.year, m_time.month, m_time.day, m_time.hour, m_time.minute, m_time.second);
     return avionics.set_external_rtc(time) && status;
 }
 
@@ -451,7 +451,7 @@ bool CommandSetClock::execute_command()
 
 CommandGetPicTimes::CommandGetPicTimes()
 {
-    _action = ExecuteCommand::get_pic_times;
+    m_action = ExecuteCommand::get_pic_times;
 };
 
 /**
@@ -492,7 +492,7 @@ bool CommandGetPicTimes::execute_command()
 
 CommandGetTelemetry::CommandGetTelemetry()
 {
-    _action = ExecuteCommand::get_telemetry;
+    m_action = ExecuteCommand::get_telemetry;
 };
 
 /**
@@ -532,7 +532,7 @@ bool CommandGetTelemetry::execute_command()
 
 CommandGetPower::CommandGetPower()
 {
-    _action = ExecuteCommand::get_power;
+    m_action = ExecuteCommand::get_power;
 };
 
 /**
@@ -572,7 +572,7 @@ bool CommandGetPower::execute_command()
 
 CommandGetPhotos::CommandGetPhotos()
 {
-    _action = ExecuteCommand::get_photos;
+    m_action = ExecuteCommand::get_photos;
 };
 
 /**
@@ -613,7 +613,7 @@ bool CommandGetPhotos::execute_command()
 
 CommandGetComms::CommandGetComms()
 {
-    _action = ExecuteCommand::get_comms;
+    m_action = ExecuteCommand::get_comms;
 };
 
 /**
@@ -654,7 +654,7 @@ bool CommandGetComms::execute_command()
 
 CommandGetBeaconInterval::CommandGetBeaconInterval()
 {
-    _action = ExecuteCommand::get_beacon_interval;
+    m_action = ExecuteCommand::get_beacon_interval;
 };
 
 /**
@@ -695,7 +695,7 @@ bool CommandGetBeaconInterval::execute_command()
 
 CommandSendTestPacket::CommandSendTestPacket()
 {
-    _action = ExecuteCommand::send_test_packet;
+    m_action = ExecuteCommand::send_test_packet;
 };
 
 /**
@@ -735,7 +735,7 @@ bool CommandSendTestPacket::execute_command()
 
 CommandClearPicTimes::CommandClearPicTimes()
 {
-    _action = ExecuteCommand::clear_pic_times;
+    m_action = ExecuteCommand::clear_pic_times;
 };
 
 /**
@@ -774,7 +774,7 @@ bool CommandClearPicTimes::execute_command()
 
 CommandUnsetClock::CommandUnsetClock()
 {
-    _action = ExecuteCommand::unset_clock;
+    m_action = ExecuteCommand::unset_clock;
 };
 
 /**
