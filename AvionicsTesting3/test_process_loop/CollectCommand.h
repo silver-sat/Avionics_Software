@@ -18,14 +18,14 @@
  *
  */
 
-constexpr char _command_message_separator{'|'}; /**< separator for signed command */
-constexpr size_t _buffer_token_limit{4};        /**< number of signed command sections */
-constexpr size_t _maximum_sequence_length{10};  /**< maximum digits in sequence number */
-constexpr size_t _maximum_command_length{200};  /**< maximum characters in command */
-constexpr size_t _command_token_limit{10};      /**< maximum command parameters */
-constexpr size_t _salt_size{16};                /**< salt size for HMAC */
-constexpr size_t _secret_size{16};              /**< secret size for HMAC */
-constexpr size_t _HMAC_size{32};                /**< HMAC size */
+constexpr char command_message_separator{'|'}; /**< separator for signed command */
+constexpr size_t buffer_token_limit{4};        /**< number of signed command sections */
+constexpr size_t maximum_sequence_length{10};  /**< maximum digits in sequence number */
+constexpr size_t maximum_command_length{200};  /**< maximum characters in command */
+constexpr size_t command_token_limit{10};      /**< maximum command parameters */
+constexpr size_t salt_size{16};                /**< salt size for HMAC */
+constexpr size_t secret_size{16};              /**< secret size for HMAC */
+constexpr size_t HMAC_size{32};                /**< HMAC size */
 
 class CollectCommand
 {
@@ -103,13 +103,13 @@ public:
     bool delete_command();
 
 private:
-    char _command_buffer[_maximum_command_length + 1]{""};
-    bool _validation_required{false};
-    BuildCommand *_factory{};
-    ExecuteCommand *_command{};
-    long _successful_commands{0};
-    long _failed_commands{0};
-    long _command_sequence{1};
+    char m_command_buffer[maximum_command_length + 1]{""};
+    bool m_validation_required{false};
+    BuildCommand *m_factory{};
+    ExecuteCommand *m_command{};
+    long m_successful_commands{0};
+    long m_failed_commands{0};
+    long m_command_sequence{1};
 };
 
 #endif // COLLECTCOMMAND_H

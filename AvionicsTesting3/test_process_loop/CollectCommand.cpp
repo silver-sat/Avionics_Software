@@ -41,21 +41,21 @@ CollectCommand::~CollectCommand()
 bool CollectCommand::check_for_command()
 {
     extern MockRadioBoard radio;
-    if (radio.receive_command(_command_buffer, _maximum_command_length))
+    if (radio.receive_command(m_command_buffer, maximum_command_length))
     {
-        String command_string{_command_buffer};
+        String command_string{m_command_buffer};
         make_command(command_string);
-        _command->acknowledge_command();
+        m_command->acknowledge_command();
         Log.traceln("Command acknowledged");
-        if (_command->execute_command())
+        if (m_command->execute_command())
         {
-            Log.traceln("Executed (%l executed, %l failed, next sequence %l)", ++_successful_commands, _failed_commands, _command_sequence);
+            Log.traceln("Executed (%l executed, %l failed, next sequence %l)", ++m_successful_commands, m_failed_commands, m_command_sequence);
             delete_command();
             return true;
         }
         else
         {
-            Log.errorln("Failed (%l executed, %l failed, next sequence %i)", _successful_commands, ++_failed_commands, _command_sequence);
+            Log.errorln("Failed (%l executed, %l failed, next sequence %i)", m_successful_commands, ++m_failed_commands, m_command_sequence);
             delete_command();
             return false;
         };
@@ -112,7 +112,7 @@ void hex2bin(const char *src, byte *target)
 bool CollectCommand::validate_signature(String &buffer, String &command_string)
 {
     buffer.trim();
-    size_t buffer_index = buffer.indexOf(_command_message_separator);
+    size_t buffer_index = buffer.indexOf(command_message_separator);
 
     if (buffer_index == -1)
     {
@@ -122,16 +122,16 @@ bool CollectCommand::validate_signature(String &buffer, String &command_string)
     else
     {
 
-        Log.verboseln("Command is signed", _command_message_separator);
+        Log.verboseln("Command is signed", command_message_separator);
 
         // tokenize the buffer
 
-        String buffer_tokens[_buffer_token_limit]{};
+        String buffer_tokens[buffer_token_limit]{};
         size_t buffer_token_index{0};
         size_t token_start_index{0};
-        for (auto buffer_token_index = 0; buffer_token_index < _buffer_token_limit; buffer_token_index++)
+        for (auto buffer_token_index = 0; buffer_token_index < buffer_token_limit; buffer_token_index++)
         {
-            auto token_end_index = buffer.indexOf(_command_message_separator, token_start_index);
+            auto token_end_index = buffer.indexOf(command_message_separator, token_start_index);
             buffer_tokens[buffer_token_index] = buffer.substring(token_start_index, token_end_index++);
             token_start_index = token_end_index;
         }
@@ -143,7 +143,7 @@ bool CollectCommand::validate_signature(String &buffer, String &command_string)
         {
             if (!isDigit(buffer_tokens[0].charAt(index)))
             {
-                if (_validation_required)
+                if (m_validation_required)
                 {
                     Log.errorln("Sequence is not a digit");
                     return false;
@@ -157,9 +157,9 @@ bool CollectCommand::validate_signature(String &buffer, String &command_string)
         }
 
         long command_sequence{buffer_tokens[0].toInt()};
-        if (command_sequence != _command_sequence)
+        if (command_sequence != m_command_sequence)
         {
-            if (_validation_required)
+            if (m_validation_required)
             {
 
                 Log.errorln("Command sequence invalid");
@@ -173,43 +173,43 @@ bool CollectCommand::validate_signature(String &buffer, String &command_string)
         else
         {
             Log.verboseln("Command sequence is valid");
-            _command_sequence++;
+            m_command_sequence++;
         }
 
         // todo: check for validation requirement
         // todo: check for valid lengths
 
         const size_t sequence_length{buffer_tokens[0].length()};
-        byte sequence[_maximum_sequence_length]{};
-        buffer_tokens[0].getBytes(sequence, _maximum_sequence_length);
+        byte sequence[maximum_sequence_length]{};
+        buffer_tokens[0].getBytes(sequence, maximum_sequence_length);
 
         const size_t salt_length{buffer_tokens[1].length()};
-        byte salt[_salt_size]{};
+        byte salt[salt_size]{};
         hex2bin(buffer_tokens[1].c_str(), salt);
 
         const size_t command_length{buffer_tokens[2].length()};
-        byte command[_maximum_command_length]{};
-        buffer_tokens[2].getBytes(command, _maximum_command_length);
+        byte command[maximum_command_length]{};
+        buffer_tokens[2].getBytes(command, maximum_command_length);
 
         const size_t sourceHMAC_length = buffer_tokens[3].length();
-        byte sourceHMAC[_HMAC_size]{};
+        byte sourceHMAC[HMAC_size]{};
         hex2bin(buffer_tokens[3].c_str(), sourceHMAC);
 
         const size_t secret_length = 16;
         const byte secret[]{SECRET_HASH_KEY};
 
-        byte HMAC[_HMAC_size];
+        byte HMAC[HMAC_size];
         String hexHMAC{};
 
         BLAKE2s blake{};
-        blake.resetHMAC(&secret, _secret_size);
+        blake.resetHMAC(&secret, secret_size);
         blake.update(&sequence, sequence_length);
-        blake.update(&_command_message_separator, 1);
-        blake.update(&salt, _salt_size);
-        blake.update(&_command_message_separator, 1);
+        blake.update(&command_message_separator, 1);
+        blake.update(&salt, salt_size);
+        blake.update(&command_message_separator, 1);
         blake.update(&command, command_length);
-        blake.finalizeHMAC(secret, _secret_size, HMAC, _HMAC_size);
-        for (auto index = 0; index < _HMAC_size; index++)
+        blake.finalizeHMAC(secret, secret_size, HMAC, HMAC_size);
+        for (auto index = 0; index < HMAC_size; index++)
         {
             if (HMAC[index] < 0x10)
             {
@@ -226,7 +226,7 @@ bool CollectCommand::validate_signature(String &buffer, String &command_string)
         }
         else
         {
-            if (_validation_required)
+            if (m_validation_required)
             {
                 Log.errorln("Command signature invalid");
                 return false;
@@ -265,7 +265,7 @@ bool CollectCommand::parse_parameters(const String &command_string, String comma
         else
         {
             Log.verboseln("Token processed: %s", command_tokens[token_index].c_str());
-            if (token_index++ > _command_token_limit)
+            if (token_index++ > command_token_limit)
             {
                 Log.warningln("Too many command parameters");
                 return false;
@@ -274,7 +274,7 @@ bool CollectCommand::parse_parameters(const String &command_string, String comma
     }
 
     Log.verboseln("Token processed: %s", command_tokens[token_index].c_str());
-    if (token_index > _command_token_limit)
+    if (token_index > command_token_limit)
     {
         Log.warningln("Too many command parameters");
         return false;
@@ -299,13 +299,13 @@ bool CollectCommand::make_command(String buffer)
 
     // tokenize the command string and create the command object
 
-    String command_tokens[_command_token_limit]{};
+    String command_tokens[command_token_limit]{};
     size_t token_count{0};
     if (parse_parameters(command_string, command_tokens, token_count))
     {
         Log.traceln("Constructing command object");
-        _factory = new BuildCommand(command_tokens, token_count);
-        _command = _factory->get_command();
+        m_factory = new BuildCommand(command_tokens, token_count);
+        m_command = m_factory->get_command();
         return true;
     }
     else
@@ -325,18 +325,18 @@ bool CollectCommand::delete_command()
 
     // destroy the command
 
-    if (_command)
+    if (m_command)
     {
-        delete _command;
-        _command = NULL;
+        delete m_command;
+        m_command = NULL;
     }
 
     // destroy the factory
 
-    if (_factory)
+    if (m_factory)
     {
-        delete _factory;
-        _factory = NULL;
+        delete m_factory;
+        m_factory = NULL;
     }
 
     return true;

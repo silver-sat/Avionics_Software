@@ -57,7 +57,7 @@ public:
 private:
     // todo: convert call sign to Morse code ('.' '-')
     String _call_sign{"..--.. ..--.. ..--.. ..--.. ..--.. "}; // this is "?????"
-    String _message {};
+    String m_message {};
 };
 
 #endif

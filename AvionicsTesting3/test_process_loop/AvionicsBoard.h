@@ -214,19 +214,19 @@ private:
 
     bool serial_buffer_disable();
 
-    ExternalRTC _external_rtc{};
-    Watchdog _watchdog{};
-    unsigned long _beacon_interval{2 * 60 * SECONDS_TO_MILLISECONDS};
-    unsigned long _last_beacon_time{0};
-    size_t _picture_count{0};
-    DateTime _picture_times[maximum_scheduled_pictures]{};
-    IMU _imu{};
+    ExternalRTC m_external_rtc{};
+    Watchdog m_watchdog{};
+    unsigned long m_beacon_interval{2 * 60 * SECONDS_TO_MILLISECONDS};
+    unsigned long m_last_beacon_time{0};
+    size_t m_picture_count{0};
+    DateTime m_picture_times[maximum_scheduled_pictures]{};
+    IMU m_imu{};
     // to consider: refactor FRAM as object
-    Adafruit_FRAM_I2C _fram{};
-    Beacon::status _power_status{Beacon::status::unknown};
-    Beacon::status _avionics_status{Beacon::status::excellent};
-    Beacon::status _radio_status{Beacon::status::unknown};
-    Beacon::status _payload_status{Beacon::status::unknown};
+    Adafruit_FRAM_I2C m_fram{};
+    Beacon::status m_power_status{Beacon::status::unknown};
+    Beacon::status m_avionics_status{Beacon::status::excellent};
+    Beacon::status m_radio_status{Beacon::status::unknown};
+    Beacon::status m_payload_status{Beacon::status::unknown};
 };
 
 #endif // AVIONICSBOARD_H

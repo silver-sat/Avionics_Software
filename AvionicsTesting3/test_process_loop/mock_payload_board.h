@@ -130,13 +130,13 @@ private:
     bool power_down_signal_is_set();
 
 private:
-    const unsigned long _tweet_duration{30 * SECONDS_TO_MILLISECONDS};
-    const unsigned long _photo_duration{15 * SECONDS_TO_MILLISECONDS};
-    unsigned long _last_activity_time{0};
-    unsigned long _action_duration{};
-    bool _payload_active{false};
-    bool _power_down_signal{true};
-    int _photo_count{0};
+    const unsigned long m_tweet_duration{30 * SECONDS_TO_MILLISECONDS};
+    const unsigned long m_photo_duration{15 * SECONDS_TO_MILLISECONDS};
+    unsigned long m_last_activity_time{0};
+    unsigned long m_action_duration{};
+    bool m_payload_active{false};
+    bool m_power_down_signal{true};
+    int m_photo_count{0};
 };
 
 #endif // MOCK_PAYLOAD_BOARD_H

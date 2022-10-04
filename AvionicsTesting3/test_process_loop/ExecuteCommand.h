@@ -102,7 +102,7 @@ protected:
      * @brief Command operation
      *
      */
-    operation _action{invalid};
+    operation m_action{invalid};
 };
 
 /**

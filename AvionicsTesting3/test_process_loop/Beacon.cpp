@@ -26,7 +26,7 @@ Beacon::Beacon(
     status payload)
 {
 
-    _message = (to_board_code(power) +
+    m_message = (to_board_code(power) +
                 to_board_code(avionics) +
                 to_board_code(radio) +
                 to_board_code(payload));
@@ -70,5 +70,5 @@ String Beacon::to_board_code(status status)
  */
 String Beacon::get_message()
 {
-    return _message;
+    return m_message;
 };

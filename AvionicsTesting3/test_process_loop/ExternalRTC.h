@@ -29,8 +29,8 @@ public:
     bool is_set();
 
 private:
-    RTC_PCF8523 _rtc{};
-    bool _rtc_is_set{false};
+    RTC_PCF8523 m_rtc{};
+    bool m_rtc_is_set{false};
 };
 
 #endif // EXTERNALRTC_H

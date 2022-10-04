@@ -55,7 +55,7 @@ Beacon::Beacon(
     status reserved)
 {
 
-    _message = (_call_sign +
+    m_message = (_call_sign +
                 toMorse(avionics) +
                 toMorse(payload) +
                 toMorse(power) +
@@ -70,5 +70,5 @@ Beacon::Beacon(
  */
 String Beacon::get_code()
 {
-    return _message;
+    return m_message;
 };

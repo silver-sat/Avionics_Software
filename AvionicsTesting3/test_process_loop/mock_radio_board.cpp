@@ -57,29 +57,29 @@ bool MockRadioBoard::receive_command(char *buffer, const size_t length)
     while (Serial1.available())
     {
         char character = Serial1.read();
-        if (_received_start)
+        if (m_received_start)
         {
-            if (_receiving_type)
+            if (m_receiving_type)
             {
-                _receiving_type = false;
+                m_receiving_type = false;
                 if (character != DATA_FRAME)
                 {
                     Log.errorln("Type is not 0: 0x%x", character);
                 }
             }
 
-            else if (_received_escape)
+            else if (m_received_escape)
             {
-                _received_escape = false;
-                if (_buffer_index < length)
+                m_received_escape = false;
+                if (m_buffer_index < length)
                 {
                     switch (character)
                     {
                     case TFEND:
-                        buffer[_buffer_index++] = FEND;
+                        buffer[m_buffer_index++] = FEND;
                         break;
                     case TFESC:
-                        buffer[_buffer_index++] = FESC;
+                        buffer[m_buffer_index++] = FESC;
                         break;
                     default:
                         Log.errorln("FESC followed by invalid character, ignored: 0x%x", character);
@@ -94,17 +94,17 @@ bool MockRadioBoard::receive_command(char *buffer, const size_t length)
 
             else if (character == FESC)
             {
-                _received_escape = true;
+                m_received_escape = true;
             }
 
             else if (character == FEND)
             {
-                if (_buffer_index > header_size + 1)
+                if (m_buffer_index > header_size + 1)
                 {
-                    buffer[_buffer_index++] = '\0';
-                    memmove(buffer, buffer + header_size, _buffer_index - header_size);
-                    Log.infoln("Command received (count %l): %s", ++_commands_received, buffer);
-                    _received_start = false;
+                    buffer[m_buffer_index++] = '\0';
+                    memmove(buffer, buffer + header_size, m_buffer_index - header_size);
+                    Log.infoln("Command received (count %l): %s", ++m_commands_received, buffer);
+                    m_received_start = false;
                     return true;
                 }
                 else
@@ -115,9 +115,9 @@ bool MockRadioBoard::receive_command(char *buffer, const size_t length)
 
             else
             {
-                if (_buffer_index < length)
+                if (m_buffer_index < length)
                 {
-                    buffer[_buffer_index++] = character;
+                    buffer[m_buffer_index++] = character;
                 }
                 else
                 {
@@ -127,9 +127,9 @@ bool MockRadioBoard::receive_command(char *buffer, const size_t length)
         }
         else if (character == FEND)
         {
-            _buffer_index = 0;
-            _received_start = true;
-            _receiving_type = true;
+            m_buffer_index = 0;
+            m_received_start = true;
+            m_receiving_type = true;
         }
         else
         {
