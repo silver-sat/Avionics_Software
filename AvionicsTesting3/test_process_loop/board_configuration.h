@@ -51,17 +51,16 @@
  * @brief I2C Addresses
  *
  */
-
+// todo: refactor as constexpr
 #define RTC_I2C_ADDRESS 0x68  /**< realtime clock I2C address @hideinitializer */
 #define IMU_I2C_ADDRESS 0x68  /**< inertial measurement unit I2C address @hideinitializer */
 #define FRAM_I2C_ADDRESS 0x50 /**< FRAM I2C address @hideinitializer */
 
 /**
- * @brief Constants
+ * @brief Global constants
  *
  */
 
-#define SECONDS_TO_MILLISECONDS 1000    /**< conversion factor for time in seconds @hideinitializer */
-#define SERIAL_MONITOR_BAUD_RATE 115200 /**< speed of serial connection @hideinitializer */
+constexpr unsigned long seconds_to_milliseconds{1000}; /**< conversion factor for time in seconds @hideinitializer */
 
 #endif // BOARD_CONFIGURATION_H

@@ -35,7 +35,14 @@
 #include "mock_radio_board.h"
 #include "CollectCommand.h"
 
-constexpr unsigned long separation_delay{5 * SECONDS_TO_MILLISECONDS}; // todo: adjust to 45 minutes for full test
+/**
+ * @brief Process loop constants
+ *
+ */
+
+constexpr uint32_t serial_monitor_baud_rate{115200}; /**< speed of serial connection @hideinitializer */
+// todo: adjust to 45 minutes for full test
+constexpr unsigned long separation_delay{5 * seconds_to_milliseconds};
 constexpr unsigned long separation_time{0};
 
 /**
@@ -111,7 +118,7 @@ void setup()
 {
     // Initialize serial connections and log utility for test reporting
 
-    Serial.begin(SERIAL_MONITOR_BAUD_RATE);
+    Serial.begin(serial_monitor_baud_rate);
     while (!Serial)
     {
         avionics.trigger_watchdog();
@@ -139,7 +146,7 @@ void setup()
 
     Log.noticeln("Initializing mock Radio Board");
     radio.begin();
-    Serial1.begin(SERIAL_MONITOR_BAUD_RATE);
+    Serial1.begin(serial_monitor_baud_rate);
     while (!Serial1)
     {
         avionics.trigger_watchdog();

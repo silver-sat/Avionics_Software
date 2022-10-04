@@ -11,6 +11,7 @@
 #ifndef AVIONICSBOARD_H
 #define AVIONICSBOARD_H
 
+#include "board_configuration.h"
 #include "Watchdog.h"
 #include "ExternalRTC.h"
 #include "IMU.h"
@@ -223,7 +224,7 @@ private:
 
     ExternalRTC m_external_rtc{};
     Watchdog m_watchdog{};
-    unsigned long m_beacon_interval{2 * 60 * SECONDS_TO_MILLISECONDS};
+    unsigned long m_beacon_interval{2 * 60 * seconds_to_milliseconds};
     unsigned long m_last_beacon_time{0};
     size_t m_picture_count{0};
     DateTime m_picture_times[maximum_scheduled_pictures]{};

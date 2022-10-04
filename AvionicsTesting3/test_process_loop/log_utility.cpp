@@ -105,6 +105,7 @@ void printLogLevel(Print *_logOutput, int logLevel)
  * @param _logOutput output
  * @param logLevel log level
  */
+
 void printSuffix(Print *_logOutput, int logLevel)
 {
   _logOutput->print("");
