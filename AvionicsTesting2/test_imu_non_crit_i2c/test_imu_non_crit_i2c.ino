@@ -14,26 +14,26 @@
 #include "wiring_private.h"
 
 Adafruit_MPU6050 imu;
-TwoWire non_crit_i2c(&sercom1, 11, 13);
+// TwoWire non_crit_i2c(&sercom2, 3, 4);
 
-void SERCOM1_Handler(void){
-  non_crit_i2c.onService();
-}
+// void SERCOM2_Handler(void){
+//   non_crit_i2c.onService();
+// }
 
 void setup()
 {
   Serial.begin(115200);
   while (!Serial)
     delay(10); // will pause Zero, Leonardo, etc until serial console opens
-  Wire.begin();
-  non_crit_i2c.begin();
-  pinPeripheral(11, PIO_SERCOM);
-  pinPeripheral(13, PIO_SERCOM);
+  // Wire.begin();
+  // non_crit_i2c.begin();
+  // pinPeripheral(3, PIO_SERCOM_ALT);
+  // pinPeripheral(4, PIO_SERCOM_ALT);
 
   Serial.println("Adafruit MPU6050 test!");
 
   // Try to initialize!
-  if (!imu.begin(0x68, &non_crit_i2c))
+  if (!imu.begin(0x68, &Wire))
   {
     Serial.println("IMU not found");
     while (true)

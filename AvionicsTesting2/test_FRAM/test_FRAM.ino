@@ -41,7 +41,7 @@ void setup(void)
   // Verify FRAM is present at specified address
 
   auto fram_i2c_address = 0x50;
-  if (fram.begin(fram_i2c_address))
+  if (fram.begin(fram_i2c_address, &Wire1))
   {
     Serial.print("Found FRAM at I2C address 0x");
     Serial.println(fram_i2c_address, HEX);
