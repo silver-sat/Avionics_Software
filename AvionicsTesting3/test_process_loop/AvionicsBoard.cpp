@@ -39,22 +39,16 @@ bool AvionicsBoard::begin()
 
     Log.traceln("Initializing non-critical I2C bus");
     busswitch_begin();
+    // todo: disable busswitch full time?
     busswitch_enable();
     Wire1.begin();
     busswitch_disable();
     Log.traceln("Non-critical I2C bus initialization completed");
 
-    // Serial connections
-
-    Log.traceln("Initializing serial buffers");
-    serial_buffer_begin();
-    Log.traceln("Serial buffer initialization completed");
-
     // External realtime clock
 
     Log.traceln("Initializing external realtime clock");
 
-    // todo: replace with Avionics Board external realtime clock
     // todo: does not fail if no clock attached
     // todo: clock fails on power change (e.g. adding 5v to board)
 
@@ -383,52 +377,6 @@ bool AvionicsBoard::busswitch_disable()
     return true;
 };
 
-/**
- * @brief Initialize serial buffers
- *
- * @return true successful
- * @return false error
- */
-
-bool AvionicsBoard::serial_buffer_begin()
-{
-    // todo: consider making serial buffer object
-    Log.verboseln("Disabling serial connection to payload board");
-    pinMode(EN_PAYLOAD_SERIAL, OUTPUT);
-    digitalWrite(EN_PAYLOAD_SERIAL, LOW);
-    // todo: verify connection to radio board should always be active
-    // pinMode(EN_RADIO_SERIAL, OUTPUT);
-    // digitalWrite(EN_RADIO_SERIAL, LOW);
-    return true;
-};
-
-/**
- * @brief Enable serial buffer to Radio Board
- *
- * @return true successful
- * @return false error
- */
-
-bool AvionicsBoard::serial_buffer_enable()
-{
-    Log.verboseln("Enabling serial driver to Radio Board");
-    digitalWrite(EN_RADIO_SERIAL, HIGH);
-    return true;
-};
-
-/**
- * @brief Disable serial buffer to Radio Board
- *
- * @return true successful
- * @return false error
- */
-
-bool AvionicsBoard::serial_buffer_disable()
-{
-    Log.verboseln("Disabling serial driver to Radio Board");
-    digitalWrite(EN_RADIO_SERIAL, LOW);
-    return true;
-};
 
 /**
  * @brief Read byte from FRAM
@@ -451,6 +399,7 @@ String AvionicsBoard::read_fram(size_t address)
  */
 
 bool AvionicsBoard::unset_clock()
+// todo: consider eliminating command
 {
     Log.verboseln("Unsetting the realtime clock");
     return m_external_rtc.unset_clock();

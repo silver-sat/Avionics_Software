@@ -18,12 +18,12 @@ echo "Starting Avionics Board hardware unit test"
 # create the list of sketches
 
 declare -a sketches=(
+                     "test_LED"
                      "test_SAMD21"
-                     "test_I2C_switch"
                      "test_external_RTC" 
-                     "test_imu"
+                     "test_I2C_switch"
+                     "test_imu_non_crit_i2c"
                      "test_FRAM" 
-                     "test_watchdog"
                      ) 
 
 # execute each sketch

@@ -28,22 +28,27 @@
 
 #include "log_utility.h"
 #include "Beacon.h"
-#include "ExecuteCommand.h"
-#include "AvionicsBoard.h"
-#include "mock_power_board.h"
-#include "mock_payload_board.h"
-#include "mock_radio_board.h"
 #include "CollectCommand.h"
+#include "ExecuteCommand.h"
+#include "mock_power_board.h"
+#include "AvionicsBoard.h"
+#include "mock_radio_board.h"
+#include "mock_payload_board.h"
 
 /**
  * @brief Process loop constants
  *
  */
 
-constexpr uint32_t serial_monitor_baud_rate{115200}; /**< speed of serial connection @hideinitializer */
 // todo: adjust to 45 minutes for full test
 constexpr unsigned long separation_delay{5 * seconds_to_milliseconds};
 constexpr unsigned long separation_time{0};
+
+/**
+ * @brief Serial interface constant
+ *
+ */
+constexpr uint32_t serial_baud_rate{115200};  /**< speed of serial connection @hideinitializer */
 
 /**
  * @brief Create the boards and command processor
@@ -118,7 +123,7 @@ void setup()
 {
     // Initialize serial connections and log utility for test reporting
 
-    Serial.begin(serial_monitor_baud_rate);
+    Serial.begin(serial_baud_rate);
     while (!Serial)
     {
         avionics.trigger_watchdog();
@@ -146,12 +151,6 @@ void setup()
 
     Log.noticeln("Initializing mock Radio Board");
     radio.begin();
-    Serial1.begin(serial_monitor_baud_rate);
-    while (!Serial1)
-    {
-        avionics.trigger_watchdog();
-    }
-    Log.traceln("Serial1 (command) port initialized");
     Log.noticeln("Mock Radio Board initialization completed");
 
     // Initialize mock Payload Board

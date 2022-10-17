@@ -197,44 +197,22 @@ private:
     bool busswitch_disable();
 
     /**
-     * @brief Initialize serial buffers
-     *
-     */
-
-    bool serial_buffer_begin();
-
-    /**
-     * @brief Enable serial buffer to Radio Board
-     *
-     */
-
-    bool serial_buffer_enable();
-
-    /**
-     * @brief Disable serial buffer to Radio Board
-     *
-     */
-
-    bool serial_buffer_disable();
-
-    /**
      * @brief Avionics Board member variables
      * 
      */
 
-    ExternalRTC m_external_rtc{};
     Watchdog m_watchdog{};
     unsigned long m_beacon_interval{2 * 60 * seconds_to_milliseconds};
     unsigned long m_last_beacon_time{0};
-    size_t m_picture_count{0};
-    DateTime m_picture_times[maximum_scheduled_pictures]{};
-    IMU m_imu{};
-    // to consider: refactor FRAM as object
-    CY15B256J m_fram{};
     Beacon::status m_power_status{Beacon::status::unknown};
     Beacon::status m_avionics_status{Beacon::status::excellent};
     Beacon::status m_radio_status{Beacon::status::unknown};
     Beacon::status m_payload_status{Beacon::status::unknown};
+    size_t m_picture_count{0};
+    DateTime m_picture_times[maximum_scheduled_pictures]{};
+    ExternalRTC m_external_rtc{};
+    IMU m_imu{};
+    CY15B256J m_fram{};
 };
 
 #endif // AVIONICSBOARD_H

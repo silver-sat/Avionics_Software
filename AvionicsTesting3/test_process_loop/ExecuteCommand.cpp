@@ -279,6 +279,7 @@ bool CommandTweeSlee::execute_command()
     Log.verboseln("TweeSlee");
     extern MockRadioBoard radio;
     Log.traceln("Sending local command: halt");
+    // todo: consider consolidating in radio board
     Serial1.write(FEND);
     Serial1.write(HALT);
     Serial1.write(FEND);
