@@ -12,7 +12,7 @@
 
 #include <Arduino.h>
 
-#define OE_OVERBAR_PIN 8
+#define OE_OVERBAR_PIN 11u
 
 /**
  * @brief The bus switch object

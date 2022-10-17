@@ -6,9 +6,11 @@
  * @date 2022-10-13
  *
  * Based on Arduino blink.ino
+ * 
+ * Connect LED in series with a 220 ohm resistor to J1 ground and GPIO_A pin
  */
 #include <Arduino.h>
-constexpr unsigned TXLED{32u};
+constexpr unsigned GPIO_A{14u};
 void setup()
 {
     Serial.begin(115200);
@@ -16,13 +18,13 @@ void setup()
     {
     }
     Serial.println("Starting LED test");
-    pinMode(TXLED, OUTPUT);
+    pinMode(GPIO_A, OUTPUT);
 }
 
 void loop()
 {
-    digitalWrite(TXLED, HIGH); // turn the LED on (HIGH is the voltage level)
+    digitalWrite(GPIO_A, HIGH); // turn the LED on (HIGH is the voltage level)
     delay(1000);               // wait for a second
-    digitalWrite(TXLED, LOW);  // turn the LED off by making the voltage LOW
+    digitalWrite(GPIO_A, LOW);  // turn the LED off by making the voltage LOW
     delay(1000);               // wait for a second
 }
