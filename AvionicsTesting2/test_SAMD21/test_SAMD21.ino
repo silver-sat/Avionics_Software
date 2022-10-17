@@ -10,6 +10,8 @@
 
 #include "test_SAMD21.h"
 
+constexpr unsigned GPIO_A{14u};
+
 void setup(void)
 {
 
@@ -85,24 +87,23 @@ void setup(void)
 
     {
         Serial.print(".");
-        samd21.write_digital(LED_BUILTIN, HIGH);
+        samd21.write_digital(GPIO_A, HIGH);
         delay(1000);
-        samd21.write_digital(LED_BUILTIN, LOW);
+        samd21.write_digital(GPIO_A, LOW);
         delay(1000);
     }
     Serial.println("\nDigital write successful");
 
-    // connect pin 3 to ground and pin 4 to +3.3V
+    // connect J1 pin 5 to ground and J1 pin 6 to +3.3V
 
-    auto pin_three = samd21.read_digital(3);
-    Serial.print("Pin 3: ");
-    Serial.println(pin_three);
-    auto pin_four = samd21.read_digital(4);
-    samd21.read_digital(4);
-    Serial.print("Pin 4: ");
-    Serial.println(pin_four);
+    auto pin_J1_5 = samd21.read_digital(9u);
+    Serial.print("J1 Pin 5: ");
+    Serial.println(pin_J1_5);
+    auto pin_J1_6 = samd21.read_digital(19u);
+    Serial.print("J1 Pin 6: ");
+    Serial.println(pin_J1_6);
     Serial.println("Digital read successful");
-    Serial.println("Digial I/O test complete");
+    Serial.println("Digital I/O test complete");
 
     // End of test
 
