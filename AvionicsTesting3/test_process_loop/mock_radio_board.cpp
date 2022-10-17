@@ -9,8 +9,16 @@
  */
 
 #include "mock_radio_board.h"
+#include "board_configuration.h"
 #include "log_utility.h"
+#include "AvionicsBoard.h"
 #include <CRC32.h>
+
+/**
+ * @brief Serial interface constant
+ *
+ */
+constexpr uint32_t serial1_baud_rate{115200}; /**< speed of serial1 connection @hideinitializer */
 
 /**
  * @brief initialize the Radio Board
@@ -22,6 +30,17 @@
 bool MockRadioBoard::begin()
 {
     Log.traceln("Radio Board initializing");
+    Log.verboseln("Enabling serial driver to Radio Board");
+    pinMode(EN_RADIO_SERIAL, OUTPUT);
+    digitalWrite(EN_RADIO_SERIAL, HIGH);
+    Log.verboseln("Initializing Serial1 (command) port");
+    Serial1.begin(serial1_baud_rate);
+    while (!Serial1)
+    {
+        extern AvionicsBoard avionics;
+        avionics.trigger_watchdog();
+    }
+    Log.traceln("Serial1 (command) port initialized");
     return true;
 };
 
