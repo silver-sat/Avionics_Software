@@ -9,6 +9,7 @@
  */
 
 #include "CY15B256J.h"
+#include "log_utility.h"
 #include <math.h>
 #include <stdlib.h>
 
@@ -39,15 +40,11 @@ bool CY15B256J::begin(uint8_t addr, TwoWire *theWire) {
   uint16_t manufID, prodID;
   getDeviceID(&manufID, &prodID);
   if (manufID != 0x004) {
-    // todo: replace with logging 
-    Serial.print("Unexpected Manufacturer ID: 0x");
-    Serial.println(manufID, HEX);
+    Log.errorln("Unexpected Manufacturer ID: %X", manufID);
     return false;
   }
   if (prodID != 0x221) {
-    // todo: replace with logging
-    Serial.print("Unexpected Product ID: 0x");
-    Serial.println(prodID, HEX);
+    Log.errorln("Unexpected Product ID: %X", prodID);
     return false;
   }
 
