@@ -8,8 +8,7 @@
  *
  */
 
-#include "Adafruit_EEPROM_I2C.h"
-#include "Adafruit_FRAM_I2C.h"
+#include "CY15B256J.h"
 
 // Test patterns
 
@@ -24,7 +23,7 @@ const long FRAM_size = 32 * long(1024);
 
 // Create the FRAM object
 
-Adafruit_FRAM_I2C fram;
+CY15B256J fram;
 
 // Execute the tests
 
