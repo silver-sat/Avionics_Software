@@ -16,9 +16,9 @@
 #include "ExternalRTC.h"
 #include "IMU.h"
 #include "Beacon.h"
+#include "CY15B256J.h"
 #include <Wire.h>
 #include <wiring_private.h>
-#include <Adafruit_FRAM_I2C.h>
 
 /**
  * @brief Avionics Board constants
@@ -230,7 +230,7 @@ private:
     DateTime m_picture_times[maximum_scheduled_pictures]{};
     IMU m_imu{};
     // to consider: refactor FRAM as object
-    Adafruit_FRAM_I2C m_fram{};
+    CY15B256J m_fram{};
     Beacon::status m_power_status{Beacon::status::unknown};
     Beacon::status m_avionics_status{Beacon::status::excellent};
     Beacon::status m_radio_status{Beacon::status::unknown};
