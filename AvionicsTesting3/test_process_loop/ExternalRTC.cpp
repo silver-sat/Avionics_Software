@@ -27,22 +27,23 @@ ExternalRTC::ExternalRTC(){};
 
 bool ExternalRTC::begin(TwoWire *theWire)
 {
-    Log.verboseln("Starting external realtime clock");
-    if (!m_rtc.begin(theWire))
-    {
-        return false;
-    };
-    if (!m_rtc.initialized() || m_rtc.lostPower())
-    {
-        m_rtc_is_set = false;
-        Log.verboseln("Realtime clock is not set");
-    }
-    else
-    {
-        m_rtc_is_set = true;
-        Log.verboseln("Realtime clock is set");
-    }
-    m_rtc.start();
+    // todo: restore external realtime clock
+    // Log.verboseln("Starting external realtime clock");
+    // if (!m_rtc.begin(theWire))
+    // {
+    //     return false;
+    // };
+    // if (!m_rtc.initialized() || m_rtc.lostPower())
+    // {
+    //     m_rtc_is_set = false;
+    //     Log.verboseln("Realtime clock is not set");
+    // }
+    // else
+    // {
+    //     m_rtc_is_set = true;
+    //     Log.verboseln("Realtime clock is set");
+    // }
+    // m_rtc.start();
     Log.verboseln("Realtime clock is running");
     return true;
 };
@@ -60,7 +61,8 @@ bool ExternalRTC::set_time(DateTime time)
     if (time.isValid())
     {
         m_rtc.adjust(time);
-        m_rtc.start();
+        // todo: restore external realtime clock
+        // m_rtc.start();
         m_rtc_is_set = true;
         return true;
     }

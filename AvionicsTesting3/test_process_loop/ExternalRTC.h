@@ -11,6 +11,7 @@
 #ifndef EXTERNALRTC_H
 #define EXTERNALRTC_H
 
+#include "DS1337.h"
 #include <RTClib.h>
 
 /**
@@ -83,7 +84,7 @@ public:
     bool is_set();
 
 private:
-    RTC_PCF8523 m_rtc{};
+    RTC_DS1337 m_rtc{};
     bool m_rtc_is_set{false};
 };
 
