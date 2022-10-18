@@ -15,53 +15,46 @@
  * @brief SAMD21 pin definitions
  *
  */
-// todo: refactor as constexpr
-#define SERCOM_SERIAL0 sercom0  /**< sercom for Serial0 @hideinitializer */
-#define SERCOM_SERIAL1 sercom1  /**< sercom for Serial0 @hideinitializer */
-#define SERCOM_NON_CRIT sercom2 /**< sercom for non-critical I2C @hideinitializer */
-#define SERCOM_CRIT sercom3     /**< sercom for critical I2C @hideinitializer */
-#define SERCOM_SPI sercom4      /**< sercom for Serial0 @hideinitializer */
-#define SERCOM_SERIAL2 sercom5  /**< sercom for Serial0 @hideinitializer */
-#define SDA_NON_CRIT 4          /**< SDA for non-critical I2C @hideinitializer */
-#define SCL_NON_CRIT 3          /**< SCL for non-critical I2C @hideinitializer */
-#define SDA_CRIT 26             /**< SDA for critical I2C @hideinitializer */
-#define SCL_CRIT 27             /**< SCL for non-critical I2C @hideinitializer */
-#define WDTICK 38               /**< trigger for Watchdog @hideinitializer */
-#define MOSI MOSI               /**< MOSI @hideinitializer */
-#define MISO MISO               /**< MISO @hideinitializer */
-#define SCK SCK                 /**< SCK @hideinitializer */
-#define TXD2 7                  /**< TXD @hideinitializer */
-#define RXD2 6                  /**< RXD @hideinitializer */
-#define EN_EXT_I2C 11           /**< enable non-critical I2C @hideinitializer */
-#define EN_PAYLOAD_SERIAL 39    /**< enable payload serial @hideinitializer */
-#define EN_RADIO_SERIAL 10      /**< enable radio serial @hideinitializer */
-#define PAYLOAD_TXD 1           /**< payload TXD @hideinitializer */
-#define PAYLOAD_RXD 0           /**< payload RXD @hideinitializer */
-#define RADIO_TXD 13            /**< radio TXD @hideinitializer */
-#define RADIO_RXD 12            /**< radio TXD @hideinitializer */
-#define PLD_ON_A 17             /**< payload on A @hideinitializer */
-#define PLD_ON_B 18             /**< payload on B @hideinitializer */
-#define PLD_ON_C 8              /**< payload on C @hideinitializer */
-#define STATES_A_INT 9          /**< payload state A @hideinitializer */
-#define STATES_B_INT 2          /**< payload state B @hideinitializer */
-#define STATES_C_INT 5          /**< payload state C @hideinitializer */
-#define SHUTDOWN_A 19           /**< payload shutdown A @hideinitializer */
-#define SHUTDOWN_B 36           /**< payload shutdown B @hideinitializer */
-#define SHUTDOWN_C 37           /**< payload shutdown C @hideinitializer */
-#define PAYLOAD_OC 16           /**< payload over current @hideinitializer */
+
+constexpr unsigned SDA_NON_CRIT{4u};       /**< SDA for non-critical I2C @hideinitializer */
+constexpr unsigned SCL_NON_CRIT{3u};       /**< SCL for non-critical I2C @hideinitializer */
+constexpr unsigned SDA_CRIT{26u};          /**< SDA for critical I2C @hideinitializer */
+constexpr unsigned SCL_CRIT{27u};          /**< SCL for non-critical I2C @hideinitializer */
+constexpr unsigned WDTICK{38u};            /**< trigger for Watchdog @hideinitializer */
+constexpr unsigned uC_MOSI{29u};           /**< MOSI @hideinitializer */
+constexpr unsigned uC_MISO{28u};           /**< MISO @hideinitializer */
+constexpr unsigned uC_SCK{30u};            /**< SCK @hideinitializer */
+constexpr unsigned TXD2{7u};               /**< TXD @hideinitializer */
+constexpr unsigned RXD2{6u};               /**< RXD @hideinitializer */
+constexpr unsigned EN_EXT_I2C{11u};        /**< enable non-critical I2C @hideinitializer */
+constexpr unsigned EN_PAYLOAD_SERIAL{39u}; /**< enable payload serial @hideinitializer */
+constexpr unsigned EN_RADIO_SERIAL{10u};   /**< enable radio serial @hideinitializer */
+constexpr unsigned PAYLOAD_TXD{1u};        /**< payload TXD @hideinitializer */
+constexpr unsigned PAYLOAD_RXD{0u};        /**< payload RXD @hideinitializer */
+constexpr unsigned RADIO_TXD{13u};         /**< radio TXD @hideinitializer */
+constexpr unsigned RADIO_RXD{12u};         /**< radio TXD @hideinitializer */
+constexpr unsigned PLD_ON_A{17u};          /**< payload on A @hideinitializer */
+constexpr unsigned PLD_ON_B{18u};          /**< payload on B @hideinitializer */
+constexpr unsigned PLD_ON_C{8u};           /**< payload on C @hideinitializer */
+constexpr unsigned STATES_A_INT{9u};       /**< payload state A @hideinitializer */
+constexpr unsigned STATES_B_INT{2u};       /**< payload state B @hideinitializer */
+constexpr unsigned STATES_C_INT{5u};       /**< payload state C @hideinitializer */
+constexpr unsigned SHUTDOWN_A{19u};        /**< payload shutdown A @hideinitializer */
+constexpr unsigned SHUTDOWN_B{36u};        /**< payload shutdown B @hideinitializer */
+constexpr unsigned SHUTDOWN_C{37u};        /**< payload shutdown C @hideinitializer */
+constexpr unsigned PAYLOAD_OC{16u};        /**< payload over current @hideinitializer */
 // todo: establish reset monitor pin for testing
-#define RESET 0
-
-
+constexpr unsigned RESET{40u};
 
 /**
  * @brief I2C Addresses
  *
+ * RTC and IMU have the same addresses but are located on different buses
  */
-// todo: refactor as constexpr
-#define RTC_I2C_ADDRESS 0x68  /**< realtime clock I2C address @hideinitializer */
-#define IMU_I2C_ADDRESS 0x68  /**< inertial measurement unit I2C address @hideinitializer */
-#define FRAM_I2C_ADDRESS 0x50 /**< FRAM I2C address @hideinitializer */
+
+constexpr unsigned RTC_I2C_ADDRESS{0x68};  /**< realtime clock I2C address @hideinitializer */
+constexpr unsigned IMU_I2C_ADDRESS{0x68};  /**< inertial measurement unit I2C address @hideinitializer */
+constexpr unsigned FRAM_I2C_ADDRESS{0x50}; /**< FRAM I2C address @hideinitializer */
 
 /**
  * @brief Global constants
