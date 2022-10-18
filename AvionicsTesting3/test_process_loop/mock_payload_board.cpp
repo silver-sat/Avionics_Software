@@ -146,7 +146,12 @@ bool MockPayloadBoard::end_activity()
 
 bool MockPayloadBoard::power_down()
 {
-    // todo: set GPIO pins for power down
+    pinMode(PLD_ON_A, OUTPUT);
+    digitalWrite(PLD_ON_A, LOW);
+    pinMode(PLD_ON_B, OUTPUT);
+    digitalWrite(PLD_ON_B, LOW);
+    pinMode(PLD_ON_C, OUTPUT);
+    digitalWrite(PLD_ON_C, LOW);
     Log.verboseln("Payload power off");
     return true;
 };
@@ -160,7 +165,12 @@ bool MockPayloadBoard::power_down()
 
 bool MockPayloadBoard::power_up()
 {
-    // todo: set GPIO pins for power up
+    pinMode(PLD_ON_A, OUTPUT);
+    digitalWrite(PLD_ON_A, HIGH);
+    pinMode(PLD_ON_B, OUTPUT);
+    digitalWrite(PLD_ON_B, HIGH);
+    pinMode(PLD_ON_C, OUTPUT);
+    digitalWrite(PLD_ON_C, HIGH);
     Log.verboseln("Payload power on");
     return true;
 };

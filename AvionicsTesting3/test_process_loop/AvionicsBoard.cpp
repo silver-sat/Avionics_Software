@@ -252,6 +252,7 @@ bool AvionicsBoard::check_photo()
     if ((m_external_rtc.get_time().year() < minimum_valid_year) || (m_external_rtc.get_time().year() > maximum_valid_year )) {
         // todo: error recovery from invalid time
         Log.errorln("Invalid time from external real time clock: %x", m_external_rtc.get_time());
+        m_external_rtc.unset_clock();
         return false;
     }
     if ((m_picture_count > 0) && (m_external_rtc.get_time() >= m_picture_times[0]))
