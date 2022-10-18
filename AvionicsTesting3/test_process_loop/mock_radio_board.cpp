@@ -12,7 +12,6 @@
 #include "board_configuration.h"
 #include "log_utility.h"
 #include "AvionicsBoard.h"
-#include <CRC32.h>
 
 /**
  * @brief Serial interface constant
@@ -186,14 +185,11 @@ bool MockRadioBoard::send_message(Message message)
 {
     String message_data = message.get_message();
     size_t message_length = message_data.length();
-    uint32_t checksum = CRC32::calculate(message_data.c_str(), message_length);
     Log.noticeln("Sending message: %s", message_data.c_str());
-    Log.verboseln("Checksum: 0x%x", checksum);
     Serial1.write(FEND);
     Serial1.write(DATA_FRAME);
     Serial1.write(HEADER, 16);
     Serial1.write(message_data.c_str());
-    Serial1.print(checksum, HEX);
     Serial1.write(FEND);
     return true;
 };
