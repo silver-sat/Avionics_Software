@@ -50,10 +50,12 @@ public:
     /**
      * @brief Get the current external realtime clock time
      *
-     * @return * DateTime current time
+     * @return DateTime current time
+     * @return true successful
+     * @return false error
      */
 
-    DateTime get_time();
+    bool get_time(DateTime &time);
 
     /**
      * @brief Get a timestamp

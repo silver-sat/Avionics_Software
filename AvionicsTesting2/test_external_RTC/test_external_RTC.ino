@@ -11,7 +11,7 @@
 #include "DS1337.h"
 #include "RTClib.h"
 
-RTC_DS1337 rtc;
+RTC_DS1337 rtc{};
 
 char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
