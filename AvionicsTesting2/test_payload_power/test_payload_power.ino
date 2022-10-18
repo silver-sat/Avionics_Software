@@ -5,9 +5,7 @@
  * @version 1.0.0
  * @date 2022-10-18
  *
- * Based on Arduino blink.ino
  * 
- * Connect LED in series with a 220 ohm resistor to ground and H2 PAYLOAD_ON_X pins
  */
 #include <Arduino.h>
 
