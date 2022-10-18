@@ -26,8 +26,8 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef _VARIANT_ARDUINO_ZERO_
-#define _VARIANT_ARDUINO_ZERO_
+#ifndef _AVIONICS_BOARD_
+#define _AVIONICS_BOARD_
 
 // The definitions here needs a SAMD core >=1.6.10
 #define ARDUINO_SAMD_VARIANT_COMPLIANCE 10610
@@ -280,5 +280,5 @@ extern Uart Serial1;
 #define SERIAL_PORT_HARDWARE        Serial0
 #define SERIAL_PORT_HARDWARE_OPEN   Serial0
 
-#endif /* _VARIANT_ARDUINO_ZERO_ */
+#endif /* _AVIONICS_BOARD_ */
 
