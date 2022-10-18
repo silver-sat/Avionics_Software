@@ -49,9 +49,6 @@ bool AvionicsBoard::begin()
 
     Log.traceln("Initializing external realtime clock");
 
-    // todo: does not fail if no clock attached
-    // todo: clock fails on power change (e.g. adding 5v to board)
-
     if (m_external_rtc.begin(&Wire))
     {
         Log.traceln("External realtime clock initialization completed");
@@ -76,8 +73,6 @@ bool AvionicsBoard::begin()
     }
 
     // FRAM
-
-    // todo: replace with Avionics Board FRAM
 
     Log.traceln("Initializing FRAM");
     // todo: initialization hangs if no FRAM present
@@ -115,7 +110,7 @@ bool AvionicsBoard::watchdog_force_reset()
  * @return false error
  */
 
-bool AvionicsBoard::set_external_rtc(DateTime time)
+bool AvionicsBoard::set_external_rtc(const DateTime time)
 {
     if ((time.year() <= minimum_valid_year) || (time.year() >= maximum_valid_year))
     {
@@ -210,7 +205,12 @@ bool AvionicsBoard::set_picture_time(DateTime time)
         Log.errorln("Picture time must be between %d and %d, inclusive", minimum_valid_year, maximum_valid_year);
         return false;
     }
-    if (time < m_external_rtc.get_time())
+    DateTime current_time{};
+    if (!m_external_rtc.get_time(current_time)){
+        Log.errorln("Error from external realtime clock");
+        return false;
+    }
+    if (time < current_time)
     {
         Log.errorln("Picture time is before current time");
         return false;
@@ -249,13 +249,20 @@ bool AvionicsBoard::check_photo()
     {
         return false;
     }
-    if ((m_external_rtc.get_time().year() < minimum_valid_year) || (m_external_rtc.get_time().year() > maximum_valid_year )) {
-        // todo: error recovery from invalid time
-        Log.errorln("Invalid time from external real time clock: %x", m_external_rtc.get_time());
-        m_external_rtc.unset_clock();
+    DateTime time{};
+    if (!m_external_rtc.get_time(time)) {
+        Log.errorln("Error from external real time clock");
+        clear_pic_times();
         return false;
     }
-    if ((m_picture_count > 0) && (m_external_rtc.get_time() >= m_picture_times[0]))
+
+    if ((time.year() < minimum_valid_year) || (time.year() > maximum_valid_year))
+    {
+        Log.errorln("Time outside valid range");
+        clear_pic_times();
+        return false;
+    }
+    if ((m_picture_count > 0) && (time >= m_picture_times[0]))
     {
         Log.traceln("Photo time reached %s", get_timestamp().c_str());
         for (size_t index = 0; index < m_picture_count; index++)
@@ -377,7 +384,6 @@ bool AvionicsBoard::busswitch_disable()
     digitalWrite(EN_EXT_I2C, HIGH);
     return true;
 };
-
 
 /**
  * @brief Read byte from FRAM

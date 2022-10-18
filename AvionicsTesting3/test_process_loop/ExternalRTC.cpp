@@ -25,9 +25,20 @@ ExternalRTC::ExternalRTC(){};
  * @return false error
  */
 
+// todo: does not fail if no clock attached
+// todo: clock fails on power change (e.g. adding 5v to board)
+// todo: clock fails on processor reset
+
 bool ExternalRTC::begin(TwoWire *theWire)
 {
     Log.verboseln("Starting external realtime clock");
+
+    // Wait for realtime clock--not immediately available after processor reset with no power cycle
+    unsigned long delayStartTime = millis();
+    while ((!m_rtc.begin(theWire)) && ((millis() - delayStartTime) < 10))
+    {
+    }
+    
     if (!m_rtc.begin(theWire))
     {
         Log.errorln("Error starting realtime clock");
@@ -48,7 +59,7 @@ bool ExternalRTC::begin(TwoWire *theWire)
  * @return false error
  */
 
-bool ExternalRTC::set_time(DateTime time)
+bool ExternalRTC::set_time(const DateTime time)
 {
     if (time.isValid())
     {
@@ -58,23 +69,37 @@ bool ExternalRTC::set_time(DateTime time)
     }
     else
     {
-        // todo: reconcile invalidate time from RTC and invalid range in Avionics Board
         Log.errorln("Invalid time");
         return false;
     }
-};
+}
 
 /**
  * @brief Get the current external realtime clock time
  *
  * @return * DateTime current time
+ * @return true successful
+ * @return false otherwise
  */
 
-DateTime ExternalRTC::get_time()
+bool ExternalRTC::get_time(DateTime &time)
 {
-    // todo: sanity check on RTC value
-    return m_rtc.now();
-};
+    if (!m_rtc_is_set)
+    {
+        Log.errorln("External realtime clock not set");
+        return false;
+    }
+    time = m_rtc.now();
+    if (time.isValid())
+    {
+        return true;
+    }
+    else
+    {
+        Log.errorln("Invalid time");
+        return false;
+    }
+}
 
 /**
  * @brief Get a timestamp
@@ -84,17 +109,22 @@ DateTime ExternalRTC::get_time()
 
 String ExternalRTC::get_timestamp()
 {
-    if (m_rtc_is_set)
-    {
-
-        return m_rtc.now().timestamp();
-    }
-    else
+    if (!m_rtc_is_set)
     {
         Log.errorln("External realtime clock not set");
         return "ERROR";
     }
-};
+    DateTime time = m_rtc.now();
+    if (time.isValid())
+    {
+        return m_rtc.now().timestamp();
+    }
+    else
+    {
+        Log.errorln("Invalid time");
+        return "ERROR";
+    }
+}
 
 /**
  * @brief Unset the realtime clock
@@ -103,13 +133,13 @@ String ExternalRTC::get_timestamp()
  * @return false error
  */
 
-// todo: for testing only, remove from flight software
+// todo: consider removing from flight software
 
 bool ExternalRTC::unset_clock()
 {
     m_rtc_is_set = false;
     return true;
-};
+}
 
 /**
  * @brief Get status of realtime clock
@@ -120,4 +150,4 @@ bool ExternalRTC::unset_clock()
 bool ExternalRTC::is_set()
 {
     return m_rtc_is_set;
-};
+}
