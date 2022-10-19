@@ -1,7 +1,7 @@
 /**
- * @file test_Serial1_transmit.ino
+ * @file test_Serial1_receive.ino
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief Test Serial1 transmit with loop
+ * @brief Test Serial1 receive with loop
  * @version 1.0.0
  * @date 2022-10-19
  *
@@ -16,7 +16,7 @@ void setup()
   while (!Serial)
   {
   }
-  Serial.println("Starting Serial1 transmit test");
+  Serial.println("Starting Serial1 receive test");
   pinMode(EN_RADIO_SERIAL, OUTPUT);
   digitalWrite(EN_RADIO_SERIAL, HIGH);
   Serial1.begin(115200);
@@ -24,6 +24,7 @@ void setup()
 
 void loop()
 {
-  Serial1.println("Testing Serial1 output");
-  delay(2000);
+  while (Serial1.available()) {
+    Serial.write(Serial1.read());
+  }
 }

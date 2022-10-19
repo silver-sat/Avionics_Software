@@ -20,5 +20,5 @@ TIMEOUT = 5
 command_port = serial.Serial(COMMAND_PORT, BAUDRATE, timeout=TIMEOUT)
 
 while True:
-    command_port.write("Testing Serial1 input".encode("utf-8"))
+    command_port.write("Testing Serial1 input\n".encode("utf-8"))
     time.sleep(1)
