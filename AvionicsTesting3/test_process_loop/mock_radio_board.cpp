@@ -32,14 +32,16 @@ bool MockRadioBoard::begin()
     Log.verboseln("Enabling serial driver to Radio Board");
     pinMode(EN_RADIO_SERIAL, OUTPUT);
     digitalWrite(EN_RADIO_SERIAL, HIGH);
-    Log.verboseln("Initializing Serial1 (command) port");
+    Log.verboseln("Initializing command port");
     Serial1.begin(serial1_baud_rate);
     while (!Serial1)
     {
         extern AvionicsBoard avionics;
         avionics.trigger_watchdog();
     }
-    Log.traceln("Serial1 (command) port initialized");
+    Log.traceln("Command port initialized");
+    Serial1.write(FEND); // send initial sync to recover from incomplete message after board reset
+    Serial1.write(FEND);
     return true;
 };
 
