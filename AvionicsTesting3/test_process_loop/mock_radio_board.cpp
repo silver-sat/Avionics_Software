@@ -81,7 +81,14 @@ bool MockRadioBoard::receive_command(char *buffer, const size_t length)
         {
             if (m_receiving_type)
             {
+                if (character == FEND)
+                {
+                    Log.warningln("Unexpected FEND");
+                    continue; // ignore additional FENDs
+                }
+                // todo: receive Radio Board status
                 m_receiving_type = false;
+
                 if (character != DATA_FRAME)
                 {
                     Log.errorln("Type is not 0: 0x%x", character);
@@ -119,6 +126,7 @@ bool MockRadioBoard::receive_command(char *buffer, const size_t length)
 
             else if (character == FEND)
             {
+                // todo: receive radio board status
                 if (m_buffer_index > header_size + 1)
                 {
                     buffer[m_buffer_index++] = '\0';
