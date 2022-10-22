@@ -28,10 +28,11 @@ constexpr byte DATA_FRAME{'\x00'}; /**< data frame */
  * @brief SilverSat defined KISS local command types
  *
  */
-constexpr byte BEACON{'\x07'};           /**< send a beacon */
-constexpr byte DEPLOY_ANTENNA{'\x08'};   /**< deploy antenna */
-constexpr byte GET_RADIO_STATUS{'\x09'}; /**< return radio status */
-constexpr byte HALT('\x0A');             /**< halt */
+constexpr byte BEACON{'\x07'};            /**< send a beacon */
+constexpr byte DEPLOY_ANTENNA{'\x08'};    /**< deploy antenna */
+constexpr byte GET_RADIO_STATUS{'\x09'};  /**< request radio status */
+constexpr byte HALT('\x0A');              /**< halt */
+constexpr byte SEND_RADIO_STATUS{'\x0B'}; /**< return radio status */
 
 /**
  * @brief Dummy AX.25 header
@@ -79,7 +80,7 @@ public:
      *
      * @param buffer buffer to assemble command
      * @param length maximum length of command
-     * 
+     *
      * @return true no command or successful
      * @return false error
      */
@@ -89,7 +90,7 @@ public:
     /**
      * @brief Send beacon
      *
-     * @param beacon beacon data 
+     * @param beacon beacon data
      */
 
     void send_beacon(Beacon beacon);
