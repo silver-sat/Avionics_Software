@@ -35,16 +35,6 @@ bool AvionicsBoard::begin()
     Wire.begin();
     Log.traceln("Critical I2C bus initialization completed");
 
-    // Non-Critical I2C
-
-    Log.traceln("Initializing non-critical I2C bus");
-    busswitch_begin();
-    // todo: disable busswitch full time?
-    busswitch_enable();
-    Wire1.begin();
-    busswitch_disable();
-    Log.traceln("Non-critical I2C bus initialization completed");
-
     // External realtime clock
 
     Log.traceln("Initializing external realtime clock");
@@ -57,6 +47,16 @@ bool AvionicsBoard::begin()
     {
         Log.errorln("External realtime clock not initialized");
     };
+
+    // Non-Critical I2C
+
+    Log.traceln("Initializing non-critical I2C bus");
+    busswitch_begin();
+    // todo: disable busswitch full time?
+    busswitch_enable();
+    Wire1.begin();
+    busswitch_disable();
+    Log.traceln("Non-critical I2C bus initialization completed");
 
     // Inertial Management Unit
 
@@ -142,6 +142,13 @@ String AvionicsBoard::get_timestamp()
 
 bool AvionicsBoard::set_beacon_interval(int seconds)
 {
+    // todo: set beacon interval minimum and maximum
+    if ((seconds != 0) && ((seconds < minimum_beacon_interval) || (seconds > maximum_beacon_interval)))
+    {
+        Log.errorln("Beacon interval must be zero or between %d and %d, inclusive", 
+                     minimum_beacon_interval, maximum_beacon_interval);
+        return false;
+    }
     m_beacon_interval = seconds * seconds_to_milliseconds;
     return true;
 };
@@ -206,7 +213,8 @@ bool AvionicsBoard::set_picture_time(DateTime time)
         return false;
     }
     DateTime current_time{};
-    if (!m_external_rtc.get_time(current_time)){
+    if (!m_external_rtc.get_time(current_time))
+    {
         Log.errorln("Error from external realtime clock");
         return false;
     }
@@ -250,12 +258,12 @@ bool AvionicsBoard::check_photo()
         return false;
     }
     DateTime time{};
-    if (!m_external_rtc.get_time(time)) {
+    if (!m_external_rtc.get_time(time))
+    {
         Log.errorln("Error from external real time clock");
         clear_pic_times();
         return false;
     }
-
     if ((time.year() < minimum_valid_year) || (time.year() > maximum_valid_year))
     {
         Log.errorln("Time outside valid range");
@@ -324,6 +332,13 @@ String AvionicsBoard::get_telemetry()
     return m_imu.get_acceleration() + m_imu.get_rotation() + m_imu.get_temperature();
 };
 
+/**
+ * @brief Get the beacon interval
+ *
+ * @return String interval
+ */
+
+
 String AvionicsBoard::get_beacon_interval()
 {
     return String(m_beacon_interval / seconds_to_milliseconds);
@@ -351,7 +366,6 @@ bool AvionicsBoard::trigger_watchdog()
 
 bool AvionicsBoard::busswitch_begin()
 {
-    // todo: consider making busswitch object
     Log.verboseln("Initializing I2C bus switch");
     pinMode(EN_EXT_I2C, OUTPUT);
     return true;
@@ -394,7 +408,6 @@ bool AvionicsBoard::busswitch_disable()
 
 String AvionicsBoard::read_fram(size_t address)
 {
-    // todo: consider making FRAM object
     return String(m_fram.read(address));
 };
 

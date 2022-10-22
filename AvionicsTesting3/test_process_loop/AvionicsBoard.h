@@ -25,6 +25,8 @@
  *
  */
 
+constexpr uint16_t minimum_beacon_interval{1};  /**< Restrict to a reasonable value */
+constexpr uint16_t maximum_beacon_interval{10}; /**< Restrict to a reasonable value */
 constexpr size_t maximum_scheduled_pictures{5}; /**< Assume small number of pictures in one orbit */
 constexpr uint16_t minimum_valid_year{2020};    /**< Restrict to reasonable value */
 constexpr uint16_t maximum_valid_year{2040};    /**< Restrict to reasonable value */
@@ -198,7 +200,7 @@ private:
 
     /**
      * @brief Avionics Board member variables
-     * 
+     *
      */
 
     Watchdog m_watchdog{};
