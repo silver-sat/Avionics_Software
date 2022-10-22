@@ -338,3 +338,17 @@ def local_get_comms_sent(log):
 def test_packet_sent(log):
 
     return any([item.detail == "Sending message: RESTEST" for item in log])
+
+
+## Send FEND
+#
+def send_FEND(count=1):
+    index = 0
+    while index < count:
+        command_port.write(FEND)
+        index += 1
+
+
+# todo: verify beacon power_sent
+
+# todo: verify deploy antenna sent
