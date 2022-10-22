@@ -10,6 +10,7 @@
 import helper
 import serial
 from collections import namedtuple
+import time
 
 ## log entry field names
 Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
@@ -24,14 +25,16 @@ class TestPicTimes:
     ## set picture times
     #
     def test_pic_times(self):
-
-        log = helper.collect("PicTimes 2023 12 12 10 10 0")
+        start_time = time.gmtime(time.time() + 10)
+        start_time = time.strftime("%Y %m %d %H %M %S", start_time)
+        log = helper.collect_through_power_off(f"PicTimes {start_time}")
         assert helper.not_signed(log)
         assert helper.acknowledged(log)
         assert helper.no_logged_errors(log)
         assert helper.executed(log)
+        assert helper.payload_power_off(log)
 
-    ## error: incorrect number of  parameters
+    ## error: incorrect number of parameters
     #
     def test_pic_times_no_param(self):
 
@@ -95,12 +98,15 @@ class TestPicTimes:
     #
     def test_pic_times_signed(self):
 
-        log = helper.collect(helper.generate_signed("PicTimes 2023 12 12 10 10 0"))
+        start_time = time.gmtime(time.time() + 10)
+        start_time = time.strftime("%Y %m %d %H %M %S", start_time)
+        log = helper.collect_through_power_off(helper.generate_signed(f"PicTimes {start_time}"))
         assert helper.signed(log)
         assert helper.signature_valid(log)
         assert helper.acknowledged(log)
         assert helper.no_logged_errors(log)
         assert helper.executed(log)
+        assert helper.payload_power_off(log)
 
     ## error: incorrect number of  parameters signed
     #

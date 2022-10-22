@@ -14,6 +14,7 @@
 
 import helper
 from collections import namedtuple
+import time
 
 ## log entry field names
 Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
@@ -31,3 +32,16 @@ class TestAvionicsInitialization:
         log = helper.collect_initialization()
         assert helper.initialization_complete(log)
         assert helper.no_logged_errors(log)
+
+        """Set the realtime clock"""
+
+    ## Set the realtime clock
+    #
+    def test_set_realtime_clock(self):
+
+        utc_time = time.strftime("%Y %m %d %H %M %S", time.gmtime());
+        log = helper.collect(f"SetClock {utc_time}")
+        assert helper.not_signed(log)
+        assert helper.acknowledged(log)
+        assert helper.no_logged_errors(log)
+        assert helper.executed(log)
