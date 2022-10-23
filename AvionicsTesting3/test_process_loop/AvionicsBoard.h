@@ -176,14 +176,6 @@ public:
 
     bool unset_clock();
 
-private:
-    /**
-     * @brief Initialize I2C bus switch
-     *
-     */
-
-    bool busswitch_begin();
-
     /**
      * @brief Enable I2C bus switch
      *
@@ -197,6 +189,14 @@ private:
      */
 
     bool busswitch_disable();
+
+private:
+    /**
+     * @brief Initialize I2C bus switch
+     *
+     */
+
+    bool busswitch_begin();
 
     /**
      * @brief Avionics Board member variables

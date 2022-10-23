@@ -10,6 +10,7 @@
 
 #include "mock_power_board.h"
 #include "log_utility.h"
+#include "AvionicsBoard.h"
 
 MockPowerBoard::MockPowerBoard(){};
 
@@ -35,7 +36,9 @@ bool MockPowerBoard::begin()
 String MockPowerBoard::get_power_status()
 {
 
-    // todo: open non-critical I2C bus, access power data from Power Board
+    // todo: access power data from Power Board
+    extern AvionicsBoard avionics;
+    avionics.busswitch_enable();
 
     switch (m_power_status)
     {
@@ -52,6 +55,7 @@ String MockPowerBoard::get_power_status()
     default:
         return "U";
     };
+    avionics.busswitch_disable();
 };
 
 /**
