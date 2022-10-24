@@ -4,8 +4,8 @@
  * @brief SilverSat driver for Endurosat EPS I
  * @version 1.0.0
  * @date 2022-10-23
- * 
- * 
+ *
+ *
  */
 
 #include "EPS_I.h"
@@ -16,55 +16,69 @@
 // #include "wiring_private.h"
 /**
  * @brief Construct a new eps i::eps i object
- * 
- * @param sensorID unique id for sensor
+ *
  */
-EPS_I::EPS_I(int32_t sensorID) {
-  _sensorID = sensorID;
+EPS_I::EPS_I(void)
+{
 }
 
-EPS_I::~EPS_I(void) {
-  if (temperature_sensor) delete temperature_sensor;
-  if (voltage_sensor) delete voltage_sensor;
-  if (current_sensor) delete current_sensor;
-  if (i2c_device) delete i2c_device;
-}
-
-
-bool EPS_I::begin(uint8_t 12c_address, TwoWire *wire, int32t sensor_id) {
-  if (i2c_device) {
-    delete i2c_device; // remove old interface
+/**
+ * @brief Set up the hardware and initialize I2C
+ *
+ * @param i2c_address address of the device
+ * @param wire wire object for I2C connections
+ * @return true successful
+ * @return false error
+ */
+bool EPS_I::begin(uint8_t i2c_address, TwoWire *wire)
+{
+  if (!i2c_dev)
+  {
+    i2c_dev = new Adafruit_I2CDevice(i2c_address, wire);
   }
 
-  i2c_device = new Adafruit_I2CDevice(i2c_address, wire);
+  if (i2c_dev->begin())
+  {
+    return false;
+  }
+  return _init();
 }
-bool EPS_I::getEvent(sensors_event_t *event) {
-  /* Clear the event */
-  memset(event, 0, sizeof(sensors_event_t));
 
-  event->version   = sizeof(sensors_event_t);
-  event->sensor_id = _sensorID;
-  event->type      = SENSOR_TYPE_PRESSURE;
-  event->timestamp = 0;
-  event->pressure = 123.0F;
+/**
+ * @brief Initialization code for EPS I
+ *
+ * @return true if successful
+ * @return false error
+ */
+bool EPS_I::_init(void){
+  // todo: initialize EPS I
   return true;
 }
 
-void EPS_I::getSensor(sensor_t *sensor) {
-  /* Clear the sensor_t object */
-  memset(sensor, 0, sizeof(sensor_t));
+/**
+ * @brief Read 16 bits of data from the EPS I
+ * 
+ * @return raw 16 bits in correct endian format
+ */
+uint16_t EPS_I::read_value(uint8_t command)
+{
+  uint8_t return_buffer[2];
+  uint16_t value;
 
-  /* Insert the sensor name in the fixed length char array */
-  strncpy (sensor->name, "EPS_I", sizeof(sensor->name) - 1);
-  sensor->name[sizeof(sensor->name)- 1] = 0;
-  sensor->version     = 1;
-  sensor->sensor_id   = _sensorID;
-  sensor->type        = SENSOR_TYPE_PRESSURE;
-  sensor->min_delay   = 0;
-  sensor->max_value   = 300.0F;               // 300..1100 hPa
-  sensor->min_value   = 1100.0F;
-  sensor->resolution  = 0.01F;                // 0.01 hPa resolution
+  i2c_dev->write_then_read(&command, 1, return_buffer, 2, true);
+  value = return_buffer[1] | (return_buffer[0] << 8);
 
-  /* Clear the reserved section */
-  // memset(sensor->reserved, 0, sizeof(sensor->reserved));
+  return value;
+}
+
+/**
+ * @brief Write an 8-bit command and 8-bit state to the EPS I
+ * 
+ * @param command command to execute
+ * @param state state parameter for command
+ */
+
+void EPS_I::write_command(uint8_t command, uint8_t state)
+{
+  i2c_dev->write(&state, 1, true, &command, 1);
 }

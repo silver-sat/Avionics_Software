@@ -14,11 +14,14 @@
 #include <Adafruit_I2CDevice.h>
 #include <Adafruit_Sensor.h>
 #include "Arduino.h"
+
+constexpr uint8_t EPS_I_I2C_ADDRESS{0x18}; /**< I2C address of EPS I */
+
 /**
  * @brief Read commands
  *
  */
-typedef enum
+enum class EPS_I_Read_Commands
 {
   // ESPS Command = I2C Command
   // EPS parameter
@@ -166,12 +169,12 @@ typedef enum
   // Bits description in Table 10
   // N/A
 
-  GETCONFIGURATIONINFO_CONFIG_OUTPUTCONDITIONS = 0x18,
+  GETCONFIGURATIONINFO_CONFIG_OUTPUTCONDITIONS1 = 0x18,
   // Output Condition 1
   // Bits description in Table 11
   // N/A
 
-  GETCONFIGURATIONINFO_CONFIG_OUTPUTCONDITIONS = 0x19,
+  GETCONFIGURATIONINFO_CONFIG_OUTPUTCONDITIONS2 = 0x19,
   // Output Condition 2
   // Bits description in Table 12
   // N/A
@@ -440,9 +443,9 @@ typedef enum
   // Waiting time for the power lines to be enabled after Power Up
   // N/A
   // min
-} eps_i_read_commands;
+};
 
-typedef enum
+enum class EPS_I_Write_Commands
 {
   // ESPS Command = I2C Command
   // EPS Parameter
@@ -713,23 +716,57 @@ typedef enum
   // PowerUp Delay
   // 5 min
   // Waiting time for the power lines to be enabled after Power Up [min]
-} eps_i_write_commands;
+};
 
 class EPS_I : public Adafruit_Sensor
 {
 
 public:
-  /* Constructor */
-  EPS_I(int32_t);
+  /**
+   * @brief Construct a new EPS I::EPS I object
+   *
+   */
 
-  bool getEvent(sensors_event_t *);
-  void getSensor(sensor_t *);
+  EPS_I(void);
 
-protected:
-  Adafruit_I2CDevice *i2c_device{};
+  /**
+   * @brief Set up the hardware and initialize I2C
+   *
+   * @param i2c_address address of the device
+   * @param wire wire object for I2C connections
+   * @return true successful
+   * @return false error
+   */
+
+  bool begin(uint8_t i2c_address, TwoWire *wire);
 
 private:
-  int32_t _sensorID{1};
+  
+  /**
+   * @brief Initialization code for EPS I
+   *
+   * @return true if successful
+   * @return false error
+   */
+  bool _init(void);
+
+  Adafruit_I2CDevice *i2c_dev{};
+
+  /**
+ * @brief Read 16 bits of data from the EPS I
+ * 
+ * @return raw 16 bits in correct endian format
+ */
+uint16_t read_value(uint8_t command);
+
+/**
+ * @brief Write an 8-bit command and 8-bit state to the EPS I
+ * 
+ * @param command command to execute
+ * @param state state parameter for command
+ */
+void write_command(uint8_t command, uint8_t state);
+
 };
 
 #endif // EPS_I_H
