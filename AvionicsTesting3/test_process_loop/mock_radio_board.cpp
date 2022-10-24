@@ -87,6 +87,9 @@ bool MockRadioBoard::receive_command(char *buffer, const size_t length)
                     continue; // ignore additional FENDs
                 }
                 // todo: receive Radio Board status
+                // todo: receive Radio Board "ACK + command"
+                // todo: receive Radio Board "NACK + command"
+                // todo: receive Radio Board "RES + data", success and fail
                 m_receiving_type = false;
 
                 if (character != DATA_FRAME)
