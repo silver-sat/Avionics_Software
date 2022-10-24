@@ -10,15 +10,34 @@
 
 #include "EPS_I.h"
 
-#include <avr/pgmspace.h>
-#include <limits.h>
-#include "pins_arduino.h"
-#include "wiring_private.h"
-
+// #include <avr/pgmspace.h>
+// #include <limits.h>
+// #include "pins_arduino.h"
+// #include "wiring_private.h"
+/**
+ * @brief Construct a new eps i::eps i object
+ * 
+ * @param sensorID unique id for sensor
+ */
 EPS_I::EPS_I(int32_t sensorID) {
   _sensorID = sensorID;
 }
 
+EPS_I::~EPS_I(void) {
+  if (temperature_sensor) delete temperature_sensor;
+  if (voltage_sensor) delete voltage_sensor;
+  if (current_sensor) delete current_sensor;
+  if (i2c_device) delete i2c_device;
+}
+
+
+bool EPS_I::begin(uint8_t 12c_address, TwoWire *wire, int32t sensor_id) {
+  if (i2c_device) {
+    delete i2c_device; // remove old interface
+  }
+
+  i2c_device = new Adafruit_I2CDevice(i2c_address, wire);
+}
 bool EPS_I::getEvent(sensors_event_t *event) {
   /* Clear the event */
   memset(event, 0, sizeof(sensors_event_t));
