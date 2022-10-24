@@ -15,13 +15,23 @@
 #include <Adafruit_Sensor.h>
 #include "Arduino.h"
 
+/**
+ * @brief EPS_I Constants
+ *
+ */
 constexpr uint8_t EPS_I_I2C_ADDRESS{0x18}; /**< I2C address of EPS I */
+constexpr float GETBATTERYINFO_BATTERY_BATT_VOLT_COEFFICIENT{0.0023394775};
+constexpr float GETBATTERYINFO_BATTERY_BATT_CURR_COEFFICIENT{0.0030517578};
+constexpr float GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE{0.00390625};
+constexpr float GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE{-0.0624};
+constexpr float GETSOLARPANELSINFO_SOLAR_Z_CURR_NEG_COEFFICIENT{0.0006103516};
+constexpr float GETBUSESINFO_BUSES_BUS_5V_CURR_COEFFICIENT{0.0020345052};
 
 /**
  * @brief Read commands
  *
  */
-enum class EPS_I_Read_Commands
+enum class EPS_I_Read_Command
 {
   // ESPS Command = I2C Command
   // EPS parameter
@@ -444,8 +454,49 @@ enum class EPS_I_Read_Commands
   // N/A
   // min
 };
+/**
+ * @brief Note 2 constants
+ *
+ */
+enum class EPS_I_Query_Watchdog
+{
+  Ignore = 0,       // Used only for EnduroSat Protocol Stack I (ESPS I) to read current values.
+  Disable = 1,      // The Watchdog is turned off, not in use.
+  Payload_Auto = 2, // The Watchdog resets only the payload. Starts automatically, after first command resetWatchdogTimer (0x72).
+  Payload_ON = 3,   // The Watchdog resets only the payload. Starts immediately after power ON.
+  System_Auto = 4,  // The Watchdog resets the whole system. Starts automatically, after first command resetWatchdogTimer (0x72).
+  System_ON = 5,    // The Watchdog resets the whole system. Starts immediately after power ON.
+};
 
-enum class EPS_I_Write_Commands
+// todo: Table 10
+
+enum class EPS_I_Output_Condition_1
+{
+  // Least Significant Bit
+  SWSelfLock = 0,     // SW Self Lock
+  VBATTENEnable = 1,  // Battery BUS
+  BCROutENEnable = 2, // BCR BUS
+  SHD_3_3V = 3,       // Enable 3.3V BUS
+  SHD_5V = 4,         // Enable 5V BUS
+                      // RESERVED = 5,
+                      // RESERVED = 6,
+  OUT1 = 7,           // Output 1 / Payload
+  OUT2 = 8,           // Output 2
+  OUT3 = 9,           // Output 3
+  OUT4 = 10,          // Output 4/ OBC
+  OUT5 = 11,          // Output 5/ UHF
+  OUT6 = 12,          // Output 6
+  Heater_1 = 13,      // Battery heater 1
+  Heater_2 = 14,      // Battery heater 2
+  Heater_3 = 15,      // Battery heater 3
+                      // Most Significant Bit
+};
+
+// todo: Table 12
+// todo: Table 13
+// todo: Table 14
+
+enum class EPS_I_Write_Command
 {
   // ESPS Command = I2C Command
   // EPS Parameter
@@ -718,7 +769,21 @@ enum class EPS_I_Write_Commands
   // Waiting time for the power lines to be enabled after Power Up [min]
 };
 
-class EPS_I : public Adafruit_Sensor
+// todo: Write command state
+// enum class EPS_I_Write_State
+// {
+//   OFF = 0,
+//   ON = 1,
+//   FORCED_OFF = 2,
+//   FORCED_ON = 3,
+//   TOGGLE = 5,
+//   SET_TO_DEFAULT = 6,
+// };
+
+// todo: Note 3
+// todo: Note 4
+
+class EPS_I
 {
 
 public:
@@ -727,7 +792,7 @@ public:
    *
    */
 
-  EPS_I(void);
+  EPS_I();
 
   /**
    * @brief Set up the hardware and initialize I2C
@@ -740,33 +805,117 @@ public:
 
   bool begin(uint8_t i2c_address, TwoWire *wire);
 
+  /**
+   * @brief Get the battery voltage
+   *
+   * @return float voltage
+   */
+
+  float getBatteryVoltage(void);
+
+  /**
+   * @brief Get the battery current
+   *
+   * @return float amperage
+   */
+
+  float getBatteryCurrent(void);
+
+  /**
+   * @brief Get the temperature at sensor 1
+   *
+   * @return float temperature
+   */
+
+  float getTemperatureSensor1(void);
+
+  /**
+   * @brief Get the temperature at sensor 2
+   *
+   * @return float temperature
+   */
+
+  float getTemperatureSensor2(void);
+
+  /**
+   * @brief Get the temperature at sensor 3
+   *
+   * @return float temperature
+   */
+
+  float getTemperatureSensor3(void);
+
+  /**
+   * @brief Get the Z negative panel current
+   *
+   * @return float amperage
+   */
+
+  float getZNegativeCurrent(void);
+
+  /**
+   * @brief Get the 5 volt current
+   *
+   * @return float voltage
+   */
+
+  float get5VCurrent(void);
+
+  /**
+   * @brief Get the heater 1 state
+   *
+   * @return bool true ON
+   * @return bool false OFF
+   */
+
+  bool getHeater1State(void);
+
+  /**
+   * @brief Get the heater 2 state
+   *
+   * @return bool true ON
+   * @return bool false OFF
+   */
+
+  bool getHeater2State(void);
+
+  /**
+   * @brief Get the heater 3 state
+   *
+   * @return bool true ON
+   * @return bool false OFF
+   */
+
+  bool getHeater3State(void);
+
 private:
-  
   /**
    * @brief Initialization code for EPS I
    *
    * @return true if successful
    * @return false error
    */
+
   bool _init(void);
 
-  Adafruit_I2CDevice *i2c_dev{};
+  /**
+   * @brief Read 16 bits of data from the EPS I
+   *
+   * @return raw 16 bits in correct endian format
+   */
+
+  uint16_t read_value(EPS_I_Read_Command command);
 
   /**
- * @brief Read 16 bits of data from the EPS I
- * 
- * @return raw 16 bits in correct endian format
- */
-uint16_t read_value(uint8_t command);
+   * @brief Write an 8-bit command and 8-bit state to the EPS I
+   *
+   * @param command command to execute
+   * @param state state parameter for command
+   */
 
-/**
- * @brief Write an 8-bit command and 8-bit state to the EPS I
- * 
- * @param command command to execute
- * @param state state parameter for command
- */
-void write_command(uint8_t command, uint8_t state);
+  void write_command(EPS_I_Write_Command command, uint8_t state);
 
+  Adafruit_I2CDevice *i2c_dev;
 };
 
 #endif // EPS_I_H
