@@ -2,7 +2,7 @@
  * @file ExecuteCommand.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat commands
- * @version 1.1.0
+ * @version 1.1.1
  * @date 2022-07-25
  *
  *
@@ -11,23 +11,8 @@
 #ifndef EXECUTECOMMAND_H
 #define EXECUTECOMMAND_H
 
+#include "RTClib.h"
 #include <Arduino.h>
-
-/**
- * @brief date structure: UTC year, month, day, hour, minute, second
- *
- */
-
-// todo: consider refactor as DateTime
-struct TimeValue
-{
-    int year;   /**< year */
-    int month;  /**< month */
-    int day;    /**< day */
-    int hour;   /**< hour */
-    int minute; /**< minute */
-    int second; /**< second */
-};
 
 /**
  * @brief Command structure and processing
@@ -221,12 +206,12 @@ private:
 class CommandPicTimes : public ExecuteCommand
 {
 public:
-    CommandPicTimes(TimeValue time);
+    CommandPicTimes(DateTime time);
     bool acknowledge_command() override;
     bool execute_command() override;
 
 private:
-    TimeValue m_time;
+    DateTime m_time;
 };
 
 /**
@@ -237,12 +222,12 @@ private:
 class CommandSetClock : public ExecuteCommand
 {
 public:
-    CommandSetClock(TimeValue time);
+    CommandSetClock(DateTime time);
     bool acknowledge_command() override;
     bool execute_command() override;
 
 private:
-    TimeValue m_time;
+    DateTime m_time;
 };
 
 /**

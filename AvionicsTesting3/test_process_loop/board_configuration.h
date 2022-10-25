@@ -2,7 +2,7 @@
  * @file board_configuration.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Hardware definitions for Avionics Board
- * @version 1.0.0
+ * @version 1.0.1
  * @date 2022-08-11
  *
  *
@@ -33,9 +33,9 @@ constexpr unsigned PAYLOAD_TXD{1u};        /**< payload TXD @hideinitializer */
 constexpr unsigned PAYLOAD_RXD{0u};        /**< payload RXD @hideinitializer */
 constexpr unsigned RADIO_TXD{13u};         /**< radio TXD @hideinitializer */
 constexpr unsigned RADIO_RXD{12u};         /**< radio TXD @hideinitializer */
-constexpr unsigned PLD_ON_A_INT{17u};          /**< payload on A @hideinitializer */
-constexpr unsigned PLD_ON_B_INT{18u};          /**< payload on B @hideinitializer */
-constexpr unsigned PLD_ON_C_INT{8u};           /**< payload on C @hideinitializer */
+constexpr unsigned PLD_ON_A_INT{17u};      /**< payload on A @hideinitializer */
+constexpr unsigned PLD_ON_B_INT{18u};      /**< payload on B @hideinitializer */
+constexpr unsigned PLD_ON_C_INT{8u};       /**< payload on C @hideinitializer */
 constexpr unsigned STATES_A_INT{9u};       /**< payload state A @hideinitializer */
 constexpr unsigned STATES_B_INT{2u};       /**< payload state B @hideinitializer */
 constexpr unsigned STATES_C_INT{5u};       /**< payload state C @hideinitializer */
@@ -52,9 +52,10 @@ constexpr unsigned RESET{0u};
  * RTC and IMU have the same addresses but are located on different buses
  */
 
-constexpr unsigned RTC_I2C_ADDRESS{0x68};  /**< realtime clock I2C address @hideinitializer */
-constexpr unsigned IMU_I2C_ADDRESS{0x68};  /**< inertial measurement unit I2C address @hideinitializer */
-constexpr unsigned FRAM_I2C_ADDRESS{0x50}; /**< FRAM I2C address @hideinitializer */
+constexpr unsigned RTC_I2C_ADDRESS{0x68};   /**< realtime clock I2C address @hideinitializer */
+constexpr unsigned IMU_I2C_ADDRESS{0x68};   /**< inertial measurement unit I2C address @hideinitializer */
+constexpr unsigned FRAM_I2C_ADDRESS{0x50};  /**< FRAM I2C address @hideinitializer */
+constexpr unsigned wait_for_i2c_device{10}; /**< wait for I2C device to become available */
 
 /**
  * @brief Global constants

@@ -2,7 +2,7 @@
  * @file IMU.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Implement inertial management unit
- * @version 1.0.0
+ * @version 1.0.1
  * @date 2022-08-02
  *
  *
@@ -30,6 +30,11 @@ IMU::IMU(){
 
 bool IMU::begin(TwoWire *theWire)
 {
+    unsigned long delayStartTime{millis()};
+    // wait for IMU to become available
+    while ((!m_mpu.begin(IMU_I2C_ADDRESS, theWire)) && ((millis() - delayStartTime) < wait_for_i2c_device))
+    {
+    }
     if (!m_mpu.begin(IMU_I2C_ADDRESS, theWire))
     {
         Log.errorln("Cannot initialize inertial management unit");

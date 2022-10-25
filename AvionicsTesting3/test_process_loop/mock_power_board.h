@@ -2,7 +2,7 @@
  * @file mock_power_board.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Test the Avionics Board mock Power Board
- * @version 1.0.1
+ * @version 1.1.0
  * @date 2022-07-24
  *
  *
@@ -53,14 +53,14 @@ public:
      * @return String letter grade for beacon
      */
 
-    String get_power_status();
+    String get_status();
 
     /**
      * @brief Get the power detail
      *
      * @return String power details
      */
-    String get_power_detail();
+    String get_detail();
 
 private:
     PowerStatus m_power_status{fair};

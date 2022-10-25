@@ -1,36 +1,36 @@
 /**
- * @file Watchdog.h
+ * @file ExternalWatchdog.h
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief Watchdog for SilverSat
- * @version 1.0.0
+ * @brief ExternalWatchdog for SilverSat
+ * @version 1.0.1
  * @date 2022-08-01
  *
  *
  */
 
-#ifndef TEST_WATCHDOG_H
-#define TEST_WATCHDOG_H
+#ifndef EXTERNAL_WATCHDOG_H
+#define EXTERNAL_WATCHDOG_H
 
 /**
- * @brief Watchdog constants
+ * @brief ExternalWatchdog constants
  *
  */
 
 constexpr unsigned long watchdog_lower_boundary{24}; /**< 23.5 milliseconds */
 
 /**
- * @brief Watchdog
+ * @brief ExternalWatchdog
  *
  */
-class Watchdog
+class ExternalWatchdog
 {
 public:
   /**
-   * @brief Construct a new Watchdog object
+   * @brief Construct a new ExternalWatchdog object
    *
    */
 
-  Watchdog();
+  ExternalWatchdog();
 
   /**
    * @brief Trigger the watchdog
@@ -55,4 +55,4 @@ private:
   int m_reset_pin_state{};
 };
 
-#endif // TEST_WATCHDOG_H
+#endif // EXTERNAL_WATCHDOG_H

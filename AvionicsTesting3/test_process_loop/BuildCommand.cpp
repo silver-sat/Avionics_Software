@@ -71,12 +71,13 @@ BuildCommand::BuildCommand(String tokens[], size_t token_count)
             if (tokens_are_digits)
             {
 
-                m_command = new CommandPicTimes({tokens[1].toInt(),
-                                                tokens[2].toInt(),
-                                                tokens[3].toInt(),
-                                                tokens[4].toInt(),
-                                                tokens[5].toInt(),
-                                                tokens[6].toInt()});
+                m_command = new CommandPicTimes(DateTime(
+                    static_cast<uint16_t>(tokens[1].toInt()),
+                    static_cast<uint8_t>(tokens[2].toInt()),
+                    static_cast<uint8_t>(tokens[3].toInt()),
+                    static_cast<uint8_t>(tokens[4].toInt()),
+                    static_cast<uint8_t>(tokens[5].toInt()),
+                    static_cast<uint8_t>(tokens[6].toInt())));
                 return;
             }
         }
@@ -126,12 +127,13 @@ BuildCommand::BuildCommand(String tokens[], size_t token_count)
             }
             if (tokens_are_digits)
             {
-                m_command = new CommandSetClock({tokens[1].toInt(),
-                                                tokens[2].toInt(),
-                                                tokens[3].toInt(),
-                                                tokens[4].toInt(),
-                                                tokens[5].toInt(),
-                                                tokens[6].toInt()});
+                m_command = new CommandSetClock(DateTime(
+                    static_cast<uint16_t>(tokens[1].toInt()),
+                    static_cast<uint8_t>(tokens[2].toInt()),
+                    static_cast<uint8_t>(tokens[3].toInt()),
+                    static_cast<uint8_t>(tokens[4].toInt()),
+                    static_cast<uint8_t>(tokens[5].toInt()),
+                    static_cast<uint8_t>(tokens[6].toInt())));
                 return;
             }
         }
@@ -152,7 +154,7 @@ BuildCommand::BuildCommand(String tokens[], size_t token_count)
             return;
         }
     }
-    else if (tokens[0] == "Watchdog")
+    else if (tokens[0] == "ExternalWatchdog")
     {
         if (token_count == 0)
         {
