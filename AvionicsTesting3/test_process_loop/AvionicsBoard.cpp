@@ -52,7 +52,6 @@ bool AvionicsBoard::begin()
 
     Log.traceln("Initializing non-critical I2C bus");
     busswitch_begin();
-    // todo: disable busswitch full time?
     busswitch_enable();
     Wire1.begin();
     busswitch_disable();
@@ -142,7 +141,6 @@ String AvionicsBoard::get_timestamp()
 
 bool AvionicsBoard::set_beacon_interval(int seconds)
 {
-    // todo: set beacon interval minimum and maximum
     if ((seconds != 0) && ((seconds < minimum_beacon_interval) || (seconds > maximum_beacon_interval)))
     {
         Log.errorln("Beacon interval must be zero or between %d and %d, inclusive", 

@@ -2,7 +2,7 @@
  * @file mock_payload_board.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Test the Avionics Board mock Payload Board
- * @version 1.0.0
+ * @version 1.0.1
  * @date 2022-07-24
  *
  *
@@ -30,8 +30,17 @@ MockPayloadBoard::MockPayloadBoard(){
 
 bool MockPayloadBoard::begin()
 {
-
     Log.traceln("Payload Board initializing");
+    pinMode(PLD_ON_A_INT, OUTPUT);
+    pinMode(PLD_ON_B_INT, OUTPUT);
+    pinMode(PLD_ON_C_INT, OUTPUT);
+    pinMode(STATES_A_INT, OUTPUT);
+    pinMode(STATES_B_INT, OUTPUT);
+    pinMode(STATES_C_INT, OUTPUT);
+    pinMode(SHUTDOWN_A, INPUT);
+    pinMode(SHUTDOWN_B, INPUT);
+    pinMode(SHUTDOWN_C, INPUT);
+
     return true;
 };
 
@@ -45,12 +54,10 @@ bool MockPayloadBoard::begin()
 bool MockPayloadBoard::photo()
 {
 
-    // todo: check for adequate power
     if (!m_payload_active)
     {
-
         Log.noticeln("Starting photo session");
-        m_payload_active = true;
+        // todo: delete timing of photo for flatsat test
         m_action_duration = photo_duration;
         m_last_activity_time = millis();
         set_mode_photo();
@@ -73,12 +80,10 @@ bool MockPayloadBoard::photo()
 
 bool MockPayloadBoard::tweet()
 {
-    // todo: check for adequate power
     if (!m_payload_active)
     {
-
         Log.noticeln("Starting Twitter session");
-        m_payload_active = true;
+        // todo: delete timing of tweet session for flatsat test
         m_action_duration = tweet_duration;
         m_last_activity_time = millis();
         set_mode_comms();
@@ -101,6 +106,7 @@ bool MockPayloadBoard::tweet()
 
 bool MockPayloadBoard::check_shutdown()
 {
+    // todo: delete for flatsat test
     if (m_payload_active && millis() - m_last_activity_time > m_action_duration)
     {
         end_activity();
@@ -108,7 +114,6 @@ bool MockPayloadBoard::check_shutdown()
     if (power_down_signal_is_set())
     {
         Log.verboseln("Powering down payload");
-        // todo: verify timing of shutdown signal reset
         m_power_down_signal = false;
         power_down();
     }
@@ -121,7 +126,7 @@ bool MockPayloadBoard::check_shutdown()
  * @return true successful
  * @return false error
  */
-
+// todo: delete for flatsat test
 bool MockPayloadBoard::end_activity()
 {
     if (!m_payload_active)
@@ -132,7 +137,6 @@ bool MockPayloadBoard::end_activity()
     {
         Log.traceln("Payload activity ending");
     }
-    m_payload_active = false;
     m_power_down_signal = true;
     return true;
 };
@@ -146,12 +150,10 @@ bool MockPayloadBoard::end_activity()
 
 bool MockPayloadBoard::power_down()
 {
-    pinMode(PLD_ON_A, OUTPUT);
-    digitalWrite(PLD_ON_A, LOW);
-    pinMode(PLD_ON_B, OUTPUT);
-    digitalWrite(PLD_ON_B, LOW);
-    pinMode(PLD_ON_C, OUTPUT);
-    digitalWrite(PLD_ON_C, LOW);
+    digitalWrite(PLD_ON_A_INT, LOW);
+    digitalWrite(PLD_ON_B_INT, LOW);
+    digitalWrite(PLD_ON_C_INT, LOW);
+    m_payload_active = false;
     Log.verboseln("Payload power off");
     return true;
 };
@@ -165,12 +167,10 @@ bool MockPayloadBoard::power_down()
 
 bool MockPayloadBoard::power_up()
 {
-    pinMode(PLD_ON_A, OUTPUT);
-    digitalWrite(PLD_ON_A, HIGH);
-    pinMode(PLD_ON_B, OUTPUT);
-    digitalWrite(PLD_ON_B, HIGH);
-    pinMode(PLD_ON_C, OUTPUT);
-    digitalWrite(PLD_ON_C, HIGH);
+    digitalWrite(PLD_ON_A_INT, HIGH);
+    digitalWrite(PLD_ON_B_INT, HIGH);
+    digitalWrite(PLD_ON_C_INT, HIGH);
+    m_payload_active = true;
     Log.verboseln("Payload power on");
     return true;
 };
@@ -183,7 +183,9 @@ bool MockPayloadBoard::power_up()
  */
 bool MockPayloadBoard::set_mode_comms()
 {
-    // todo: set appropriate GPIO pins for tweet
+    digitalWrite(STATES_A_INT, HIGH);
+    digitalWrite(STATES_B_INT, HIGH);
+    digitalWrite(STATES_C_INT, HIGH);
     Log.verboseln("Payload mode set to tweet");
     if (m_photo_count > 0)
     {
@@ -200,7 +202,9 @@ bool MockPayloadBoard::set_mode_comms()
  */
 bool MockPayloadBoard::set_mode_photo()
 {
-    // todo: set appropriate GPIO pins for photo
+    digitalWrite(STATES_A_INT, LOW);
+    digitalWrite(STATES_B_INT, LOW);
+    digitalWrite(STATES_C_INT, LOW);
     Log.verboseln("Payload mode set to photo");
     m_photo_count += 1;
     return true;
@@ -215,6 +219,10 @@ bool MockPayloadBoard::set_mode_photo()
 
 bool MockPayloadBoard::power_down_signal_is_set()
 {
+    bool a = digitalRead(SHUTDOWN_A);
+    bool b = digitalRead(SHUTDOWN_B);
+    bool c = digitalRead(SHUTDOWN_C);
+    // todo: return (a + b + c) >= 2;
     return m_power_down_signal;
 };
 

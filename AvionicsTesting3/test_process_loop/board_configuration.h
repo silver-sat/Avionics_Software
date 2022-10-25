@@ -33,9 +33,9 @@ constexpr unsigned PAYLOAD_TXD{1u};        /**< payload TXD @hideinitializer */
 constexpr unsigned PAYLOAD_RXD{0u};        /**< payload RXD @hideinitializer */
 constexpr unsigned RADIO_TXD{13u};         /**< radio TXD @hideinitializer */
 constexpr unsigned RADIO_RXD{12u};         /**< radio TXD @hideinitializer */
-constexpr unsigned PLD_ON_A{17u};          /**< payload on A @hideinitializer */
-constexpr unsigned PLD_ON_B{18u};          /**< payload on B @hideinitializer */
-constexpr unsigned PLD_ON_C{8u};           /**< payload on C @hideinitializer */
+constexpr unsigned PLD_ON_A_INT{17u};          /**< payload on A @hideinitializer */
+constexpr unsigned PLD_ON_B_INT{18u};          /**< payload on B @hideinitializer */
+constexpr unsigned PLD_ON_C_INT{8u};           /**< payload on C @hideinitializer */
 constexpr unsigned STATES_A_INT{9u};       /**< payload state A @hideinitializer */
 constexpr unsigned STATES_B_INT{2u};       /**< payload state B @hideinitializer */
 constexpr unsigned STATES_C_INT{5u};       /**< payload state C @hideinitializer */
@@ -62,5 +62,6 @@ constexpr unsigned FRAM_I2C_ADDRESS{0x50}; /**< FRAM I2C address @hideinitialize
  */
 
 constexpr unsigned long seconds_to_milliseconds{1000}; /**< conversion factor for time in seconds @hideinitializer */
+constexpr unsigned long minutes_to_seconds{60};        /**< conversion factor for time in minutes @hideinitializer */
 
 #endif // BOARD_CONFIGURATION_H

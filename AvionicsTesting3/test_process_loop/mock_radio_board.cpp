@@ -43,7 +43,7 @@ bool MockRadioBoard::begin()
     Serial1.write(FEND); // send initial sync to recover from incomplete message after board reset
     Serial1.write(FEND);
     return true;
-};
+}
 
 /**
  * @brief Local command to deploy antenna
@@ -59,7 +59,7 @@ bool MockRadioBoard::deploy_antenna()
     Serial1.write(DEPLOY_ANTENNA);
     Serial1.write(FEND);
     return true;
-};
+}
 
 /**
  * @brief Assemble command from Serial1 port
@@ -168,7 +168,7 @@ bool MockRadioBoard::receive_command(char *buffer, const size_t length)
         }
     }
     return false;
-};
+}
 
 /**
  * @brief Send beacon
@@ -185,7 +185,7 @@ void MockRadioBoard::send_beacon(Beacon beacon)
     Serial1.write(BEACON);
     Serial1.write(beacon_data.c_str());
     Serial1.write(FEND);
-};
+}
 
 /**
  * @brief Send message
@@ -205,7 +205,7 @@ bool MockRadioBoard::send_message(Message message)
     Serial1.write(message_data.c_str());
     Serial1.write(FEND);
     return true;
-};
+}
 
 /**
  * @brief Get Radio Board status
@@ -221,4 +221,20 @@ String MockRadioBoard::get_status()
     Serial1.write(FEND);
     // todo: retrieve and store Radio Board status
     return "unknown";
-};
+}
+
+/**
+ * @brief Send halt local command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool MockRadioBoard::send_halt()
+{
+    Serial1.write(FEND);
+    Serial1.write(HALT);
+    Serial1.write(FEND);
+    Log.traceln("Halt local command sent");
+    return true;
+}

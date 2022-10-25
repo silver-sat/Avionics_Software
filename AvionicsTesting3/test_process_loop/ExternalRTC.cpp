@@ -26,7 +26,6 @@ ExternalRTC::ExternalRTC(){};
  */
 
 // todo: does not fail if no clock attached
-// todo: clock fails on power change (e.g. adding 5v to board)
 // todo: clock fails on processor reset
 
 bool ExternalRTC::begin(TwoWire *theWire)

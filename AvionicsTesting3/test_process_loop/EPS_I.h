@@ -454,6 +454,7 @@ enum class EPS_I_Read_Command
   // N/A
   // min
 };
+
 /**
  * @brief Note 2 constants
  *
@@ -468,7 +469,23 @@ enum class EPS_I_Query_Watchdog
   System_ON = 5,    // The Watchdog resets the whole system. Starts immediately after power ON.
 };
 
-// todo: Table 10
+/**
+ * @brief Table 10 constants: Command 23
+ *
+ */
+
+enum class EPS_I_Input_Condition_1
+{
+  // Least Significant Bit
+  KS_Lock_Reset = 0 // Reset SW Self Lock
+                    // Unused
+                    // Most Significant Bit
+};
+
+/**
+ * @brief Table 11 constants: Command 24
+ *
+ */
 
 enum class EPS_I_Output_Condition_1
 {
@@ -492,9 +509,88 @@ enum class EPS_I_Output_Condition_1
                       // Most Significant Bit
 };
 
-// todo: Table 12
-// todo: Table 13
-// todo: Table 14
+/**
+ * @brief Table 12 constants: Command 25
+ *
+ */
+
+enum class EPS_I_Output_Condition_2
+{
+  // Least Significant Bit
+  LUP_3_3V = 0,                   // Latch-up Protected output 3.3V (High Level - OFF)
+  LUP_5V = 1,                     // Latch-up Protected output 5V (High Level - OFF)
+  SHDChrg = 2,                    // Shutdown Battery Charger (High Level - OFF) Maximum Current 230mA.
+  Fast_Charge_230mA0 = 3,         // Fast battery charge. Maximum current limit is increased with 230mA
+  Fast_Charge_230mA1 = 4,         // Fast battery charge. Maximum current limit is increased with 230mA
+  I2C_PULLUP_RES_10K = 5,         // Pull up resistor for I2 C communication (10kΩ)
+  I2C_PULLUP_RES_4K7 = 6,         // Pull up resistor for I2 C communication (4.7kΩ)
+  RS485_120_OHM_TERMINATING_RES = 7, // Terminating resistor for RS485 communication (120Ω)
+  OUT7 = 8,                       // Output 7
+  OUT8 = 9,                       // Output 8
+                                  // 10 unused
+                                  // 11 unused
+                                  // 12 unused
+                                  // 13 unused
+                                  // 14 unused
+                                  // 15 unused
+                                  // Most Significant Bit
+};
+
+/**
+ * @brief Table 13 constants: Command 43
+ *
+ */
+
+enum class EPS_I_Defaults_1
+{
+  // Least Significant Bit
+  LUP_3_3V_Default = 0,           //   State on power up ofoutput “LUP 3.3V” (High Level - OFF)
+  LUP_5V_Default = 1,             // State on power up of output “LUP 5V” (High Level - OFF)
+  Fast_Charge_230mA_Default0 = 2, // State on power up of output “Fast Charge +230mA”
+  Fast_Charge_230mA_Default1 = 3, // State on power up of output “Fast Charge +2300mA”
+  I2C_PULLUP_RES_10K = 4,         // Pull up resistor for I2C communication (10kΩ)
+  I2C_PULLUP_RES_4K7 = 5,         // Pull up resistor for I2C communication (4.7kΩ)
+  RS485_120_OHM_TERMINATING_RES = 6, // Terminating resistor for RS485 communication (120Ω)
+                                  // 7 unused
+                                  // 8 unused
+                                  // 9 unused
+                                  // 10 unused
+                                  // 10 unused
+                                  // 11 unused
+                                  // 12 unused
+                                  // 13 unused
+                                  // 14 unused
+                                  // 15 unused
+                                  // Most Significant Bit
+};
+
+/**
+ * @brief Table 14 constants: Command 44
+ *
+ */
+
+enum class EPS_I_Defaults_2
+{
+  // Least Significant Bit
+  Output_1_Default = 0, // State on power up of output OUT 1
+  Output_2_Default = 1, // State on power up of output OUT 2
+  Output_3_Default = 2, // State on power up of output OUT 3
+  Output_4_Default = 3, // State on power up of output OUT 4
+  Output_5_Default = 4, // State on power up of output OUT 5
+  Output_6_Default = 5, // State on power up of output OUT 6
+  Output_7_Default = 6, // State on power up of output OUT 7
+  Output_8_Default = 7, // State on power up of output OUT 8
+                        // 8 unused
+                        // 9 unused
+                        // 10 unused
+                        // 10 unused
+                        // 11 unused
+                        // 12 unused
+                        // 13 unused
+                        // 14 unused
+                        // 15 unused
+                        // Most Significant Bit
+};
 
 enum class EPS_I_Write_Command
 {
@@ -769,19 +865,52 @@ enum class EPS_I_Write_Command
   // Waiting time for the power lines to be enabled after Power Up [min]
 };
 
-// todo: Write command state
-// enum class EPS_I_Write_State
-// {
-//   OFF = 0,
-//   ON = 1,
-//   FORCED_OFF = 2,
-//   FORCED_ON = 3,
-//   TOGGLE = 5,
-//   SET_TO_DEFAULT = 6,
-// };
+/**
+ * @brief Write command states for 0x00 to 0x17
+ *
+ * 0x18 accepts only 5, toggle
+ *
+ */
+enum class EPS_I_Write_State
+{
+  OFF = 0,            // turns in ON or OFF temporarily (until the next command, reset or internal algorithm are required to change it)
+  ON = 1,             // turns in ON or OFF temporarily (until the next command, reset or internal algorithm are required to change it)
+  FORCED_OFF = 2,     // turns it ON or OFF regardless of internal algorithms (until the next command or reset)
+  FORCED_ON = 3,      // turns it ON or OFF regardless of internal algorithms (until the next command or reset)
+  TOGGLE = 5,         // toggles the state of an output for the time set by the 0x7E command (default: 2 seconds)
+  SET_TO_DEFAULT = 6, // sets the output temporarily to the default state
+};
 
-// todo: Note 3
-// todo: Note 4
+/**
+ * @brief Note 3 constants
+ *
+ */
+enum class EPS_I_Query_Watchdog_New_Type
+{
+  Ignore = 0,       // Used only for ESPS I to read current values.
+  Disable = 1,      // The Watchdog is turned off, not in use.
+  Payload_Auto = 2, // The Watchdog resets only the payload. Starts automatically, after first command resetWatchdogTimer (0x72).
+  Payload_ON = 3,   // The Watchdog resets only the payload. Starts immediately after power ON.
+  System_Auto = 4,  // The Watchdog resets the whole system. Starts automatically, after first command resetWatchdogTimer (0x72).
+  System_ON = 5,    // The Watchdog resets the whole system. Starts immediately after power ON.
+};
+
+/**
+ * @brief Note 4 constants
+ *
+ */
+enum class EPS_I_Reset_Power_Supply
+{
+  security_key0 = 0x00, // Payload reset (power failure simulation)
+  security_key1 = 0x12, // Soft MCU reset - waits for critical tasks to be done first
+  security_key2 = 0x5A, // Hard MCU reset - resets the MCU faster, however still tries to send a response
+  security_key3 = 0xDE, // ’Kill It!’ - resets MCU ASAP, no response is almost guaranteed.
+};
+
+/**
+ * @brief EPS_I class declaration
+ *
+ */
 
 class EPS_I
 {

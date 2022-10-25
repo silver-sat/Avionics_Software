@@ -277,15 +277,12 @@ bool CommandTweeSlee::execute_command()
 {
     auto status = ExecuteCommand::execute_command();
     Log.verboseln("TweeSlee");
+    extern MockPayloadBoard payload;
+    Log.traceln("Turning off payload power");
+    status = payload.power_down() && status;
     extern MockRadioBoard radio;
     Log.traceln("Sending local command: halt");
-    // todo: consider consolidating in radio board
-    // todo: shutdown payload before sending halt to radio
-    Serial1.write(FEND);
-    Serial1.write(HALT);
-    Serial1.write(FEND);
-    extern MockPayloadBoard payload;
-    return payload.end_activity() && status;
+    return radio.send_halt() && status;
 };
 
 /**

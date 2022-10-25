@@ -24,6 +24,8 @@ MockPowerBoard::MockPowerBoard(){};
 bool MockPowerBoard::begin()
 {
     Log.traceln("Power Board initializing");
+    // todo: consider opening I2C bus full time
+    // todo: consider getting initial values
     return true;
 }
 

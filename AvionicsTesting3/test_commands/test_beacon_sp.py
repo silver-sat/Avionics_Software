@@ -20,11 +20,11 @@ Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
 class TestBeaconSp:
     """Test BeaconSp command"""
 
-    ## 10 second spacing
+    ## 60 second spacing
     #
-    def test_beacon_sp_10(self):
+    def test_beacon_sp_60(self):
 
-        interval = 10
+        interval = 60
         log = helper.collect(f"BeaconSp {interval}")
         assert helper.not_signed(log)
         assert helper.acknowledged(log)
@@ -33,11 +33,11 @@ class TestBeaconSp:
         log = helper.collect_two_beacons(interval)
         assert helper.beacon_interval(interval, log)
 
-    ## 20 second spacing
+    ## 120 second spacing
     #
-    def test_beacon_sp_20(self):
+    def test_beacon_sp_120(self):
 
-        interval = 20
+        interval = 120
         log = helper.collect(f"BeaconSp {interval}")
         assert helper.not_signed(log)
         assert helper.acknowledged(log)
@@ -46,11 +46,11 @@ class TestBeaconSp:
         log = helper.collect_two_beacons(interval)
         assert helper.beacon_interval(interval, log)
 
-    ## 15 second spacing
+    ## 90 second spacing
     #
-    def test_beacon_sp_15(self):
+    def test_beacon_sp_90(self):
 
-        interval = 15
+        interval = 90
         log = helper.collect(f"BeaconSp {interval}")
         assert helper.not_signed(log)
         assert helper.acknowledged(log)
@@ -85,7 +85,7 @@ class TestBeaconSp:
     #
     def test_beacon_sp_two_param(self):
 
-        log = helper.collect("BeaconSp 10 20")
+        log = helper.collect("BeaconSp 100 200")
         assert helper.not_signed(log)
         assert helper.acknowledged(log)
         assert not helper.no_logged_errors(log)
@@ -101,11 +101,11 @@ class TestBeaconSp:
         assert not helper.no_logged_errors(log)
         assert not helper.executed(log)
 
-    ## 10 second spacing signed
+    ## 60 second spacing signed
     #
-    def test_beacon_sp_10_signed(self):
+    def test_beacon_sp_60_signed(self):
 
-        interval = 10
+        interval = 60
         log = helper.collect(helper.generate_signed(f"BeaconSp {interval}"))
         assert helper.signed(log)
         assert helper.signature_valid(log)
@@ -115,11 +115,11 @@ class TestBeaconSp:
         log = helper.collect_two_beacons(interval)
         assert helper.beacon_interval(interval, log)
 
-    ## 20 second spacing signed
+    ## 120 second spacing signed
     #
-    def test_beacon_sp_20_signed(self):
+    def test_beacon_sp_120_signed(self):
 
-        interval = 20
+        interval = 120
         log = helper.collect(helper.generate_signed(f"BeaconSp {interval}"))
         assert helper.signed(log)
         assert helper.signature_valid(log)
@@ -129,11 +129,11 @@ class TestBeaconSp:
         log = helper.collect_two_beacons(interval)
         assert helper.beacon_interval(interval, log)
 
-    ## 15 second spacing signed
+    ## 90 second spacing signed
     #
-    def test_beacon_sp_15_signed(self):
+    def test_beacon_sp_90_signed(self):
 
-        interval = 15
+        interval = 90
         log = helper.collect(helper.generate_signed(f"BeaconSp {interval}"))
         assert helper.signed(log)
         assert helper.signature_valid(log)
@@ -171,7 +171,7 @@ class TestBeaconSp:
     #
     def test_beacon_sp_two_param_signed(self):
 
-        log = helper.collect(helper.generate_signed("BeaconSp 10 20"))
+        log = helper.collect(helper.generate_signed("BeaconSp 100 200"))
         assert helper.signed(log)
         assert helper.signature_valid(log)
         assert helper.acknowledged(log)

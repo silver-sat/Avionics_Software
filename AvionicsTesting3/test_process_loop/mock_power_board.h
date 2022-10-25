@@ -11,6 +11,7 @@
 #ifndef MOCK_POWER_BOARD_H
 #define MOCK_POWER_BOARD_H
 
+#include "EPS_I.h"
 #include <Arduino.h>
 
 /**
@@ -63,6 +64,7 @@ public:
 
 private:
     PowerStatus m_power_status{fair};
+    EPS_I eps_i{};
 };
 
 #endif // MOCK_POWER_BOARD_H
