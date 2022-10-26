@@ -8,8 +8,6 @@
  * Based and dependent on Adafruit RTClib
  */
 
-// todo: disable alarms and square wave output
-
 #include "DS1337.h"
 #include <RTClib.h>
 
