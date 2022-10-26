@@ -2,7 +2,7 @@
  * @file ExecuteCommand.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat commands
- * @version 1.1.0
+ * @version 1.1.1
  * @date 2022-07-25
  *
  *
@@ -277,15 +277,12 @@ bool CommandTweeSlee::execute_command()
 {
     auto status = ExecuteCommand::execute_command();
     Log.verboseln("TweeSlee");
+    extern MockPayloadBoard payload;
+    Log.traceln("Turning off payload power");
+    status = payload.power_down() && status;
     extern MockRadioBoard radio;
     Log.traceln("Sending local command: halt");
-    // todo: consider consolidating in radio board
-    // todo: shutdown payload before sending halt to radio
-    Serial1.write(FEND);
-    Serial1.write(HALT);
-    Serial1.write(FEND);
-    extern MockPayloadBoard payload;
-    return payload.end_activity() && status;
+    return radio.send_halt() && status;
 };
 
 /**
@@ -367,7 +364,7 @@ bool CommandBeaconSp::execute_command()
  * @param time time value
  */
 
-CommandPicTimes::CommandPicTimes(TimeValue time)
+CommandPicTimes::CommandPicTimes(DateTime time)
 {
     m_action = ExecuteCommand::pic_times;
     m_time = time;
@@ -384,7 +381,7 @@ bool CommandPicTimes::acknowledge_command()
 {
     auto status = ExecuteCommand::acknowledge_command();
     Log.verboseln("PicTimes: Year: %d Month: %d Day: %d Hour: %d Minute: %d Second: %d",
-                  m_time.year, m_time.month, m_time.day, m_time.hour, m_time.minute, m_time.second);
+                  m_time.year(), m_time.month(), m_time.day(), m_time.hour(), m_time.minute(), m_time.second());
     return status;
 }
 
@@ -399,8 +396,7 @@ bool CommandPicTimes::execute_command()
     auto status = ExecuteCommand::execute_command();
     Log.verboseln("PicTimes");
     extern AvionicsBoard avionics;
-    DateTime time = DateTime(m_time.year, m_time.month, m_time.day, m_time.hour, m_time.minute, m_time.second);
-    return avionics.set_picture_time(time) && status;
+    return avionics.set_picture_time(m_time) && status;
 };
 
 /**
@@ -409,7 +405,7 @@ bool CommandPicTimes::execute_command()
  * @param time time value
  */
 
-CommandSetClock::CommandSetClock(TimeValue time)
+CommandSetClock::CommandSetClock(DateTime time)
 {
     m_action = ExecuteCommand::set_clock;
     m_time = time;
@@ -426,7 +422,7 @@ bool CommandSetClock::acknowledge_command()
 {
     auto status = ExecuteCommand::acknowledge_command();
     Log.verboseln("SetClock: Year: %d Month: %d Day: %d Hour: %d Minute: %d Second: %d",
-                  m_time.year, m_time.month, m_time.day, m_time.hour, m_time.minute, m_time.second);
+                  m_time.year(), m_time.month(), m_time.day(), m_time.hour(), m_time.minute(), m_time.second());
     return status;
 }
 
@@ -442,8 +438,7 @@ bool CommandSetClock::execute_command()
     auto status = ExecuteCommand::execute_command();
     Log.verboseln("SetClock");
     extern AvionicsBoard avionics;
-    DateTime time = DateTime(m_time.year, m_time.month, m_time.day, m_time.hour, m_time.minute, m_time.second);
-    return avionics.set_external_rtc(time) && status;
+    return avionics.set_external_rtc(m_time) && status;
 }
 
 /**
@@ -564,7 +559,7 @@ bool CommandGetPower::execute_command()
     Log.verboseln("GetPower");
     extern MockPowerBoard power;
     extern MockRadioBoard radio;
-    auto message = Message(Message::response, power.get_power_detail());
+    auto message = Message(Message::response, power.get_detail());
     return radio.send_message(message) && status;
 };
 /**

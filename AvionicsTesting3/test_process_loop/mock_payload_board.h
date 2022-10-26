@@ -96,7 +96,6 @@ public:
 
     bool get_payload_active();
 
-private:
     /**
      * @brief Power down Payload board
      *
@@ -105,6 +104,7 @@ private:
      */
     bool power_down();
 
+private:
     /**
      * @brief Power up Payload Board
      *

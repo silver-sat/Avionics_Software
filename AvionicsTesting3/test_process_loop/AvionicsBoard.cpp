@@ -2,7 +2,7 @@
  * @file AvionicsBoard.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Test Avionics Board for SilverSat
- * @version 1.0.3
+ * @version 1.0.4
  * @date 2022-07-29
  *
  *
@@ -10,6 +10,7 @@
 
 #include "AvionicsBoard.h"
 #include "log_utility.h"
+#include "mock_power_board.h"
 #include "mock_radio_board.h"
 #include "mock_payload_board.h"
 
@@ -51,8 +52,8 @@ bool AvionicsBoard::begin()
     // Non-Critical I2C
 
     Log.traceln("Initializing non-critical I2C bus");
+    // todo: consider leaving busswitch always enabled
     busswitch_begin();
-    // todo: disable busswitch full time?
     busswitch_enable();
     Wire1.begin();
     busswitch_disable();
@@ -61,7 +62,6 @@ bool AvionicsBoard::begin()
     // Inertial Management Unit
 
     Log.traceln("Initializing inertial management unit");
-    // todo: initialization hangs if no IMU present
     auto status = m_imu.begin(&Wire1);
     if (status)
     {
@@ -75,7 +75,6 @@ bool AvionicsBoard::begin()
     // FRAM
 
     Log.traceln("Initializing FRAM");
-    // todo: initialization hangs if no FRAM present
     status = m_fram.begin(FRAM_I2C_ADDRESS, &Wire1);
     if (status)
     {
@@ -99,7 +98,7 @@ bool AvionicsBoard::begin()
 bool AvionicsBoard::watchdog_force_reset()
 {
     Log.fatalln("Forcing watchdog reset");
-    return m_watchdog.set_force_reset();
+    return m_external_watchdog.set_force_reset();
 };
 
 /**
@@ -140,9 +139,8 @@ String AvionicsBoard::get_timestamp()
  * @return false error
  */
 
-bool AvionicsBoard::set_beacon_interval(int seconds)
+bool AvionicsBoard::set_beacon_interval(const int seconds)
 {
-    // todo: set beacon interval minimum and maximum
     if ((seconds != 0) && ((seconds < minimum_beacon_interval) || (seconds > maximum_beacon_interval)))
     {
         Log.errorln("Beacon interval must be zero or between %d and %d, inclusive", 
@@ -164,7 +162,14 @@ bool AvionicsBoard::check_beacon()
 {
     if ((millis() - m_last_beacon_time > m_beacon_interval) && (m_beacon_interval > 0))
     {
-        // todo: get power status
+        // todo: retrieve and store power status
+        extern MockPowerBoard power;
+        if (power.get_status() == "U")
+        {
+            m_power_status == Beacon::unknown;
+        } else {
+            m_power_status == Beacon::unknown;
+        }
         m_avionics_status = Beacon::excellent;
         extern MockRadioBoard radio;
         // todo: retrieve and store radio status
@@ -353,7 +358,7 @@ String AvionicsBoard::get_beacon_interval()
 
 bool AvionicsBoard::trigger_watchdog()
 {
-    m_watchdog.trigger();
+    m_external_watchdog.trigger();
     return true;
 };
 

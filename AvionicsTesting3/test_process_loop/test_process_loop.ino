@@ -24,7 +24,7 @@
  *
  */
 
-#define INSTRUMENTATION // Instrumentation for processor and memory usage
+#undef INSTRUMENTATION // Instrumentation for processor and memory usage
 
 #include "log_utility.h"
 #include "Beacon.h"

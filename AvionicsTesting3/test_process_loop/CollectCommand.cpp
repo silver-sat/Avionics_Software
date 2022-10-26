@@ -178,6 +178,7 @@ bool CollectCommand::validate_signature(String &buffer, String &command_string)
 
         // todo: check for validation requirement
         // todo: check for valid lengths
+        // todo: consider enforcing command sequence numbers
 
         const size_t sequence_length{buffer_tokens[0].length()};
         byte sequence[maximum_sequence_length]{};

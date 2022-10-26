@@ -2,13 +2,14 @@
  * @file ExternalRTC.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief External Realtime Clock
- * @version 1.0.1
+ * @version 1.0.2
  * @date 2022-08-11
  *
  *
  */
 
 #include "ExternalRTC.h"
+#include "board_configuration.h"
 #include "log_utility.h"
 
 /**
@@ -25,17 +26,13 @@ ExternalRTC::ExternalRTC(){};
  * @return false error
  */
 
-// todo: does not fail if no clock attached
-// todo: clock fails on power change (e.g. adding 5v to board)
-// todo: clock fails on processor reset
-
 bool ExternalRTC::begin(TwoWire *theWire)
 {
     Log.verboseln("Starting external realtime clock");
 
     // Wait for realtime clock--not immediately available after processor reset with no power cycle
     unsigned long delayStartTime = millis();
-    while ((!m_rtc.begin(theWire)) && ((millis() - delayStartTime) < 10))
+    while ((!m_rtc.begin(theWire)) && ((millis() - delayStartTime) < wait_for_i2c_device))
     {
     }
     

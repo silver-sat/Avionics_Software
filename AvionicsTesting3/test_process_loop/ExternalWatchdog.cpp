@@ -1,24 +1,24 @@
 /**
- * @file Watchdog.cpp
+ * @file ExternalWatchdog.cpp
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief Watchdog for SilverSat
+ * @brief ExternalWatchdog for SilverSat
  * @version 1.0.0
  * @date 2022-08-01
  *
  *
  */
 
-#include "Watchdog.h"
+#include "ExternalWatchdog.h"
 #include "log_utility.h"
 #include "board_configuration.h"
 #include <Arduino.h>
 
 /**
- * @brief Construct a new Watchdog object
+ * @brief Construct a new ExternalWatchdog object
  *
  */
 
-Watchdog::Watchdog()
+ExternalWatchdog::ExternalWatchdog()
 {
     m_last_action_time = millis();
     pinMode(WDTICK, OUTPUT);
@@ -32,7 +32,7 @@ Watchdog::Watchdog()
  * @return false error
  */
 
-bool Watchdog::trigger()
+bool ExternalWatchdog::trigger()
 {
     auto reset = digitalRead(RESET);
     if (reset != m_reset_pin_state)
@@ -68,7 +68,7 @@ bool Watchdog::trigger()
  * @return false error
  */
 
-bool Watchdog::set_force_reset()
+bool ExternalWatchdog::set_force_reset()
 {
     m_force_reset = true;
     return true;

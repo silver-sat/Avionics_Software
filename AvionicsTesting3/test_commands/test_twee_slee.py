@@ -25,7 +25,7 @@ class TestTweeSlee:
     #
     def test_twee_slee(self):
 
-        log = helper.collect_through_power_off("TweeSlee")
+        log = helper.collect("TweeSlee")
         assert helper.not_signed(log)
         assert helper.acknowledged(log)
         assert helper.no_logged_errors(log)
@@ -46,7 +46,7 @@ class TestTweeSlee:
     #
     def test_twee_slee_signed(self):
 
-        log = helper.collect_through_power_off(helper.generate_signed("TweeSlee"))
+        log = helper.collect(helper.generate_signed("TweeSlee"))
         assert helper.signed(log)
         assert helper.signature_valid(log)
         assert helper.acknowledged(log)

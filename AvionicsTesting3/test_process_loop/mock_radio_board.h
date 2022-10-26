@@ -112,6 +112,15 @@ public:
 
     String get_status();
 
+    /**
+     * @brief Send halt local command
+     *
+     * @return true successful
+     * @return false error
+     */
+
+    bool send_halt();
+
 private:
     size_t m_buffer_index{0};
     bool m_received_start{false};

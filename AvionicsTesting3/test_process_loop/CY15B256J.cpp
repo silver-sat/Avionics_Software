@@ -2,48 +2,58 @@
  * @file CY15B256J.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Driver for CY15B256 FRAM
- * @version 1.0.0
+ * @version 1.0.1
  * @date 2022-10-17
- * 
+ *
  * Based on Adafruit_FRAM_I2C
  */
 
 #include "CY15B256J.h"
+#include "board_configuration.h"
 #include "log_utility.h"
 #include <math.h>
 #include <stdlib.h>
 
 /**
  * @brief Construct a new CY15B256J::CY15B256J object
- * 
+ *
  */
-CY15B256J::CY15B256J(void) {_framInitialized = false;}
+CY15B256J::CY15B256J(void) { _framInitialized = false; }
 
 /**
  * @brief Sets up the hardware and initializes I2C
- * 
+ *
  * @param addr The I2C address to be used.
  * @param theWire The Wire object to be used for I2C connections.
  * @return true initialization successful
  * @return false otherwire
  */
-bool CY15B256J::begin(uint8_t addr, TwoWire *theWire) {
-  Adafruit_EEPROM_I2C::begin(addr, theWire);
+bool CY15B256J::begin(uint8_t addr, TwoWire *theWire)
+{
+  // wait for FRAM to become available
+  unsigned long delayStartTime{millis()};
+  while ((!Adafruit_EEPROM_I2C::begin(addr, theWire)) && ((millis() - delayStartTime) < wait_for_i2c_device))
+  {
+  }
 
   // the CY15B256J has a secondary address too!
   i2c_dev2 = new Adafruit_I2CDevice(CY15B256J_SECONDARY_ADDRESS, theWire);
-  if (!i2c_dev2->begin()) {
+
+  if (!i2c_dev2->begin())
+  {
     return false;
   }
 
   /* Make sure we're actually connected */
   uint16_t manufID, prodID;
   getDeviceID(&manufID, &prodID);
-  if (manufID != 0x004) {
+  if (manufID != 0x004)
+  {
     Log.errorln("Unexpected Manufacturer ID: %X", manufID);
     return false;
   }
-  if (prodID != 0x221) {
+  if (prodID != 0x221)
+  {
     Log.errorln("Unexpected Product ID: %X", prodID);
     return false;
   }
@@ -56,16 +66,17 @@ bool CY15B256J::begin(uint8_t addr, TwoWire *theWire) {
 
 /**
  * @brief Reads the Manufacturer ID and the Product ID from the IC
- * 
- * @param[out] manufacturerID 
+ *
+ * @param[out] manufacturerID
  *              The 12-bit manufacturer ID () (Cypress = 0x004)
- * @param productID 
+ * @param productID
  *              The memory density (bytes 11..8) and proprietary
  *              Product ID fields (bytes 7..0). Should be 0x221 for
  *              the CY15B256J.
  */
 void CY15B256J::getDeviceID(uint16_t *manufacturerID,
-                                    uint16_t *productID) {
+                            uint16_t *productID)
+{
   uint8_t buff[3] = {(uint8_t)(_addr * 2), 0, 0};
 
   i2c_dev2->write_then_read(buff, 1, buff, 3, false);

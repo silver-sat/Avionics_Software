@@ -2,7 +2,7 @@
  * @file mock_power_board.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Test the Avionics Board mock Power Board
- * @version 1.0.1
+ * @version 1.1.0
  * @date 2022-07-24
  *
  *
@@ -24,6 +24,8 @@ MockPowerBoard::MockPowerBoard(){};
 bool MockPowerBoard::begin()
 {
     Log.traceln("Power Board initializing");
+    // todo: consider opening I2C bus full time
+    // todo: consider getting initial values
     return true;
 }
 
@@ -33,13 +35,12 @@ bool MockPowerBoard::begin()
  * @return String letter grade for beacon
  */
 
-String MockPowerBoard::get_power_status()
+String MockPowerBoard::get_status()
 {
 
     // todo: access power data from Power Board
     extern AvionicsBoard avionics;
     avionics.busswitch_enable();
-
     switch (m_power_status)
     {
     case excellent:
@@ -64,7 +65,7 @@ String MockPowerBoard::get_power_status()
  * @return String power details
  */
 
-String MockPowerBoard::get_power_detail()
+String MockPowerBoard::get_detail()
 {
 
     // todo: open non-critical I2C bus, access power data from Power Board
