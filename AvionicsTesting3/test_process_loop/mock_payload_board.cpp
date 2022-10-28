@@ -40,7 +40,7 @@ bool MockPayloadBoard::begin()
     pinMode(SHUTDOWN_A, INPUT);
     pinMode(SHUTDOWN_B, INPUT);
     pinMode(SHUTDOWN_C, INPUT);
-
+    power_down();
     return true;
 };
 
@@ -111,7 +111,7 @@ bool MockPayloadBoard::check_shutdown()
     {
         end_activity();
     }
-    if (power_down_signal_is_set())
+    if (power_down_signal_is_set() && m_payload_active)
     {
         Log.verboseln("Powering down payload");
         m_power_down_signal = false;
