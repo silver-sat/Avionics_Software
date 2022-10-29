@@ -26,7 +26,7 @@ void setup()
   pinMode(EN_EXT_I2C, OUTPUT);
   digitalWrite(EN_EXT_I2C, LOW);
   pinMode(11,OUTPUT);
-  digitalWrite(11, HIGH);
+  digitalWrite(11, LOW);
   Wire.begin();
   // myWire.begin();
   // pinPeripheral(3, PIO_SERCOM_ALT);
