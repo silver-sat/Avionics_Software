@@ -25,7 +25,8 @@ void setup()
   Serial.println("\nI2C Scanner");
   pinMode(EN_EXT_I2C, OUTPUT);
   digitalWrite(EN_EXT_I2C, LOW);
-
+  pinMode(11,OUTPUT);
+  digitalWrite(11, HIGH);
   Wire.begin();
   // myWire.begin();
   // pinPeripheral(3, PIO_SERCOM_ALT);
