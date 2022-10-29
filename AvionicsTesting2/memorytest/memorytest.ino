@@ -14,6 +14,12 @@ Adafruit_EEPROM_I2C i2ceeprom;
 #define EEPROM_ADDR 0x50  // the default address!
 
 void setup(void) {
+  pinMode(17,OUTPUT);
+  digitalWrite(17, HIGH);
+   pinMode(18,OUTPUT);
+  digitalWrite(18, HIGH);
+   pinMode(24,OUTPUT);
+  digitalWrite(24, HIGH);
   Serial.begin(115200);
   
   if (i2ceeprom.begin(0x50)) {  // you can stick the new i2c addr in here, e.g. begin(0x51);
