@@ -1,0 +1,190 @@
+# Copyright (c) 2014-2015 Arduino LLC.  All right reserved.
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+menu.cache=Cache
+menu.speed=CPU Speed
+menu.opt=Optimize
+menu.maxqspi=Max QSPI
+menu.usbstack=USB Stack
+menu.debug=Debug
+
+
+# -----------------------------------
+# SilverSat Avionics Board (SAMD21)
+# -----------------------------------
+silversat_avionics_board.name=SilverSat Avionics Board (SAMD21)
+
+# VID/PID for Bootloader, Arduino & CircuitPython
+silversat_avionics_board.vid.0=0x239A
+silversat_avionics_board.pid.0=0x8013
+silversat_avionics_board.vid.1=0x239A
+silversat_avionics_board.pid.1=0x0013
+
+# Upload
+silversat_avionics_board.upload.tool=bossac18
+silversat_avionics_board.upload.protocol=sam-ba
+silversat_avionics_board.upload.maximum_size=262144
+silversat_avionics_board.upload.offset=0x2000
+silversat_avionics_board.upload.use_1200bps_touch=true
+silversat_avionics_board.upload.wait_for_upload_port=true
+silversat_avionics_board.upload.native_usb=true
+
+# Build
+silversat_avionics_board.build.mcu=cortex-m0plus
+silversat_avionics_board.build.f_cpu=48000000L
+silversat_avionics_board.build.usb_product="Avionics Board"
+silversat_avionics_board.build.usb_manufacturer="SilverSat"
+silversat_avionics_board.build.board=SAMD_ZERO
+silversat_avionics_board.build.core=arduino
+silversat_avionics_board.build.extra_flags=-D__SAMD21G18A__ -DADAFRUIT_METRO_M0_EXPRESS -DARDUINO_SAMD_ZERO -DARM_MATH_CM0PLUS {build.usb_flags}
+silversat_avionics_board.build.ldscript=linker_scripts/gcc/flash_without_bootloader.ld
+silversat_avionics_board.build.openocdscript=openocd_scripts/metro_m0.cfg
+silversat_avionics_board.build.variant=avionics_board
+silversat_avionics_board.build.variant_system_lib=
+silversat_avionics_board.build.vid=0x239A
+silversat_avionics_board.build.pid=0x8013
+silversat_avionics_board.bootloader.tool=openocd
+silversat_avionics_board.bootloader.file=metroM0/bootloader-metro_m0-v2.0.0-adafruit.5.bin
+
+# Menu
+silversat_avionics_board.menu.opt.small=Small (-Os) (standard)
+silversat_avionics_board.menu.opt.small.build.flags.optimize=-Os
+silversat_avionics_board.menu.opt.fast=Fast (-O2)
+silversat_avionics_board.menu.opt.fast.build.flags.optimize=-O2
+silversat_avionics_board.menu.opt.faster=Faster (-O3)
+silversat_avionics_board.menu.opt.faster.build.flags.optimize=-O3
+silversat_avionics_board.menu.opt.fastest=Fastest (-Ofast)
+silversat_avionics_board.menu.opt.fastest.build.flags.optimize=-Ofast
+silversat_avionics_board.menu.opt.dragons=Here be dragons (-Ofast -funroll-loops)
+silversat_avionics_board.menu.opt.dragons.build.flags.optimize=-Ofast -funroll-loops
+silversat_avionics_board.menu.usbstack.arduino=Arduino
+silversat_avionics_board.menu.usbstack.tinyusb=TinyUSB
+silversat_avionics_board.menu.usbstack.tinyusb.build.flags.usbstack=-DUSE_TINYUSB
+silversat_avionics_board.menu.debug.off=Off
+silversat_avionics_board.menu.debug.on=On
+silversat_avionics_board.menu.debug.on.build.flags.debug=-g
+
+
+# -----------------------------------
+# Adafruit Metro M0 Design (SAMD21)
+# -----------------------------------
+adafruit_metro_m0_design.name=Adafruit Metro M0 Design (SAMD21)
+
+# VID/PID for Bootloader, Arduino & CircuitPython
+adafruit_metro_m0_design.vid.0=0x239A
+adafruit_metro_m0_design.pid.0=0x8013
+adafruit_metro_m0_design.vid.1=0x239A
+adafruit_metro_m0_design.pid.1=0x0013
+
+# Upload
+adafruit_metro_m0_design.upload.tool=bossac18
+adafruit_metro_m0_design.upload.protocol=sam-ba
+adafruit_metro_m0_design.upload.maximum_size=262144
+adafruit_metro_m0_design.upload.offset=0x2000
+adafruit_metro_m0_design.upload.use_1200bps_touch=true
+adafruit_metro_m0_design.upload.wait_for_upload_port=true
+adafruit_metro_m0_design.upload.native_usb=true
+
+# Build
+adafruit_metro_m0_design.build.mcu=cortex-m0plus
+adafruit_metro_m0_design.build.f_cpu=48000000L
+adafruit_metro_m0_design.build.usb_product="Avionics Board"
+adafruit_metro_m0_design.build.usb_manufacturer="SilverSat"
+adafruit_metro_m0_design.build.board=SAMD_ZERO
+adafruit_metro_m0_design.build.core=arduino
+adafruit_metro_m0_design.build.extra_flags=-D__SAMD21G18A__ -Dadafruit_metro_m0_prototype_EXPRESS -DARDUINO_SAMD_ZERO -DARM_MATH_CM0PLUS {build.usb_flags}
+adafruit_metro_m0_design.build.ldscript=linker_scripts/gcc/flash_with_bootloader.ld
+adafruit_metro_m0_design.build.openocdscript=openocd_scripts/metro_m0.cfg
+adafruit_metro_m0_design.build.variant=metro_m0_design
+adafruit_metro_m0_design.build.variant_system_lib=
+adafruit_metro_m0_design.build.vid=0x239A
+adafruit_metro_m0_design.build.pid=0x8013
+adafruit_metro_m0_design.bootloader.tool=openocd
+adafruit_metro_m0_design.bootloader.file=metroM0/bootloader-metro_m0-v2.0.0-adafruit.5.bin
+
+# Menu
+adafruit_metro_m0_design.menu.opt.small=Small (-Os) (standard)
+adafruit_metro_m0_design.menu.opt.small.build.flags.optimize=-Os
+adafruit_metro_m0_design.menu.opt.fast=Fast (-O2)
+adafruit_metro_m0_design.menu.opt.fast.build.flags.optimize=-O2
+adafruit_metro_m0_design.menu.opt.faster=Faster (-O3)
+adafruit_metro_m0_design.menu.opt.faster.build.flags.optimize=-O3
+adafruit_metro_m0_design.menu.opt.fastest=Fastest (-Ofast)
+adafruit_metro_m0_design.menu.opt.fastest.build.flags.optimize=-Ofast
+adafruit_metro_m0_design.menu.opt.dragons=Here be dragons (-Ofast -funroll-loops)
+adafruit_metro_m0_design.menu.opt.dragons.build.flags.optimize=-Ofast -funroll-loops
+adafruit_metro_m0_design.menu.usbstack.arduino=Arduino
+adafruit_metro_m0_design.menu.usbstack.tinyusb=TinyUSB
+adafruit_metro_m0_design.menu.usbstack.tinyusb.build.flags.usbstack=-DUSE_TINYUSB
+adafruit_metro_m0_design.menu.debug.off=Off
+adafruit_metro_m0_design.menu.debug.on=On
+adafruit_metro_m0_design.menu.debug.on.build.flags.debug=-g
+
+
+# --------------------------------------
+# Adafruit Metro M0 Prototype (SAMD21)
+# --------------------------------------
+adafruit_metro_m0_prototype.name=Adafruit Metro M0 Prototype (SAMD21)
+# VID/PID for Bootloader, Arduino & CircuitPython
+adafruit_metro_m0_prototype.vid.0=0x239A
+adafruit_metro_m0_prototype.pid.0=0x8013
+adafruit_metro_m0_prototype.vid.1=0x239A
+adafruit_metro_m0_prototype.pid.1=0x0013
+
+# Upload
+adafruit_metro_m0_prototype.upload.tool=bossac18
+adafruit_metro_m0_prototype.upload.protocol=sam-ba
+adafruit_metro_m0_prototype.upload.maximum_size=262144
+adafruit_metro_m0_prototype.upload.offset=0x2000
+adafruit_metro_m0_prototype.upload.use_1200bps_touch=true
+adafruit_metro_m0_prototype.upload.wait_for_upload_port=true
+adafruit_metro_m0_prototype.upload.native_usb=true
+
+# Build
+adafruit_metro_m0_prototype.build.mcu=cortex-m0plus
+adafruit_metro_m0_prototype.build.f_cpu=48000000L
+adafruit_metro_m0_prototype.build.usb_product="Metro M0 Prototype"
+adafruit_metro_m0_prototype.build.usb_manufacturer="Adafruit"
+adafruit_metro_m0_prototype.build.board=SAMD_ZERO
+adafruit_metro_m0_prototype.build.core=arduino
+adafruit_metro_m0_prototype.build.extra_flags=-D__SAMD21G18A__ -DADAFRUIT_METRO_M0_EXPRESS -DARDUINO_SAMD_ZERO -DARM_MATH_CM0PLUS {build.usb_flags}
+adafruit_metro_m0_prototype.build.ldscript=linker_scripts/gcc/flash_with_bootloader.ld
+adafruit_metro_m0_prototype.build.openocdscript=openocd_scripts/metro_m0.cfg
+adafruit_metro_m0_prototype.build.variant=metro_m0_prototype
+adafruit_metro_m0_prototype.build.variant_system_lib=
+adafruit_metro_m0_prototype.build.vid=0x239A
+adafruit_metro_m0_prototype.build.pid=0x8013
+adafruit_metro_m0_prototype.bootloader.tool=openocd
+adafruit_metro_m0_prototype.bootloader.file=metroM0/bootloader-metro_m0-v2.0.0-adafruit.5.bin
+
+# Menu
+adafruit_metro_m0_prototype.menu.opt.small=Small (-Os) (standard)
+adafruit_metro_m0_prototype.menu.opt.small.build.flags.optimize=-Os
+adafruit_metro_m0_prototype.menu.opt.fast=Fast (-O2)
+adafruit_metro_m0_prototype.menu.opt.fast.build.flags.optimize=-O2
+adafruit_metro_m0_prototype.menu.opt.faster=Faster (-O3)
+adafruit_metro_m0_prototype.menu.opt.faster.build.flags.optimize=-O3
+adafruit_metro_m0_prototype.menu.opt.fastest=Fastest (-Ofast)
+adafruit_metro_m0_prototype.menu.opt.fastest.build.flags.optimize=-Ofast
+adafruit_metro_m0_prototype.menu.opt.dragons=Here be dragons (-Ofast -funroll-loops)
+adafruit_metro_m0_prototype.menu.opt.dragons.build.flags.optimize=-Ofast -funroll-loops
+adafruit_metro_m0_prototype.menu.usbstack.arduino=Arduino
+adafruit_metro_m0_prototype.menu.usbstack.tinyusb=TinyUSB
+adafruit_metro_m0_prototype.menu.usbstack.tinyusb.build.flags.usbstack=-DUSE_TINYUSB
+adafruit_metro_m0_prototype.menu.debug.off=Off
+adafruit_metro_m0_prototype.menu.debug.on=On
+adafruit_metro_m0_prototype.menu.debug.on.build.flags.debug=-g
+

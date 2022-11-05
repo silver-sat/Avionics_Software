@@ -17,5 +17,8 @@ downloaded files.
 If you do not have the Metro M0 Express definitions on your development computer, you can download them using the procedure
 documented at https://learn.adafruit.com/adafruit-metro-m0-express/arduino-ide-setup.
 
+If you want to load software using a programmer and have no bootloader on the board, modify the "boards.txt" file to make "flash_without_bootloader.ld"
+the linker script file base name.
+
 After you have setup the definitions for the Avionics Board, open your development environment, select the new board configuration, 
 build your sketch, and upload it to the Avionics Board.
