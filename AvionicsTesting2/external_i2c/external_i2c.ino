@@ -9,7 +9,7 @@ pinMode(en_ext_I2C, OUTPUT);
 pinMode(SDA_NON_CRIT, OUTPUT);
 pinMode(SCL_NON_CRIT, OUTPUT);
  // keeps enable on
- digitalWrite(en_ext_I2C, HIGH);
+ digitalWrite(en_ext_I2C, LOW);
 }
 //turns on and off every half second
 void loop(){
