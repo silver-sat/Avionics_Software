@@ -1,0 +1,110 @@
+#include <Wire.h>
+byte rtcAddr = 104;
+struct time_struct{
+byte second;
+byte minute;
+byte hour;
+byte day;
+byte month;
+byte year;
+};
+
+byte bcd2dec(byte inputbcd){
+  byte ones = inputbcd & 0x0F;
+  byte tens = inputbcd >> 4;
+  byte decValue = tens*10+ones;
+
+  return decValue;
+}
+
+byte dec2bcd(byte inputdec)
+{
+   return ( (inputdec/10*16) + (inputdec%10) );
+}
+int setTime(struct time_struct timeToSet) {
+     Wire.beginTransmission(rtcAddr);
+    // start at the seconds register (register 0x00).  The RTC will automatically advance to the next register after each write.
+     Wire.write(0x00);    
+     Wire.write(dec2bcd(timeToSet.second));      // Writes to 0x00, then RTC advances to 0x01
+     Wire.write(dec2bcd(timeToSet.minute));      // Writes to register 0x01, then RTC advances to 0x02
+     Wire.write(dec2bcd(timeToSet.hour));        
+     Wire.endTransmission();                              // We're going to skip of day of the week, so end this write here
+
+// now start at the day of the month register (the date register, and write day/month/year
+     Wire.beginTransmission(rtcAddr);
+     Wire.write(0x04);
+     Wire.write(dec2bcd (timeToSet.day));
+     Wire.write(dec2bcd (timeToSet.month));
+     Wire.write(dec2bcd (timeToSet.year));
+Wire.endTransmission();
+  }
+struct time_struct readTime(){
+ 
+  Wire.beginTransmission(rtcAddr);
+   Wire.write(0x00);
+   Wire.endTransmission();
+
+ Wire.requestFrom(rtcAddr, 3);
+byte secBcd = Wire.read();
+
+byte minBcd = Wire.read();
+byte hourBcd = Wire.read();
+Wire.beginTransmission(rtcAddr);
+   Wire.write(0x04);
+   Wire.endTransmission();
+Wire.requestFrom(rtcAddr,3);
+byte dayBcd = Wire.read();
+byte monthBcd = Wire.read(); 
+byte yearBcd = Wire.read();
+struct time_struct currentTime;
+currentTime.second = bcd2dec(secBcd); 
+currentTime.minute = bcd2dec(minBcd);
+currentTime.hour = bcd2dec(hourBcd);
+currentTime.day = bcd2dec(dayBcd); 
+currentTime.month = bcd2dec(monthBcd);
+currentTime.year = bcd2dec(yearBcd);
+  return currentTime;
+}
+
+void setup() {
+  // put your setup code here, to run once:
+Serial.begin(9600);
+Wire.begin(rtcAddr);
+struct time_struct t;
+t.second = 1;
+t.minute = 1;
+t.hour = 1;
+t.day = 2;
+t.month = 3;
+t.year = 77
+;
+timeStr(t);
+setTime(t);
+}
+
+void timeStr(struct time_struct averf){
+  Serial.print(averf.year);
+  Serial.print(':');
+Serial.print(averf.month);
+Serial.print(':');
+Serial.print(averf.day);
+Serial.print(':');
+Serial.print(averf.hour);
+Serial.print(':');
+Serial.print(averf.minute);
+Serial.print(':');
+Serial.println(averf.second);
+  }
+
+ 
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+
+struct time_struct t;
+t = readTime();
+  timeStr(t);
+
+delay(500);
+}
