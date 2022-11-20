@@ -1,5 +1,5 @@
 /**
- * @file pass_by_reference.ino
+ * @file globals.ino
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Demonstrate global variables
  * @version 1.0.0
