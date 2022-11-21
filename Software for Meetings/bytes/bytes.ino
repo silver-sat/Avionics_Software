@@ -18,12 +18,12 @@ void setup() {
   bool b{ true };
   Serial.print("bool ");
   Serial.print("b: ");
-  Serial.println(b);
+  Serial.println(b, BIN);
 
   // 8-bit unsigned number, 0 to 255
   byte y{ 0xAA };
   Serial.print("byte ");
-  Serial.print("y: ");
+  Serial.print("y: 0x");
   Serial.println(y, HEX);
 
   // same as byte
