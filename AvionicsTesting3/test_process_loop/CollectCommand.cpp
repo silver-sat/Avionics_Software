@@ -9,7 +9,7 @@
  */
 
 #include "CollectCommand.h"
-#include "arduino_secrets.h" /**< shared secret with ground station */
+#include "arduino_secrets.h"
 #include "log_utility.h"
 #include "mock_radio_board.h"
 #include <BLAKE2s.h>

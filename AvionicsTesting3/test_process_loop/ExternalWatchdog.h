@@ -35,8 +35,6 @@ public:
   /**
    * @brief Trigger the watchdog
    *
-   * @return true successful
-   * @return false error
    */
 
   bool trigger();
@@ -44,8 +42,6 @@ public:
   /**
    * @brief Set force reset
    *
-   * @return true successful
-   * @return false error
    */
   bool set_force_reset();
 

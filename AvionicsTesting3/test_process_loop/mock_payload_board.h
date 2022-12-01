@@ -18,8 +18,8 @@
  *
  */
 
-constexpr unsigned long tweet_duration{30 * seconds_to_milliseconds};
-constexpr unsigned long photo_duration{15 * seconds_to_milliseconds};
+constexpr unsigned long tweet_duration{30 * seconds_to_milliseconds}; /**< test tweet duration */
+constexpr unsigned long photo_duration{15 * seconds_to_milliseconds}; /**< test photo duration */
 
 /**
  * @brief Mock Payload Board for testing the Avionics Board
@@ -40,8 +40,6 @@ public:
      * @brief Initialize Payload Board
      *
      *
-     * @return true successful
-     * @return false error
      */
 
     bool begin();
@@ -49,32 +47,24 @@ public:
     /**
      * @brief Power up Payload Board and take photo
      *
-     * @return true successful
-     * @return false error
      */
     bool photo();
 
     /**
      * @brief Power up Payload Board and tweet
      *
-     * @return true successful
-     * @return false error
      */
     bool tweet();
 
     /**
      * @brief Shut off Payload Board if ready to sleep
      *
-     * @return true successful
-     * @return false error
      */
     bool check_shutdown();
 
     /**
      * @brief End payload session
      *
-     * @return true successful
-     * @return false error
      */
 
     bool end_activity();
@@ -82,7 +72,6 @@ public:
     /**
      * @brief Get the photo count
      *
-     * @return int photo count
      */
 
     int get_photo_count();
@@ -90,8 +79,6 @@ public:
     /**
      * @brief Get the payload activity status
      *
-     * @return true active
-     * @return false powered down
      */
 
     bool get_payload_active();
@@ -99,8 +86,6 @@ public:
     /**
      * @brief Power down Payload board
      *
-     * @return true successful
-     * @return false error
      */
     bool power_down();
 
@@ -108,32 +93,24 @@ private:
     /**
      * @brief Power up Payload Board
      *
-     * @return true successful
-     * @return false error
      */
     bool power_up();
 
     /**
      * @brief Set the mode to communications
      *
-     * @return true successful
-     * @return false error
      */
     bool set_mode_comms();
 
     /**
      * @brief Set the mode to photograph
      *
-     * @return true successful
-     * @return false error
      */
     bool set_mode_photo();
 
     /**
      * @brief Check Payload Board shutdown signal
      *
-     * @return true successful
-     * @return false error
      */
     bool power_down_signal_is_set();
 

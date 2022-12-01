@@ -42,15 +42,12 @@ public:
     /**
      * @brief Initialize the Power Board
      *
-     * @return true successful
-     * @return false error
      */
     bool begin();
 
     /**
      * @brief Get power status
      *
-     * @return String letter grade for beacon
      */
 
     String get_status();
@@ -58,7 +55,6 @@ public:
     /**
      * @brief Get the power detail
      *
-     * @return String power details
      */
     String get_detail();
 

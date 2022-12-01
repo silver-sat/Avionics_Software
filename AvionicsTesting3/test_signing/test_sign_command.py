@@ -11,7 +11,7 @@ verify_prg = "./verify_command.py"
 ##Shared secret
 secret = "./secret.txt"
 
-
+## Test sign command
 class TestSignCommand:
     """Test command signing"""
 

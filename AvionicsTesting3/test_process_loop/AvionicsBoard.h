@@ -47,8 +47,6 @@ public:
     /**
      * @brief Initialize the Avionics Board
      *
-     * @return true successful
-     * @return false error
      */
 
     bool begin();
@@ -56,8 +54,6 @@ public:
     /**
      * @brief Force the watchdog to reset the processor
      *
-     * @return true successful
-     * @return false error
      */
 
     bool watchdog_force_reset();
@@ -65,9 +61,6 @@ public:
     /**
      * @brief Set the external realtime clock
      *
-     * @param time new time setting
-     * @return true successful
-     * @return false error
      */
 
     bool set_external_rtc(DateTime time);
@@ -75,7 +68,6 @@ public:
     /**
      * @brief Get a timestamp
      *
-     * @return String timestamp
      */
 
     String get_timestamp();
@@ -83,9 +75,6 @@ public:
     /**
      * @brief Set beacon interval
      *
-     * @param seconds
-     * @return true successful
-     * @return false error
      */
 
     bool set_beacon_interval(int seconds);
@@ -93,8 +82,6 @@ public:
     /**
      * @brief Send a beacon if the beacon interval has elapsed
      *
-     * @return true successful
-     * @return false error
      */
 
     bool check_beacon();
@@ -102,17 +89,12 @@ public:
     /**
      * @brief Set the time for the next payload photo
      *
-     * @param time time for photo
-     * @return true successful
-     * @return false error
      */
     bool set_picture_time(DateTime time);
 
     /**
      * @brief Check time for photo and start payload if required
      *
-     * @return true successful
-     * @return false error
      */
 
     bool check_photo();
@@ -120,7 +102,6 @@ public:
     /**
      * @brief Get scheduled picture times
      *
-     * @return String number of pictures available
      */
 
     String get_pic_times();
@@ -128,8 +109,6 @@ public:
     /**
      * @brief Clear picture times
      *
-     * @return true successful
-     * @return false error
      */
 
     bool clear_pic_times();
@@ -137,7 +116,6 @@ public:
     /**
      * @brief Get telemetry
      *
-     * @return String telemetry data
      */
 
     String get_telemetry();
@@ -145,7 +123,6 @@ public:
     /**
      * @brief Get the beacon interval
      *
-     * @return String interval
      */
 
     String get_beacon_interval();
@@ -153,15 +130,12 @@ public:
     /**
      * @brief Trigger the watchdog
      *
-     * @return true successful
-     * @return false error
      */
     bool trigger_watchdog();
 
     /**
      * @brief Read a byte from the FRAM
      *
-     * @return String byte read
      */
 
     String read_fram(size_t address);
@@ -169,8 +143,6 @@ public:
     /**
      * @brief Unset the realtime clock
      *
-     * @return true successful
-     * @return false error
      */
 
     bool unset_clock();

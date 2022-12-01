@@ -44,7 +44,7 @@ class TestPicTimes:
         assert not helper.no_logged_errors(log)
         assert not helper.executed(log)
 
-    # error: incorrect number of parameters
+    ## error: incorrect number of parameters
     #
     def test_pic_times_three_param(self):
 
@@ -108,7 +108,7 @@ class TestPicTimes:
         assert helper.executed(log)
         assert helper.payload_power_off(log)
 
-    ## error: incorrect number of  parameters signed
+    ## error: no parameters signed
     #
     def test_pic_times_no_param_signed(self):
 
@@ -119,7 +119,7 @@ class TestPicTimes:
         assert not helper.no_logged_errors(log)
         assert not helper.executed(log)
 
-    # error: incorrect number of parameters signed
+    ## error: three parameters signed
     #
     def test_pic_times_three_param_signed(self):
 

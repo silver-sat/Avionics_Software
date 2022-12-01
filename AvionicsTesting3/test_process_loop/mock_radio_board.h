@@ -60,8 +60,6 @@ public:
     /**
      * @brief Initialize the Radio Board
      *
-     * @return true successful
-     * @return false error
      */
 
     bool begin();
@@ -69,8 +67,6 @@ public:
     /**
      * @brief Notify radio board to deploy antenna
      *
-     * @return true successful
-     * @return false error
      */
 
     bool deploy_antenna();
@@ -78,11 +74,6 @@ public:
     /**
      * @brief Assemble command from Serial1 port
      *
-     * @param buffer buffer to assemble command
-     * @param length maximum length of command
-     *
-     * @return true no command or successful
-     * @return false error
      */
 
     bool receive_command(char *buffer, const size_t length);
@@ -90,7 +81,6 @@ public:
     /**
      * @brief Send beacon
      *
-     * @param beacon beacon data
      */
 
     void send_beacon(Beacon beacon);
@@ -98,8 +88,6 @@ public:
     /**
      * @brief Send message
      *
-     * @return true successful
-     * @return false error
      */
 
     bool send_message(Message message);
@@ -107,7 +95,6 @@ public:
     /**
      * @brief Get Radio Board status
      *
-     * @return Beacon::status status
      */
 
     String get_status();
@@ -115,8 +102,6 @@ public:
     /**
      * @brief Send halt local command
      *
-     * @return true successful
-     * @return false error
      */
 
     bool send_halt();
