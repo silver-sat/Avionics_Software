@@ -638,7 +638,6 @@ bool CommandGetComms::execute_command()
 {
     auto status = ExecuteCommand::execute_command();
     Log.verboseln("GetComms");
-    extern MockPayloadBoard payload;
     extern MockRadioBoard radio;
     auto message = Message(Message::response, radio.get_status().c_str());
     return radio.send_message(message) && status;

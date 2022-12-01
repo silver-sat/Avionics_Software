@@ -179,7 +179,6 @@ bool MockRadioBoard::receive_command(char *buffer, const size_t length)
 void MockRadioBoard::send_beacon(Beacon beacon)
 {
     String beacon_data = call_sign + beacon.get_message();
-    size_t beacon_length = beacon_data.length();
     Log.noticeln("Sending local command: beacon %s", beacon.get_message().c_str());
     Serial1.write(FEND);
     Serial1.write(BEACON);
@@ -197,7 +196,6 @@ void MockRadioBoard::send_beacon(Beacon beacon)
 bool MockRadioBoard::send_message(Message message)
 {
     String message_data = message.get_message();
-    size_t message_length = message_data.length();
     Log.noticeln("Sending message: %s", message_data.c_str());
     Serial1.write(FEND);
     Serial1.write(DATA_FRAME);

@@ -45,7 +45,7 @@ def collect_initialization():
 
     log = []
     log_data = ""
-    while "Payload power off" not in log_data:
+    while "Process Loop Test initialization completed" not in log_data:
         log_data = log_port.readline().decode("utf-8").strip()
         log.append(Entry(*(log_data.split(maxsplit=2))))
         print(log_data)

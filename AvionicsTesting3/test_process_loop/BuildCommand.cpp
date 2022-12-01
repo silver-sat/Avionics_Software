@@ -24,7 +24,7 @@ BuildCommand::BuildCommand(String tokens[], size_t token_count)
         if (token_count == 1)
         {
             auto token_is_digits = true;
-            for (auto index = 0; index < tokens[1].length(); index++)
+            for (size_t index = 0; index < tokens[1].length(); index++)
             {
                 if (!isDigit(tokens[1][index]))
                 {
@@ -58,9 +58,9 @@ BuildCommand::BuildCommand(String tokens[], size_t token_count)
         if (token_count == 6)
         {
             auto tokens_are_digits = true;
-            for (auto token = 1; token <= token_count; token++)
+            for (size_t token = 1; token <= token_count; token++)
             {
-                for (auto index = 0; index < tokens[token].length(); index++)
+                for (size_t index = 0; index < tokens[token].length(); index++)
                 {
                     if (!isDigit(tokens[token][index]))
                     {
@@ -115,9 +115,9 @@ BuildCommand::BuildCommand(String tokens[], size_t token_count)
         if (token_count == 6)
         {
             auto tokens_are_digits = true;
-            for (auto token = 1; token <= token_count; token++)
+            for (size_t token = 1; token <= token_count; token++)
             {
-                for (auto index = 0; index < tokens[token].length(); index++)
+                for (size_t index = 0; index < tokens[token].length(); index++)
                 {
                     if (!isDigit(tokens[token][index]))
                     {
