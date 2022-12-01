@@ -38,7 +38,6 @@ public:
     /**
      * @brief Get the command object
      *
-     * @return ExecuteCommand*
      */
 
     ExecuteCommand *get_command();

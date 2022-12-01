@@ -12,8 +12,8 @@ import argparse
 import secrets
 
 ##
-#
-# @param file file optional filename, default is stdout
+# Command line arguments
+# file optional filename, default is stdout
 #
 
 

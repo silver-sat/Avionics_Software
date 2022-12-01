@@ -15,11 +15,11 @@ import hmac
 import secrets
 
 ##
-#
-# @param str string string to sign
-# @param str secret secret for signing
-# @param int sequence optioanl sequence number, default = 1
-# @param str separator optional separator, default = '|'
+# Command line arguments
+# string string to sign
+# secret secret for signing
+# sequence optional sequence number, default = 1
+# separator optional separator, default = '|'
 #
 
 

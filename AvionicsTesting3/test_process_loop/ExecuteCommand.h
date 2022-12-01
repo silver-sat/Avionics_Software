@@ -64,7 +64,6 @@ public:
     /**
      * @brief Get the operation
      *
-     * @return operation
      */
 
     virtual operation get_operation();

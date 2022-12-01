@@ -43,8 +43,7 @@ constexpr unsigned SHUTDOWN_A{19u};        /**< payload shutdown A @hideinitiali
 constexpr unsigned SHUTDOWN_B{36u};        /**< payload shutdown B @hideinitializer */
 constexpr unsigned SHUTDOWN_C{37u};        /**< payload shutdown C @hideinitializer */
 constexpr unsigned PAYLOAD_OC{16u};        /**< payload over current @hideinitializer */
-// todo: establish reset monitor pin for testing
-constexpr unsigned RESET{0u};
+constexpr unsigned RESET{0u};              /**< reset the processor @hideinitializer */
 
 /**
  * @brief I2C Addresses

@@ -39,10 +39,6 @@ public:
     /**
      * @brief Construct a new Beacon object
      *
-     * @param power status
-     * @param avionics status
-     * @param radio status
-     * @param payload status
      */
 
     Beacon(
@@ -54,8 +50,6 @@ public:
     /**
      * @brief Convert board status to string
      *
-     * @param status status of a board
-     * @return String status character
      */
 
     String to_board_code(Beacon::status status);
@@ -63,7 +57,6 @@ public:
     /**
      * @brief Get the message for the beacon
      *
-     * @return String status for each board
      */
 
     String get_message();
