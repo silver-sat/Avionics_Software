@@ -166,9 +166,9 @@ bool AvionicsBoard::check_beacon()
         extern MockPowerBoard power;
         if (power.get_status() == "U")
         {
-            m_power_status == Beacon::unknown;
+            m_power_status = Beacon::unknown;
         } else {
-            m_power_status == Beacon::unknown;
+            m_power_status = Beacon::unknown;
         }
         m_avionics_status = Beacon::excellent;
         extern MockRadioBoard radio;

@@ -112,7 +112,7 @@ void hex2bin(const char *src, byte *target)
 bool CollectCommand::validate_signature(String &buffer, String &command_string)
 {
     buffer.trim();
-    size_t buffer_index = buffer.indexOf(command_message_separator);
+    auto buffer_index = buffer.indexOf(command_message_separator);
 
     if (buffer_index == -1)
     {
@@ -129,7 +129,7 @@ bool CollectCommand::validate_signature(String &buffer, String &command_string)
         String buffer_tokens[buffer_token_limit]{};
         size_t buffer_token_index{0};
         size_t token_start_index{0};
-        for (auto buffer_token_index = 0; buffer_token_index < buffer_token_limit; buffer_token_index++)
+        for (size_t buffer_token_index = 0; buffer_token_index < buffer_token_limit; buffer_token_index++)
         {
             auto token_end_index = buffer.indexOf(command_message_separator, token_start_index);
             buffer_tokens[buffer_token_index] = buffer.substring(token_start_index, token_end_index++);
@@ -139,7 +139,7 @@ bool CollectCommand::validate_signature(String &buffer, String &command_string)
 
         // validate sequence number
 
-        for (auto index = 0; index < buffer_tokens[0].length(); index++)
+        for (unsigned int index = 0; index < buffer_tokens[0].length(); index++)
         {
             if (!isDigit(buffer_tokens[0].charAt(index)))
             {
@@ -210,7 +210,7 @@ bool CollectCommand::validate_signature(String &buffer, String &command_string)
         blake.update(&command_message_separator, 1);
         blake.update(&command, command_length);
         blake.finalizeHMAC(secret, secret_size, HMAC, HMAC_size);
-        for (auto index = 0; index < HMAC_size; index++)
+        for (size_t index = 0; index < HMAC_size; index++)
         {
             if (HMAC[index] < 0x10)
             {
@@ -257,7 +257,7 @@ bool CollectCommand::parse_parameters(const String &command_string, String comma
 
     Log.verboseln("Parsing command");
     token_index = 0;
-    for (auto string_index = 0; string_index < command_string.length(); string_index++)
+    for (unsigned int string_index = 0; string_index < command_string.length(); string_index++)
     {
         if (command_string.charAt(string_index) != ' ')
         {
