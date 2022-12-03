@@ -12,8 +12,8 @@ int b{ 22 };
 
 // the local variables a and b shadow the global variables
 int add(int a, int b) {
-  a = 10;
-  b = 5;
+  ::a = 10;
+  ::b = 5;
   return a + b;
 }
 
@@ -26,16 +26,19 @@ void setup() {
   Serial.print(a);
   Serial.print(" b: ");
   Serial.println(b);
+  Serial.println();
   
 // call the add function with copies of the global variables
   Serial.print("sum: ");
   Serial.println(add(a, b));
+  Serial.println();
   
 // the global variables are unchanged by the assignments in add
   Serial.print("a: ");
   Serial.print(a);
   Serial.print(" b: ");
   Serial.println(b);
+  Serial.println();
 }
 
 void loop() {}
