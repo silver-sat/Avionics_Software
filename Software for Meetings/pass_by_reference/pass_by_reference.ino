@@ -8,7 +8,7 @@
  *
  */
 
-int add(const int &a, const int &b) {
+int add(int a, int b) {
   a = 10;
   b = 5;    
   return a + b;
@@ -28,16 +28,19 @@ void setup() {
   Serial.print(a);
   Serial.print(" b: ");
   Serial.println(b);
+  Serial.println();
   
 // print sum
   Serial.print("sum: ");
   Serial.println(add(a, b));
+  Serial.println();
   
  // print values 
   Serial.print("a: ");
   Serial.print(a);
   Serial.print(" b: ");
   Serial.println(b);
+  Serial.println();
 }
 
 void loop() {}
