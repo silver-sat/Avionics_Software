@@ -61,7 +61,7 @@ bool AvionicsBoard::begin()
 
     // Inertial Management Unit
 
-    Log.traceln("Initializing inertial management unit");
+    Log.traceln("Initializing inertial measurement unit");
     auto status = m_imu.begin(&Wire1);
     if (status)
     {
@@ -212,7 +212,7 @@ bool AvionicsBoard::set_picture_time(DateTime time)
         Log.errorln("External realtime clock is not set");
         return false;
     }
-    if ((time.year() <= minimum_valid_year) || (time.year() >= maximum_valid_year))
+    if ((time.year() < minimum_valid_year) || (time.year() > maximum_valid_year))
     {
         Log.errorln("Picture time must be between %d and %d, inclusive", minimum_valid_year, maximum_valid_year);
         return false;

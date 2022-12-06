@@ -77,6 +77,7 @@ public:
      *
      */
 
+    // todo: consider using TimeSpan
     bool set_beacon_interval(int seconds);
 
     /**
@@ -90,6 +91,7 @@ public:
      * @brief Set the time for the next payload photo
      *
      */
+
     bool set_picture_time(DateTime time);
 
     /**
@@ -161,7 +163,6 @@ public:
 
     bool busswitch_disable();
 
-private:
     /**
      * @brief Initialize I2C bus switch
      *
@@ -169,23 +170,24 @@ private:
 
     bool busswitch_begin();
 
+private:
     /**
      * @brief Avionics Board member variables
      *
      */
 
-    ExternalWatchdog m_external_watchdog{};
-    unsigned long m_beacon_interval{2 * minutes_to_seconds * seconds_to_milliseconds};
-    unsigned long m_last_beacon_time{0};
-    Beacon::status m_power_status{Beacon::status::unknown};
-    Beacon::status m_avionics_status{Beacon::status::excellent};
-    Beacon::status m_radio_status{Beacon::status::unknown};
-    Beacon::status m_payload_status{Beacon::status::unknown};
-    size_t m_picture_count{0};
-    DateTime m_picture_times[maximum_scheduled_pictures]{};
-    ExternalRTC m_external_rtc{};
-    IMU m_imu{};
-    CY15B256J m_fram{};
+    ExternalWatchdog m_external_watchdog{};                                            /**< Watchdog */
+    unsigned long m_beacon_interval{2 * minutes_to_seconds * seconds_to_milliseconds}; /**< Beacon interval */
+    unsigned long m_last_beacon_time{0};                                               /**< Last beacon time */
+    Beacon::status m_power_status{Beacon::status::unknown};                            /**< Power Board status */
+    Beacon::status m_avionics_status{Beacon::status::excellent};                       /**< Avionics Board status */
+    Beacon::status m_radio_status{Beacon::status::unknown};                            /**< Radio Board status */
+    Beacon::status m_payload_status{Beacon::status::unknown};                          /**< Payload Board status */
+    size_t m_picture_count{0};                                                         /**< Maximum picture count */
+    DateTime m_picture_times[maximum_scheduled_pictures]{};                            /**< Scheduled picture times */
+    ExternalRTC m_external_rtc{};                                                      /**< External Real Time Clock */
+    IMU m_imu{};                                                                       /**< Inertial Measurement Unit */
+    CY15B256J m_fram{};                                                                /**< FRAM */
 };
 
 #endif // AVIONICSBOARD_H

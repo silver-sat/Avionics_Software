@@ -62,6 +62,13 @@ public:
     ExecuteCommand();
 
     /**
+     * @brief Destroy the ExecuteCommand object
+     *
+     */
+
+    virtual ~ExecuteCommand() = default;
+
+    /**
      * @brief Get the operation
      *
      */
