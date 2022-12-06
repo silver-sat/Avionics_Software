@@ -15,23 +15,6 @@
 #include <BLAKE2s.h>
 
 /**
- * @brief Construct a new CollectCommand::CollectCommand object
- *
- */
-
-CollectCommand::CollectCommand(){};
-
-/**
- * @brief Destroy the CollectCommand::CollectCommand object
- *
- */
-
-CollectCommand::~CollectCommand()
-{
-    delete_command();
-};
-
-/**
  * @brief Check for command
  *
  * @return true no command or successful
@@ -127,7 +110,6 @@ bool CollectCommand::validate_signature(String &buffer, String &command_string)
         // tokenize the buffer
 
         String buffer_tokens[buffer_token_limit]{};
-        size_t buffer_token_index{0};
         size_t token_start_index{0};
         for (size_t buffer_token_index = 0; buffer_token_index < buffer_token_limit; buffer_token_index++)
         {

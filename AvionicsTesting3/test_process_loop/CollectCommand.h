@@ -35,18 +35,11 @@ class CollectCommand
 {
 public:
     /**
-     * @brief Construct a new CollectCommand::CollectCommand object
+     * @brief Construct the CollectCommand::CollectCommand object
      *
      */
 
-    CollectCommand();
-
-    /**
-     * @brief Destroy the CollectCommand::CollectCommand object
-     *
-     */
-
-    ~CollectCommand();
+    CollectCommand() = default;
 
     /**
      * @brief Check for command
