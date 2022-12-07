@@ -29,7 +29,7 @@
 #include "log_utility.h"
 #include "Beacon.h"
 #include "CollectCommand.h"
-#include "ExecuteCommand.h"
+// #include "CommandProcessor.h"
 #include "mock_power_board.h"
 #include "AvionicsBoard.h"
 #include "mock_radio_board.h"

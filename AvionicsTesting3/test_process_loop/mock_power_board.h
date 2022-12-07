@@ -59,8 +59,10 @@ public:
     String get_detail();
 
 private:
+// todo: consider where power status is gathered and stored
     PowerStatus m_power_status{fair};
     EPS_I eps_i{};
+    
 };
 
 #endif // MOCK_POWER_BOARD_H

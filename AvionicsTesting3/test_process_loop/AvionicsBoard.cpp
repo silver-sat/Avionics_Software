@@ -37,7 +37,7 @@ bool AvionicsBoard::begin()
     Log.traceln("Critical I2C bus initialization completed");
 
     // External realtime clock
-
+    // todo: evaluate use of SAMD21 internal watchdog
     Log.traceln("Initializing external realtime clock");
 
     if (m_external_rtc.begin(&Wire))
@@ -143,8 +143,8 @@ bool AvionicsBoard::set_beacon_interval(const int seconds)
 {
     if ((seconds != 0) && ((seconds < minimum_beacon_interval) || (seconds > maximum_beacon_interval)))
     {
-        Log.errorln("Beacon interval must be zero or between %d and %d, inclusive", 
-                     minimum_beacon_interval, maximum_beacon_interval);
+        Log.errorln("Beacon interval must be zero or between %d and %d, inclusive",
+                    minimum_beacon_interval, maximum_beacon_interval);
         return false;
     }
     m_beacon_interval = seconds * seconds_to_milliseconds;
@@ -167,7 +167,9 @@ bool AvionicsBoard::check_beacon()
         if (power.get_status() == "U")
         {
             m_power_status = Beacon::unknown;
-        } else {
+        }
+        else
+        {
             m_power_status = Beacon::unknown;
         }
         m_avionics_status = Beacon::excellent;
@@ -342,7 +344,6 @@ String AvionicsBoard::get_telemetry()
  *
  * @return String interval
  */
-
 
 String AvionicsBoard::get_beacon_interval()
 {

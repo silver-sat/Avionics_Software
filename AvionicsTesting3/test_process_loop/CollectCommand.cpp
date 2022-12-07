@@ -86,10 +86,10 @@ void hex2bin(const char *src, byte *target)
 /**
  * @brief Validate the commmand signature
  *
- * @param buffer sequence, salt, command and HMAC
- * @param command_string output: command and parameters
- * @return true if valid
- * @return false if invalid
+ * @param[in] buffer sequence, salt, command and HMAC
+ * @param[out] command_string command and parameters
+ * @return true valid
+ * @return false invalid
  */
 
 bool CollectCommand::validate_signature(String &buffer, String &command_string)

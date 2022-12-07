@@ -11,7 +11,7 @@
 #ifndef BUILDCOMMAND_H
 #define BUILDCOMMAND_H
 
-#include "ExecuteCommand.h"
+#include "CommandProcessor.h"
 
 /**
  * @brief Factory for Command objects
@@ -40,10 +40,10 @@ public:
      *
      */
 
-    ExecuteCommand *get_command();
+    CommandProcessor *get_command();
 
 private:
-    ExecuteCommand *m_command;
+    CommandProcessor *m_command;
 };
 
 #endif // BUILDCOMMAND_H
