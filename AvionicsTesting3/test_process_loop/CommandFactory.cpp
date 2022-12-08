@@ -250,17 +250,6 @@ Command* CommandFactory::BuildCommand(String tokens[], size_t token_count)
             return new CommandInvalid(); // Wrong number of parameters
         }
     }
-    else if (tokens[0] == "Unknown")
-    {
-        if (token_count == 0)
-        {
-            return new CommandUnknown();
-        }
-        else
-        {
-            return new CommandInvalid(); // Wrong number of parameters
-        }
-    }
     else
     {
         return new CommandUnknown(); // Unknown command

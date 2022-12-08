@@ -44,23 +44,7 @@
 class Command
 {
 public:
-    /**
-     * @brief Commands
-     *
-     */
-
-    enum operation
-    {
-        
-    };
-
-    /**
-     * @brief Construct a new Command object
-     *
-     */
-
-    Command() = default;
-
+    
     /**
      * @brief Destroy the Command object
      *

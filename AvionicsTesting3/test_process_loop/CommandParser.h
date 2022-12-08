@@ -1,20 +1,20 @@
 /**
- * @file CollectCommand.h
+ * @file CommandParser.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Collect command, validate signature, and parse parameters
- * @version 1.0.0
+ * @version 1.2.0
  * @date 2022-09-27
  *
  *
  */
 
-#ifndef COLLECTCOMMAND_H
-#define COLLECTCOMMAND_H
+#ifndef COMMANDPARSER_H
+#define COMMANDPARSER_H
 
-#include "BuildCommand.h"
+#include <Arduino.h>
 
 /**
- * @brief CollectCommand constants
+ * @brief CommandParser constants
  *
  */
 
@@ -29,32 +29,11 @@ constexpr size_t HMAC_size{32};                /**< HMAC size */
 
 /**
  * @brief Collect command, validate signature, parse parameters
- * 
+ *
  */
-class CollectCommand
+class CommandParser
 {
 public:
-    /**
-     * @brief Construct the CollectCommand::CollectCommand object
-     *
-     */
-
-    CollectCommand() = default;
-
-    /**
-     * @brief Check for command
-     *
-     */
-
-    bool check_for_command();
-
-    /**
-     * @brief Get command
-     *
-     */
-
-    ExecuteCommand *get_command();
-
     /**
      * @brief Parse command parameters
      *
@@ -67,29 +46,8 @@ public:
      *
      */
 
-    bool validate_signature(String &buffer, String &command_string);
+    bool validate_signature(String &buffer, String &command_string, const bool validation_required, long& command_sequence);
 
-    /**
-     * @brief Make a command
-     *
-     */
-
-    bool make_command(String buffer);
-
-    /**
-     * @brief Delete the command and the factory
-     *
-     */
-    bool delete_command();
-
-private:
-    char m_command_buffer[maximum_command_length + 1]{""};
-    bool m_validation_required{false};
-    BuildCommand *m_factory{};
-    ExecuteCommand *m_command{};
-    long m_successful_commands{0};
-    long m_failed_commands{0};
-    long m_command_sequence{1};
 };
 
-#endif // COLLECTCOMMAND_H
+#endif // COMMANDPARSER_H

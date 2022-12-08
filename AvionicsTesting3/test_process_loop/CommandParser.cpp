@@ -1,50 +1,18 @@
 /**
- * @file CollectCommand.cpp
+ * @file CommandParser.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Collect command, validate signature, and parse parameters
- * @version 1.0.0
+ * @version 1.1.0
  * @date 2022-09-27
  *
  *
  */
-
-#include "CollectCommand.h"
+#include "CommandParser.h"
 #include "arduino_secrets.h"
 #include "log_utility.h"
 #include "mock_radio_board.h"
 #include <BLAKE2s.h>
 
-/**
- * @brief Check for command
- *
- * @return true no command or successful
- * @return false error
- */
-
-bool CollectCommand::check_for_command()
-{
-    extern MockRadioBoard radio;
-    if (radio.receive_command(m_command_buffer, maximum_command_length))
-    {
-        String command_string{m_command_buffer};
-        make_command(command_string);
-        m_command->acknowledge_command();
-        Log.traceln("Command acknowledged");
-        if (m_command->execute_command())
-        {
-            Log.traceln("Executed (%l executed, %l failed, next sequence %l)", ++m_successful_commands, m_failed_commands, m_command_sequence);
-            delete_command();
-            return true;
-        }
-        else
-        {
-            Log.errorln("Failed (%l executed, %l failed, next sequence %i)", m_successful_commands, ++m_failed_commands, m_command_sequence);
-            delete_command();
-            return false;
-        };
-    };
-    return true;
-};
 
 /**
  * @brief Helper function for hexadecimal text to binary conversion
@@ -72,7 +40,7 @@ int char2int(const char input)
  */
 
 // This function assumes src to be a zero terminated sanitized string with
-// an even number of [0-9a-f] characters, and target to be sufficiently large
+// an even number of [0-9a-f] characters and target to be sufficiently large
 
 void hex2bin(const char *src, byte *target)
 {
@@ -88,11 +56,13 @@ void hex2bin(const char *src, byte *target)
  *
  * @param[in] buffer sequence, salt, command and HMAC
  * @param[out] command_string command and parameters
- * @return true valid
- * @return false invalid
+ * @param[in] validation_required true if command must have valid signature
+ * @param[in, out] command_sequence next valid command sequence number
+ * @return true valid signature
+ * @return false invalid signature
  */
 
-bool CollectCommand::validate_signature(String &buffer, String &command_string)
+bool CommandParser::validate_signature(String &buffer, String &command_string, bool validation_required, long& expected_sequence)
 {
     buffer.trim();
     auto buffer_index = buffer.indexOf(command_message_separator);
@@ -125,7 +95,7 @@ bool CollectCommand::validate_signature(String &buffer, String &command_string)
         {
             if (!isDigit(buffer_tokens[0].charAt(index)))
             {
-                if (m_validation_required)
+                if (validation_required)
                 {
                     Log.errorln("Sequence is not a digit");
                     return false;
@@ -138,10 +108,11 @@ bool CollectCommand::validate_signature(String &buffer, String &command_string)
             }
         }
 
-        long command_sequence{buffer_tokens[0].toInt()};
-        if (command_sequence != m_command_sequence)
+        // todo: consider enforcing command sequence numbers
+        long transmitted_sequence{buffer_tokens[0].toInt()};
+        if (transmitted_sequence != expected_sequence)
         {
-            if (m_validation_required)
+            if (validation_required)
             {
 
                 Log.errorln("Command sequence invalid");
@@ -149,24 +120,20 @@ bool CollectCommand::validate_signature(String &buffer, String &command_string)
             }
             else
             {
-                Log.infoln("Command sequence invalid");
+                Log.warningln("Command sequence invalid");
             }
         }
         else
         {
             Log.verboseln("Command sequence is valid");
-            m_command_sequence++;
+            expected_sequence++;
         }
-
-        // todo: check for validation requirement
-        // todo: check for valid lengths
-        // todo: consider enforcing command sequence numbers
 
         const size_t sequence_length{buffer_tokens[0].length()};
         byte sequence[maximum_sequence_length]{};
         buffer_tokens[0].getBytes(sequence, maximum_sequence_length);
 
-        const size_t salt_length{buffer_tokens[1].length()};
+        // const size_t salt_length{buffer_tokens[1].length()};
         byte salt[salt_size]{};
         hex2bin(buffer_tokens[1].c_str(), salt);
 
@@ -174,11 +141,11 @@ bool CollectCommand::validate_signature(String &buffer, String &command_string)
         byte command[maximum_command_length]{};
         buffer_tokens[2].getBytes(command, maximum_command_length);
 
-        const size_t sourceHMAC_length = buffer_tokens[3].length();
+        // const size_t sourceHMAC_length = buffer_tokens[3].length();
         byte sourceHMAC[HMAC_size]{};
         hex2bin(buffer_tokens[3].c_str(), sourceHMAC);
 
-        const size_t secret_length = 16;
+        // const size_t secret_length = 16;
         const byte secret[]{SECRET_HASH_KEY};
 
         byte HMAC[HMAC_size];
@@ -209,7 +176,7 @@ bool CollectCommand::validate_signature(String &buffer, String &command_string)
         }
         else
         {
-            if (m_validation_required)
+            if (validation_required)
             {
                 Log.errorln("Command signature invalid");
                 return false;
@@ -227,14 +194,14 @@ bool CollectCommand::validate_signature(String &buffer, String &command_string)
 /**
  * @brief Parse command parameters
  *
- * @param command_string command string
- * @param command_tokens output: tokens
- * @param token_index output: number of tokens
+ * @param[in] command_string command string
+ * @param[out] command_tokens tokens
+ * @param[out] token_index number of tokens
  * @return true successful
  * @return false failure
  */
 
-bool CollectCommand::parse_parameters(const String &command_string, String command_tokens[], size_t &token_index)
+bool CommandParser::parse_parameters(const String &command_string, String command_tokens[], size_t &token_index)
 {
 
     Log.verboseln("Parsing command");
@@ -255,7 +222,7 @@ bool CollectCommand::parse_parameters(const String &command_string, String comma
             }
         }
     }
-
+// todo: evaluate duplicate code
     Log.verboseln("Token processed: %s", command_tokens[token_index].c_str());
     if (token_index > command_token_limit)
     {
@@ -265,62 +232,3 @@ bool CollectCommand::parse_parameters(const String &command_string, String comma
     return true;
 };
 
-/**
- * @brief Make command object
- *
- * @return next command to process
- *
- */
-
-bool CollectCommand::make_command(String buffer)
-{
-
-    // validate signature
-
-    String command_string;
-    validate_signature(buffer, command_string);
-
-    // tokenize the command string and create the command object
-
-    String command_tokens[command_token_limit]{};
-    size_t token_count{0};
-    if (parse_parameters(command_string, command_tokens, token_count))
-    {
-        Log.traceln("Constructing command object");
-        m_factory = new BuildCommand(command_tokens, token_count);
-        m_command = m_factory->get_command();
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-};
-
-/**
- * @brief Delete the command and the factory
- *
- * @return true successful
- * @return false erroe
- */
-bool CollectCommand::delete_command()
-{
-
-    // destroy the command
-
-    if (m_command)
-    {
-        delete m_command;
-        m_command = NULL;
-    }
-
-    // destroy the factory
-
-    if (m_factory)
-    {
-        delete m_factory;
-        m_factory = NULL;
-    }
-
-    return true;
-}
