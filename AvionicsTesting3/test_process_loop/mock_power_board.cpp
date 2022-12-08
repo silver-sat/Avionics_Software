@@ -46,16 +46,22 @@ String MockPowerBoard::get_status()
     {
     case excellent:
         status = "A";
+        break;
     case good:
         status = "B";
+        break;
     case fair:
         status = "C";
+        break;
     case poor:
         status = "D";
+        break;
     case critical:
         status = "F";
+        break;
     default:
         status = "U";
+        break;
     };
     avionics.busswitch_disable();
     return status;
