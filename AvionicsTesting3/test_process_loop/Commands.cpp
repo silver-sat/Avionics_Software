@@ -581,6 +581,13 @@ bool CommandUnsetClock::acknowledge_command()
     return status;
 }
 
+/**
+ * @brief Execute UnsetClock command
+ *
+ * @return true successful
+ * @return false error
+ */
+
 bool CommandUnsetClock::execute_command()
 {
     auto status = Command::execute_command();

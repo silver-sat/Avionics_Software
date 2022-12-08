@@ -13,7 +13,6 @@
 #include "mock_radio_board.h"
 #include <BLAKE2s.h>
 
-
 /**
  * @brief Helper function for hexadecimal text to binary conversion
  *
@@ -54,6 +53,16 @@ void hex2bin(const char *src, byte *target)
 /**
  * @brief Validate the commmand signature
  *
+ * Properly formed commands consist of four parts, separated by the
+ * command_message_separator character
+ *
+ * 1. Sequence number, ascii digits, variable length up to maximum_sequence_length
+ * 2. Salt, ascii hexadecial digits, fixed length of salt_size
+ * 3. Command, ascii characters, command and space separated parameters, variable length
+ *      up to maximum_command_length
+ * 4. HMAC, ascii hexadecimal digits, fixed length of HMAC_soize
+ *
+ *
  * @param[in] buffer sequence, salt, command and HMAC
  * @param[out] command_string command and parameters
  * @param[in] validation_required true if command must have valid signature
@@ -62,7 +71,7 @@ void hex2bin(const char *src, byte *target)
  * @return false invalid signature
  */
 
-bool CommandParser::validate_signature(String &buffer, String &command_string, bool validation_required, long& expected_sequence)
+bool CommandParser::validate_signature(String &buffer, String &command_string, bool validation_required, long &expected_sequence)
 {
     buffer.trim();
     auto buffer_index = buffer.indexOf(command_message_separator);
@@ -77,7 +86,7 @@ bool CommandParser::validate_signature(String &buffer, String &command_string, b
 
         Log.verboseln("Command is signed", command_message_separator);
 
-        // tokenize the buffer
+        // Tokenize the buffer
 
         String buffer_tokens[buffer_token_limit]{};
         size_t token_start_index{0};
@@ -89,7 +98,8 @@ bool CommandParser::validate_signature(String &buffer, String &command_string, b
         }
         command_string = buffer_tokens[2];
 
-        // validate sequence number
+        // Verify sequence contains digits
+        // todo: consider enforcing command sequence numbers
 
         for (unsigned int index = 0; index < buffer_tokens[0].length(); index++)
         {
@@ -97,24 +107,24 @@ bool CommandParser::validate_signature(String &buffer, String &command_string, b
             {
                 if (validation_required)
                 {
-                    Log.errorln("Sequence is not a digit");
+                    Log.errorln("Sequence character is not a digit");
                     return false;
                 }
                 else
                 {
-                    Log.warningln("Sequence is not a digit");
+                    Log.warningln("Sequence character is not a digit");
                     break;
                 }
             }
         }
 
-        // todo: consider enforcing command sequence numbers
+        // Validate sequence number
+
         long transmitted_sequence{buffer_tokens[0].toInt()};
         if (transmitted_sequence != expected_sequence)
         {
             if (validation_required)
             {
-
                 Log.errorln("Command sequence invalid");
                 return false;
             }
@@ -125,15 +135,16 @@ bool CommandParser::validate_signature(String &buffer, String &command_string, b
         }
         else
         {
-            Log.verboseln("Command sequence is valid");
+            Log.verboseln("Command sequence valid");
             expected_sequence++;
         }
+
+        // Marshal sequence, salt, command, and HMAC as ascii characters
 
         const size_t sequence_length{buffer_tokens[0].length()};
         byte sequence[maximum_sequence_length]{};
         buffer_tokens[0].getBytes(sequence, maximum_sequence_length);
 
-        // const size_t salt_length{buffer_tokens[1].length()};
         byte salt[salt_size]{};
         hex2bin(buffer_tokens[1].c_str(), salt);
 
@@ -141,13 +152,12 @@ bool CommandParser::validate_signature(String &buffer, String &command_string, b
         byte command[maximum_command_length]{};
         buffer_tokens[2].getBytes(command, maximum_command_length);
 
-        // const size_t sourceHMAC_length = buffer_tokens[3].length();
         byte sourceHMAC[HMAC_size]{};
         hex2bin(buffer_tokens[3].c_str(), sourceHMAC);
 
-        // const size_t secret_length = 16;
-        const byte secret[]{SECRET_HASH_KEY};
+        // Generate HMAC with shared secret
 
+        const byte secret[]{SECRET_HASH_KEY};
         byte HMAC[HMAC_size];
         String hexHMAC{};
 
@@ -163,10 +173,12 @@ bool CommandParser::validate_signature(String &buffer, String &command_string, b
         {
             if (HMAC[index] < 0x10)
             {
-                hexHMAC += "0";
+                hexHMAC += "0"; // insert leading zero for single digit hex values
             };
             hexHMAC += String(HMAC[index], HEX);
         }
+
+        // Validate HMAC
 
         Log.verboseln("Computed HMAC: %s", hexHMAC.c_str());
         if (hexHMAC == buffer_tokens[3])
@@ -184,7 +196,6 @@ bool CommandParser::validate_signature(String &buffer, String &command_string, b
             else
             {
                 Log.warningln("Command signature invalid");
-                return true;
             }
         }
     }
@@ -215,20 +226,19 @@ bool CommandParser::parse_parameters(const String &command_string, String comman
         else
         {
             Log.verboseln("Token processed: %s", command_tokens[token_index].c_str());
-            if (token_index++ > command_token_limit)
+            if (token_index++ > command_parameter_limit)
             {
                 Log.warningln("Too many command parameters");
                 return false;
             }
         }
     }
-// todo: evaluate duplicate code
+    // todo: evaluate duplicate code
     Log.verboseln("Token processed: %s", command_tokens[token_index].c_str());
-    if (token_index > command_token_limit)
+    if (token_index > command_parameter_limit)
     {
         Log.warningln("Too many command parameters");
         return false;
     }
     return true;
 };
-

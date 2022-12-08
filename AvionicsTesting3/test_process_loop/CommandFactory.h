@@ -26,7 +26,7 @@ public:
      *
      */
 
-    Command *BuildCommand(String tokens[], size_t token_count);
+    Command *BuildCommand(const String tokens[], size_t token_count);
 };
 
 #endif // COMMANDFACTORY_H

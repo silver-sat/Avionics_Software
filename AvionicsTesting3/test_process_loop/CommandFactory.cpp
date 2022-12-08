@@ -17,7 +17,7 @@
  *
  */
 
-Command* CommandFactory::BuildCommand(String tokens[], size_t token_count)
+Command* CommandFactory::BuildCommand(const String tokens[], size_t token_count)
 {
     if (tokens[0] == "BeaconSp")
     {

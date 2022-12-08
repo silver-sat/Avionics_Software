@@ -63,7 +63,7 @@ Command* CommandProcessor::make_command(String buffer)
 
     // tokenize the command string and create the command object
 
-    String command_tokens[command_token_limit]{};
+    String command_tokens[command_parameter_limit]{};
     size_t token_count{0};
     if (command_parser.parse_parameters(command_string, command_tokens, token_count))
     {

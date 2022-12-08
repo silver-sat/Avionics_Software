@@ -26,8 +26,6 @@
  * GetBeaconInternal: reply with beacon interval
  * SendTestPacket: reply with test message
  * ClearPicTimes: empty PicTimes queue
- * Unknown: unknown command, error
- * Invalid: invalid command, error
  * UnsetClock: change the realtime clock status to unset for testing
  */
 

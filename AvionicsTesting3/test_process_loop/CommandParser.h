@@ -22,7 +22,7 @@ constexpr char command_message_separator{'|'}; /**< separator for signed command
 constexpr size_t buffer_token_limit{4};        /**< number of signed command sections */
 constexpr size_t maximum_sequence_length{10};  /**< maximum digits in sequence number */
 constexpr size_t maximum_command_length{200};  /**< maximum characters in command */
-constexpr size_t command_token_limit{10};      /**< maximum command parameters */
+constexpr size_t command_parameter_limit{10};  /**< maximum command parameters */
 constexpr size_t salt_size{16};                /**< salt size for HMAC */
 constexpr size_t secret_size{16};              /**< secret size for HMAC */
 constexpr size_t HMAC_size{32};                /**< HMAC size */
@@ -46,8 +46,7 @@ public:
      *
      */
 
-    bool validate_signature(String &buffer, String &command_string, const bool validation_required, long& command_sequence);
-
+    bool validate_signature(String &buffer, String &command_string, const bool validation_required, long &command_sequence);
 };
 
 #endif // COMMANDPARSER_H
