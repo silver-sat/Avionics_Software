@@ -18,6 +18,7 @@
  * @brief KISS defined constants
  *
  */
+// todo: consider changing case of constants
 constexpr byte FEND{'\xC0'};       /**< frame end */
 constexpr byte FESC{'\xDB'};       /**< frame escape */
 constexpr byte TFEND{'\xDC'};      /**< transposed frame end */
@@ -28,6 +29,7 @@ constexpr byte DATA_FRAME{'\x00'}; /**< data frame */
  * @brief SilverSat defined KISS local command types
  *
  */
+// todo: consider changing case of constants
 constexpr byte BEACON{'\x07'};            /**< send a beacon */
 constexpr byte DEPLOY_ANTENNA{'\x08'};    /**< deploy antenna */
 constexpr byte GET_RADIO_STATUS{'\x09'};  /**< request radio status */
@@ -38,7 +40,7 @@ constexpr byte SEND_RADIO_STATUS{'\x0B'}; /**< return radio status */
  * @brief Dummy AX.25 header
  *
  */
-
+// todo: consider changing case of constants
 constexpr byte HEADER[]{0x96, 0x86, 0x66, 0x86, 0xa2, 0x94, 0xe0, 0x96,
                         0x86, 0x66, 0x86, 0xa2, 0x94, 0xe5, 0x03, 0xf0}; /**< dummy AX.25 header */
 constexpr size_t header_size{sizeof(HEADER)};                            /**< AX.25 header size */

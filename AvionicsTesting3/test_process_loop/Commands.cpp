@@ -1,14 +1,14 @@
 /**
- * @file ExecuteCommand.cpp
+ * @file Commands.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat commands
- * @version 1.1.1
+ * @version 1.2.0
  * @date 2022-07-25
  *
  *
  */
 
-#include "ExecuteCommand.h"
+#include "Commands.h"
 #include "Message.h"
 #include "log_utility.h"
 #include "AvionicsBoard.h"
@@ -17,37 +17,27 @@
 #include "mock_payload_board.h"
 
 /**
- * @brief Construct a new Command object
- *
- */
-
-ExecuteCommand::ExecuteCommand(){
-
-};
-
-/**
- * @brief get the command operation
- *
- * @return Command::operation
- */
-ExecuteCommand::operation ExecuteCommand::get_operation()
-{
-    return m_action;
-};
-
-/**
  * @brief Acknowledge the command
  *
  */
 
-bool ExecuteCommand::acknowledge_command()
+bool Command::acknowledge_command()
 {
     Log.traceln("Acknowledging command");
     Message message{Message::acknowledgement, ""};
-    if (m_action == ExecuteCommand::invalid)
-    {
-        message = Message(Message::negative_acknowledgement, "");
-    }
+    extern MockRadioBoard radio;
+    return radio.send_message(message);
+};
+
+/**
+ * @brief Negative acknowledge the command
+ *
+ */
+
+bool Command::negative_acknowledge_command()
+{
+    Log.traceln("Negative acknowledging command");
+    Message message{Message::negative_acknowledgement, ""};
     extern MockRadioBoard radio;
     return radio.send_message(message);
 };
@@ -59,34 +49,23 @@ bool ExecuteCommand::acknowledge_command()
  * @return false error
  */
 
-bool ExecuteCommand::execute_command()
+bool Command::execute_command()
 {
     Log.traceln("Executing command");
     return true;
 };
 
 /**
- * @brief Construct a new Command Unknown:: Command Unknown object
- *
- */
-
-CommandUnknown::CommandUnknown()
-{
-    m_action = ExecuteCommand::unknown;
-};
-
-/**
  * @brief Acknowledge unknown command
  *
- * @return true successful
  * @return false error
  */
 
 bool CommandUnknown::acknowledge_command()
 {
-    auto status = ExecuteCommand::acknowledge_command();
+    Command::negative_acknowledge_command();
     Log.verboseln("Unknown");
-    return status;
+    return false;
 };
 
 /**
@@ -96,33 +75,22 @@ bool CommandUnknown::acknowledge_command()
  */
 bool CommandUnknown::execute_command()
 {
-    ExecuteCommand::execute_command();
+    Command::execute_command();
     Log.errorln("Unknown");
     return false;
 }
 
 /**
- * @brief Construct a new Command Invalid:: Command Invalid object
- *
- */
-
-CommandInvalid::CommandInvalid()
-{
-    m_action = ExecuteCommand::invalid;
-};
-
-/**
  * @brief Acknowledge invalid command
  *
- * @return true successful
  * @return false error
  */
 
 bool CommandInvalid::acknowledge_command()
 {
-    auto status = ExecuteCommand::acknowledge_command();
+    Command::negative_acknowledge_command();
     Log.verboseln("Invalid");
-    return status;
+    return false;
 };
 
 /**
@@ -132,19 +100,9 @@ bool CommandInvalid::acknowledge_command()
  */
 bool CommandInvalid::execute_command()
 {
-    ExecuteCommand::execute_command();
+    Command::execute_command();
     Log.errorln("Invalid");
     return false;
-};
-
-/**
- * @brief Construct a new Command No Operate:: Command No Operate object
- *
- */
-
-CommandNoOperate::CommandNoOperate()
-{
-    m_action = ExecuteCommand::no_operate;
 };
 
 /**
@@ -156,7 +114,7 @@ CommandNoOperate::CommandNoOperate()
 
 bool CommandNoOperate::acknowledge_command()
 {
-    auto status = ExecuteCommand::acknowledge_command();
+    auto status = Command::acknowledge_command();
     Log.verboseln("NoOperate");
     return status;
 };
@@ -169,19 +127,9 @@ bool CommandNoOperate::acknowledge_command()
 
 bool CommandNoOperate::execute_command()
 {
-    ExecuteCommand::execute_command();
+    Command::execute_command();
     Log.verboseln("NoOperate");
     return true;
-};
-
-/**
- * @brief Construct a new Command Pay Comms:: Command Pay Comms object
- *
- */
-
-CommandPayComms::CommandPayComms()
-{
-    m_action = ExecuteCommand::pay_comms;
 };
 
 /**
@@ -191,7 +139,7 @@ CommandPayComms::CommandPayComms()
 
 bool CommandPayComms::acknowledge_command()
 {
-    auto status = ExecuteCommand::acknowledge_command();
+    auto status = Command::acknowledge_command();
     Log.verboseln("PayComms");
     return status;
 };
@@ -199,20 +147,10 @@ bool CommandPayComms::acknowledge_command()
 bool CommandPayComms::execute_command()
 {
 
-    auto status = ExecuteCommand::execute_command();
+    auto status = Command::execute_command();
     Log.verboseln("PayComms");
     extern MockPayloadBoard payload;
     return payload.tweet() && status;
-};
-
-/**
- * @brief Construct a new Command Report T:: Command Report T object
- *
- */
-
-CommandReportT::CommandReportT()
-{
-    m_action = ExecuteCommand::report_t;
 };
 
 /**
@@ -222,14 +160,14 @@ CommandReportT::CommandReportT()
 
 bool CommandReportT::acknowledge_command()
 {
-    auto status = ExecuteCommand::acknowledge_command();
+    auto status = Command::acknowledge_command();
     Log.verboseln("ReportT");
     return status;
 };
 
 bool CommandReportT::execute_command()
 {
-    auto status = ExecuteCommand::execute_command();
+    auto status = Command::execute_command();
     Log.verboseln("ReportT");
     extern AvionicsBoard avionics;
     auto timestamp = avionics.get_timestamp();
@@ -243,16 +181,6 @@ bool CommandReportT::execute_command()
 };
 
 /**
- * @brief Construct a new Command Twee Slee:: Command Twee Slee object
- *
- */
-
-CommandTweeSlee::CommandTweeSlee()
-{
-    m_action = CommandTweeSlee::twee_slee;
-};
-
-/**
  * @brief Acknowledge TweeSlee command
  *
  * @return true successful
@@ -261,7 +189,7 @@ CommandTweeSlee::CommandTweeSlee()
 
 bool CommandTweeSlee::acknowledge_command()
 {
-    auto status = ExecuteCommand::acknowledge_command();
+    auto status = Command::acknowledge_command();
     Log.verboseln("TweeSlee");
     return status;
 };
@@ -275,7 +203,7 @@ bool CommandTweeSlee::acknowledge_command()
 
 bool CommandTweeSlee::execute_command()
 {
-    auto status = ExecuteCommand::execute_command();
+    auto status = Command::execute_command();
     Log.verboseln("TweeSlee");
     extern MockPayloadBoard payload;
     Log.traceln("Turning off payload power");
@@ -283,16 +211,6 @@ bool CommandTweeSlee::execute_command()
     extern MockRadioBoard radio;
     Log.traceln("Sending local command: halt");
     return radio.send_halt() && status;
-};
-
-/**
- * @brief Construct a new Command Watchdog:: Command Watchdog object
- *
- */
-
-CommandWatchdog::CommandWatchdog()
-{
-    m_action = ExecuteCommand::watchdog;
 };
 
 /**
@@ -304,29 +222,17 @@ CommandWatchdog::CommandWatchdog()
 
 bool CommandWatchdog::acknowledge_command()
 {
-    auto status = ExecuteCommand::acknowledge_command();
+    auto status = Command::acknowledge_command();
     Log.verboseln("Watchdog");
     return status;
 };
 
 bool CommandWatchdog::execute_command()
 {
-    auto status = ExecuteCommand::execute_command();
+    auto status = Command::execute_command();
     Log.verboseln("Watchdog");
     extern AvionicsBoard avionics;
     return avionics.watchdog_force_reset() && status;
-};
-
-/**
- * @brief Construct a new Command Beacon Sp:: Command Beacon Sp object
- *
- * @param seconds interval between beacons
- */
-
-CommandBeaconSp::CommandBeaconSp(int seconds)
-{
-    m_action = ExecuteCommand::beacon_sp;
-    m_seconds = seconds;
 };
 
 /**
@@ -338,7 +244,7 @@ CommandBeaconSp::CommandBeaconSp(int seconds)
 
 bool CommandBeaconSp::acknowledge_command()
 {
-    auto status = ExecuteCommand::acknowledge_command();
+    auto status = Command::acknowledge_command();
     Log.verboseln("BeaconSp: %d seconds", m_seconds);
     return status;
 };
@@ -352,22 +258,10 @@ bool CommandBeaconSp::acknowledge_command()
 
 bool CommandBeaconSp::execute_command()
 {
-    auto status = ExecuteCommand::execute_command();
+    auto status = Command::execute_command();
     Log.verboseln("BeaconSp");
     extern AvionicsBoard avionics;
     return avionics.set_beacon_interval(m_seconds) && status;
-};
-
-/**
- * @brief Construct a new Command Pic Times:: Command Pic Times object
- *
- * @param time time value
- */
-
-CommandPicTimes::CommandPicTimes(DateTime time)
-{
-    m_action = ExecuteCommand::pic_times;
-    m_time = time;
 };
 
 /**
@@ -379,7 +273,7 @@ CommandPicTimes::CommandPicTimes(DateTime time)
 
 bool CommandPicTimes::acknowledge_command()
 {
-    auto status = ExecuteCommand::acknowledge_command();
+    auto status = Command::acknowledge_command();
     Log.verboseln("PicTimes: Year: %d Month: %d Day: %d Hour: %d Minute: %d Second: %d",
                   m_time.year(), m_time.month(), m_time.day(), m_time.hour(), m_time.minute(), m_time.second());
     return status;
@@ -393,22 +287,10 @@ bool CommandPicTimes::acknowledge_command()
  */
 bool CommandPicTimes::execute_command()
 {
-    auto status = ExecuteCommand::execute_command();
+    auto status = Command::execute_command();
     Log.verboseln("PicTimes");
     extern AvionicsBoard avionics;
     return avionics.set_picture_time(m_time) && status;
-};
-
-/**
- * @brief Construct a new Command Set Clock:: Command Set Clock object
- *
- * @param time time value
- */
-
-CommandSetClock::CommandSetClock(DateTime time)
-{
-    m_action = ExecuteCommand::set_clock;
-    m_time = time;
 };
 
 /**
@@ -420,7 +302,7 @@ CommandSetClock::CommandSetClock(DateTime time)
 
 bool CommandSetClock::acknowledge_command()
 {
-    auto status = ExecuteCommand::acknowledge_command();
+    auto status = Command::acknowledge_command();
     Log.verboseln("SetClock: Year: %d Month: %d Day: %d Hour: %d Minute: %d Second: %d",
                   m_time.year(), m_time.month(), m_time.day(), m_time.hour(), m_time.minute(), m_time.second());
     return status;
@@ -435,21 +317,11 @@ bool CommandSetClock::acknowledge_command()
 
 bool CommandSetClock::execute_command()
 {
-    auto status = ExecuteCommand::execute_command();
+    auto status = Command::execute_command();
     Log.verboseln("SetClock");
     extern AvionicsBoard avionics;
     return avionics.set_external_rtc(m_time) && status;
 }
-
-/**
- * @brief Construct a new Command Get Pic Times:: Command Get Pic Times object
- *
- */
-
-CommandGetPicTimes::CommandGetPicTimes()
-{
-    m_action = ExecuteCommand::get_pic_times;
-};
 
 /**
  * @brief Acknowledge GetPicTimes command
@@ -460,7 +332,7 @@ CommandGetPicTimes::CommandGetPicTimes()
 
 bool CommandGetPicTimes::acknowledge_command()
 {
-    auto status = ExecuteCommand::acknowledge_command();
+    auto status = Command::acknowledge_command();
     Log.verboseln("GetPicTimes");
     return status;
 };
@@ -474,22 +346,12 @@ bool CommandGetPicTimes::acknowledge_command()
 
 bool CommandGetPicTimes::execute_command()
 {
-    auto status = ExecuteCommand::execute_command();
+    auto status = Command::execute_command();
     Log.verboseln("GetPicTimes");
     extern AvionicsBoard avionics;
     extern MockRadioBoard radio;
     auto message = Message(Message::response, avionics.get_pic_times());
     return radio.send_message(message) && status;
-};
-
-/**
- * @brief Construct a new Command Get Telemetry:: Command Get Telemetry object
- *
- */
-
-CommandGetTelemetry::CommandGetTelemetry()
-{
-    m_action = ExecuteCommand::get_telemetry;
 };
 
 /**
@@ -501,7 +363,7 @@ CommandGetTelemetry::CommandGetTelemetry()
 
 bool CommandGetTelemetry::acknowledge_command()
 {
-    auto status = ExecuteCommand::acknowledge_command();
+    auto status = Command::acknowledge_command();
     Log.verboseln("GetTelemetry");
     return status;
 };
@@ -515,21 +377,12 @@ bool CommandGetTelemetry::acknowledge_command()
 
 bool CommandGetTelemetry::execute_command()
 {
-    auto status = ExecuteCommand::execute_command();
+    auto status = Command::execute_command();
     Log.verboseln("GetTelemetry");
     extern AvionicsBoard avionics;
     extern MockRadioBoard radio;
     auto message = Message(Message::response, avionics.get_telemetry());
     return radio.send_message(message) && status;
-};
-/**
- * @brief Construct a new Command Get Power:: Command Get Power object
- *
- */
-
-CommandGetPower::CommandGetPower()
-{
-    m_action = ExecuteCommand::get_power;
 };
 
 /**
@@ -541,7 +394,7 @@ CommandGetPower::CommandGetPower()
 
 bool CommandGetPower::acknowledge_command()
 {
-    auto status = ExecuteCommand::acknowledge_command();
+    auto status = Command::acknowledge_command();
     Log.verboseln("GetPower");
     return status;
 };
@@ -555,21 +408,12 @@ bool CommandGetPower::acknowledge_command()
 
 bool CommandGetPower::execute_command()
 {
-    auto status = ExecuteCommand::execute_command();
+    auto status = Command::execute_command();
     Log.verboseln("GetPower");
     extern MockPowerBoard power;
     extern MockRadioBoard radio;
     auto message = Message(Message::response, power.get_detail());
     return radio.send_message(message) && status;
-};
-/**
- * @brief Construct a new Command Get Photos:: Command Get Photos object
- *
- */
-
-CommandGetPhotos::CommandGetPhotos()
-{
-    m_action = ExecuteCommand::get_photos;
 };
 
 /**
@@ -581,7 +425,7 @@ CommandGetPhotos::CommandGetPhotos()
 
 bool CommandGetPhotos::acknowledge_command()
 {
-    auto status = ExecuteCommand::acknowledge_command();
+    auto status = Command::acknowledge_command();
     Log.verboseln("GetPhotos");
     return status;
 };
@@ -595,22 +439,12 @@ bool CommandGetPhotos::acknowledge_command()
 
 bool CommandGetPhotos::execute_command()
 {
-    auto status = ExecuteCommand::execute_command();
+    auto status = Command::execute_command();
     Log.verboseln("GetPhotos");
     extern MockPayloadBoard payload;
     extern MockRadioBoard radio;
     auto message = Message(Message::response, String(payload.get_photo_count()).c_str());
     return radio.send_message(message) && status;
-};
-
-/**
- * @brief Construct a new Command Get Comms:: Command Get Comms object
- *
- */
-
-CommandGetComms::CommandGetComms()
-{
-    m_action = ExecuteCommand::get_comms;
 };
 
 /**
@@ -622,7 +456,7 @@ CommandGetComms::CommandGetComms()
 
 bool CommandGetComms::acknowledge_command()
 {
-    auto status = ExecuteCommand::acknowledge_command();
+    auto status = Command::acknowledge_command();
     Log.verboseln("GetComms");
     return status;
 };
@@ -636,21 +470,11 @@ bool CommandGetComms::acknowledge_command()
 
 bool CommandGetComms::execute_command()
 {
-    auto status = ExecuteCommand::execute_command();
+    auto status = Command::execute_command();
     Log.verboseln("GetComms");
     extern MockRadioBoard radio;
     auto message = Message(Message::response, radio.get_status().c_str());
     return radio.send_message(message) && status;
-};
-
-/**
- * @brief Construct a new Command Get Beacon Interval:: Command Get Beacon Interval object
- *
- */
-
-CommandGetBeaconInterval::CommandGetBeaconInterval()
-{
-    m_action = ExecuteCommand::get_beacon_interval;
 };
 
 /**
@@ -662,7 +486,7 @@ CommandGetBeaconInterval::CommandGetBeaconInterval()
 
 bool CommandGetBeaconInterval::acknowledge_command()
 {
-    auto status = ExecuteCommand::acknowledge_command();
+    auto status = Command::acknowledge_command();
     Log.verboseln("GetBeaconInterval");
     return status;
 };
@@ -676,22 +500,12 @@ bool CommandGetBeaconInterval::acknowledge_command()
 
 bool CommandGetBeaconInterval::execute_command()
 {
-    auto status = ExecuteCommand::execute_command();
+    auto status = Command::execute_command();
     Log.verboseln("GetBeaconInterval");
     extern AvionicsBoard avionics;
     extern MockRadioBoard radio;
     auto message = Message(Message::response, String(avionics.get_beacon_interval()).c_str());
     return radio.send_message(message) && status;
-};
-
-/**
- * @brief Construct a new Command Send Test Packet:: Command Send Test Packet object
- *
- */
-
-CommandSendTestPacket::CommandSendTestPacket()
-{
-    m_action = ExecuteCommand::send_test_packet;
 };
 
 /**
@@ -703,7 +517,7 @@ CommandSendTestPacket::CommandSendTestPacket()
 
 bool CommandSendTestPacket::acknowledge_command()
 {
-    auto status = ExecuteCommand::acknowledge_command();
+    auto status = Command::acknowledge_command();
     Log.verboseln("SendTestPacket");
     return status;
 };
@@ -717,21 +531,11 @@ bool CommandSendTestPacket::acknowledge_command()
 
 bool CommandSendTestPacket::execute_command()
 {
-    auto status = ExecuteCommand::execute_command();
+    auto status = Command::execute_command();
     Log.verboseln("SendTestPacket");
     extern MockRadioBoard radio;
     auto message = Message(Message::response, "TEST");
     return radio.send_message(message) && status;
-};
-
-/**
- * @brief Construct a new Command Clear Pic Times:: Command Clear Pic Times object
- *
- */
-
-CommandClearPicTimes::CommandClearPicTimes()
-{
-    m_action = ExecuteCommand::clear_pic_times;
 };
 
 /**
@@ -743,7 +547,7 @@ CommandClearPicTimes::CommandClearPicTimes()
 
 bool CommandClearPicTimes::acknowledge_command()
 {
-    auto status = ExecuteCommand::acknowledge_command();
+    auto status = Command::acknowledge_command();
     Log.verboseln("ClearPicTimes");
     return status;
 };
@@ -757,20 +561,10 @@ bool CommandClearPicTimes::acknowledge_command()
 
 bool CommandClearPicTimes::execute_command()
 {
-    auto status = ExecuteCommand::execute_command();
+    auto status = Command::execute_command();
     Log.verboseln("ClearPicTimes");
     extern AvionicsBoard avionics;
     return avionics.clear_pic_times() && status;
-};
-
-/**
- * @brief Construct a new Command Unset Clock:: Command Unset Clock object
- *
- */
-
-CommandUnsetClock::CommandUnsetClock()
-{
-    m_action = ExecuteCommand::unset_clock;
 };
 
 /**
@@ -782,14 +576,21 @@ CommandUnsetClock::CommandUnsetClock()
 
 bool CommandUnsetClock::acknowledge_command()
 {
-    auto status = ExecuteCommand::acknowledge_command();
+    auto status = Command::acknowledge_command();
     Log.verboseln("Unset clock");
     return status;
 }
 
+/**
+ * @brief Execute UnsetClock command
+ *
+ * @return true successful
+ * @return false error
+ */
+
 bool CommandUnsetClock::execute_command()
 {
-    auto status = ExecuteCommand::execute_command();
+    auto status = Command::execute_command();
     Log.verboseln("Unset clock");
     extern AvionicsBoard avionics;
     return avionics.unset_clock() && status;

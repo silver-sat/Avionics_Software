@@ -1,23 +1,23 @@
 /**
- * @file BuildCommand.cpp
+ * @file CommandFactory.cpp
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief Generate command object
- * @version 1.1.0
+ * @brief Generate command objects
+ * @version 1.2.0
  * @date 2022-07-28
  *
  *
  */
 
-#include "BuildCommand.h"
+#include "CommandFactory.h"
+#include "Commands.h"
 #include "log_utility.h"
-#include <Arduino.h>
 
 /**
- * @brief Construct a new  BuildCommand::BuildCommand object
+ * @brief Construct a new  Command object
  *
  */
 
-BuildCommand::BuildCommand(String tokens[], size_t token_count)
+Command* CommandFactory::BuildCommand(const String tokens[], size_t token_count)
 {
     if (tokens[0] == "BeaconSp")
     {
@@ -33,24 +33,20 @@ BuildCommand::BuildCommand(String tokens[], size_t token_count)
             }
             if (token_is_digits)
             {
-                m_command = new CommandBeaconSp(tokens[1].toInt());
-                return;
+                return new CommandBeaconSp(tokens[1].toInt());
             }
         }
-        m_command = new CommandInvalid(); // Wrong number of parameters or bad parameter
-        return;
+        return new CommandInvalid(); // Wrong number of parameters or bad parameter
     }
     else if (tokens[0] == "PayComms")
     {
         if (token_count == 0)
         {
-            m_command = new CommandPayComms();
-            return;
+            return new CommandPayComms();
         }
         else
         {
-            m_command = new CommandInvalid(); // Wrong number of parameters
-            return;
+            return new CommandInvalid(); // Wrong number of parameters
         }
     }
     else if (tokens[0] == "PicTimes")
@@ -71,43 +67,37 @@ BuildCommand::BuildCommand(String tokens[], size_t token_count)
             if (tokens_are_digits)
             {
 
-                m_command = new CommandPicTimes(DateTime(
+                return new CommandPicTimes(DateTime(
                     static_cast<uint16_t>(tokens[1].toInt()),
                     static_cast<uint8_t>(tokens[2].toInt()),
                     static_cast<uint8_t>(tokens[3].toInt()),
                     static_cast<uint8_t>(tokens[4].toInt()),
                     static_cast<uint8_t>(tokens[5].toInt()),
                     static_cast<uint8_t>(tokens[6].toInt())));
-                return;
             }
         }
-        m_command = new CommandInvalid(); // Wrong number of parameters or bad parameter
-        return;
+        return new CommandInvalid(); // Wrong number of parameters or bad parameter
     }
     else if (tokens[0] == "ReportT")
     {
         if (token_count == 0)
         {
-            m_command = new CommandReportT();
-            return;
+            return new CommandReportT();
         }
         else
         {
-            m_command = new CommandInvalid(); // Wrong number of parameters
-            return;
+            return new CommandInvalid(); // Wrong number of parameters
         }
     }
     else if (tokens[0] == "NoOperate")
     {
         if (token_count == 0)
         {
-            m_command = new CommandNoOperate();
-            return;
+            return new CommandNoOperate();
         }
         else
         {
-            m_command = new CommandInvalid(); // Wrong number of parameters
-            return;
+            return new CommandInvalid(); // Wrong number of parameters
         }
     }
     else if (tokens[0] == "SetClock")
@@ -127,204 +117,141 @@ BuildCommand::BuildCommand(String tokens[], size_t token_count)
             }
             if (tokens_are_digits)
             {
-                m_command = new CommandSetClock(DateTime(
+                return new CommandSetClock(DateTime(
                     static_cast<uint16_t>(tokens[1].toInt()),
                     static_cast<uint8_t>(tokens[2].toInt()),
                     static_cast<uint8_t>(tokens[3].toInt()),
                     static_cast<uint8_t>(tokens[4].toInt()),
                     static_cast<uint8_t>(tokens[5].toInt()),
                     static_cast<uint8_t>(tokens[6].toInt())));
-                return;
             }
         }
-        m_command = new CommandInvalid(); // Wrong number of parameters or bad parameter
-        return;
+        return new CommandInvalid(); // Wrong number of parameters or bad parameter
     }
     else if (tokens[0] == "TweeSlee")
     {
         if (token_count == 0)
 
         {
-            m_command = new CommandTweeSlee();
-            return;
+            return new CommandTweeSlee();
         }
         else
         {
-            m_command = new CommandInvalid(); // Wrong number of parameters
-            return;
+            return new CommandInvalid(); // Wrong number of parameters
         }
     }
     else if (tokens[0] == "ExternalWatchdog")
     {
         if (token_count == 0)
         {
-            m_command = new CommandWatchdog();
-            return;
+            return new CommandWatchdog();
         }
         else
         {
-            m_command = new CommandInvalid(); // Wrong number of parameters
-            return;
+            return new CommandInvalid(); // Wrong number of parameters
         }
     }
     else if (tokens[0] == "GetPicTimes")
     {
         if (token_count == 0)
         {
-            m_command = new CommandGetPicTimes();
-            return;
+            return new CommandGetPicTimes();
         }
         else
         {
-            m_command = new CommandInvalid(); // Wrong number of parameters
-            return;
+            return new CommandInvalid(); // Wrong number of parameters
         }
     }
     else if (tokens[0] == "GetTelemetry")
     {
         if (token_count == 0)
         {
-            m_command = new CommandGetTelemetry();
-            return;
+            return new CommandGetTelemetry();
         }
         else
         {
-            m_command = new CommandInvalid(); // Wrong number of parameters
-            return;
+            return new CommandInvalid(); // Wrong number of parameters
         }
     }
     else if (tokens[0] == "GetPower")
     {
         if (token_count == 0)
         {
-            m_command = new CommandGetPower();
-            return;
+            return new CommandGetPower();
         }
         else
         {
-            m_command = new CommandInvalid(); // Wrong number of parameters
-            return;
+            return new CommandInvalid(); // Wrong number of parameters
         }
     }
     else if (tokens[0] == "GetPhotos")
     {
         if (token_count == 0)
         {
-            m_command = new CommandGetPhotos();
-            return;
+            return new CommandGetPhotos();
         }
         else
         {
-            m_command = new CommandInvalid(); // Wrong number of parameters
-            return;
+            return new CommandInvalid(); // Wrong number of parameters
         }
     }
     else if (tokens[0] == "GetComms")
     {
         if (token_count == 0)
         {
-            m_command = new CommandGetComms();
-            return;
+            return new CommandGetComms();
         }
         else
         {
-            m_command = new CommandInvalid(); // Wrong number of parameters
-            return;
+            return new CommandInvalid(); // Wrong number of parameters
         }
     }
     else if (tokens[0] == "GetBeaconInterval")
     {
         if (token_count == 0)
         {
-            m_command = new CommandGetBeaconInterval();
-            return;
+            return new CommandGetBeaconInterval();
         }
         else
         {
-            m_command = new CommandInvalid(); // Wrong number of parameters
-            return;
+            return new CommandInvalid(); // Wrong number of parameters
         }
     }
     else if (tokens[0] == "SendTestPacket")
     {
         if (token_count == 0)
         {
-            m_command = new CommandSendTestPacket();
-            return;
+            return new CommandSendTestPacket();
         }
         else
         {
-            m_command = new CommandInvalid(); // Wrong number of parameters
-            return;
+            return new CommandInvalid(); // Wrong number of parameters
         }
     }
     else if (tokens[0] == "ClearPicTimes")
     {
         if (token_count == 0)
         {
-            m_command = new CommandClearPicTimes();
-            return;
+            return new CommandClearPicTimes();
         }
         else
         {
-            m_command = new CommandInvalid(); // Wrong number of parameters
-            return;
+            return new CommandInvalid(); // Wrong number of parameters
         }
     }
     else if (tokens[0] == "UnsetClock")
     {
         if (token_count == 0)
         {
-            m_command = new CommandUnsetClock();
-            return;
+            return new CommandUnsetClock();
         }
         else
         {
-            m_command = new CommandInvalid(); // Wrong number of parameters
-            return;
-        }
-    }
-    else if (tokens[0] == "Unknown")
-    {
-        if (token_count == 0)
-        {
-            m_command = new CommandUnknown();
-            return;
-        }
-        else
-        {
-            m_command = new CommandInvalid(); // Wrong number of parameters
-            return;
+            return new CommandInvalid(); // Wrong number of parameters
         }
     }
     else
     {
-        m_command = new CommandUnknown();
-        return;
+        return new CommandUnknown(); // Unknown command
     }
-};
-
-/**
- * @brief Destroy the BuildCommand::BuildCommand object and the associated command
- *
- */
-
-BuildCommand::~BuildCommand()
-{
-    if (m_command)
-    {
-        delete m_command;
-        m_command = NULL;
-    };
-};
-
-/**
- * @brief return the command
- *
- * @return Command*
- */
-
-ExecuteCommand *BuildCommand::get_command()
-{
-    return m_command;
 };

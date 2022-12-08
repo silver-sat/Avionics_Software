@@ -39,24 +39,26 @@ String MockPowerBoard::get_status()
 {
 
     // todo: access power data from Power Board
+    String status{};
     extern AvionicsBoard avionics;
     avionics.busswitch_enable();
     switch (m_power_status)
     {
     case excellent:
-        return "A";
+        status = "A";
     case good:
-        return "B";
+        status = "B";
     case fair:
-        return "C";
+        status = "C";
     case poor:
-        return "D";
+        status = "D";
     case critical:
-        return "F";
+        status = "F";
     default:
-        return "U";
+        status = "U";
     };
     avionics.busswitch_disable();
+    return status;
 };
 
 /**
@@ -68,7 +70,8 @@ String MockPowerBoard::get_status()
 String MockPowerBoard::get_detail()
 {
 
-    // todo: open non-critical I2C bus, access power data from Power Board
+    // todo: open non-critical I2C bus, access power data from Power Board]
+    // todo: integrate with EPS_I driver
 
     return "VP100.000" // Panel 1 voltage and current
            "CP100.000"

@@ -17,7 +17,7 @@ import hmac
 import time
 
 ## port for log output
-LOG_PORT = "/dev/tty.usbmodem11101"
+LOG_PORT = "/dev/tty.usbmodem11401"
 ## port for command input
 COMMAND_PORT = "/dev/tty.usbserial-A10MHKWZ"
 ## serial transmission speed
@@ -68,8 +68,8 @@ def generate_signed(command):
     salt = secrets.token_bytes(16)
     # todo: implement sequence number testing
     global command_counter
-    sequence = repr(command_counter).encode("utf-8")
     command_counter += 1
+    sequence = repr(command_counter).encode("utf-8")
     separator = "|".encode("utf-8")
     command = command.encode("utf-8")
     command_hmac = hmac.new(secret, digestmod=hashlib.blake2s)
