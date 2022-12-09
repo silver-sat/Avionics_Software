@@ -37,7 +37,7 @@ bool AvionicsBoard::begin()
     Log.traceln("Critical I2C bus initialization completed");
 
     // External realtime clock
-
+    // todo: evaluate use of SAMD21 internal watchdog
     Log.traceln("Initializing external realtime clock");
 
     if (m_external_rtc.begin(&Wire))
@@ -61,7 +61,7 @@ bool AvionicsBoard::begin()
 
     // Inertial Management Unit
 
-    Log.traceln("Initializing inertial management unit");
+    Log.traceln("Initializing inertial measurement unit");
     auto status = m_imu.begin(&Wire1);
     if (status)
     {
@@ -143,8 +143,8 @@ bool AvionicsBoard::set_beacon_interval(const int seconds)
 {
     if ((seconds != 0) && ((seconds < minimum_beacon_interval) || (seconds > maximum_beacon_interval)))
     {
-        Log.errorln("Beacon interval must be zero or between %d and %d, inclusive", 
-                     minimum_beacon_interval, maximum_beacon_interval);
+        Log.errorln("Beacon interval must be zero or between %d and %d, inclusive",
+                    minimum_beacon_interval, maximum_beacon_interval);
         return false;
     }
     m_beacon_interval = seconds * seconds_to_milliseconds;
@@ -166,9 +166,11 @@ bool AvionicsBoard::check_beacon()
         extern MockPowerBoard power;
         if (power.get_status() == "U")
         {
-            m_power_status == Beacon::unknown;
-        } else {
-            m_power_status == Beacon::unknown;
+            m_power_status = Beacon::unknown;
+        }
+        else
+        {
+            m_power_status = Beacon::unknown;
         }
         m_avionics_status = Beacon::excellent;
         extern MockRadioBoard radio;
@@ -212,7 +214,7 @@ bool AvionicsBoard::set_picture_time(DateTime time)
         Log.errorln("External realtime clock is not set");
         return false;
     }
-    if ((time.year() <= minimum_valid_year) || (time.year() >= maximum_valid_year))
+    if ((time.year() < minimum_valid_year) || (time.year() > maximum_valid_year))
     {
         Log.errorln("Picture time must be between %d and %d, inclusive", minimum_valid_year, maximum_valid_year);
         return false;
@@ -342,7 +344,6 @@ String AvionicsBoard::get_telemetry()
  *
  * @return String interval
  */
-
 
 String AvionicsBoard::get_beacon_interval()
 {

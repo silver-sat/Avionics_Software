@@ -36,8 +36,6 @@ public:
     /**
      * @brief Construct a new Message object
      *
-     * @param header message type
-     * @param content message body
      */
 
     Message(message_type header, String content);
@@ -45,7 +43,6 @@ public:
     /**
      * @brief Get the message
      *
-     * @return String
      */
 
     String get_message();

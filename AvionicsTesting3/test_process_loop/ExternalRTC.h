@@ -31,8 +31,6 @@ public:
     /**
      * @brief Initialize the external realtime clock
      *
-     * @return true successful
-     * @return false error
      */
 
     bool begin(TwoWire *theWire);
@@ -40,9 +38,6 @@ public:
     /**
      * @brief Set the external realtime clock
      *
-     * @param time
-     * @return true successful
-     * @return false error
      */
 
     bool set_time(DateTime time);
@@ -50,9 +45,6 @@ public:
     /**
      * @brief Get the current external realtime clock time
      *
-     * @return DateTime current time
-     * @return true successful
-     * @return false error
      */
 
     bool get_time(DateTime &time);
@@ -60,7 +52,6 @@ public:
     /**
      * @brief Get a timestamp
      *
-     * @return String timestamp
      */
 
     String get_timestamp();
@@ -68,8 +59,6 @@ public:
     /**
      * @brief Unset the realtime clock
      *
-     * @return true successful
-     * @return false error
      */
 
     // todo: for testing only, remove from flight softwarebool unset_clock();
@@ -79,8 +68,6 @@ public:
     /**
      * @brief Get status of realtime clock
      *
-     * @return true
-     * @return false
      */
 
     bool is_set();

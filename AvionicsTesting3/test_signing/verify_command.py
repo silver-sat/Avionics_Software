@@ -14,11 +14,11 @@ import hashlib
 import hmac
 
 ##
-#
-# @param str string string to sign
-# @param str secret secret for signing
-# @param int sequence optioanl sequence number, default = 1
-# @param str separator optional separator, default = '|'
+# Command line parameters
+# string string to sign
+# secret secret for signing
+# sequence optioanl sequence number, default = 1
+# separator optional separator, default = '|'
 #
 
 

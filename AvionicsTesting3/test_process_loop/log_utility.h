@@ -16,8 +16,6 @@
 /**
  * @brief Print log prefix
  *
- * @param _logOutput output
- * @param logLevel log level
  */
 
 void printPrefix(Print *_logOutput, int logLevel);
@@ -25,7 +23,6 @@ void printPrefix(Print *_logOutput, int logLevel);
 /**
  * @brief Print log timestamp
  *
- * @param _logOutput output
  */
 
 void printTimestamp(Print *_logOutput);
@@ -33,8 +30,6 @@ void printTimestamp(Print *_logOutput);
 /**
  * @brief Format timestamp
  *
- * @param timestamp output
- * @param msecs optional, default is current value of millis()
  */
 
 void formatTimestamp(char *timestamp, const unsigned long msecs = millis());
@@ -42,8 +37,6 @@ void formatTimestamp(char *timestamp, const unsigned long msecs = millis());
 /**
  * @brief Print log description based on level
  *
- * @param _logOutput output
- * @param logLevel log level
  */
 
 void printLogLevel(Print *_logOutput, int logLevel);
@@ -51,8 +44,6 @@ void printLogLevel(Print *_logOutput, int logLevel);
 /**
  * @brief Print log suffix
  *
- * @param _logOutput output
- * @param logLevel log level
  */
 
 void printSuffix(Print *_logOutput, int logLevel);

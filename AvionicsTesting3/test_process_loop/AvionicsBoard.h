@@ -47,8 +47,6 @@ public:
     /**
      * @brief Initialize the Avionics Board
      *
-     * @return true successful
-     * @return false error
      */
 
     bool begin();
@@ -56,8 +54,6 @@ public:
     /**
      * @brief Force the watchdog to reset the processor
      *
-     * @return true successful
-     * @return false error
      */
 
     bool watchdog_force_reset();
@@ -65,9 +61,6 @@ public:
     /**
      * @brief Set the external realtime clock
      *
-     * @param time new time setting
-     * @return true successful
-     * @return false error
      */
 
     bool set_external_rtc(DateTime time);
@@ -75,7 +68,6 @@ public:
     /**
      * @brief Get a timestamp
      *
-     * @return String timestamp
      */
 
     String get_timestamp();
@@ -83,18 +75,14 @@ public:
     /**
      * @brief Set beacon interval
      *
-     * @param seconds
-     * @return true successful
-     * @return false error
      */
 
+    // todo: consider using TimeSpan
     bool set_beacon_interval(int seconds);
 
     /**
      * @brief Send a beacon if the beacon interval has elapsed
      *
-     * @return true successful
-     * @return false error
      */
 
     bool check_beacon();
@@ -102,17 +90,13 @@ public:
     /**
      * @brief Set the time for the next payload photo
      *
-     * @param time time for photo
-     * @return true successful
-     * @return false error
      */
+
     bool set_picture_time(DateTime time);
 
     /**
      * @brief Check time for photo and start payload if required
      *
-     * @return true successful
-     * @return false error
      */
 
     bool check_photo();
@@ -120,7 +104,6 @@ public:
     /**
      * @brief Get scheduled picture times
      *
-     * @return String number of pictures available
      */
 
     String get_pic_times();
@@ -128,8 +111,6 @@ public:
     /**
      * @brief Clear picture times
      *
-     * @return true successful
-     * @return false error
      */
 
     bool clear_pic_times();
@@ -137,7 +118,6 @@ public:
     /**
      * @brief Get telemetry
      *
-     * @return String telemetry data
      */
 
     String get_telemetry();
@@ -145,7 +125,6 @@ public:
     /**
      * @brief Get the beacon interval
      *
-     * @return String interval
      */
 
     String get_beacon_interval();
@@ -153,15 +132,12 @@ public:
     /**
      * @brief Trigger the watchdog
      *
-     * @return true successful
-     * @return false error
      */
     bool trigger_watchdog();
 
     /**
      * @brief Read a byte from the FRAM
      *
-     * @return String byte read
      */
 
     String read_fram(size_t address);
@@ -169,8 +145,6 @@ public:
     /**
      * @brief Unset the realtime clock
      *
-     * @return true successful
-     * @return false error
      */
 
     bool unset_clock();
@@ -189,7 +163,6 @@ public:
 
     bool busswitch_disable();
 
-private:
     /**
      * @brief Initialize I2C bus switch
      *
@@ -197,23 +170,24 @@ private:
 
     bool busswitch_begin();
 
+private:
     /**
      * @brief Avionics Board member variables
      *
      */
 
-    ExternalWatchdog m_external_watchdog{};
-    unsigned long m_beacon_interval{2 * minutes_to_seconds * seconds_to_milliseconds};
-    unsigned long m_last_beacon_time{0};
-    Beacon::status m_power_status{Beacon::status::unknown};
-    Beacon::status m_avionics_status{Beacon::status::excellent};
-    Beacon::status m_radio_status{Beacon::status::unknown};
-    Beacon::status m_payload_status{Beacon::status::unknown};
-    size_t m_picture_count{0};
-    DateTime m_picture_times[maximum_scheduled_pictures]{};
-    ExternalRTC m_external_rtc{};
-    IMU m_imu{};
-    CY15B256J m_fram{};
+    ExternalWatchdog m_external_watchdog{};                                            /**< Watchdog */
+    unsigned long m_beacon_interval{2 * minutes_to_seconds * seconds_to_milliseconds}; /**< Beacon interval */
+    unsigned long m_last_beacon_time{0};                                               /**< Last beacon time */
+    Beacon::status m_power_status{Beacon::status::unknown};                            /**< Power Board status */
+    Beacon::status m_avionics_status{Beacon::status::excellent};                       /**< Avionics Board status */
+    Beacon::status m_radio_status{Beacon::status::unknown};                            /**< Radio Board status */
+    Beacon::status m_payload_status{Beacon::status::unknown};                          /**< Payload Board status */
+    size_t m_picture_count{0};                                                         /**< Maximum picture count */
+    DateTime m_picture_times[maximum_scheduled_pictures]{};                            /**< Scheduled picture times */
+    ExternalRTC m_external_rtc{};                                                      /**< External Real Time Clock */
+    IMU m_imu{};                                                                       /**< Inertial Measurement Unit */
+    CY15B256J m_fram{};                                                                /**< FRAM */
 };
 
 #endif // AVIONICSBOARD_H

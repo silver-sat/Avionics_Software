@@ -17,9 +17,9 @@ import hmac
 import time
 
 ## port for log output
-LOG_PORT = "/dev/ttyACM0"
+LOG_PORT = "/dev/tty.usbmodem11401"
 ## port for command input
-COMMAND_PORT = "/dev/ttyUSB0"
+COMMAND_PORT = "/dev/tty.usbserial-A10MHKWZ"
 ## serial transmission speed
 BAUDRATE = 115200
 ## default timeout for readline
@@ -45,7 +45,7 @@ def collect_initialization():
 
     log = []
     log_data = ""
-    while "Payload power off" not in log_data:
+    while "Process Loop Test initialization completed" not in log_data:
         log_data = log_port.readline().decode("utf-8").strip()
         log.append(Entry(*(log_data.split(maxsplit=2))))
         print(log_data)
@@ -68,8 +68,8 @@ def generate_signed(command):
     salt = secrets.token_bytes(16)
     # todo: implement sequence number testing
     global command_counter
-    sequence = repr(command_counter).encode("utf-8")
     command_counter += 1
+    sequence = repr(command_counter).encode("utf-8")
     separator = "|".encode("utf-8")
     command = command.encode("utf-8")
     command_hmac = hmac.new(secret, digestmod=hashlib.blake2s)

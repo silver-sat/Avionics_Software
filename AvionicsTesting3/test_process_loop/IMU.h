@@ -31,8 +31,6 @@ public:
     /**
      * @brief Initialize inertial management unit
      *
-     * @return true successful
-     * @return false error
      */
     
     bool begin(TwoWire *theWire);
@@ -40,7 +38,6 @@ public:
     /**
      * @brief Get acceleration
      *
-     * @return String acceleration in m/s^2
      */
     
     String get_acceleration();
@@ -48,7 +45,6 @@ public:
     /**
      * @brief Get rotation
      *
-     * @return String rotation in rad/s
      */
     
     String get_rotation();
@@ -56,7 +52,6 @@ public:
     /**
      * @brief Get temperature
      *
-     * @return String temperature in degC
      */
     
     String get_temperature();
@@ -65,8 +60,6 @@ private:
     /**
      * @brief Update the data from the IMU
      *
-     * @return true
-     * @return false
      */
     
     bool refresh_data();

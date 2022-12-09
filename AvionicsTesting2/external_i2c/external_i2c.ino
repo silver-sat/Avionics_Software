@@ -8,16 +8,16 @@ void setup(){
 pinMode(en_ext_I2C, OUTPUT);
 pinMode(SDA_NON_CRIT, OUTPUT);
 pinMode(SCL_NON_CRIT, OUTPUT);
- //turns pins on
-digitalWrite(en_ext_I2C, HIGH);
-digitalWrite(SDA_NON_CRIT, HIGH);
-digitalWrite(SCL_NON_CRIT, HIGH);
+ // keeps enable on
+ digitalWrite(en_ext_I2C, LOW);
 }
 
 void loop(){
-//   delay(500);
-//  digitalWrite(en_ext_I2C, LOW);
-//  digitalWrite(SDA_NON_CRIT, LOW);
-//  digitalWrite(SCL_NON_CRIT, LOW);
-//   delay(500);
+ digitalWrite(SDA_NON_CRIT, HIGH);
+ digitalWrite(SCL_NON_CRIT, HIGH);
+  delay(500);
+ //digitalWrite(en_ext_I2C, LOW);
+ digitalWrite(SDA_NON_CRIT, LOW);
+ digitalWrite(SCL_NON_CRIT, LOW);
+  delay(500);
 }

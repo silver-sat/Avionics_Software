@@ -19,13 +19,14 @@
  * @brief EPS_I Constants
  *
  */
-constexpr uint8_t EPS_I_I2C_ADDRESS{0x18}; /**< I2C address of EPS I */
-constexpr float GETBATTERYINFO_BATTERY_BATT_VOLT_COEFFICIENT{0.0023394775};
-constexpr float GETBATTERYINFO_BATTERY_BATT_CURR_COEFFICIENT{0.0030517578};
-constexpr float GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE{0.00390625};
-constexpr float GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE{-0.0624};
-constexpr float GETSOLARPANELSINFO_SOLAR_Z_CURR_NEG_COEFFICIENT{0.0006103516};
-constexpr float GETBUSESINFO_BUSES_BUS_5V_CURR_COEFFICIENT{0.0020345052};
+// todo: consider changing case of constants
+constexpr uint8_t EPS_I_I2C_ADDRESS{0x18};                                                 /**< I2C address of EPS I */
+constexpr float GETBATTERYINFO_BATTERY_BATT_VOLT_COEFFICIENT{0.0023394775};                /**< Battery voltage coefficient */
+constexpr float GETBATTERYINFO_BATTERY_BATT_CURR_COEFFICIENT{0.0030517578};                /**< Battery current coefficient */
+constexpr float GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE{0.00390625}; /**< Battery temperature coefficient positive */
+constexpr float GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE{-0.0624};    /**< Battery temperature coefficient negative */
+constexpr float GETSOLARPANELSINFO_SOLAR_Z_CURR_NEG_COEFFICIENT{0.0006103516};             /**< Solar Z current coefficient negative */
+constexpr float GETBUSESINFO_BUSES_BUS_5V_CURR_COEFFICIENT{0.0020345052};                  /**< Bus 5 volt current coefficient */
 
 /**
  * @brief Read commands
@@ -517,23 +518,23 @@ enum class EPS_I_Output_Condition_1
 enum class EPS_I_Output_Condition_2
 {
   // Least Significant Bit
-  LUP_3_3V = 0,                   // Latch-up Protected output 3.3V (High Level - OFF)
-  LUP_5V = 1,                     // Latch-up Protected output 5V (High Level - OFF)
-  SHDChrg = 2,                    // Shutdown Battery Charger (High Level - OFF) Maximum Current 230mA.
-  Fast_Charge_230mA0 = 3,         // Fast battery charge. Maximum current limit is increased with 230mA
-  Fast_Charge_230mA1 = 4,         // Fast battery charge. Maximum current limit is increased with 230mA
-  I2C_PULLUP_RES_10K = 5,         // Pull up resistor for I2 C communication (10kΩ)
-  I2C_PULLUP_RES_4K7 = 6,         // Pull up resistor for I2 C communication (4.7kΩ)
+  LUP_3_3V = 0,                      // Latch-up Protected output 3.3V (High Level - OFF)
+  LUP_5V = 1,                        // Latch-up Protected output 5V (High Level - OFF)
+  SHDChrg = 2,                       // Shutdown Battery Charger (High Level - OFF) Maximum Current 230mA.
+  Fast_Charge_230mA0 = 3,            // Fast battery charge. Maximum current limit is increased with 230mA
+  Fast_Charge_230mA1 = 4,            // Fast battery charge. Maximum current limit is increased with 230mA
+  I2C_PULLUP_RES_10K = 5,            // Pull up resistor for I2 C communication (10kΩ)
+  I2C_PULLUP_RES_4K7 = 6,            // Pull up resistor for I2 C communication (4.7kΩ)
   RS485_120_OHM_TERMINATING_RES = 7, // Terminating resistor for RS485 communication (120Ω)
-  OUT7 = 8,                       // Output 7
-  OUT8 = 9,                       // Output 8
-                                  // 10 unused
-                                  // 11 unused
-                                  // 12 unused
-                                  // 13 unused
-                                  // 14 unused
-                                  // 15 unused
-                                  // Most Significant Bit
+  OUT7 = 8,                          // Output 7
+  OUT8 = 9,                          // Output 8
+                                     // 10 unused
+                                     // 11 unused
+                                     // 12 unused
+                                     // 13 unused
+                                     // 14 unused
+                                     // 15 unused
+                                     // Most Significant Bit
 };
 
 /**
@@ -544,24 +545,24 @@ enum class EPS_I_Output_Condition_2
 enum class EPS_I_Defaults_1
 {
   // Least Significant Bit
-  LUP_3_3V_Default = 0,           //   State on power up ofoutput “LUP 3.3V” (High Level - OFF)
-  LUP_5V_Default = 1,             // State on power up of output “LUP 5V” (High Level - OFF)
-  Fast_Charge_230mA_Default0 = 2, // State on power up of output “Fast Charge +230mA”
-  Fast_Charge_230mA_Default1 = 3, // State on power up of output “Fast Charge +2300mA”
-  I2C_PULLUP_RES_10K = 4,         // Pull up resistor for I2C communication (10kΩ)
-  I2C_PULLUP_RES_4K7 = 5,         // Pull up resistor for I2C communication (4.7kΩ)
+  LUP_3_3V_Default = 0,              //   State on power up ofoutput “LUP 3.3V” (High Level - OFF)
+  LUP_5V_Default = 1,                // State on power up of output “LUP 5V” (High Level - OFF)
+  Fast_Charge_230mA_Default0 = 2,    // State on power up of output “Fast Charge +230mA”
+  Fast_Charge_230mA_Default1 = 3,    // State on power up of output “Fast Charge +2300mA”
+  I2C_PULLUP_RES_10K = 4,            // Pull up resistor for I2C communication (10kΩ)
+  I2C_PULLUP_RES_4K7 = 5,            // Pull up resistor for I2C communication (4.7kΩ)
   RS485_120_OHM_TERMINATING_RES = 6, // Terminating resistor for RS485 communication (120Ω)
-                                  // 7 unused
-                                  // 8 unused
-                                  // 9 unused
-                                  // 10 unused
-                                  // 10 unused
-                                  // 11 unused
-                                  // 12 unused
-                                  // 13 unused
-                                  // 14 unused
-                                  // 15 unused
-                                  // Most Significant Bit
+                                     // 7 unused
+                                     // 8 unused
+                                     // 9 unused
+                                     // 10 unused
+                                     // 10 unused
+                                     // 11 unused
+                                     // 12 unused
+                                     // 13 unused
+                                     // 14 unused
+                                     // 15 unused
+                                     // Most Significant Bit
 };
 
 /**
@@ -592,6 +593,10 @@ enum class EPS_I_Defaults_2
                         // Most Significant Bit
 };
 
+/**
+ * @brief EPS Write Command
+ *
+ */
 enum class EPS_I_Write_Command
 {
   // ESPS Command = I2C Command
@@ -926,10 +931,6 @@ public:
   /**
    * @brief Set up the hardware and initialize I2C
    *
-   * @param i2c_address address of the device
-   * @param wire wire object for I2C connections
-   * @return true successful
-   * @return false error
    */
 
   bool begin(uint8_t i2c_address, TwoWire *wire);
@@ -937,7 +938,6 @@ public:
   /**
    * @brief Get the battery voltage
    *
-   * @return float voltage
    */
 
   float getBatteryVoltage(void);
@@ -945,7 +945,6 @@ public:
   /**
    * @brief Get the battery current
    *
-   * @return float amperage
    */
 
   float getBatteryCurrent(void);
@@ -953,7 +952,6 @@ public:
   /**
    * @brief Get the temperature at sensor 1
    *
-   * @return float temperature
    */
 
   float getTemperatureSensor1(void);
@@ -961,7 +959,6 @@ public:
   /**
    * @brief Get the temperature at sensor 2
    *
-   * @return float temperature
    */
 
   float getTemperatureSensor2(void);
@@ -969,7 +966,6 @@ public:
   /**
    * @brief Get the temperature at sensor 3
    *
-   * @return float temperature
    */
 
   float getTemperatureSensor3(void);
@@ -977,7 +973,6 @@ public:
   /**
    * @brief Get the Z negative panel current
    *
-   * @return float amperage
    */
 
   float getZNegativeCurrent(void);
@@ -985,7 +980,6 @@ public:
   /**
    * @brief Get the 5 volt current
    *
-   * @return float voltage
    */
 
   float get5VCurrent(void);
@@ -993,8 +987,6 @@ public:
   /**
    * @brief Get the heater 1 state
    *
-   * @return bool true ON
-   * @return bool false OFF
    */
 
   bool getHeater1State(void);
@@ -1002,8 +994,6 @@ public:
   /**
    * @brief Get the heater 2 state
    *
-   * @return bool true ON
-   * @return bool false OFF
    */
 
   bool getHeater2State(void);
@@ -1011,8 +1001,6 @@ public:
   /**
    * @brief Get the heater 3 state
    *
-   * @return bool true ON
-   * @return bool false OFF
    */
 
   bool getHeater3State(void);
@@ -1021,8 +1009,6 @@ private:
   /**
    * @brief Initialization code for EPS I
    *
-   * @return true if successful
-   * @return false error
    */
 
   bool _init(void);
@@ -1030,7 +1016,6 @@ private:
   /**
    * @brief Read 16 bits of data from the EPS I
    *
-   * @return raw 16 bits in correct endian format
    */
 
   uint16_t read_value(EPS_I_Read_Command command);
@@ -1038,8 +1023,6 @@ private:
   /**
    * @brief Write an 8-bit command and 8-bit state to the EPS I
    *
-   * @param command command to execute
-   * @param state state parameter for command
    */
 
   void write_command(EPS_I_Write_Command command, uint8_t state);
