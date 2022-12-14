@@ -18,6 +18,7 @@ int main()
     /**
      * @brief C-style loop
      *
+     * Traditional, standard Arduino
      */
 
     int array1[5] = {4, 7, 2, 5, 1};
@@ -29,11 +30,13 @@ int main()
         sum1 += array1[i];
     }
 
-    printf("Sum 1 is: %d\n", sum1); 
+    printf("Sum 1 is: %d\n", sum1);
 
     /**
      * @brief for-each loop
      *
+     * Preferred, avoids off by one and indexing errors
+     * Supported by Arduino
      */
 
     int array2[]{4, 7, 2, 5, 1};
@@ -49,8 +52,9 @@ int main()
     /**
      * @brief Library function
      *
+     * Available in environments supporting the standard library 
      */
 
-    std::array array3 {4, 7, 2, 5, 1};
+    std::array array3{4, 7, 2, 5, 1};
     std::cout << "Sum 3 is: " << std::accumulate(array3.begin(), array3.end(), 0) << '\n';
 }
