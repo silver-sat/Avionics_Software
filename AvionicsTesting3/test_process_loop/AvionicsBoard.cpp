@@ -12,14 +12,10 @@
 #include "log_utility.h"
 #include "mock_power_board.h"
 #include "mock_radio_board.h"
+#include <Adafruit_SleepyDog.h>
 #include "mock_payload_board.h"
 
-/**
- * @brief Construct a new Avionics Board:: Avionics Board object
- *
- */
-
-AvionicsBoard::AvionicsBoard(){};
+constexpr int internal_watchdog_interval{ 2 * seconds_to_milliseconds }; /**< internal watchdog interval **/
 
 /**
  * @brief Initialize the Avionics Board
@@ -28,77 +24,78 @@ AvionicsBoard::AvionicsBoard(){};
  * @return false error
  */
 
-bool AvionicsBoard::begin()
-{
-    // Critical I2C
 
-    Log.traceln("Initializing critical I2C bus");
-    Wire.begin();
-    Log.traceln("Critical I2C bus initialization completed");
+bool AvionicsBoard::begin() {
 
-    // External realtime clock
-    // todo: evaluate use of SAMD21 internal watchdog
-    Log.traceln("Initializing external realtime clock");
+  // Internal watchdog timer
+  //
+  // Only required for internal watchdog
+  // todo: consider adding window if internal watchdog is required
 
-    if (m_external_rtc.begin(&Wire))
-    {
-        Log.traceln("External realtime clock initialization completed");
-    }
-    else
-    {
-        Log.errorln("External realtime clock not initialized");
-    };
+  Log.traceln("Initializing internal watchdog timer");
+  auto interval{ Watchdog.enable(internal_watchdog_interval) };
+  Log.verboseln("Watchdog interval: %dms", interval);
+  Log.traceln("Internal watchdog timer initialized");
 
-    // Non-Critical I2C
+  // Critical I2C
 
-    Log.traceln("Initializing non-critical I2C bus");
-    // todo: consider leaving busswitch always enabled
-    busswitch_begin();
-    busswitch_enable();
-    Wire1.begin();
-    busswitch_disable();
-    Log.traceln("Non-critical I2C bus initialization completed");
+  Log.traceln("Initializing critical I2C bus");
+  Wire.begin();
+  Log.traceln("Critical I2C bus initialization completed");
 
-    // Inertial Management Unit
+  // External realtime clock
+  // todo: evaluate use of SAMD21 internal watchdog
+  Log.traceln("Initializing external realtime clock");
 
-    Log.traceln("Initializing inertial measurement unit");
-    auto status = m_imu.begin(&Wire1);
-    if (status)
-    {
-        Log.traceln("Inertial measurement unit initialization completed");
-    }
-    else
-    {
-        Log.errorln("Inertial management unit not initialized");
-    }
+  if (m_external_rtc.begin(&Wire)) {
+    Log.traceln("External realtime clock initialization completed");
+  } else {
+    Log.errorln("External realtime clock not initialized");
+  };
 
-    // FRAM
+  // Non-Critical I2C
 
-    Log.traceln("Initializing FRAM");
-    status = m_fram.begin(FRAM_I2C_ADDRESS, &Wire1);
-    if (status)
-    {
-        Log.traceln("FRAM initialization completed");
-    }
-    else
-    {
-        Log.errorln("FRAM not initialized");
-    }
+  Log.traceln("Initializing non-critical I2C bus");
+  // todo: consider leaving busswitch always enabled
+  busswitch_begin();
+  busswitch_enable();
+  Wire1.begin();
+  busswitch_disable();
+  Log.traceln("Non-critical I2C bus initialization completed");
 
-    return true;
+  // Inertial Management Unit
+
+  Log.traceln("Initializing inertial measurement unit");
+  auto status = m_imu.begin(&Wire1);
+  if (status) {
+    Log.traceln("Inertial measurement unit initialization completed");
+  } else {
+    Log.errorln("Inertial management unit not initialized");
+  }
+
+  // FRAM
+
+  Log.traceln("Initializing FRAM");
+  status = m_fram.begin(FRAM_I2C_ADDRESS, &Wire1);
+  if (status) {
+    Log.traceln("FRAM initialization completed");
+  } else {
+    Log.errorln("FRAM not initialized");
+  }
+
+  return true;
 };
 
 /**
  * @brief Force the watchdog to reset the processor
  *
- * @return true successful
- * @return false error
  */
 
-bool AvionicsBoard::watchdog_force_reset()
-{
-    Log.fatalln("Forcing watchdog reset");
-    return m_external_watchdog.set_force_reset();
+void AvionicsBoard::watchdog_force_reset() {
+  Log.fatalln("Forcing watchdog reset");
+  m_external_watchdog.set_force_reset();
+  Watchdog.disable();
+  Watchdog.enable(0);
 };
 
 /**
@@ -109,15 +106,13 @@ bool AvionicsBoard::watchdog_force_reset()
  * @return false error
  */
 
-bool AvionicsBoard::set_external_rtc(const DateTime time)
-{
-    if ((time.year() <= minimum_valid_year) || (time.year() >= maximum_valid_year))
-    {
-        Log.errorln("Time must be between %d and %d, inclusive", minimum_valid_year, maximum_valid_year);
-        return false;
-    }
+bool AvionicsBoard::set_external_rtc(const DateTime time) {
+  if ((time.year() <= minimum_valid_year) || (time.year() >= maximum_valid_year)) {
+    Log.errorln("Time must be between %d and %d, inclusive", minimum_valid_year, maximum_valid_year);
+    return false;
+  }
 
-    return m_external_rtc.set_time(time);
+  return m_external_rtc.set_time(time);
 };
 
 /**
@@ -126,9 +121,8 @@ bool AvionicsBoard::set_external_rtc(const DateTime time)
  * @return String timestamp
  */
 
-String AvionicsBoard::get_timestamp()
-{
-    return m_external_rtc.get_timestamp();
+String AvionicsBoard::get_timestamp() {
+  return m_external_rtc.get_timestamp();
 };
 
 /**
@@ -139,16 +133,14 @@ String AvionicsBoard::get_timestamp()
  * @return false error
  */
 
-bool AvionicsBoard::set_beacon_interval(const int seconds)
-{
-    if ((seconds != 0) && ((seconds < minimum_beacon_interval) || (seconds > maximum_beacon_interval)))
-    {
-        Log.errorln("Beacon interval must be zero or between %d and %d, inclusive",
-                    minimum_beacon_interval, maximum_beacon_interval);
-        return false;
-    }
-    m_beacon_interval = seconds * seconds_to_milliseconds;
-    return true;
+bool AvionicsBoard::set_beacon_interval(const int seconds) {
+  if ((seconds != 0) && ((seconds < minimum_beacon_interval) || (seconds > maximum_beacon_interval))) {
+    Log.errorln("Beacon interval must be zero or between %d and %d, inclusive",
+                minimum_beacon_interval, maximum_beacon_interval);
+    return false;
+  }
+  m_beacon_interval = seconds * seconds_to_milliseconds;
+  return true;
 };
 
 /**
@@ -158,45 +150,34 @@ bool AvionicsBoard::set_beacon_interval(const int seconds)
  * @return false error
  */
 
-bool AvionicsBoard::check_beacon()
-{
-    if ((millis() - m_last_beacon_time > m_beacon_interval) && (m_beacon_interval > 0))
-    {
-        // todo: retrieve and store power status
-        extern MockPowerBoard power;
-        if (power.get_status() == "U")
-        {
-            m_power_status = Beacon::unknown;
-        }
-        else
-        {
-            m_power_status = Beacon::unknown;
-        }
-        m_avionics_status = Beacon::excellent;
-        extern MockRadioBoard radio;
-        // todo: retrieve and store radio status
-        if (radio.get_status() == "unknown")
-        {
-            m_radio_status = Beacon::unknown;
-        }
-        else
-        {
-            m_radio_status = Beacon::unknown;
-        }
-        extern MockPayloadBoard payload;
-        if (payload.get_payload_active())
-        {
-            m_payload_status = Beacon::on;
-        }
-        else
-        {
-            m_payload_status = Beacon::off;
-        }
-        Beacon message{m_power_status, m_avionics_status, m_radio_status, m_payload_status};
-        radio.send_beacon(message);
-        m_last_beacon_time = millis();
-    };
-    return true;
+bool AvionicsBoard::check_beacon() {
+  if ((millis() - m_last_beacon_time > m_beacon_interval) && (m_beacon_interval > 0)) {
+    // todo: retrieve and store power status
+    extern MockPowerBoard power;
+    if (power.get_status() == "U") {
+      m_power_status = Beacon::unknown;
+    } else {
+      m_power_status = Beacon::unknown;
+    }
+    m_avionics_status = Beacon::excellent;
+    extern MockRadioBoard radio;
+    // todo: retrieve and store radio status
+    if (radio.get_status() == "unknown") {
+      m_radio_status = Beacon::unknown;
+    } else {
+      m_radio_status = Beacon::unknown;
+    }
+    extern MockPayloadBoard payload;
+    if (payload.get_payload_active()) {
+      m_payload_status = Beacon::on;
+    } else {
+      m_payload_status = Beacon::off;
+    }
+    Beacon message{ m_power_status, m_avionics_status, m_radio_status, m_payload_status };
+    radio.send_beacon(message);
+    m_last_beacon_time = millis();
+  };
+  return true;
 };
 
 /**
@@ -207,48 +188,38 @@ bool AvionicsBoard::check_beacon()
  * @return false error
  */
 
-bool AvionicsBoard::set_picture_time(DateTime time)
-{
-    if (!m_external_rtc.is_set())
-    {
-        Log.errorln("External realtime clock is not set");
-        return false;
+bool AvionicsBoard::set_picture_time(DateTime time) {
+  if (!m_external_rtc.is_set()) {
+    Log.errorln("External realtime clock is not set");
+    return false;
+  }
+  if ((time.year() < minimum_valid_year) || (time.year() > maximum_valid_year)) {
+    Log.errorln("Picture time must be between %d and %d, inclusive", minimum_valid_year, maximum_valid_year);
+    return false;
+  }
+  DateTime current_time{};
+  if (!m_external_rtc.get_time(current_time)) {
+    Log.errorln("Error from external realtime clock");
+    return false;
+  }
+  if (time < current_time) {
+    Log.errorln("Picture time is before current time");
+    return false;
+  }
+  if (m_picture_count + 1 > maximum_scheduled_pictures) {
+    Log.errorln("Too many picture times");
+    return false;
+  }
+  size_t index{ m_picture_count++ };
+  for (; index > 0; index--) {
+    if (time > m_picture_times[index - 1]) {
+      break;
+    } else {
+      m_picture_times[index] = m_picture_times[index - 1];
     }
-    if ((time.year() < minimum_valid_year) || (time.year() > maximum_valid_year))
-    {
-        Log.errorln("Picture time must be between %d and %d, inclusive", minimum_valid_year, maximum_valid_year);
-        return false;
-    }
-    DateTime current_time{};
-    if (!m_external_rtc.get_time(current_time))
-    {
-        Log.errorln("Error from external realtime clock");
-        return false;
-    }
-    if (time < current_time)
-    {
-        Log.errorln("Picture time is before current time");
-        return false;
-    }
-    if (m_picture_count + 1 > maximum_scheduled_pictures)
-    {
-        Log.errorln("Too many picture times");
-        return false;
-    }
-    size_t index{m_picture_count++};
-    for (; index > 0; index--)
-    {
-        if (time > m_picture_times[index - 1])
-        {
-            break;
-        }
-        else
-        {
-            m_picture_times[index] = m_picture_times[index - 1];
-        }
-    }
-    m_picture_times[index] = time;
-    return true;
+  }
+  m_picture_times[index] = time;
+  return true;
 };
 
 /**
@@ -258,45 +229,36 @@ bool AvionicsBoard::set_picture_time(DateTime time)
  * @return false error
  */
 
-bool AvionicsBoard::check_photo()
-{
-    if (!m_external_rtc.is_set())
-    {
-        return false;
+bool AvionicsBoard::check_photo() {
+  if (!m_external_rtc.is_set()) {
+    return false;
+  }
+  DateTime time{};
+  if (!m_external_rtc.get_time(time)) {
+    Log.errorln("Error from external real time clock");
+    clear_pic_times();
+    return false;
+  }
+  if ((time.year() < minimum_valid_year) || (time.year() > maximum_valid_year)) {
+    Log.errorln("Time outside valid range");
+    clear_pic_times();
+    return false;
+  }
+  if ((m_picture_count > 0) && (time >= m_picture_times[0])) {
+    Log.traceln("Photo time reached %s", get_timestamp().c_str());
+    for (size_t index = 0; index < m_picture_count; index++) {
+      m_picture_times[index] = m_picture_times[index + 1];
     }
-    DateTime time{};
-    if (!m_external_rtc.get_time(time))
-    {
-        Log.errorln("Error from external real time clock");
-        clear_pic_times();
-        return false;
+    m_picture_count--;
+    extern MockPayloadBoard payload;
+    if (payload.get_payload_active()) {
+      Log.errorln("Payload board active, picture time ignored");
+      return false;
+    } else {
+      payload.photo();
     }
-    if ((time.year() < minimum_valid_year) || (time.year() > maximum_valid_year))
-    {
-        Log.errorln("Time outside valid range");
-        clear_pic_times();
-        return false;
-    }
-    if ((m_picture_count > 0) && (time >= m_picture_times[0]))
-    {
-        Log.traceln("Photo time reached %s", get_timestamp().c_str());
-        for (size_t index = 0; index < m_picture_count; index++)
-        {
-            m_picture_times[index] = m_picture_times[index + 1];
-        }
-        m_picture_count--;
-        extern MockPayloadBoard payload;
-        if (payload.get_payload_active())
-        {
-            Log.errorln("Payload board active, picture time ignored");
-            return false;
-        }
-        else
-        {
-            payload.photo();
-        }
-    };
-    return true;
+  };
+  return true;
 };
 
 /**
@@ -305,14 +267,12 @@ bool AvionicsBoard::check_photo()
  * @return String count and timestamps
  */
 
-String AvionicsBoard::get_pic_times()
-{
-    String response{m_picture_count};
-    for (size_t index = 0; index < m_picture_count; index++)
-    {
-        response += m_picture_times[index].timestamp();
-    }
-    return response;
+String AvionicsBoard::get_pic_times() {
+  String response{ m_picture_count };
+  for (size_t index = 0; index < m_picture_count; index++) {
+    response += m_picture_times[index].timestamp();
+  }
+  return response;
 };
 
 /**
@@ -322,10 +282,9 @@ String AvionicsBoard::get_pic_times()
  * @return false error
  */
 
-bool AvionicsBoard::clear_pic_times()
-{
-    m_picture_count = 0;
-    return true;
+bool AvionicsBoard::clear_pic_times() {
+  m_picture_count = 0;
+  return true;
 };
 
 /**
@@ -334,9 +293,8 @@ bool AvionicsBoard::clear_pic_times()
  * @return String telemetry
  */
 
-String AvionicsBoard::get_telemetry()
-{
-    return m_imu.get_acceleration() + m_imu.get_rotation() + m_imu.get_temperature();
+String AvionicsBoard::get_telemetry() {
+  return m_imu.get_acceleration() + m_imu.get_rotation() + m_imu.get_temperature();
 };
 
 /**
@@ -345,22 +303,19 @@ String AvionicsBoard::get_telemetry()
  * @return String interval
  */
 
-String AvionicsBoard::get_beacon_interval()
-{
-    return String(m_beacon_interval / seconds_to_milliseconds);
+String AvionicsBoard::get_beacon_interval() {
+  return String(m_beacon_interval / seconds_to_milliseconds);
 };
 
 /**
  * @brief Trigger the watchdog
  *
- * @return true successful
- * @return false error
+ * todo: remove either external or internal watchdog, including .h and .cpp files and #includes as required
  */
 
-bool AvionicsBoard::trigger_watchdog()
-{
-    m_external_watchdog.trigger();
-    return true;
+void AvionicsBoard::trigger_watchdog() {
+  m_external_watchdog.trigger();
+  Watchdog.reset();
 };
 
 /**
@@ -370,11 +325,10 @@ bool AvionicsBoard::trigger_watchdog()
  * @return false error
  */
 
-bool AvionicsBoard::busswitch_begin()
-{
-    Log.verboseln("Initializing I2C bus switch");
-    pinMode(EN_EXT_I2C, OUTPUT);
-    return true;
+bool AvionicsBoard::busswitch_begin() {
+  Log.verboseln("Initializing I2C bus switch");
+  pinMode(EN_EXT_I2C, OUTPUT);
+  return true;
 };
 
 /**
@@ -384,11 +338,10 @@ bool AvionicsBoard::busswitch_begin()
  * @return false error
  */
 
-bool AvionicsBoard::busswitch_enable()
-{
-    Log.verboseln("Enabling I2C bus switch");
-    digitalWrite(EN_EXT_I2C, LOW);
-    return true;
+bool AvionicsBoard::busswitch_enable() {
+  Log.verboseln("Enabling I2C bus switch");
+  digitalWrite(EN_EXT_I2C, LOW);
+  return true;
 };
 
 /**
@@ -398,11 +351,10 @@ bool AvionicsBoard::busswitch_enable()
  * @return false error
  */
 
-bool AvionicsBoard::busswitch_disable()
-{
-    Log.verboseln("Disabling I2C bus switch");
-    digitalWrite(EN_EXT_I2C, HIGH);
-    return true;
+bool AvionicsBoard::busswitch_disable() {
+  Log.verboseln("Disabling I2C bus switch");
+  digitalWrite(EN_EXT_I2C, HIGH);
+  return true;
 };
 
 /**
@@ -412,9 +364,8 @@ bool AvionicsBoard::busswitch_disable()
  * @return String byte read
  */
 
-String AvionicsBoard::read_fram(size_t address)
-{
-    return String(m_fram.read(address));
+String AvionicsBoard::read_fram(size_t address) {
+  return String(m_fram.read(address));
 };
 
 /**
@@ -427,6 +378,6 @@ String AvionicsBoard::read_fram(size_t address)
 bool AvionicsBoard::unset_clock()
 // todo: consider eliminating command
 {
-    Log.verboseln("Unsetting the realtime clock");
-    return m_external_rtc.unset_clock();
+  Log.verboseln("Unsetting the realtime clock");
+  return m_external_rtc.unset_clock();
 }

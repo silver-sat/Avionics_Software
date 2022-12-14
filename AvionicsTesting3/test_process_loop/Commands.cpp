@@ -232,7 +232,8 @@ bool CommandWatchdog::execute_command()
     auto status = Command::execute_command();
     Log.verboseln("Watchdog");
     extern AvionicsBoard avionics;
-    return avionics.watchdog_force_reset() && status;
+    avionics.watchdog_force_reset();
+    return status;
 };
 
 /**

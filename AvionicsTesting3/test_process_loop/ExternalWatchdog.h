@@ -16,14 +16,13 @@
  *
  */
 
-constexpr unsigned long watchdog_lower_boundary{24}; /**< 23.5 milliseconds */
+constexpr unsigned long watchdog_lower_boundary{ 24 }; /**< 23.5 milliseconds */
 
 /**
  * @brief ExternalWatchdog
  *
  */
-class ExternalWatchdog
-{
+class ExternalWatchdog {
 public:
   /**
    * @brief Construct a new ExternalWatchdog object
@@ -37,18 +36,18 @@ public:
    *
    */
 
-  bool trigger();
+  void trigger();
 
   /**
    * @brief Set force reset
    *
    */
-  bool set_force_reset();
+
+  void set_force_reset();
 
 private:
-  unsigned long m_last_action_time{0};
-  bool m_force_reset{false};
-  int m_reset_pin_state{};
+  unsigned long m_last_action_time{ 0 };
+  bool m_force_reset{ false };
 };
 
-#endif // EXTERNAL_WATCHDOG_H
+#endif  // EXTERNAL_WATCHDOG_H
