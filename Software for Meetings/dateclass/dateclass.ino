@@ -1,5 +1,5 @@
 /**
- * @file dateclass.ino
+ * @file DateClass.ino
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Class exercise for meeting
  * @version 1.0.0
@@ -8,20 +8,9 @@
  * Adapted from learncpp.com
  */
 
-/**
- * @brief Class to store and print dates
- *
- */
 class DateClass
 {
 public:
-    /**
-     * @brief Construct a new DateClass object
-     *
-     * @param year year
-     * @param month month
-     * @param day day
-     */
     DateClass(int year, int month, int day)
     {
         m_year = year;
@@ -29,10 +18,6 @@ public:
         m_day = day;
     }
 
-    /**
-     * @brief Print a DateClass object
-     *
-     */
     void print()
     {
         Serial.print(m_year);
@@ -42,10 +27,6 @@ public:
         Serial.println(m_day);
     }
 
-    /**
-     * @brief Member variables
-     *
-     */
 private:
     int m_year{};
     int m_month{};

@@ -1,5 +1,5 @@
 /**
- * @file pair.ino
+ * @file IntPair.ino
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Exercise for meeting from learncpp.com chapter 13.2
  * @version 1.0.0
