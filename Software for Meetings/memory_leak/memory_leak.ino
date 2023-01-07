@@ -24,4 +24,6 @@ void loop()
 {
     p = new byte[m];
     Serial.println("Allocated 1024 bytes");
+    delete[] p;
+    p = nullptr;
 }
