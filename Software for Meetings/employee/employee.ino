@@ -1,5 +1,5 @@
 /**
- * @file employee.ino
+ * @file Employee.ino
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Demonsrate an Employee class
  * @version 1.0.0
