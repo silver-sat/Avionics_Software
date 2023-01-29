@@ -8,8 +8,7 @@
  *
  */
 
-#ifndef MOCK_PAYLOAD_BOARD_H
-#define MOCK_PAYLOAD_BOARD_H
+#pragma once
 
 #include "board_configuration.h"
 
@@ -121,5 +120,3 @@ private:
     bool m_power_down_signal{true};
     int m_photo_count{0};
 };
-
-#endif // MOCK_PAYLOAD_BOARD_H

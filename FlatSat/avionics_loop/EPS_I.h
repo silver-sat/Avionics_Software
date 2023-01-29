@@ -8,8 +8,7 @@
  * Based on the Adafruit Sensor Library
  */
 
-#ifndef EPS_I_H
-#define EPS_I_H
+#pragma once
 
 #include <Adafruit_I2CDevice.h>
 #include <Adafruit_Sensor.h>
@@ -1029,5 +1028,3 @@ private:
 
   Adafruit_I2CDevice *i2c_dev;
 };
-
-#endif // EPS_I_H

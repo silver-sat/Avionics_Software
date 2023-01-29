@@ -8,8 +8,7 @@
  *
  */
 
-#ifndef AVIONICSBOARD_H
-#define AVIONICSBOARD_H
+#pragma once
 
 #include "board_configuration.h"
 #include "ExternalWatchdog.h"
@@ -182,5 +181,3 @@ private:
   IMU m_imu{};                                                                         /**< Inertial Measurement Unit */
   CY15B256J m_fram{};                                                                  /**< FRAM */
 };
-
-#endif  // AVIONICSBOARD_H

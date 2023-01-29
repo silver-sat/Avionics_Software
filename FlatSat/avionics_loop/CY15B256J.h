@@ -8,8 +8,7 @@
  * Based on Adafruit_FRAM_I2C
  */
 
-#ifndef CY15B256J_H
-#define CY15B256J_H
+#pragma once
 
 #include <Adafruit_EEPROM_I2C.h>
 
@@ -35,5 +34,3 @@ private:
     Adafruit_I2CDevice *i2c_dev2 = NULL;
     boolean _framInitialized;
 };
-
-#endif // CY15B256J_H

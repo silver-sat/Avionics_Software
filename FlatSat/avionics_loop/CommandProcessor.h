@@ -8,8 +8,7 @@
  *
  */
 
-#ifndef COMMANDPROCESSOR_H
-#define COMMANDPROCESSOR_H
+#pragma once
 
 #include "CommandParser.h"
 #include "CommandFactory.h"
@@ -40,5 +39,3 @@ private:
     long m_successful_commands{0};
     long m_failed_commands{0};
 };
-
-#endif // COMMANDPROCESSOR_H

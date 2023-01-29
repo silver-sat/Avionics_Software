@@ -8,8 +8,7 @@
  *
  */
 
-#ifndef MESSAGE_H
-#define MESSAGE_H
+#pragma once
 
 #include <Arduino.h>
 
@@ -51,5 +50,3 @@ private:
     message_type m_header{};
     String m_content{};
 };
-
-#endif // MESSAGE_H

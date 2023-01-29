@@ -8,8 +8,7 @@
  *
  */
 
-#ifndef MOCK_POWER_BOARD_H
-#define MOCK_POWER_BOARD_H
+#pragma once
 
 #include "EPS_I.h"
 #include <Arduino.h>
@@ -64,5 +63,3 @@ private:
     EPS_I eps_i{};
     
 };
-
-#endif // MOCK_POWER_BOARD_H

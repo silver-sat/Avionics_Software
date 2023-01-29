@@ -8,8 +8,7 @@
  *
  */
 
-#ifndef COMMANDPARSER_H
-#define COMMANDPARSER_H
+#pragma once
 
 #include <Arduino.h>
 
@@ -48,5 +47,3 @@ public:
 
     bool validate_signature(String &buffer, String &command_string, const bool validation_required, long &command_sequence);
 };
-
-#endif // COMMANDPARSER_H

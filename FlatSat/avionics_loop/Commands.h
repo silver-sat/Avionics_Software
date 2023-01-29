@@ -29,8 +29,7 @@
  * UnsetClock: change the realtime clock status to unset for testing
  */
 
-#ifndef COMMANDS_H
-#define COMMANDS_H
+#pragma once
 
 #include "RTClib.h"
 
@@ -331,5 +330,3 @@ public:
     bool acknowledge_command() override;
     bool execute_command() override;
 };
-
-#endif // COMMANDS_H

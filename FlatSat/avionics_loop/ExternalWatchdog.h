@@ -8,8 +8,7 @@
  *
  */
 
-#ifndef EXTERNAL_WATCHDOG_H
-#define EXTERNAL_WATCHDOG_H
+#pragma once
 
 /**
  * @brief ExternalWatchdog constants
@@ -49,5 +48,3 @@ private:
   unsigned long m_last_action_time{ 0 };
   bool m_force_reset{ false };
 };
-
-#endif  // EXTERNAL_WATCHDOG_H

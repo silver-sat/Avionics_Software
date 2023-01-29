@@ -8,8 +8,7 @@
  *
  */
 
-#ifndef BOARD_CONFIGURATION_H
-#define BOARD_CONFIGURATION_H
+#pragma once
 
 /**
  * @brief SAMD21 pin definitions
@@ -63,5 +62,3 @@ constexpr unsigned wait_for_i2c_device{10}; /**< wait for I2C device to become a
 
 constexpr unsigned long seconds_to_milliseconds{1000}; /**< conversion factor for time in seconds @hideinitializer */
 constexpr unsigned long minutes_to_seconds{60};        /**< conversion factor for time in minutes @hideinitializer */
-
-#endif // BOARD_CONFIGURATION_H

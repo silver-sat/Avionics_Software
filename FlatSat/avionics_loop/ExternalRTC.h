@@ -8,8 +8,7 @@
  *
  */
 
-#ifndef EXTERNALRTC_H
-#define EXTERNALRTC_H
+#pragma once
 
 #include "DS1337.h"
 #include <RTClib.h>
@@ -76,5 +75,3 @@ private:
     RTC_DS1337 m_rtc{};
     bool m_rtc_is_set{false};
 };
-
-#endif // EXTERNALRTC_H

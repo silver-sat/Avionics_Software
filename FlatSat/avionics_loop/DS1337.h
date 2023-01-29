@@ -8,8 +8,7 @@
  * Based and dependent on Adafruit RTClib
  */
 
-#ifndef DS1337_H
-#define DS1337_H
+#pragma once
 
 #include <RTClib.h>
 
@@ -90,4 +89,3 @@ public:
   static uint8_t dowToDS1337(uint8_t d) { return d == 0 ? 7 : d; }
 
 };
-#endif // DS1337_H

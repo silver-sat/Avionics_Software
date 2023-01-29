@@ -8,8 +8,7 @@
  *
  */
 
-#ifndef MOCK_RADIO_BOARD_H
-#define MOCK_RADIO_BOARD_H
+#pragma once
 
 #include "Beacon.h"
 #include "Message.h"
@@ -115,5 +114,3 @@ private:
     bool m_received_escape{false};
     long m_commands_received{0};
 };
-
-#endif // MOCK_RADIO_BOARD_H

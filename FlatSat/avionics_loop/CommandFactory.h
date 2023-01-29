@@ -8,8 +8,7 @@
  *
  */
 
-#ifndef COMMANDFACTORY_H
-#define COMMANDFACTORY_H
+#pragma once
 
 #include "Commands.h"
 
@@ -28,5 +27,3 @@ public:
 
     Command *BuildCommand(const String tokens[], size_t token_count);
 };
-
-#endif // COMMANDFACTORY_H

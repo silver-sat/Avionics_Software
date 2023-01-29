@@ -8,8 +8,7 @@
  *
  */
 
-#ifndef IMU_U
-#define IMU_U
+#pragma once
 
 #include <Adafruit_MPU6050.h>
 
@@ -69,5 +68,3 @@ private:
     sensors_event_t m_g;
     sensors_event_t m_temp;
 };
-
-#endif // IMU_H

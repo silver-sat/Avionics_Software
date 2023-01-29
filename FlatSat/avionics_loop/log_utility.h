@@ -8,8 +8,7 @@
  *
  */
 
-#ifndef LOG_UTILITY_H
-#define LOG_UTILITY_H
+#pragma once
 
 #include <ArduinoLog.h>
 
@@ -47,5 +46,3 @@ void printLogLevel(Print *_logOutput, int logLevel);
  */
 
 void printSuffix(Print *_logOutput, int logLevel);
-
-#endif // LOG_UTILITY_H

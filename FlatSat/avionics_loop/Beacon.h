@@ -8,8 +8,7 @@
  *
  */
 
-#ifndef BEACON_H
-#define BEACON_H
+#pragma once
 
 #include <Arduino.h>
 
@@ -64,5 +63,3 @@ public:
 private:
     String m_message{};
 };
-
-#endif // BEACON_H
