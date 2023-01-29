@@ -1,7 +1,7 @@
 /**
  * @file IMU.h
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief Implement inertial management unit
+ * @brief SilverSat Inertial Management Unit
  * @version 1.0.0
  * @date 2022-08-02
  *

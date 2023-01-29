@@ -1,14 +1,14 @@
 /**
- * @file mock_radio_board.cpp
+ * @file RadioBoard.cpp
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief Mock Radio Board for Avionics testing
+ * @brief SilverSat Radio
  * @version 1.3.0
  * @date 2022-07-24
  *
  *
  */
 
-#include "mock_radio_board.h"
+#include "RadioBoard.h"
 #include "board_configuration.h"
 #include "log_utility.h"
 #include "AvionicsBoard.h"
@@ -20,13 +20,13 @@
 constexpr uint32_t serial1_baud_rate{115200}; /**< speed of serial1 connection @hideinitializer */
 
 /**
- * @brief initialize the Radio Board
+ * @brief Initialize the Radio Board
  *
  * @return true successful
  * @return false error
  */
 
-bool MockRadioBoard::begin()
+bool RadioBoard::begin()
 {
     Log.traceln("Radio Board initializing");
     Log.verboseln("Enabling serial driver to Radio Board");
@@ -52,7 +52,7 @@ bool MockRadioBoard::begin()
  * @return false error
  */
 
-bool MockRadioBoard::deploy_antenna()
+bool RadioBoard::deploy_antenna()
 {
     Log.traceln("Sending local command: deploy antenna");
     Serial1.write(FEND);
@@ -71,7 +71,7 @@ bool MockRadioBoard::deploy_antenna()
  * @return false error
  */
 
-bool MockRadioBoard::receive_command(char *buffer, const size_t length)
+bool RadioBoard::receive_command(char *buffer, const size_t length)
 {
 
     while (Serial1.available())
@@ -176,7 +176,7 @@ bool MockRadioBoard::receive_command(char *buffer, const size_t length)
  * @param beacon beacon data
  */
 
-void MockRadioBoard::send_beacon(Beacon beacon)
+void RadioBoard::send_beacon(Beacon beacon)
 {
     String beacon_data = call_sign + beacon.get_message();
     Log.noticeln("Sending local command: beacon %s", beacon.get_message().c_str());
@@ -193,7 +193,7 @@ void MockRadioBoard::send_beacon(Beacon beacon)
  * @return false error
  */
 
-bool MockRadioBoard::send_message(Message message)
+bool RadioBoard::send_message(Message message)
 {
     String message_data = message.get_message();
     Log.noticeln("Sending message: %s", message_data.c_str());
@@ -211,7 +211,7 @@ bool MockRadioBoard::send_message(Message message)
  * @return String status
  */
 
-String MockRadioBoard::get_status()
+String RadioBoard::get_status()
 {
     Log.traceln("Sending local command: requesting Radio Board status");
     Serial1.write(FEND);
@@ -228,7 +228,7 @@ String MockRadioBoard::get_status()
  * @return false error
  */
 
-bool MockRadioBoard::send_halt()
+bool RadioBoard::send_halt()
 {
     Serial1.write(FEND);
     Serial1.write(HALT);

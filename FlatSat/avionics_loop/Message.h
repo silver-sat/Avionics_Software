@@ -1,7 +1,7 @@
 /**
  * @file Message.h
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief Avionics outbound messages
+ * @brief SilverSat Avionics outbound messages
  * @version 1.0.0
  * @date 2022-07-31
  *

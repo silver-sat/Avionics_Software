@@ -1,7 +1,7 @@
 /**
- * @file mock_payload_board.h
+ * @file PayloadBoard.h
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief Test the Avionics Board mock Payload Board
+ * @brief SilverSat Payload Board
  * @version 1.0.0
  * @date 2022-07-24
  *
@@ -14,7 +14,7 @@
 #include "board_configuration.h"
 
 /**
- * @brief Mock Payload Board constants
+ * @brief PayloadBoard constants
  *
  */
 
@@ -22,19 +22,19 @@ constexpr unsigned long tweet_duration{30 * seconds_to_milliseconds}; /**< test 
 constexpr unsigned long photo_duration{15 * seconds_to_milliseconds}; /**< test photo duration */
 
 /**
- * @brief Mock Payload Board for testing the Avionics Board
+ * @brief SilverSat Payload Board
  *
  */
 
-class MockPayloadBoard
+class PayloadBoard
 {
 public:
     /**
-     * @brief Construct a new Mock Payload Board object
+     * @brief Construct a new PayloadBoard object
      *
      */
 
-    MockPayloadBoard();
+    PayloadBoard();
 
     /**
      * @brief Initialize Payload Board
@@ -84,7 +84,7 @@ public:
     bool get_payload_active();
 
     /**
-     * @brief Power down Payload board
+     * @brief Power down Payload Board
      *
      */
     bool power_down();

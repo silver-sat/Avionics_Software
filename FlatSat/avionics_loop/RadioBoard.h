@@ -1,7 +1,7 @@
 /**
- * @file mock_radio_board.h
+ * @file RadioBoard.h
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief Mock Radio Board for Avionics testing
+ * @brief SilverSat Radio Board
  * @version 1.2.0
  * @date 2022-07-24
  *
@@ -53,10 +53,10 @@ constexpr size_t header_size{sizeof(HEADER)};                            /**< AX
 const String call_sign{"KC3CQJ-2"};
 
 /**
- * @brief Mock Radio Board for testing the Avionics Board
+ * @brief SilverSat Radio Board
  *
  */
-class MockRadioBoard
+class RadioBoard
 {
 public:
     /**

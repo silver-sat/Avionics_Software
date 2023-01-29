@@ -1,18 +1,18 @@
 /**
- * @file mock_power_board.cpp
+ * @file PowerBoard.cpp
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief Test the Avionics Board mock Power Board
+ * @brief SilverSat Power Board
  * @version 1.1.0
  * @date 2022-07-24
  *
  *
  */
 
-#include "mock_power_board.h"
+#include "PowerBoard.h"
 #include "log_utility.h"
 #include "AvionicsBoard.h"
 
-MockPowerBoard::MockPowerBoard(){};
+PowerBoard::PowerBoard(){};
 
 /**
  * @brief Initialize the Power Board
@@ -21,7 +21,7 @@ MockPowerBoard::MockPowerBoard(){};
  * @return false error
  */
 
-bool MockPowerBoard::begin()
+bool PowerBoard::begin()
 {
     Log.traceln("Power Board initializing");
     // todo: consider opening I2C bus full time
@@ -35,7 +35,7 @@ bool MockPowerBoard::begin()
  * @return String letter grade for beacon
  */
 
-String MockPowerBoard::get_status()
+String PowerBoard::get_status()
 {
 
     // todo: access power data from Power Board
@@ -73,7 +73,7 @@ String MockPowerBoard::get_status()
  * @return String power details
  */
 
-String MockPowerBoard::get_detail()
+String PowerBoard::get_detail()
 {
 
     // todo: open non-critical I2C bus, access power data from Power Board]

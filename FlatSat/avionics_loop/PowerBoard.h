@@ -1,7 +1,7 @@
 /**
- * @file mock_power_board.h
+ * @file PowerBoard.h
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief Test the Avionics Board mock Power Board
+ * @brief SilverSat Power Board
  * @version 1.1.0
  * @date 2022-07-24
  *
@@ -15,14 +15,14 @@
 #include <Arduino.h>
 
 /**
- * @brief Mock Power Board for testing the Avionics Board
+ * @brief SilverSat Power Board Interface
  *
  */
 
-class MockPowerBoard
+class PowerBoard
 {
 public:
-    MockPowerBoard();
+    PowerBoard();
 
     /**
      * @brief Status of the Power Board

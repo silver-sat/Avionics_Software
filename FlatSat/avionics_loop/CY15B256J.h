@@ -1,7 +1,7 @@
 /**
  * @file CY15B256J.h
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief Driver for CY15B256 FRAM
+ * @brief Device Driver for CY15B256 FRAM
  * @version 1.0.0
  * @date 2022-10-17
  *

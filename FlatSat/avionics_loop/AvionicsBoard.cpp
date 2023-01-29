@@ -1,7 +1,7 @@
 /**
  * @file AvionicsBoard.cpp
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief Test Avionics Board for SilverSat
+ * @brief Avionics Board for SilverSat
  * @version 1.0.4
  * @date 2022-07-29
  *
@@ -13,7 +13,7 @@
 #include "mock_power_board.h"
 #include "mock_radio_board.h"
 #include <Adafruit_SleepyDog.h>
-#include "mock_payload_board.h"
+#include "PayloadBoard.h"
 
 constexpr int internal_watchdog_interval{ 2 * seconds_to_milliseconds }; /**< internal watchdog interval **/
 
@@ -167,7 +167,7 @@ bool AvionicsBoard::check_beacon() {
     } else {
       m_radio_status = Beacon::unknown;
     }
-    extern MockPayloadBoard payload;
+    extern PayloadBoard payload;
     if (payload.get_payload_active()) {
       m_payload_status = Beacon::on;
     } else {
@@ -250,7 +250,7 @@ bool AvionicsBoard::check_photo() {
       m_picture_times[index] = m_picture_times[index + 1];
     }
     m_picture_count--;
-    extern MockPayloadBoard payload;
+    extern PayloadBoard payload;
     if (payload.get_payload_active()) {
       Log.errorln("Payload board active, picture time ignored");
       return false;

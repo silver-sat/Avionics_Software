@@ -1,7 +1,7 @@
 /**
  * @file ExternalWatchdog.cpp
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief ExternalWatchdog for SilverSat
+ * @brief SilverSat External Watchdog Timer
  * @version 1.1.0
  * @date 2022-08-01
  *

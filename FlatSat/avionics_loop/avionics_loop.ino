@@ -1,25 +1,25 @@
 /**
- * @file test_process_loop.ino
+ * @file avionics_loop.ino
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief Test the Avionics Board
+ * @brief Avionics Board Setup and Process Loop
  * @version 1.2.0
  * @date 2022-07-24
  *
  */
 
 /**
- * @mainpage Test Process Loop
+ * @mainpage Avionics Loop
  * @section overview Overview
  *
- * This is the main process loop to test the SilverSat Avionics Board.
+ * This is the setup and process loop for the SilverSat Avionics Board.
  *
- * The on-board devices are implemented as classes interfacing to real hardware and include a watchdog timer, external realtime clock, inertial measurement
- * unit, and FRAM. The board also includes serial ports, I2C buses, and a SAMD21 processor.
+ * The on-board devices are implemented as classes interfacing to real hardware and include an external watchdog timer, external realtime clock, inertial measurement
+ * unit, and FRAM. The board also includes serial ports, I2C buses, and a SAMD21 processor. The SAMD21 internal watchdog timer is defined and activated as a backup 
+ * in the event hardware for the external timer is not available.
  *
- * The other boards: Power, Radio, and Payload, are implemented as mock devices in software for these
- * tests. Each mock board performs a subset, as needed to test the Avionics Board, of the functionality provided by the actual board,.
+ * The other boards: Power, Radio, and Payload, are represented as classes which provide interfaces to encapsulate their functions.
  *
- * The beacon message which Avionics sends to the radio board, the command messages the Radio
+ * The beacon message which Avionics sends to the Radio Board, the command messages the Radio
  * Board forwards to Avionics, and the response and local command messages sent to the Radio Board are also represented as classes.
  *
  */
@@ -29,10 +29,10 @@
 #include "log_utility.h"
 #include "Beacon.h"
 #include "CommandProcessor.h"
-#include "mock_power_board.h"
+#include "PowerBoard.h"
 #include "AvionicsBoard.h"
-#include "mock_radio_board.h"
-#include "mock_payload_board.h"
+#include "RadioBoard.h"
+#include "PayloadBoard.h"
 
 /**
  * @brief Process loop constants
@@ -55,9 +55,9 @@ constexpr uint32_t serial_baud_rate{ 115200 }; /**< speed of serial connection @
  */
 
 AvionicsBoard avionics;
-MockPayloadBoard payload;
-MockRadioBoard radio;
-MockPowerBoard power;
+PayloadBoard payload;
+RadioBoard radio;
+PowerBoard power;
 CommandProcessor command_processor;
 
 #ifdef INSTRUMENTATION

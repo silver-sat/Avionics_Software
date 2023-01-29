@@ -1,7 +1,7 @@
 /**
  * @file AvionicsBoard.h
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief Test Avionics Board for SilverSat
+ * @brief Avionics Board for SilverSat
  * @version 1.0.4
  * @date 2022-07-29
  *

@@ -1,7 +1,7 @@
 /**
  * @file ExternalRTC.cpp
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief External Realtime Clock
+ * @brief SilverSat External Realtime Clock
  * @version 1.0.2
  * @date 2022-08-11
  *

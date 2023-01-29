@@ -1,7 +1,7 @@
 /**
  * @file EPS_I.h
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief SilverSat driver for Endurosat EPS I
+ * @brief SilverSat device driver for Endurosat EPS I
  * @version 1.0.0
  * @date 2022-10-23
  *

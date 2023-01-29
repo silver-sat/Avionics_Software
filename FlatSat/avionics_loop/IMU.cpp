@@ -1,7 +1,7 @@
 /**
  * @file IMU.cpp
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief Implement inertial management unit
+ * @brief SilveSat Inertial Management Unit
  * @version 1.0.1
  * @date 2022-08-02
  *

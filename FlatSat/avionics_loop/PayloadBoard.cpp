@@ -1,23 +1,23 @@
 /**
- * @file mock_payload_board.h
+ * @file PayloadBoard.h
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief Test the Avionics Board mock Payload Board
+ * @brief SilverSat Payload Board
  * @version 1.0.1
  * @date 2022-07-24
  *
  *
  */
 
-#include "mock_payload_board.h"
+#include "PayloadBoard.h"
 #include "log_utility.h"
 #include <Arduino.h>
 
 /**
- * @brief Construct a new Mock Payload Board:: Mock Payload Board object
+ * @brief Construct a new PayloadBoard::PayloadBoard object
  *
  */
 
-MockPayloadBoard::MockPayloadBoard(){
+PayloadBoard::PayloadBoard(){
 
 };
 
@@ -28,7 +28,7 @@ MockPayloadBoard::MockPayloadBoard(){
  * @return false error
  */
 
-bool MockPayloadBoard::begin()
+bool PayloadBoard::begin()
 {
     Log.traceln("Payload Board initializing");
     pinMode(PLD_ON_A_INT, OUTPUT);
@@ -51,7 +51,7 @@ bool MockPayloadBoard::begin()
  * @return false error
  */
 
-bool MockPayloadBoard::photo()
+bool PayloadBoard::photo()
 {
 
     if (!m_payload_active)
@@ -78,7 +78,7 @@ bool MockPayloadBoard::photo()
  * @return false error
  */
 
-bool MockPayloadBoard::tweet()
+bool PayloadBoard::tweet()
 {
     if (!m_payload_active)
     {
@@ -104,7 +104,7 @@ bool MockPayloadBoard::tweet()
  * @return false error
  */
 
-bool MockPayloadBoard::check_shutdown()
+bool PayloadBoard::check_shutdown()
 {
     // todo: delete for flatsat test
     if (m_payload_active && millis() - m_last_activity_time > m_action_duration)
@@ -127,7 +127,7 @@ bool MockPayloadBoard::check_shutdown()
  * @return false error
  */
 // todo: delete for flatsat test
-bool MockPayloadBoard::end_activity()
+bool PayloadBoard::end_activity()
 {
     if (!m_payload_active)
     {
@@ -148,7 +148,7 @@ bool MockPayloadBoard::end_activity()
  * @return false error
  */
 
-bool MockPayloadBoard::power_down()
+bool PayloadBoard::power_down()
 {
     digitalWrite(PLD_ON_A_INT, LOW);
     digitalWrite(PLD_ON_B_INT, LOW);
@@ -165,7 +165,7 @@ bool MockPayloadBoard::power_down()
  * @return false error
  */
 
-bool MockPayloadBoard::power_up()
+bool PayloadBoard::power_up()
 {
     digitalWrite(PLD_ON_A_INT, HIGH);
     digitalWrite(PLD_ON_B_INT, HIGH);
@@ -181,7 +181,7 @@ bool MockPayloadBoard::power_up()
  * @return true successful
  * @return false error
  */
-bool MockPayloadBoard::set_mode_comms()
+bool PayloadBoard::set_mode_comms()
 {
     digitalWrite(STATES_A_INT, HIGH);
     digitalWrite(STATES_B_INT, HIGH);
@@ -200,7 +200,7 @@ bool MockPayloadBoard::set_mode_comms()
  * @return true successful
  * @return false error
  */
-bool MockPayloadBoard::set_mode_photo()
+bool PayloadBoard::set_mode_photo()
 {
     digitalWrite(STATES_A_INT, LOW);
     digitalWrite(STATES_B_INT, LOW);
@@ -217,7 +217,7 @@ bool MockPayloadBoard::set_mode_photo()
  * @return false error
  */
 
-bool MockPayloadBoard::power_down_signal_is_set()
+bool PayloadBoard::power_down_signal_is_set()
 {
     bool a = digitalRead(SHUTDOWN_A);
     bool b = digitalRead(SHUTDOWN_B);
@@ -232,7 +232,7 @@ bool MockPayloadBoard::power_down_signal_is_set()
  * @return int photo count
  */
 
-int MockPayloadBoard::get_photo_count()
+int PayloadBoard::get_photo_count()
 {
     // todo: provide I2C interface to FRAM to access photo count
 
@@ -246,7 +246,7 @@ int MockPayloadBoard::get_photo_count()
  * @return false powered down
  */
 
-bool MockPayloadBoard::get_payload_active()
+bool PayloadBoard::get_payload_active()
 {
     return m_payload_active;
 };
