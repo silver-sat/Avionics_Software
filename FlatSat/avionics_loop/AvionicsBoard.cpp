@@ -10,8 +10,8 @@
 
 #include "AvionicsBoard.h"
 #include "log_utility.h"
-#include "mock_power_board.h"
-#include "mock_radio_board.h"
+#include "PowerBoard.h"
+#include "RadioBoard.h"
 #include <Adafruit_SleepyDog.h>
 #include "PayloadBoard.h"
 
@@ -153,14 +153,14 @@ bool AvionicsBoard::set_beacon_interval(const int seconds) {
 bool AvionicsBoard::check_beacon() {
   if ((millis() - m_last_beacon_time > m_beacon_interval) && (m_beacon_interval > 0)) {
     // todo: retrieve and store power status
-    extern MockPowerBoard power;
+    extern PowerBoard power;
     if (power.get_status() == "U") {
       m_power_status = Beacon::unknown;
     } else {
       m_power_status = Beacon::unknown;
     }
     m_avionics_status = Beacon::excellent;
-    extern MockRadioBoard radio;
+    extern RadioBoard radio;
     // todo: retrieve and store radio status
     if (radio.get_status() == "unknown") {
       m_radio_status = Beacon::unknown;

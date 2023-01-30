@@ -39,7 +39,7 @@ public:
      *
      */
 
-    bool set_time(DateTime time);
+    bool set_time(const DateTime& time);
 
     /**
      * @brief Get the current external realtime clock time
@@ -69,7 +69,7 @@ public:
      *
      */
 
-    bool is_set();
+    bool is_set() const;
 
 private:
     RTC_DS1337 m_rtc{};

@@ -44,7 +44,7 @@ public:
      *
      */
 
-    String get_message();
+    String get_message() const;
 
 private:
     message_type m_header{};

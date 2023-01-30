@@ -51,14 +51,14 @@ public:
      *
      */
 
-    String to_board_code(Beacon::status status);
+    String to_board_code(Beacon::status status) const;
 
     /**
      * @brief Get the message for the beacon
      *
      */
 
-    String get_message();
+    String get_message() const;
 
 private:
     String m_message{};

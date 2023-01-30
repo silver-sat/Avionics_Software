@@ -111,7 +111,7 @@ private:
      * @brief Check Payload Board shutdown signal
      *
      */
-    bool power_down_signal_is_set();
+    bool power_down_signal_is_set() const;
 
 private:
     unsigned long m_last_activity_time{0};

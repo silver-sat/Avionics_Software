@@ -25,7 +25,7 @@ Message::Message(message_type header, String content) : m_header{header}, m_cont
  * @return String
  */
 
-String Message::get_message()
+String Message::get_message() const
 {
     switch (m_header)
     {

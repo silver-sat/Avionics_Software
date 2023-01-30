@@ -39,7 +39,7 @@ Beacon::Beacon(
  * @return String status character
  */
 
-String Beacon::to_board_code(status status)
+String Beacon::to_board_code(status status) const
 {
     switch (status)
     {
@@ -68,7 +68,7 @@ String Beacon::to_board_code(status status)
  *
  * @return String
  */
-String Beacon::get_message()
+String Beacon::get_message() const
 {
     return m_message;
 };

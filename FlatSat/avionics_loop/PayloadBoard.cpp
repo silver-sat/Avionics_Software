@@ -217,7 +217,7 @@ bool PayloadBoard::set_mode_photo()
  * @return false error
  */
 
-bool PayloadBoard::power_down_signal_is_set()
+bool PayloadBoard::power_down_signal_is_set() const
 {
     bool a = digitalRead(SHUTDOWN_A);
     bool b = digitalRead(SHUTDOWN_B);

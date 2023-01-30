@@ -56,7 +56,7 @@ bool ExternalRTC::begin(TwoWire *theWire)
  * @return false error
  */
 
-bool ExternalRTC::set_time(const DateTime time)
+bool ExternalRTC::set_time(const DateTime& time)
 {
     if (time.isValid())
     {
@@ -147,7 +147,7 @@ bool ExternalRTC::unset_clock()
  * @return true
  * @return false
  */
-bool ExternalRTC::is_set()
+bool ExternalRTC::is_set() const
 {
     return m_rtc_is_set;
 }

@@ -939,70 +939,70 @@ public:
    *
    */
 
-  float getBatteryVoltage(void);
+  float getBatteryVoltage(void) const;
 
   /**
    * @brief Get the battery current
    *
    */
 
-  float getBatteryCurrent(void);
+  float getBatteryCurrent(void) const;
 
   /**
    * @brief Get the temperature at sensor 1
    *
    */
 
-  float getTemperatureSensor1(void);
+  float getTemperatureSensor1(void) const;
 
   /**
    * @brief Get the temperature at sensor 2
    *
    */
 
-  float getTemperatureSensor2(void);
+  float getTemperatureSensor2(void) const;
 
   /**
    * @brief Get the temperature at sensor 3
    *
    */
 
-  float getTemperatureSensor3(void);
+  float getTemperatureSensor3(void) const;
 
   /**
    * @brief Get the Z negative panel current
    *
    */
 
-  float getZNegativeCurrent(void);
+  float getZNegativeCurrent(void) const;
 
   /**
    * @brief Get the 5 volt current
    *
    */
 
-  float get5VCurrent(void);
+  float get5VCurrent(void) const;
 
   /**
    * @brief Get the heater 1 state
    *
    */
 
-  bool getHeater1State(void);
+  bool getHeater1State(void) const;
 
   /**
    * @brief Get the heater 2 state
    *
    */
 
-  bool getHeater2State(void);
+  bool getHeater2State(void) const;
 
   /**
    * @brief Get the heater 3 state
    *
    */
 
-  bool getHeater3State(void);
+  bool getHeater3State(void) const;
 
 private:
   /**
@@ -1017,7 +1017,7 @@ private:
    *
    */
 
-  uint16_t read_value(EPS_I_Read_Command command);
+  uint16_t read_value(EPS_I_Read_Command command) const;
 
   /**
    * @brief Write an 8-bit command and 8-bit state to the EPS I
