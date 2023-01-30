@@ -18,7 +18,7 @@
  *
  */
 
-class PowerBoard
+class PowerBoard final
 {
 public:
     PowerBoard();

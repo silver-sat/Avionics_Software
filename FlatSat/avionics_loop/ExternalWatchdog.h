@@ -21,7 +21,7 @@ constexpr unsigned long watchdog_lower_boundary{ 24 }; /**< 23.5 milliseconds */
  * @brief ExternalWatchdog
  *
  */
-class ExternalWatchdog {
+class ExternalWatchdog final {
 public:
   /**
    * @brief Construct a new ExternalWatchdog object

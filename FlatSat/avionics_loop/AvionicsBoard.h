@@ -33,7 +33,7 @@ constexpr uint16_t maximum_valid_year{ 2040 };                         /**< Rest
  * @brief Avionics Board for testing the microcontroller and peripherals
  *
  */
-class AvionicsBoard {
+class AvionicsBoard final {
 public:
 
   /**

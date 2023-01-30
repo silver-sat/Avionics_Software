@@ -916,7 +916,7 @@ enum class EPS_I_Reset_Power_Supply
  *
  */
 
-class EPS_I
+class EPS_I final
 {
 
 public:

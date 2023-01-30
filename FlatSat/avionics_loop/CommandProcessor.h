@@ -13,7 +13,7 @@
 #include "CommandParser.h"
 #include "CommandFactory.h"
 
-class CommandProcessor
+class CommandProcessor final
 {
 public:
     /**

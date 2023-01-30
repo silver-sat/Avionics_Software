@@ -25,7 +25,7 @@ constexpr unsigned long photo_duration{15 * seconds_to_milliseconds}; /**< test 
  *
  */
 
-class PayloadBoard
+class PayloadBoard final
 {
 public:
     /**

@@ -17,7 +17,7 @@
  *
  */
 
-class IMU
+class IMU final
 {
 public:
     /**

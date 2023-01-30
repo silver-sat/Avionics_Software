@@ -22,7 +22,7 @@
  *        I2C FRAM chips
  *
  */
-class CY15B256J : public Adafruit_EEPROM_I2C
+class CY15B256J final : public Adafruit_EEPROM_I2C
 {
 public:
     CY15B256J(void);

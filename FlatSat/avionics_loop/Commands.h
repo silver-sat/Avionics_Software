@@ -77,7 +77,7 @@ public:
  *
  */
 
-class CommandUnknown : public Command
+class CommandUnknown final : public Command
 {
 public:
     CommandUnknown() = default;
@@ -90,7 +90,7 @@ public:
  *
  */
 
-class CommandInvalid : public Command
+class CommandInvalid final : public Command
 {
 public:
     CommandInvalid() = default;
@@ -103,7 +103,7 @@ public:
  *
  */
 
-class CommandNoOperate : public Command
+class CommandNoOperate final : public Command
 {
 public:
     CommandNoOperate() = default;
@@ -116,7 +116,7 @@ public:
  *
  */
 
-class CommandPayComms : public Command
+class CommandPayComms final : public Command
 {
 public:
     CommandPayComms() = default;
@@ -129,7 +129,7 @@ public:
  *
  */
 
-class CommandReportT : public Command
+class CommandReportT final : public Command
 {
 public:
     CommandReportT() = default;
@@ -142,7 +142,7 @@ public:
  *
  */
 
-class CommandTweeSlee : public Command
+class CommandTweeSlee final : public Command
 {
 public:
     CommandTweeSlee() = default;
@@ -155,7 +155,7 @@ public:
  *
  */
 
-class CommandWatchdog : public Command
+class CommandWatchdog final : public Command
 {
 public:
     CommandWatchdog() = default;
@@ -169,7 +169,7 @@ public:
  * @param seconds interval between beacons
  */
 
-class CommandBeaconSp : public Command
+class CommandBeaconSp final : public Command
 {
 public:
     CommandBeaconSp(int seconds): m_seconds{seconds}{};
@@ -186,7 +186,7 @@ private:
  * @param time photo time
  */
 
-class CommandPicTimes : public Command
+class CommandPicTimes final : public Command
 {
 public:
     CommandPicTimes(DateTime time): m_time{time}{};
@@ -203,7 +203,7 @@ private:
  * @param time UTC for real time clock
  */
 
-class CommandSetClock : public Command
+class CommandSetClock final : public Command
 {
 public:
     CommandSetClock(DateTime time): m_time{time}{};
@@ -219,7 +219,7 @@ private:
  *
  */
 
-class CommandGetPicTimes : public Command
+class CommandGetPicTimes final : public Command
 {
 public:
     CommandGetPicTimes() = default;
@@ -232,7 +232,7 @@ public:
  *
  */
 
-class CommandGetTelemetry : public Command
+class CommandGetTelemetry final : public Command
 {
 public:
     CommandGetTelemetry() = default;
@@ -245,7 +245,7 @@ public:
  *
  */
 
-class CommandGetPower : public Command
+class CommandGetPower final : public Command
 {
 public:
     CommandGetPower() = default;
@@ -258,7 +258,7 @@ public:
  *
  */
 
-class CommandGetPhotos : public Command
+class CommandGetPhotos final : public Command
 {
 public:
     CommandGetPhotos() = default;
@@ -271,7 +271,7 @@ public:
  *
  */
 
-class CommandGetComms : public Command
+class CommandGetComms final : public Command
 {
 public:
     CommandGetComms() = default;
@@ -284,7 +284,7 @@ public:
  *
  */
 
-class CommandGetBeaconInterval : public Command
+class CommandGetBeaconInterval final : public Command
 {
 public:
     CommandGetBeaconInterval() = default;
@@ -297,7 +297,7 @@ public:
  *
  */
 
-class CommandSendTestPacket : public Command
+class CommandSendTestPacket final : public Command
 {
 public:
     CommandSendTestPacket() = default;
@@ -310,7 +310,7 @@ public:
  *
  */
 
-class CommandClearPicTimes : public Command
+class CommandClearPicTimes final : public Command
 {
 public:
     CommandClearPicTimes() = default;
@@ -323,7 +323,7 @@ public:
  *
  */
 
-class CommandUnsetClock : public Command
+class CommandUnsetClock final : public Command
 {
 public:
     CommandUnsetClock() = default;

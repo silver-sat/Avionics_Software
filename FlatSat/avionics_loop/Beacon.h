@@ -16,7 +16,7 @@
  * @brief Beacon format sent by the Avionics Board
  *
  */
-class Beacon
+class Beacon final
 {
 public:
     /**

@@ -17,7 +17,7 @@
  * @brief External realtime clock for testing the Avionics Board
  *
  */
-class ExternalRTC
+class ExternalRTC final
 {
 public:
     /**

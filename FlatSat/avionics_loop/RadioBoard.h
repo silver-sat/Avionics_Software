@@ -55,7 +55,7 @@ const String call_sign{"KC3CQJ-2"};
  * @brief SilverSat Radio Board
  *
  */
-class RadioBoard
+class RadioBoard final
 {
 public:
     /**

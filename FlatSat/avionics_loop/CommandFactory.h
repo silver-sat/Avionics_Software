@@ -17,7 +17,7 @@
  *
  */
 
-class CommandFactory
+class CommandFactory final
 {
 public:
     /**

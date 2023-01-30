@@ -30,7 +30,7 @@ constexpr size_t HMAC_size{32};                /**< HMAC size */
  * @brief Collect command, validate signature, parse parameters
  *
  */
-class CommandParser
+class CommandParser final
 {
 public:
     /**

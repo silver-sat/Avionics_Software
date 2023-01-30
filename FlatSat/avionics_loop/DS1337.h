@@ -62,7 +62,7 @@ enum Ds1337Alarm2Mode
  * @brief RTC based on the DS1337 chip connected via I2C and the Wire libary
  * 
  */
-class RTC_DS1337 : RTC_I2C {
+class RTC_DS1337 final : RTC_I2C {
 public:
   bool begin(TwoWire *wireInstance = &Wire);
   void adjust(const DateTime &dt);

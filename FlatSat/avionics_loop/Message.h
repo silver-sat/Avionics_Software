@@ -16,7 +16,7 @@
  * @brief Messages sent by the Avionics Board
  * 
  */
-class Message
+class Message final
 {
 public:
     /**
