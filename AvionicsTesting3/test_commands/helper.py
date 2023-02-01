@@ -45,7 +45,7 @@ def collect_initialization():
 
     log = []
     log_data = ""
-    while "Process Loop Test initialization completed" not in log_data:
+    while "Avionics Process initialization completed" not in log_data:
         log_data = log_port.readline().decode("utf-8").strip()
         log.append(Entry(*(log_data.split(maxsplit=2))))
         print(log_data)
@@ -57,7 +57,7 @@ def collect_initialization():
 def initialization_complete(log):
 
     return any(
-        [item.detail == "Process Loop Test initialization completed" for item in log]
+        [item.detail == "Avionics Process initialization completed" for item in log]
     )
 
 

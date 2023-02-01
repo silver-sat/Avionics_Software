@@ -36,15 +36,6 @@ constexpr byte HALT('\x0A');              /**< halt */
 constexpr byte SEND_RADIO_STATUS{'\x0B'}; /**< return radio status */
 
 /**
- * @brief Dummy AX.25 header
- *
- */
-// todo: consider changing case of constants
-constexpr byte HEADER[]{0x96, 0x86, 0x66, 0x86, 0xa2, 0x94, 0xe0, 0x96,
-                        0x86, 0x66, 0x86, 0xa2, 0x94, 0xe5, 0x03, 0xf0}; /**< dummy AX.25 header */
-constexpr size_t header_size{sizeof(HEADER)};                            /**< AX.25 header size */
-
-/**
  * @brief Amateur radio call sign
  *
  */

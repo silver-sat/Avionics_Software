@@ -77,6 +77,8 @@ bool RadioBoard::receive_command(char *buffer, const size_t length)
     while (Serial1.available())
     {
         char character = Serial1.read();
+        Serial.print("Received character: 0x");
+        Serial.println(character, HEX);
         if (m_received_start)
         {
             if (m_receiving_type)
@@ -130,10 +132,9 @@ bool RadioBoard::receive_command(char *buffer, const size_t length)
             else if (character == FEND)
             {
                 // todo: receive radio board status
-                if (m_buffer_index > header_size + 1)
+                if (m_buffer_index > 0)
                 {
                     buffer[m_buffer_index++] = '\0';
-                    memmove(buffer, buffer + header_size, m_buffer_index - header_size);
                     Log.infoln("Command received (count %l): %s", ++m_commands_received, buffer);
                     m_received_start = false;
                     return true;
@@ -199,7 +200,6 @@ bool RadioBoard::send_message(Message message)
     Log.noticeln("Sending message: %s", message_data.c_str());
     Serial1.write(FEND);
     Serial1.write(DATA_FRAME);
-    Serial1.write(HEADER, 16);
     Serial1.write(message_data.c_str());
     Serial1.write(FEND);
     return true;

@@ -1,18 +1,14 @@
 ##
 # @file test_multiple_FENDs.py
-# @brief Unit test Avionics Board multiple FENDs
+# @brief FlatSat test Avionics Board multiple FENDs
 # @author Lee A. Congdon (lee@silversat.org)
-# @version 1.0.0
+# @version 2.0.0
 # @date 22 October 2022
 
-"""Unit test Avionics Board multiples FENDs"""
+"""FlatSat test Avionics Board multiples FENDs"""
 
 import helper
 import serial
-from collections import namedtuple
-
-## log entry field names
-Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
 
 ## Test incomplete commands
 #
@@ -25,38 +21,38 @@ class TestMultipleFENDs:
     #
     def test_single_FEND(self):
         helper.send_FEND(1)
-        log = helper.collect("NoOperate")
-        assert helper.not_signed(log)
-        assert helper.acknowledged(log)
-        assert not(helper.no_logged_errors(log))
-        assert helper.executed(log)
+        helper.issue("NoOperate")
+        message = helper.collect()
+        assert helper.acknowledged(message)
+        message = helper.collect()
+        assert helper.response_sent(message)
 
     ## two FENDs followed by complete command
     #
     def test_two_FENDs(self):
         helper.send_FEND(2)
-        log = helper.collect("NoOperate")
-        assert helper.not_signed(log)
-        assert helper.acknowledged(log)
-        assert not(helper.no_logged_errors(log))
-        assert helper.executed(log)
+        helper.issue("NoOperate")
+        message = helper.collect()
+        assert helper.acknowledged(message)
+        message = helper.collect()
+        assert helper.response_sent(message)
 
     ## three FENDs followed by complete command
     #
     def test_three_FENDs(self):
         helper.send_FEND(3)
-        log = helper.collect("NoOperate")
-        assert helper.not_signed(log)
-        assert helper.acknowledged(log)
-        assert not(helper.no_logged_errors(log))
-        assert helper.executed(log)
+        helper.issue("NoOperate")
+        message = helper.collect()
+        assert helper.acknowledged(message)
+        message = helper.collect()
+        assert helper.response_sent(message)
 
     ## five FENDs followed by complete command
     #
     def test_five_FENDs(self):
         helper.send_FEND(5)
-        log = helper.collect("NoOperate")
-        assert helper.not_signed(log)
-        assert helper.acknowledged(log)
-        assert not(helper.no_logged_errors(log))
-        assert helper.executed(log)
+        helper.issue("NoOperate")
+        message = helper.collect()
+        assert helper.acknowledged(message)
+        message = helper.collect()
+        assert helper.response_sent(message)
