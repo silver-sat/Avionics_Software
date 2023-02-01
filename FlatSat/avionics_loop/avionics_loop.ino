@@ -130,7 +130,7 @@ void setup()
   Log.begin(LOG_LEVEL_VERBOSE, &Serial);
   Log.setShowLevel(false);
 
-  Log.noticeln("Initializing SilverSat Process Loop Test");
+  Log.noticeln("Initializing Avionics Process");
 
   // Initialize Avionics Board
 
@@ -138,23 +138,23 @@ void setup()
   avionics.begin();
   Log.noticeln("Avionics Board initialization completed");
 
-  // Initialize mock Power Board
+  // Initialize Power Board
 
-  Log.noticeln("Initializing mock Power Board");
+  Log.noticeln("Initializing Power Board interface");
   power.begin();
-  Log.noticeln("Mock Power Board initialization completed");
+  Log.noticeln("Power Board interface initialization completed");
 
-  // Initialize mock Radio Board
+  // Initialize Radio Board
 
-  Log.noticeln("Initializing mock Radio Board");
+  Log.noticeln("Initializing Radio Board interface");
   radio.begin();
-  Log.noticeln("Mock Radio Board initialization completed");
+  Log.noticeln("Radio Board interface initialization completed");
 
-  // Initialize mock Payload Board
+  // Initialize Payload Board
 
-  Log.noticeln("Initializing mock Payload Board");
+  Log.noticeln("Initializing Payload Board interface");
   payload.begin();
-  Log.noticeln("Mock Payload Board initialization completed");
+  Log.noticeln("Payload Board interface initialization completed");
 
   // Wait for separation delay
 
@@ -166,12 +166,13 @@ void setup()
 
   // Deploy antenna
 
-  Log.noticeln("Notifying mock Radio Board to deploy antenna");
-  radio.deploy_antenna();
+// todo: deploy antenna
+  Log.noticeln("Deploying antenna");
+  // radio.deploy_antenna();
 
   // Initialization complete
 
-  Log.noticeln("Process Loop Test initialization completed");
+  Log.noticeln("Avionics Process initialization completed");
 
 #ifdef INSTRUMENTATION
   // Set up instrumentation

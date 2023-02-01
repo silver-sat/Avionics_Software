@@ -10,7 +10,7 @@
 #include "CommandParser.h"
 #include "arduino_secrets.h"
 #include "log_utility.h"
-#include "mock_radio_board.h"
+#include "RadioBoard.h"
 #include <BLAKE2s.h>
 
 /**

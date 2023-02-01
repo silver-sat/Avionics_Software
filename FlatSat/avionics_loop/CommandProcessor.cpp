@@ -10,7 +10,7 @@
 
 #include "CommandProcessor.h"
 #include "log_utility.h"
-#include "mock_radio_board.h"
+#include "RadioBoard.h"
 
 /**
  * @brief Check for command
@@ -21,7 +21,7 @@
 
 bool CommandProcessor::check_for_command()
 {
-    extern MockRadioBoard radio;
+    extern RadioBoard radio;
     if (radio.receive_command(m_command_buffer, maximum_command_length))
     {
         String command_string{m_command_buffer};

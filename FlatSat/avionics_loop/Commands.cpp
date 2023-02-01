@@ -12,9 +12,9 @@
 #include "Message.h"
 #include "log_utility.h"
 #include "AvionicsBoard.h"
-#include "mock_power_board.h"
-#include "mock_radio_board.h"
-#include "mock_payload_board.h"
+#include "PowerBoard.h"
+#include "RadioBoard.h"
+#include "PayloadBoard.h"
 
 /**
  * @brief Acknowledge the command
@@ -25,7 +25,7 @@ bool Command::acknowledge_command()
 {
     Log.traceln("Acknowledging command");
     Message message{Message::acknowledgement, ""};
-    extern MockRadioBoard radio;
+    extern RadioBoard radio;
     return radio.send_message(message);
 };
 
@@ -38,7 +38,7 @@ bool Command::negative_acknowledge_command()
 {
     Log.traceln("Negative acknowledging command");
     Message message{Message::negative_acknowledgement, ""};
-    extern MockRadioBoard radio;
+    extern RadioBoard radio;
     return radio.send_message(message);
 };
 
@@ -149,7 +149,7 @@ bool CommandPayComms::execute_command()
 
     auto status = Command::execute_command();
     Log.verboseln("PayComms");
-    extern MockPayloadBoard payload;
+    extern PayloadBoard payload;
     return payload.tweet() && status;
 };
 
@@ -175,7 +175,7 @@ bool CommandReportT::execute_command()
     {
         status = false;
     };
-    extern MockRadioBoard radio;
+    extern RadioBoard radio;
     auto message = Message(Message::response, timestamp);
     return radio.send_message(message) && status;
 };
@@ -205,10 +205,10 @@ bool CommandTweeSlee::execute_command()
 {
     auto status = Command::execute_command();
     Log.verboseln("TweeSlee");
-    extern MockPayloadBoard payload;
+    extern PayloadBoard payload;
     Log.traceln("Turning off payload power");
     status = payload.power_down() && status;
-    extern MockRadioBoard radio;
+    extern RadioBoard radio;
     Log.traceln("Sending local command: halt");
     return radio.send_halt() && status;
 };
@@ -350,7 +350,7 @@ bool CommandGetPicTimes::execute_command()
     auto status = Command::execute_command();
     Log.verboseln("GetPicTimes");
     extern AvionicsBoard avionics;
-    extern MockRadioBoard radio;
+    extern RadioBoard radio;
     auto message = Message(Message::response, avionics.get_pic_times());
     return radio.send_message(message) && status;
 };
@@ -381,7 +381,7 @@ bool CommandGetTelemetry::execute_command()
     auto status = Command::execute_command();
     Log.verboseln("GetTelemetry");
     extern AvionicsBoard avionics;
-    extern MockRadioBoard radio;
+    extern RadioBoard radio;
     auto message = Message(Message::response, avionics.get_telemetry());
     return radio.send_message(message) && status;
 };
@@ -411,8 +411,8 @@ bool CommandGetPower::execute_command()
 {
     auto status = Command::execute_command();
     Log.verboseln("GetPower");
-    extern MockPowerBoard power;
-    extern MockRadioBoard radio;
+    extern PowerBoard power;
+    extern RadioBoard radio;
     auto message = Message(Message::response, power.get_detail());
     return radio.send_message(message) && status;
 };
@@ -442,8 +442,8 @@ bool CommandGetPhotos::execute_command()
 {
     auto status = Command::execute_command();
     Log.verboseln("GetPhotos");
-    extern MockPayloadBoard payload;
-    extern MockRadioBoard radio;
+    extern PayloadBoard payload;
+    extern RadioBoard radio;
     auto message = Message(Message::response, String(payload.get_photo_count()).c_str());
     return radio.send_message(message) && status;
 };
@@ -473,7 +473,7 @@ bool CommandGetComms::execute_command()
 {
     auto status = Command::execute_command();
     Log.verboseln("GetComms");
-    extern MockRadioBoard radio;
+    extern RadioBoard radio;
     auto message = Message(Message::response, radio.get_status().c_str());
     return radio.send_message(message) && status;
 };
@@ -504,7 +504,7 @@ bool CommandGetBeaconInterval::execute_command()
     auto status = Command::execute_command();
     Log.verboseln("GetBeaconInterval");
     extern AvionicsBoard avionics;
-    extern MockRadioBoard radio;
+    extern RadioBoard radio;
     auto message = Message(Message::response, String(avionics.get_beacon_interval()).c_str());
     return radio.send_message(message) && status;
 };
@@ -534,7 +534,7 @@ bool CommandSendTestPacket::execute_command()
 {
     auto status = Command::execute_command();
     Log.verboseln("SendTestPacket");
-    extern MockRadioBoard radio;
+    extern RadioBoard radio;
     auto message = Message(Message::response, "TEST");
     return radio.send_message(message) && status;
 };
