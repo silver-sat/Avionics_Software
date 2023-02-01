@@ -21,7 +21,10 @@ class TestGetComms:
     #
     def test_get_comms(self):
 
-        message = helper.collect("GetComms")
+        helper.issue("GetComms")
+        message = helper.collect()
         assert helper.acknowledged(message)
-        assert helper.executed(message)
-        assert helper.received_status(message)
+        message = helper.collect()
+        assert helper.local_status_request(message)
+        message = helper.collect()
+        assert helper.response_sent(message)

@@ -21,30 +21,38 @@ class TestMultipleFENDs:
     #
     def test_single_FEND(self):
         helper.send_FEND(1)
-        message = helper.collect("NoOperate")
+        helper.issue("NoOperate")
+        message = helper.collect()
         assert helper.acknowledged(message)
-        assert helper.executed(message)
+        message = helper.collect()
+        assert helper.response_sent(message)
 
     ## two FENDs followed by complete command
     #
     def test_two_FENDs(self):
         helper.send_FEND(2)
-        message = helper.collect("NoOperate")
+        helper.issue("NoOperate")
+        message = helper.collect()
         assert helper.acknowledged(message)
-        assert helper.executed(message)
+        message = helper.collect()
+        assert helper.response_sent(message)
 
     ## three FENDs followed by complete command
     #
     def test_three_FENDs(self):
         helper.send_FEND(3)
-        message = helper.collect("NoOperate")
+        helper.issue("NoOperate")
+        message = helper.collect()
         assert helper.acknowledged(message)
-        assert helper.executed(message)
+        message = helper.collect()
+        assert helper.response_sent(message)
 
     ## five FENDs followed by complete command
     #
     def test_five_FENDs(self):
         helper.send_FEND(5)
-        message = helper.collect("NoOperate")
+        helper.issue("NoOperate")
+        message = helper.collect()
         assert helper.acknowledged(message)
-        assert helper.executed(message)
+        message = helper.collect()
+        assert helper.response_sent(message)

@@ -21,17 +21,20 @@ class TestNoOperate:
     #
     def test_no_operate(self):
 
-        message = helper.collect("NoOperate")
+        helper.issue("NoOperate")
+        message = helper.collect()
         assert helper.acknowledged(message)
-        assert helper.executed(message)
+        message = helper.collect()
+        assert helper.response_sent(message)
 
     
     ## no operation signed
     #
     def test_no_operate_signed(self):
 
-        message = helper.collect(helper.generate_signed("NoOperate"))
+        helper.issue(helper.generate_signed("NoOperate"))
+        message = helper.collect()
         assert helper.acknowledged(message)
-        assert helper.executed(message)
-
+        message = helper.collect()
+        assert helper.response_sent(message)
     

@@ -21,12 +21,14 @@ class TestInvalid:
     #
     def test_invalid(self):
 
-        message = helper.collect("Invalid")
+        helper.issue("Invalid")
+        message = helper.collect()
         assert helper.negative_acknowledged(message)
 
     ## invalid command signed
     #
     def test_invalid_signed(self):
 
-        message = helper.collect(helper.generate_signed("Invalid"))
+        helper.issue(helper.generate_signed("Invalid"))
+        message = helper.collect()
         assert helper.negative_acknowledged(message)

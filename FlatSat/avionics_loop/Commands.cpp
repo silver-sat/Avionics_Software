@@ -76,6 +76,7 @@ bool CommandUnknown::acknowledge_command()
 bool CommandUnknown::execute_command()
 {
     Command::execute_command();
+    // todo: determine response
     Log.errorln("Unknown");
     return false;
 }
@@ -101,6 +102,7 @@ bool CommandInvalid::acknowledge_command()
 bool CommandInvalid::execute_command()
 {
     Command::execute_command();
+    // todo: determine response
     Log.errorln("Invalid");
     return false;
 };
@@ -127,9 +129,11 @@ bool CommandNoOperate::acknowledge_command()
 
 bool CommandNoOperate::execute_command()
 {
-    Command::execute_command();
+    auto status = Command::execute_command();
     Log.verboseln("NoOperate");
-    return true;
+    extern RadioBoard radio;
+    auto message = Message(Message::response, "");
+    return radio.send_message(message) && status;
 };
 
 /**

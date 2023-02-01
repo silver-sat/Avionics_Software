@@ -75,17 +75,30 @@ def generate_signed(command):
     )
 
 
-## Issue command and collect response
+## Issue command
 #
-def collect(command):
+def issue(command):
 
-    message = bytearray()
-    with command_port as ser:
-        ser.write(FEND + DATA_FRAME + command.encode("utf-8") + FEND)
-        message = ser.read()
-        message = message + ser.read_until(expected=FEND)
-        print(message)
+    command_port.write(FEND + DATA_FRAME + command.encode("utf-8") + FEND)
+
+
+## Collect response
+#
+def collect():
+
+    message = command_port.read()  # read first FEND
+    message = message + command_port.read_until(expected=FEND)
     return message
+
+
+## Send FEND
+#
+def send_FEND(count=1):
+
+    index = 0
+    while index < count:
+        command_port.write(FEND)
+        index += 1
 
 
 ## Verify command acknowledged
@@ -99,20 +112,18 @@ def acknowledged(message):
 #
 def negative_acknowledged(message):
 
-    return "NACK" in message
+    return bytes("NACK".encode("utf-8")) in message
 
 
-## Verify command executed
+## Verify response sent
 #
-def executed(message):
+def response_sent(message):
 
-    return "RES" in message
+    return bytes("RES".encode("utf-8")) in message
 
 
 ## Verify beacon message sent
 #
-
-
 def local_beacon_message_sent(message):
 
     return message.startswith(FEND + BEACON)
@@ -124,7 +135,7 @@ def local_beacon_message_sent(message):
 
 def local_recover_antenna(message):
 
-    return message.startwith(FEND + RECOVER_ANTENNA)
+    return message.startswith(FEND + RECOVER_ANTENNA)
 
 
 ## Verify local status request message sent
@@ -133,7 +144,7 @@ def local_recover_antenna(message):
 
 def local_status_request(message):
 
-    return message.startwith(FEND + STATUS)
+    return message.startswith(FEND + STATUS)
 
 
 ## Verify local halt message sent
