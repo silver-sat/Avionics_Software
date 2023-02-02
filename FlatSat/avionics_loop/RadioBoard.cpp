@@ -77,8 +77,8 @@ bool RadioBoard::receive_command(char *buffer, const size_t length)
     while (Serial1.available())
     {
         char character = Serial1.read();
-        Serial.print("Received character: 0x");
-        Serial.println(character, HEX);
+        // Serial.print("Received character: 0x");
+        // Serial.println(character, HEX);
         if (m_received_start)
         {
             if (m_receiving_type)
