@@ -8,7 +8,6 @@
 """FlatSat test Avionics Board SendTestPacket command"""
 
 import helper
-import serial
 
 ## Test SendTestPacket command
 #

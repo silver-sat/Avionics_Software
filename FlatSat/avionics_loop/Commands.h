@@ -7,26 +7,26 @@
  *
  * Commands
  * 
- * BeaconSP: set beacon spacing
+ * SRC: SetClock: subsumes SetTime: set realtime clock
+ * SBI: BeaconSP: set beacon spacing
+ * SPT: PicTimes: set times for photos
+ * GRC: ReportT: subsumes GetTime: reply with realtime clock setting
+ * GPT: GetPicTimes: reply with picture schedule
+ * GTY: GetTelemetry: reply with telemetry
+ * GPW: GetPower: reply with power status
+ * GPC: GetPhotos: reply with number of photos
+ * GCO: GetComms: reply with Radio Board status
+ * GBI: GetBeaconInterval: reply with beacon interval
+ * CPT: ClearPicTimes: empty PicTimes queue
+ * URC: UnsetClock: change the realtime clock status to unset for testing
+ * NOP: NoOperate: subsumes Ping: acknowlege
+ * STP: SendTestPacket: reply with test message
+ * PYC: PayComms: subsumes Begin tweet : start payload in comms mode
+ * TSL: TweeSlee: subsumes Halt: stop tweeting
+ * WDG: Watchdog: force watchdog timeout (reset SAMD21)
+ * HLT: halt, see TweeSlee
  * s_call_sig deprecated
- * PayComms: subsumes Begin tweet : start payload in comms mode
- * PicTimes: set times for photos
- * ReportT: subsumes GetTime: reply with realtime clock setting
- * NoOperate: subsumes Ping: acknowlege
- * SetClock: subsumes SetTime: set realtime clock
- * TweeSlee: subsumes Halt: stop tweeting
- * Watchdog: force watchdog timeout (reset SAMD21)
  * g_call_sig, deprecated
- * halt, see TweeSlee
- * GetPicTimes: reply with picture schedule
- * GetTelemetry: reply with telemetry
- * GetPower: reply with power status
- * GetPhotos: reply with number of photos
- * GetComms: reply with Radio Board status
- * GetBeaconInternal: reply with beacon interval
- * SendTestPacket: reply with test message
- * ClearPicTimes: empty PicTimes queue
- * UnsetClock: change the realtime clock status to unset for testing
  */
 
 #pragma once
