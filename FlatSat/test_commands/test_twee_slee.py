@@ -8,7 +8,6 @@
 """FlatSat test Avionics Board TweeSlee command"""
 
 import helper
-import serial
 
 ## Test TweeSlee command
 #
@@ -17,13 +16,15 @@ import serial
 class TestTweeSlee:
     """Test TweeSlee command"""
 
-    ## active payload to sleep
+    ## test active payload to sleep
     #
     def test_twee_slee(self):
 
         helper.issue("TweeSlee")
         message = helper.collect()
         assert helper.acknowledged(message)
+        message = helper.collect()
+        assert helper.response_sent(message)
         message = helper.collect()
         assert helper.local_halt_message_sent(message)
 
