@@ -28,11 +28,11 @@ class TestBeaconSp:
         message = helper.collect()
         assert helper.acknowledged(message)
         message = helper.collect()
-        assert helper.response_sent(message)
+        assert helper.response_sent(message, "SBI")
     
     ## no beacon signed
     #
-    def test_beacon_sp_0(self):
+    def test_beacon_sp_0_signed(self):
 
         interval = 0
         # todo: fix single and double 0 error
@@ -40,4 +40,4 @@ class TestBeaconSp:
         message = helper.collect()
         assert helper.acknowledged(message)
         message = helper.collect()
-        assert helper.response_sent(message)
+        assert helper.response_sent(message, "SBI")

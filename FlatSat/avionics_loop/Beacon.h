@@ -1,5 +1,5 @@
 /**
- * @file beacon.h
+ * @file Beacon.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat beacon messages
  * @version 2.0.0
@@ -53,10 +53,11 @@ public:
         status payload)
     {
 
-        Message(beacon, (call_sign +
+        m_command = beacon;
+        m_content = call_sign +
                          String(power) +
                          String(avionics) +
                          String(radio) +
-                         String(payload)));
+                         String(payload);
     };
 };

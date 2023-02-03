@@ -10,6 +10,8 @@
  * SRC: SetClock: subsumes SetTime: set realtime clock
  * SBI: BeaconSP: set beacon spacing
  * SPT: PicTimes: set times for photos
+ * CPT: ClearPicTimes: empty PicTimes queue
+ * URC: UnsetClock: change the realtime clock status to unset for testing
  * GRC: ReportT: subsumes GetTime: reply with realtime clock setting
  * GPT: GetPicTimes: reply with picture schedule
  * GTY: GetTelemetry: reply with telemetry
@@ -17,8 +19,6 @@
  * GPC: GetPhotos: reply with number of photos
  * GCO: GetComms: reply with Radio Board status
  * GBI: GetBeaconInterval: reply with beacon interval
- * CPT: ClearPicTimes: empty PicTimes queue
- * URC: UnsetClock: change the realtime clock status to unset for testing
  * NOP: NoOperate: subsumes Ping: acknowlege
  * STP: SendTestPacket: reply with test message
  * PYC: PayComms: subsumes Begin tweet : start payload in comms mode

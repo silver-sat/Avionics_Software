@@ -174,15 +174,35 @@ bool RadioBoard::receive_command(char *buffer, const size_t length)
 /**
  * @brief Send message
  *
+ * @param Message::message_type command
+ * @param String content
+ * 
  * @return true successful
  * @return false error
  */
 
-bool RadioBoard::send_message(Message message)
+bool RadioBoard::send_message(Message::message_type command, String content) const
+{
+    Log.noticeln("Sending message: KISS command 0x%x, content %s", command, content.c_str());
+    Serial1.write(FEND);
+    Serial1.write(command);
+    Serial1.write(content.c_str());
+    Serial1.write(FEND);
+    return true;
+}
+
+/**
+ * @brief Send message
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool RadioBoard::send_message(Message message) const
 {
     auto command = message.get_command();
     auto content = message.get_content();
-    Log.noticeln("Sending message: command %x, content %s", command, content.c_str());
+    Log.noticeln("Sending message: KISS command 0x%x, content %s", command, content.c_str());
     Serial1.write(FEND);
     Serial1.write(command);
     Serial1.write(content.c_str());

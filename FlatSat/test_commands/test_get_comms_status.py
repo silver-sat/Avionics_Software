@@ -27,4 +27,4 @@ class TestGetComms:
         message = helper.collect()
         assert helper.local_status_request(message)
         message = helper.collect()
-        assert helper.response_sent(message)
+        assert helper.response_sent(message, "GCO")

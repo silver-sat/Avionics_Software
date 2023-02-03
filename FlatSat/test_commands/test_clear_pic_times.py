@@ -24,5 +24,14 @@ class TestClearPicTimes:
         message = helper.collect()
         assert helper.acknowledged(message)
         message = helper.collect()
-        assert helper.response_sent(message)
+        assert helper.response_sent(message, "CPT")
 
+    ## clear picture times signed
+    #
+    def test_clear_pic_times_signed(self):
+
+        helper.issue(helper.generate_signed("ClearPicTimes"))
+        message = helper.collect()
+        assert helper.acknowledged(message)
+        message = helper.collect()
+        assert helper.response_sent(message, "CPT")

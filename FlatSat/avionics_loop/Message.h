@@ -10,6 +10,7 @@
 
 #pragma once
 
+// #include "RadioBoard.h"
 #include <Arduino.h>
 
 /**
@@ -55,17 +56,28 @@ public:
     Message(message_type command, String content) : m_command{command}, m_content{content} {}
 
     /**
+     * @brief Send message to Radio Board
+     *
+     * @return true
+     * @return false
+     */
+    
+    // bool send()
+    // {
+    //     extern RadioBoard radio;
+    //     // return radio.send_message(*this);
+    // }
+    /**
      * @brief Get the command
      *
      */
 
-    message_type get_command() const {return m_command;}
+    message_type get_command() const { return m_command; }
 
     /**
      * @brief Get the content
      *
      */
-
 
     String get_content() const { return m_content; }
 

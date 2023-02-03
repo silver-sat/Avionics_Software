@@ -24,7 +24,7 @@ class TestTweeSlee:
         message = helper.collect()
         assert helper.acknowledged(message)
         message = helper.collect()
-        assert helper.response_sent(message)
+        assert helper.response_sent(message, "TSL")
         message = helper.collect()
         assert helper.local_halt_message_sent(message)
 
