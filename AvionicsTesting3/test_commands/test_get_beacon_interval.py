@@ -29,7 +29,7 @@ class TestGetBeaconInterval:
         assert helper.not_signed(log)
         assert helper.acknowledged(log)
         assert helper.no_logged_errors(log)
-        assert helper.integer_sent(log)
+        assert helper.integer_sent_GBI(log)
         assert helper.executed(log)
 
     ## error: invalid parameter
@@ -50,7 +50,7 @@ class TestGetBeaconInterval:
         assert helper.signature_valid(log)
         assert helper.acknowledged(log)
         assert helper.no_logged_errors(log)
-        assert helper.integer_sent(log)
+        assert helper.integer_sent_GBI(log)
         assert helper.executed(log)
 
     ## error: invalid parameter signed

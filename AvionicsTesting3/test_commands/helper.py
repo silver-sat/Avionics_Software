@@ -242,7 +242,7 @@ def collect_timeout(interval=60):
 #
 def timestamp_sent(log):
     pattern = re.compile(
-        r"\sRES20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)$"
+        r"\sRESGRC20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)$"
     )
     return any([pattern.search(item.detail) for item in log])
 
@@ -251,7 +251,7 @@ def timestamp_sent(log):
 #
 def pictimes_sent(log):
     pattern = re.compile(
-        r"\sRES[0-5](20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)){0,5}$"
+        r"\sRESGPT[0-5](20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)){0,5}$"
     )
     return any([pattern.search(item.detail) for item in log])
 
@@ -260,7 +260,7 @@ def pictimes_sent(log):
 #
 def pictimes_zero_sent(log):
 
-    return any([item.detail == "Sending message: RES0" for item in log])
+    return any([item.detail.endswith("content RESGPT0") for item in log])
 
 
 ## Collect through reset pin cleared
@@ -307,15 +307,21 @@ def telemetry_sent(log):
 #
 def power_sent(log):
     pattern = re.compile(
-        r"\s(RES)(VP1\d+\.\d+)(CP1\d+\.\d+)(VP2\d+\.\d+)(CP2\d+\.\d+)(VP3\d+\.\d+)(CP3\d+\.\d+)"
+        r"\s(RESGPW)(VP1\d+\.\d+)(CP1\d+\.\d+)(VP2\d+\.\d+)(CP2\d+\.\d+)(VP3\d+\.\d+)(CP3\d+\.\d+)"
     )
     return any([pattern.search(item.detail) for item in log])
 
 
-## Verify integer sent
+## Verify integer sent get beacon spacing
 #
-def integer_sent(log):
-    pattern = re.compile(r"\s(RES)(\d+)$")
+def integer_sent_GBI(log):
+    pattern = re.compile(r"\s(RESGBI)(\d+)$")
+    return any([pattern.search(item.detail) for item in log])
+
+## Verify integer sent get photo count
+#
+def integer_sent_GPC(log):
+    pattern = re.compile(r"\s(RESGPC)(\d+)$")
     return any([pattern.search(item.detail) for item in log])
 
 
