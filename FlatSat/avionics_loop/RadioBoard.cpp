@@ -9,7 +9,7 @@
  */
 
 #include "RadioBoard.h"
-#include "board_configuration.h"
+#include "avionics_constants.h"
 #include "log_utility.h"
 #include "AvionicsBoard.h"
 
@@ -172,19 +172,23 @@ bool RadioBoard::receive_command(char *buffer, const size_t length)
 }
 
 /**
- * @brief Send beacon
+ * @brief Send message
  *
- * @param beacon beacon data
+ * @param Message::message_type command
+ * @param String content
+ * 
+ * @return true successful
+ * @return false error
  */
 
-void RadioBoard::send_beacon(Beacon beacon)
+bool RadioBoard::send_message(Message::message_type command, String content) const
 {
-    String beacon_data = call_sign + beacon.get_message();
-    Log.noticeln("Sending local command: beacon %s", beacon.get_message().c_str());
+    Log.noticeln("Sending message: KISS command 0x%x, content %s", command, content.c_str());
     Serial1.write(FEND);
-    Serial1.write(BEACON);
-    Serial1.write(beacon_data.c_str());
+    Serial1.write(command);
+    Serial1.write(content.c_str());
     Serial1.write(FEND);
+    return true;
 }
 
 /**
@@ -194,13 +198,14 @@ void RadioBoard::send_beacon(Beacon beacon)
  * @return false error
  */
 
-bool RadioBoard::send_message(Message message)
+bool RadioBoard::send_message(Message message) const
 {
-    String message_data = message.get_message();
-    Log.noticeln("Sending message: %s", message_data.c_str());
+    auto command = message.get_command();
+    auto content = message.get_content();
+    Log.noticeln("Sending message: KISS command 0x%x, content %s", command, content.c_str());
     Serial1.write(FEND);
-    Serial1.write(DATA_FRAME);
-    Serial1.write(message_data.c_str());
+    Serial1.write(command);
+    Serial1.write(content.c_str());
     Serial1.write(FEND);
     return true;
 }
@@ -219,20 +224,4 @@ String RadioBoard::get_status()
     Serial1.write(FEND);
     // todo: retrieve and store Radio Board status
     return "unknown";
-}
-
-/**
- * @brief Send halt local command
- *
- * @return true successful
- * @return false error
- */
-
-bool RadioBoard::send_halt()
-{
-    Serial1.write(FEND);
-    Serial1.write(HALT);
-    Serial1.write(FEND);
-    Log.traceln("Halt local command sent");
-    return true;
 }

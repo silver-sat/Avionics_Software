@@ -173,8 +173,8 @@ bool AvionicsBoard::check_beacon() {
     } else {
       m_payload_status = Beacon::off;
     }
-    Beacon message{ m_power_status, m_avionics_status, m_radio_status, m_payload_status };
-    radio.send_beacon(message);
+    Beacon beacon{ m_power_status, m_avionics_status, m_radio_status, m_payload_status };
+    radio.send_message(beacon);
     m_last_beacon_time = millis();
   };
   return true;

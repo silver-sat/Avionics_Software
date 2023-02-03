@@ -9,7 +9,7 @@
  */
 
 #include "CY15B256J.h"
-#include "board_configuration.h"
+#include "avionics_constants.h"
 #include "log_utility.h"
 #include <math.h>
 #include <stdlib.h>

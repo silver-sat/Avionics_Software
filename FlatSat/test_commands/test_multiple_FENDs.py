@@ -25,7 +25,7 @@ class TestMultipleFENDs:
         message = helper.collect()
         assert helper.acknowledged(message)
         message = helper.collect()
-        assert helper.response_sent(message)
+        assert helper.response_sent(message, "NOP")
 
     ## two FENDs followed by complete command
     #
@@ -35,7 +35,7 @@ class TestMultipleFENDs:
         message = helper.collect()
         assert helper.acknowledged(message)
         message = helper.collect()
-        assert helper.response_sent(message)
+        assert helper.response_sent(message, "NOP")
 
     ## three FENDs followed by complete command
     #
@@ -45,7 +45,7 @@ class TestMultipleFENDs:
         message = helper.collect()
         assert helper.acknowledged(message)
         message = helper.collect()
-        assert helper.response_sent(message)
+        assert helper.response_sent(message, "NOP")
 
     ## five FENDs followed by complete command
     #
@@ -55,4 +55,4 @@ class TestMultipleFENDs:
         message = helper.collect()
         assert helper.acknowledged(message)
         message = helper.collect()
-        assert helper.response_sent(message)
+        assert helper.response_sent(message, "NOP")

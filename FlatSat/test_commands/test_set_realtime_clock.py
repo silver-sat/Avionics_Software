@@ -27,7 +27,7 @@ class TestSetClock:
         message = helper.collect()
         assert helper.acknowledged(message)
         message = helper.collect()
-        assert helper.response_sent(message)
+        assert helper.response_sent(message, "SRC")
     
     ## set realtime clock with current time signed
     #
@@ -38,7 +38,7 @@ class TestSetClock:
         message = helper.collect()
         assert helper.acknowledged(message)
         message = helper.collect()
-        assert helper.response_sent(message)
+        assert helper.response_sent(message, "SRC")
 
 
 

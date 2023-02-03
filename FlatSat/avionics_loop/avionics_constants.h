@@ -1,14 +1,16 @@
 /**
- * @file board_configuration.h
+ * @file avionics_constants.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Hardware definitions for Avionics Board
- * @version 1.0.1
+ * @version 1.1.0
  * @date 2022-08-11
  *
  *
  */
 
 #pragma once
+
+#include <Arduino.h>
 
 /**
  * @brief SAMD21 pin definitions
@@ -62,3 +64,10 @@ constexpr unsigned wait_for_i2c_device{10}; /**< wait for I2C device to become a
 
 constexpr unsigned long seconds_to_milliseconds{1000}; /**< conversion factor for time in seconds @hideinitializer */
 constexpr unsigned long minutes_to_seconds{60};        /**< conversion factor for time in minutes @hideinitializer */
+
+/**
+ * @brief Amateur radio call sign
+ *
+ */
+
+const String call_sign{"KC3CQJ-2"};

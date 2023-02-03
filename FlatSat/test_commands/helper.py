@@ -117,9 +117,9 @@ def negative_acknowledged(message):
 
 ## Verify response sent
 #
-def response_sent(message):
+def response_sent(message, type):
 
-    return bytes("RES".encode("utf-8")) in message
+    return bytes(("RES" + type).encode("utf-8")) in message
 
 
 ## Verify beacon message sent

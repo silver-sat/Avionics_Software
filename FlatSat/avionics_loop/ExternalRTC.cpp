@@ -9,7 +9,7 @@
  */
 
 #include "ExternalRTC.h"
-#include "board_configuration.h"
+#include "avionics_constants.h"
 #include "log_utility.h"
 
 /**

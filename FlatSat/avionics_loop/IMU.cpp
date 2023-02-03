@@ -10,7 +10,7 @@
 
 #include "IMU.h"
 #include "log_utility.h"
-#include "board_configuration.h"
+#include "avionics_constants.h"
 
 /**
  * @brief Construct a new IMU::IMU object
