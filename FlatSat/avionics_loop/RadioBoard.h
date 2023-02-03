@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include "Beacon.h"
 #include "Message.h"
 
 /**
@@ -29,18 +28,10 @@ constexpr byte DATA_FRAME{'\x00'}; /**< data frame */
  *
  */
 // todo: consider changing case of constants
-constexpr byte BEACON{'\x07'};            /**< send a beacon */
 constexpr byte DEPLOY_ANTENNA{'\x08'};    /**< deploy antenna */
 constexpr byte GET_RADIO_STATUS{'\x09'};  /**< request radio status */
 constexpr byte HALT('\x0A');              /**< halt */
 constexpr byte SEND_RADIO_STATUS{'\x0B'}; /**< return radio status */
-
-/**
- * @brief Amateur radio call sign
- *
- */
-
-const String call_sign{"KC3CQJ-2"};
 
 /**
  * @brief SilverSat Radio Board
@@ -71,13 +62,6 @@ public:
     bool receive_command(char *buffer, const size_t length);
 
     /**
-     * @brief Send beacon
-     *
-     */
-
-    void send_beacon(Beacon beacon);
-
-    /**
      * @brief Send message
      *
      */
@@ -90,13 +74,6 @@ public:
      */
 
     String get_status();
-
-    /**
-     * @brief Send halt local command
-     *
-     */
-
-    bool send_halt();
 
 private:
     size_t m_buffer_index{0};

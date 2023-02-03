@@ -24,7 +24,7 @@
 bool Command::acknowledge_command()
 {
     Log.traceln("Acknowledging command");
-    Message message{Message::acknowledgement, ""};
+    Message message{Message::acknowledgement, "ACK"};
     extern RadioBoard radio;
     return radio.send_message(message);
 };
@@ -37,7 +37,7 @@ bool Command::acknowledge_command()
 bool Command::negative_acknowledge_command()
 {
     Log.traceln("Negative acknowledging command");
-    Message message{Message::negative_acknowledgement, ""};
+    Message message{Message::negative_acknowledgement, "NACK"};
     extern RadioBoard radio;
     return radio.send_message(message);
 };
@@ -209,13 +209,14 @@ bool CommandTweeSlee::execute_command()
     auto status{Command::execute_command()};
     Log.verboseln("TweeSlee");
     extern RadioBoard radio;
-    auto message{Message(Message::response, "TSL")};
+    auto message{Message(Message::response, "RESTSL")};
     status = radio.send_message(message) && status;
     extern PayloadBoard payload;
     Log.traceln("Turning off payload power");
     status = payload.power_down() && status;
     Log.traceln("Sending local command: halt");
-    return radio.send_halt() && status;
+    message = Message(Message::halt, "");
+    return radio.send_message(message) && status;
 };
 
 /**
@@ -491,6 +492,7 @@ bool CommandGetComms::execute_command()
     auto status{Command::execute_command()};
     Log.verboseln("GetComms");
     extern RadioBoard radio;
+    // todo: get status before response
     auto message{Message(Message::response, radio.get_status().c_str())};
     return radio.send_message(message) && status;
 };
@@ -582,7 +584,7 @@ bool CommandClearPicTimes::execute_command()
     auto status{Command::execute_command()};
     Log.verboseln("ClearPicTimes");
     extern RadioBoard radio;
-    auto message{Message(Message::response, "CPT")};
+    auto message{Message(Message::response, "RESCPT")};
     status = radio.send_message(message) && status;
     extern AvionicsBoard avionics;
     return avionics.clear_pic_times() && status;
