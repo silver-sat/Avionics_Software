@@ -11,7 +11,7 @@
 #pragma once
 
 #include "Message.h"
-#include "board_configuration.h"
+#include "avionics_constants.h"
 #include <Arduino.h>
 
 /**

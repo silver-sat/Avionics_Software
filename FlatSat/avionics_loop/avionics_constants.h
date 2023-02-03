@@ -1,8 +1,8 @@
 /**
- * @file board_configuration.h
+ * @file avionics_constants.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Hardware definitions for Avionics Board
- * @version 1.0.1
+ * @version 1.1.0
  * @date 2022-08-11
  *
  *

@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "board_configuration.h"
+#include "avionics_constants.h"
 
 /**
  * @brief PayloadBoard constants

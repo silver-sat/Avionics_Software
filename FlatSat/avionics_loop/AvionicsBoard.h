@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "board_configuration.h"
+#include "avionics_constants.h"
 #include "ExternalWatchdog.h"
 #include "ExternalRTC.h"
 #include "IMU.h"
