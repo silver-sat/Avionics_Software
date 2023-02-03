@@ -341,7 +341,7 @@ def local_get_comms_sent(log):
 #
 def test_packet_sent(log):
 
-    return any([item.detail == "Sending message: RESSTPTEST" for item in log])
+    return any([item.detail.endswith("content RESSTPTEST") for item in log])
 
 
 ## Send FEND
