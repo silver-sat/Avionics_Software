@@ -296,7 +296,7 @@ def reset_pin_cleared(log):
 #
 def telemetry_sent(log):
     pattern = re.compile(
-        r"\s(RESAX-?\d+\.\d+)(AY-?\d+\.\d+)(AZ-?\d+\.\d+)(RX-?\d+\.\d+)(RY-?\d+\.\d+)(RZ-?\d+\.\d+)(T-?\d+\.\d+)$"
+        r"\s(RESGTYAX-?\d+\.\d+)(AY-?\d+\.\d+)(AZ-?\d+\.\d+)(RX-?\d+\.\d+)(RY-?\d+\.\d+)(RZ-?\d+\.\d+)(T-?\d+\.\d+)$"
     )
     return any([pattern.search(item.detail) for item in log])
 
@@ -341,7 +341,7 @@ def local_get_comms_sent(log):
 #
 def test_packet_sent(log):
 
-    return any([item.detail == "Sending message: RESTEST" for item in log])
+    return any([item.detail == "Sending message: RESSTPTEST" for item in log])
 
 
 ## Send FEND
