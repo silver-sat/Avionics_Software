@@ -13,7 +13,6 @@
 #include "log_utility.h"
 #include "AvionicsBoard.h"
 
-
 /**
  * @brief Initialize the Radio Board
  *
@@ -110,7 +109,9 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
                     }
                     else
                     {
-                        Log.infoln("Local message received: %s", buffer);
+                        char reply[RES.length() + 1];
+                        strncpy(reply, buffer, RES.length());
+                        Log.infoln("Local message received: %s 0x%x", reply, buffer[RES.length()]);
                     }
                     m_received_start = false;
                     return true; // command or response received
@@ -177,7 +178,7 @@ bool RadioBoard::send_message(Message message) const
 {
     auto command = message.get_command();
     auto content = message.get_content();
-    Log.noticeln("Sending message: KISS command 0x%x, content: %s", command, content.c_str());
+    content.length() == 0 ? Log.noticeln("Sending message: KISS command 0x%x", command) : Log.noticeln("Sending message: KISS command 0x%x, content: %s", command, content.c_str());
     Serial1.write(FEND);
     Serial1.write(command);
     Serial1.write(content.c_str());

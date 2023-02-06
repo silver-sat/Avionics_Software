@@ -6,7 +6,7 @@
  * @date 2022-07-25
  *
  * Commands
- * 
+ *
  * SRC: SetClock: subsumes SetTime: set realtime clock
  * SBI: BeaconSP: set beacon spacing
  * SPT: PicTimes: set times for photos
@@ -52,7 +52,6 @@
 class Command
 {
 public:
-    
     /**
      * @brief Destroy the Command object
      *
@@ -73,105 +72,30 @@ public:
      */
 
     virtual bool negative_acknowledge_command();
-    
+
     /**
      * @brief Execute the command
      *
      */
 
     virtual bool execute_command();
-
 };
 
 /**
- * @brief unknown command
+ * @brief set_clock command
  *
+ * @param time UTC for real time clock
  */
 
-class CommandUnknown final : public Command
+class CommandSetClock final : public Command
 {
 public:
-    CommandUnknown() = default;
+    CommandSetClock(DateTime time) : m_time{time} {};
     bool acknowledge_command() override;
     bool execute_command() override;
-};
 
-/**
- * @brief invalid command
- *
- */
-
-class CommandInvalid final : public Command
-{
-public:
-    CommandInvalid() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
-};
-
-/**
- * @brief no_operate command
- *
- */
-
-class CommandNoOperate final : public Command
-{
-public:
-    CommandNoOperate() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
-};
-
-/**
- * @brief pay_comms command
- *
- */
-
-class CommandPayComms final : public Command
-{
-public:
-    CommandPayComms() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
-};
-
-/**
- * @brief report_t command
- *
- */
-
-class CommandReportT final : public Command
-{
-public:
-    CommandReportT() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
-};
-
-/**
- * @brief twee_slee command
- *
- */
-
-class CommandTweeSlee final : public Command
-{
-public:
-    CommandTweeSlee() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
-};
-
-/**
- * @brief watchdog command
- *
- */
-
-class CommandWatchdog final : public Command
-{
-public:
-    CommandWatchdog() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
+private:
+    DateTime m_time;
 };
 
 /**
@@ -183,7 +107,7 @@ public:
 class CommandBeaconSp final : public Command
 {
 public:
-    CommandBeaconSp(int seconds): m_seconds{seconds}{};
+    CommandBeaconSp(int seconds) : m_seconds{seconds} {};
     bool acknowledge_command() override;
     bool execute_command() override;
 
@@ -200,7 +124,7 @@ private:
 class CommandPicTimes final : public Command
 {
 public:
-    CommandPicTimes(DateTime time): m_time{time}{};
+    CommandPicTimes(DateTime time) : m_time{time} {};
     bool acknowledge_command() override;
     bool execute_command() override;
 
@@ -209,20 +133,42 @@ private:
 };
 
 /**
- * @brief set_clock command
+ * @brief clear_pic_times command
  *
- * @param time UTC for real time clock
  */
 
-class CommandSetClock final : public Command
+class CommandClearPicTimes final : public Command
 {
 public:
-    CommandSetClock(DateTime time): m_time{time}{};
+    CommandClearPicTimes() = default;
     bool acknowledge_command() override;
     bool execute_command() override;
+};
 
-private:
-    DateTime m_time;
+/**
+ * @brief unset_clock command
+ *
+ */
+
+class CommandUnsetClock final : public Command
+{
+public:
+    CommandUnsetClock() = default;
+    bool acknowledge_command() override;
+    bool execute_command() override;
+};
+
+/**
+ * @brief report_t command
+ *
+ */
+
+class CommandReportT final : public Command
+{
+public:
+    CommandReportT() = default;
+    bool acknowledge_command() override;
+    bool execute_command() override;
 };
 
 /**
@@ -304,6 +250,19 @@ public:
 };
 
 /**
+ * @brief no_operate command
+ *
+ */
+
+class CommandNoOperate final : public Command
+{
+public:
+    CommandNoOperate() = default;
+    bool acknowledge_command() override;
+    bool execute_command() override;
+};
+
+/**
  * @brief send_test_packet command
  *
  */
@@ -317,27 +276,248 @@ public:
 };
 
 /**
- * @brief clear_pic_times command
+ * @brief pay_comms command
  *
  */
 
-class CommandClearPicTimes final : public Command
+class CommandPayComms final : public Command
 {
 public:
-    CommandClearPicTimes() = default;
+    CommandPayComms() = default;
     bool acknowledge_command() override;
     bool execute_command() override;
 };
 
 /**
- * @brief unset_clock command
+ * @brief twee_slee command
  *
  */
 
-class CommandUnsetClock final : public Command
+class CommandTweeSlee final : public Command
 {
 public:
-    CommandUnsetClock() = default;
+    CommandTweeSlee() = default;
     bool acknowledge_command() override;
     bool execute_command() override;
+};
+
+/**
+ * @brief watchdog command
+ *
+ */
+
+class CommandWatchdog final : public Command
+{
+public:
+    CommandWatchdog() = default;
+    bool acknowledge_command() override;
+    bool execute_command() override;
+};
+
+/**
+ * @brief invalid command
+ *
+ */
+
+class CommandInvalid final : public Command
+{
+public:
+    CommandInvalid() = default;
+    bool acknowledge_command() override;
+    bool execute_command() override;
+};
+
+/**
+ * @brief unknown command
+ *
+ */
+
+class CommandUnknown final : public Command
+{
+public:
+    CommandUnknown() = default;
+    bool acknowledge_command() override;
+    bool execute_command() override;
+};
+
+/**
+ * @brief modify frequency command
+ *
+ */
+
+class CommandModifyFrequency final : public Command
+{
+public:
+    CommandModifyFrequency(const char *frequency)
+    {
+        memcpy(m_frequency, frequency, length);
+    }
+    bool acknowledge_command() override;
+    bool execute_command() override;
+
+private:
+    const static size_t length{9};
+    char m_frequency[length]{};
+};
+
+/**
+ * @brief modify mode command
+ *
+ */
+
+class CommandModifyMode final : public Command
+{
+public:
+    CommandModifyMode(const char mode) : m_mode{mode} {};
+    bool acknowledge_command() override;
+    bool execute_command() override;
+
+private:
+    char m_mode{};
+};
+
+/**
+ * @brief adjust frequency command
+ *
+ */
+
+class CommandAdjustFrequency final : public Command
+{
+public:
+    CommandAdjustFrequency(const char *frequency)
+    {
+        memcpy(m_frequency, frequency, length);
+    }
+    bool acknowledge_command() override;
+    bool execute_command() override;
+
+private:
+    const static size_t length{9};
+    char m_frequency[length]{};
+};
+
+/**
+ * @brief transmit carrier wave command
+ *
+ */
+
+class CommandTransmitCW final : public Command
+{
+public:
+    CommandTransmitCW(const char *duration)
+    {
+        m_duration[0] = duration[0];
+        m_duration[1] = duration[1];
+    }
+    bool acknowledge_command() override;
+    bool execute_command() override;
+
+private:
+    char m_duration[2]{};
+};
+
+/**
+ * @brief background rssi command
+ *
+ */
+
+class CommandBackgroundRSSI final : public Command
+{
+public:
+    CommandBackgroundRSSI(const char *duration)
+    {
+        m_duration[0] = duration[0];
+        m_duration[1] = duration[1];
+    }
+    bool acknowledge_command() override;
+    bool execute_command() override;
+
+private:
+    char m_duration[2]{};
+};
+
+/**
+ * @brief current rssi command
+ *
+ */
+
+class CommandCurrentRSSI final : public Command
+{
+public:
+    CommandCurrentRSSI() = default;
+    bool acknowledge_command() override;
+    bool execute_command() override;
+};
+
+/**
+ * @brief sweep transmitter command
+ *
+ */
+
+class CommandSweepTransmitter final : public Command
+{
+public:
+    CommandSweepTransmitter(const char* start_frequency, const char* stop_frequency, const char* number_of_steps, const char* dwell_time)
+    {
+        memcpy(m_start_frequency, start_frequency, frequency_length);
+        memcpy(m_stop_frequency, stop_frequency, frequency_length);
+        memcpy(m_number_of_steps, number_of_steps, steps_length);
+        memcpy(m_dwell_time, dwell_time, dwell_length);
+    }
+    bool acknowledge_command() override;
+    bool execute_command() override;
+private:
+    const static size_t frequency_length{9};
+    const static size_t steps_length{3};
+    const static size_t dwell_length{3};
+    char m_start_frequency[frequency_length]{};
+    char m_stop_frequency[frequency_length]{};
+    char m_number_of_steps[steps_length]{};
+    char m_dwell_time[dwell_length]{};
+};
+
+/**
+ * @brief sweep receiver command
+ *
+ */
+
+class CommandSweepReceiver final : public Command
+{
+public:
+    CommandSweepReceiver(const char* start_frequency, const char* stop_frequency, const char* number_of_steps, const char* dwell_time)
+    {
+        memcpy(m_start_frequency, start_frequency, frequency_length);
+        memcpy(m_stop_frequency, stop_frequency, frequency_length);
+        memcpy(m_number_of_steps, number_of_steps, steps_length);
+        memcpy(m_dwell_time, dwell_time, dwell_length);
+    }
+    bool acknowledge_command() override;
+    bool execute_command() override;
+private:
+    const static size_t frequency_length{9};
+    const static size_t steps_length{3};
+    const static size_t dwell_length{3};
+    char m_start_frequency[frequency_length]{};
+    char m_stop_frequency[frequency_length]{};
+    char m_number_of_steps[steps_length]{};
+    char m_dwell_time[dwell_length]{};
+};
+
+/**
+ * @brief query register command
+ *
+ */
+
+class CommandQueryRegister final : public Command
+{
+public:
+    CommandQueryRegister(const char* radio_register)
+    {
+        memcpy(m_radio_register, radio_register, length);
+    }
+    bool acknowledge_command() override;
+    bool execute_command() override;
+private:
+    const static size_t length{5};
+    char m_radio_register[length]{};
 };

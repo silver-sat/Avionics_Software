@@ -53,18 +53,17 @@ bool CommandProcessor::check_for_command()
             switch (command_string[0])
             {
             case 'A': // ACK
-                Log.verboseln("Received: %s, ignored", command_string.c_str());
+                Log.verboseln("Received ACK, ignored");
                 break;
             case 'N': // NACK
-                Log.verboseln("Received: %s, ignored", command_string.c_str());
+                Log.verboseln("Received NACK, ignored");
                 break;
             case 'R': // RESponse
             {
                 extern RadioBoard radio;
-                // todo: convert local response type to printable data
-                Log.verboseln("Received: %s", command_string.c_str());
-                auto radio_data{command_string.substring(RES.length())};
-                auto type{radio_data[0]};
+                auto type{command_string[RES.length()]};
+                auto radio_data{command_string.substring(RES.length()+1)};
+                Log.verboseln("Received type: 0x%x, %s", type, radio_data.c_str());
                 switch (type)
                 {
                 case GET_RADIO_STATUS:
@@ -76,20 +75,28 @@ bool CommandProcessor::check_for_command()
                     break;
                 case MODIFY_MODE:
                     response = {Response{"RMM" + radio_data}};
+                    break;
                 case ADJUST_FREQUENCY:
                     response = {Response{"RAF" + radio_data}};
+                    break;
                 case TRANSMIT_CW:
                     response = {Response{"RTC" + radio_data}};
+                    break;
                 case BACKGROUND_RSSI:
                     response = {Response{"RBR" + radio_data}};
+                    break;
                 case CURRENT_RSSI:
                     response = {Response{"RCR" + radio_data}};
+                    break;
                 case SWEEP_TRANMSMITTER:
                     response = {Response{"RST" + radio_data}};
+                    break;
                 case SWEEP_RECEIVER:
                     response = {Response{"RSR" + radio_data}};
+                    break;
                 case QUERY_REGISTER:
                     response = {Response{"RQR" + radio_data}};
+                    break;
                 default:
                     Log.errorln("Unknown local command type");
                     response = {Response{"UNK" + radio_data}};
