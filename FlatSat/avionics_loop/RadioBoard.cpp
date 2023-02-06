@@ -56,116 +56,112 @@ bool RadioBoard::deploy_antenna()
 {
     Log.traceln("Sending local command: deploy antenna");
     Serial1.write(FEND);
-    Serial1.write(DEPLOY_ANTENNA);
+    Serial1.write(MANUAL_RELEASE);
     Serial1.write(FEND);
     return true;
 }
 
 /**
- * @brief Assemble command from Serial1 port
+ * @brief Assemble command or response from Serial1 port
  *
  * @param buffer buffer to assemble command
  * @param length maximum length of command
+ * @param[out] source local or remote command
  *
  * @return true no command or successful
  * @return false error
  */
 
-bool RadioBoard::receive_command(char *buffer, const size_t length)
+bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
 {
-
     while (Serial1.available())
     {
-        char character = Serial1.read();
-        // Serial.print("Received character: 0x");
-        // Serial.println(character, HEX);
+        char character{Serial1.read()};
+        Log.verboseln("Character received: 0x%x", character);
         if (m_received_start)
         {
-            if (m_receiving_type)
+            if (!m_received_type)
             {
-                if (character == FEND)
+                source = character;
+                switch (character)
                 {
-                    Log.warningln("Unexpected FEND");
-                    continue; // ignore additional FENDs
+                case LOCAL_FRAME:
+                    m_received_type = true;
+                    m_remote_data = false;
+                    Log.verboseln("Receiving local data");
+                    break;
+                case REMOTE_FRAME:
+                    m_received_type = true;
+                    m_remote_data = true;
+                    Log.verboseln("Receiving remote data");
+                    break;
+                case FEND:
+                    break; // drop additional FENDs
+                default:
+                    Log.errorln("Invalid type");
+                    m_received_start = false;
+                    break; // restart command
                 }
-                // todo: receive Radio Board status
-                // todo: receive Radio Board "ACK + command"
-                // todo: receive Radio Board "NACK + command"
-                // todo: receive Radio Board "RES + data", success and fail
-                m_receiving_type = false;
-
-                if (character != DATA_FRAME)
-                {
-                    Log.errorln("Type is not 0: 0x%x", character);
-                }
+                continue; // drop command type
             }
-
-            else if (m_received_escape)
-            {
-                m_received_escape = false;
-                if (m_buffer_index < length)
-                {
-                    switch (character)
-                    {
-                    case TFEND:
-                        buffer[m_buffer_index++] = FEND;
-                        break;
-                    case TFESC:
-                        buffer[m_buffer_index++] = FESC;
-                        break;
-                    default:
-                        Log.errorln("FESC followed by invalid character, ignored: 0x%x", character);
-                        break;
-                    }
-                }
-                else
-                {
-                    Log.errorln("Buffer overflow, ignored: 0x%x", character);
-                }
-            }
-
-            else if (character == FESC)
-            {
-                m_received_escape = true;
-            }
-
             else if (character == FEND)
             {
-                // todo: receive radio board status
                 if (m_buffer_index > 0)
                 {
                     buffer[m_buffer_index++] = '\0';
-                    Log.infoln("Command received (count %l): %s", ++m_commands_received, buffer);
+                    if (source == REMOTE_FRAME)
+                    {
+                        Log.infoln("Command received (count %l): %s", ++m_commands_received, buffer);
+                    }
                     m_received_start = false;
-                    return true;
+                    return true; // command or response received
                 }
                 else
                 {
                     Log.errorln("No command received");
                 }
             }
-
+            if (m_received_escape)
+            {
+                m_received_escape = false;
+                switch (character)
+                {
+                case TFEND:
+                    character = FEND;
+                    break;
+                case TFESC:
+                    character = FESC;
+                    break;
+                default:
+                    Log.errorln("FESC followed by invalid character, command ignored");
+                    m_received_start = false;
+                    continue; // restart command
+                }
+            }
+            else if (character == FESC)
+            {
+                m_received_escape = true;
+                continue; // drop escape character
+            }
+            if (m_buffer_index < length)
+            {
+                buffer[m_buffer_index++] = character;
+            }
             else
             {
-                if (m_buffer_index < length)
-                {
-                    buffer[m_buffer_index++] = character;
-                }
-                else
-                {
-                    Log.errorln("Buffer overflow, ignored: 0x%x", character);
-                }
+                Log.errorln("Buffer overflow, ignored: 0x%x", character);
             }
         }
         else if (character == FEND)
         {
+            Log.verboseln("Starting command collection");
             m_buffer_index = 0;
             m_received_start = true;
-            m_receiving_type = true;
+            m_received_type = false;
         }
         else
         {
-            Log.errorln("FEND is not first character of command: 0x%x", character);
+            Log.errorln("FEND is not first character of command");
         }
     }
     return false;
@@ -176,7 +172,7 @@ bool RadioBoard::receive_command(char *buffer, const size_t length)
  *
  * @param Message::message_type command
  * @param String content
- * 
+ *
  * @return true successful
  * @return false error
  */

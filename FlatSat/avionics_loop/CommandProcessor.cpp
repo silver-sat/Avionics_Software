@@ -22,24 +22,43 @@
 bool CommandProcessor::check_for_command()
 {
     extern RadioBoard radio;
-    if (radio.receive_command(m_command_buffer, maximum_command_length))
+    char source{};
+    if (radio.receive_frame(m_command_buffer, maximum_command_length, source))
     {
         String command_string{m_command_buffer};
-        Command* command{make_command(command_string)};
-        command->acknowledge_command();
-        Log.traceln("Command acknowledged");
-        if (command->execute_command())
+        Log.verboseln("Command source: 0x%x", source);
+        if (source == REMOTE_FRAME)
         {
-            Log.traceln("Executed (%l executed, %l failed, next sequence %l)", ++m_successful_commands, m_failed_commands, m_command_sequence);
-            delete command;
-            return true;
+            Command *command{make_command(command_string)};
+            command->acknowledge_command();
+            Log.traceln("Command acknowledged");
+
+            if (command->execute_command())
+            {
+                Log.traceln("Executed (%l executed, %l failed, next sequence %l)", ++m_successful_commands, m_failed_commands, m_command_sequence);
+                delete command;
+                return true;
+            }
+            else
+            {
+                Log.errorln("Failed (%l executed, %l failed, next sequence %i)", m_successful_commands, ++m_failed_commands, m_command_sequence);
+                delete command;
+                return false;
+            }
         }
         else
         {
-            Log.errorln("Failed (%l executed, %l failed, next sequence %i)", m_successful_commands, ++m_failed_commands, m_command_sequence);
-            delete command;
-            return false;
-        };
+            switch (command_string[0])
+            {
+            case 'A': // ACK
+            case 'N': // NACK
+            case 'R': // RESponse
+                Log.verboseln("Received: %s", command_string.c_str());
+            default:
+                Log.errorln("Unknown local response");
+            }
+            // todo: Discard ACKs and NACKs, process RESponses
+        }
     };
     return true;
 };
@@ -47,13 +66,13 @@ bool CommandProcessor::check_for_command()
 /**
  * @brief Make command object
  *
- * @param buffer 
+ * @param buffer
  * @param command Command object
  * @return next command to process
  *
  */
 
-Command* CommandProcessor::make_command(String buffer)
+Command *CommandProcessor::make_command(String buffer)
 {
 
     // validate signature
@@ -73,7 +92,7 @@ Command* CommandProcessor::make_command(String buffer)
     else
     {
         Log.errorln("Invalid command");
-        String invalid[]{"Invalid"}; 
+        String invalid[]{"Invalid"};
         return command_factory.BuildCommand(invalid, 1);
     }
 };

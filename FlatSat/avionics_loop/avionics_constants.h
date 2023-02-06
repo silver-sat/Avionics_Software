@@ -12,6 +12,16 @@
 
 #include <Arduino.h>
 
+// todo: consider changing case of constants
+
+/**
+ * @brief Global time constants
+ *
+ */
+
+constexpr unsigned long seconds_to_milliseconds{1000}; /**< conversion factor for time in seconds @hideinitializer */
+constexpr unsigned long minutes_to_seconds{60};        /**< conversion factor for time in minutes @hideinitializer */
+
 /**
  * @brief SAMD21 pin definitions
  *
@@ -58,12 +68,33 @@ constexpr unsigned FRAM_I2C_ADDRESS{0x50};  /**< FRAM I2C address @hideinitializ
 constexpr unsigned wait_for_i2c_device{10}; /**< wait for I2C device to become available */
 
 /**
- * @brief Global constants
+ * @brief KISS-defined constants
  *
  */
+constexpr byte FEND{'\xC0'};  /**< frame end */
+constexpr byte FESC{'\xDB'};  /**< frame escape */
+constexpr byte TFEND{'\xDC'}; /**< transposed frame end */
+constexpr byte TFESC{'\xDD'}; /**< transposed frame escape */
 
-constexpr unsigned long seconds_to_milliseconds{1000}; /**< conversion factor for time in seconds @hideinitializer */
-constexpr unsigned long minutes_to_seconds{60};        /**< conversion factor for time in minutes @hideinitializer */
+/**
+ * @brief SilverSat defined KISS local command types
+ *
+ */
+constexpr byte LOCAL_FRAME{'\x00'};        /**< local data frame */
+constexpr byte REMOTE_FRAME{'\xAA'};       /**< remote data frame */
+constexpr byte BEACON{'\x07'};             /**< beacon */
+constexpr byte MANUAL_RELEASE{'\x08'};     /**< deploy antenna in recovery mode */
+constexpr byte GET_RADIO_STATUS{'\x09'};   /**< request radio status */
+constexpr byte HALT{'\x0A'};               /**< stop transmission */
+constexpr byte MODIFY_FREQUENCY{'\x0B'};   /**< change radio frequency */
+constexpr byte MODIFY_MODE{'\x0C'};        /**< change radio mode */
+constexpr byte ADJUST_FREQUENCY{'\x0D'};   /**< temporarily change radio frequency */
+constexpr byte TRANSMIT_CW{'\x17'};        /**< transmit carrier wave */
+constexpr byte BACKGROUND_RSSI{'\x18'};    /**< get background RSSI */
+constexpr byte CURRENT_RSSI{'\x19'};       /**< get current RSSI */
+constexpr byte SWEEP_TRANMSMITTER{'\x1A'}; /**< sweep transmitter */
+constexpr byte SWEEP_RECEIVER{'\x1B'};     /**< sweep transmitter */
+constexpr byte QUERY_REGISTER{'\x1C'};     /**< query radio register */
 
 /**
  * @brief Amateur radio call sign
@@ -71,3 +102,4 @@ constexpr unsigned long minutes_to_seconds{60};        /**< conversion factor fo
  */
 
 const String call_sign{"KC3CQJ-2"};
+

@@ -24,9 +24,10 @@ TIMEOUT = 5
 ## KISS frame end
 FEND = b"\xC0"
 ## KISS frame type
-DATA_FRAME = b"\x00"
+LOCAL_FRAME = b"\x00"
+REMOTE_FRAME = b"\xAA"
 BEACON = b"\x07"
-RECOVER_ANTENNA = b"\x08"
+MANUAL_RELEASE = b"\x08"
 STATUS = b"\x09"
 HALT = b"\x0a"
 MODIFY_FREQ = b"\x0B"
@@ -39,6 +40,9 @@ SWEEP_TRANSMITTER = b"\x1A"
 SWEEP_RECEIVER = b"\x1B"
 QUERY_REGISTER = b"\x1C"
 RADIO_PING = b"\x33"
+## local command content
+ACK = "ACK"
+NACK = "NACK"
 ## serial port for commands and responses
 command_port = serial.Serial(COMMAND_PORT, BAUDRATE, timeout=TIMEOUT)
 ## maximum read length
@@ -79,7 +83,7 @@ def generate_signed(command):
 #
 def issue(command):
 
-    command_port.write(FEND + DATA_FRAME + command.encode("utf-8") + FEND)
+    command_port.write(FEND + REMOTE_FRAME + command.encode("utf-8") + FEND)
 
 
 ## Collect response
@@ -88,7 +92,15 @@ def collect():
 
     message = command_port.read()  # read first FEND
     message = message + command_port.read_until(expected=FEND)
+    print(message)
     return message
+
+
+## Simulate response to local command
+#
+def respond(command):
+
+    command_port.write(FEND + LOCAL_FRAME + command + FEND)
 
 
 ## Send FEND
@@ -135,7 +147,7 @@ def local_beacon_message_sent(message):
 
 def local_recover_antenna(message):
 
-    return message.startswith(FEND + RECOVER_ANTENNA)
+    return message.startswith(FEND + MANUAL_RELEASE)
 
 
 ## Verify local status request message sent
