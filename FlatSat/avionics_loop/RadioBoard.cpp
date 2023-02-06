@@ -13,11 +13,6 @@
 #include "log_utility.h"
 #include "AvionicsBoard.h"
 
-/**
- * @brief Serial interface constant
- *
- */
-constexpr uint32_t serial1_baud_rate{115200}; /**< speed of serial1 connection @hideinitializer */
 
 /**
  * @brief Initialize the Radio Board
@@ -113,6 +108,10 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
                     {
                         Log.infoln("Command received (count %l): %s", ++m_commands_received, buffer);
                     }
+                    else
+                    {
+                        Log.infoln("Local message received: %s", buffer);
+                    }
                     m_received_start = false;
                     return true; // command or response received
                 }
@@ -170,26 +169,6 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
 /**
  * @brief Send message
  *
- * @param Message::message_type command
- * @param String content
- *
- * @return true successful
- * @return false error
- */
-
-bool RadioBoard::send_message(Message::message_type command, String content) const
-{
-    Log.noticeln("Sending message: KISS command 0x%x, content %s", command, content.c_str());
-    Serial1.write(FEND);
-    Serial1.write(command);
-    Serial1.write(content.c_str());
-    Serial1.write(FEND);
-    return true;
-}
-
-/**
- * @brief Send message
- *
  * @return true successful
  * @return false error
  */
@@ -198,7 +177,7 @@ bool RadioBoard::send_message(Message message) const
 {
     auto command = message.get_command();
     auto content = message.get_content();
-    Log.noticeln("Sending message: KISS command 0x%x, content %s", command, content.c_str());
+    Log.noticeln("Sending message: KISS command 0x%x, content: %s", command, content.c_str());
     Serial1.write(FEND);
     Serial1.write(command);
     Serial1.write(content.c_str());

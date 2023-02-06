@@ -43,6 +43,7 @@ RADIO_PING = b"\x33"
 ## local command content
 ACK = "ACK"
 NACK = "NACK"
+RES = "RES"
 ## serial port for commands and responses
 command_port = serial.Serial(COMMAND_PORT, BAUDRATE, timeout=TIMEOUT)
 ## maximum read length

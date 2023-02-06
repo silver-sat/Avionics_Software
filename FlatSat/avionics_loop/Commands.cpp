@@ -9,6 +9,7 @@
  */
 
 #include "Commands.h"
+#include "avionics_constants.h"
 #include "Message.h"
 #include "Response.h"
 #include "log_utility.h"
@@ -25,7 +26,7 @@
 bool Command::acknowledge_command()
 {
     Log.traceln("Acknowledging command");
-    Message message{Message::acknowledgement, "ACK"};
+    Message message{Message::acknowledgement, ACK};
     extern RadioBoard radio;
     return radio.send_message(message);
 };
@@ -38,7 +39,7 @@ bool Command::acknowledge_command()
 bool Command::negative_acknowledge_command()
 {
     Log.traceln("Negative acknowledging command");
-    Message message{Message::negative_acknowledgement, "NACK"};
+    Message message{Message::negative_acknowledgement, NACK};
     extern RadioBoard radio;
     return radio.send_message(message);
 };
@@ -129,7 +130,7 @@ bool CommandNoOperate::execute_command()
     auto status{Command::execute_command()};
     Log.verboseln("NoOperate");
     extern RadioBoard radio;
-    auto response{Response("NOP")};
+    auto response{Response{"NOP"}};
     return radio.send_message(response) && status;
 };
 
@@ -151,7 +152,7 @@ bool CommandPayComms::execute_command()
     auto status{Command::execute_command()};
     Log.verboseln("PayComms");
     extern RadioBoard radio;
-    auto response{Response("PYC")};
+    auto response{Response{"PYC"}};
     status = radio.send_message(response) && status;
     extern PayloadBoard payload;
     return payload.tweet() && status;
@@ -180,7 +181,7 @@ bool CommandReportT::execute_command()
         status = false;
     };
     extern RadioBoard radio;
-    auto response{Response("GRC" + timestamp)};
+    auto response{Response{"GRC" + timestamp}};
     return radio.send_message(response) && status;
 };
 
@@ -210,7 +211,7 @@ bool CommandTweeSlee::execute_command()
     auto status{Command::execute_command()};
     Log.verboseln("TweeSlee");
     extern RadioBoard radio;
-    auto response{Response("TSL")};
+    auto response{Response{"TSL"}};
     status = radio.send_message(response) && status;
     extern PayloadBoard payload;
     Log.traceln("Turning off payload power");
@@ -239,7 +240,7 @@ bool CommandWatchdog::execute_command()
     auto status{Command::execute_command()};
     Log.verboseln("Watchdog");
     extern RadioBoard radio;
-    auto response{Response("WDG")};
+    auto response{Response{"WDG"}};
     status = radio.send_message(response) && status;
     extern AvionicsBoard avionics;
     avionics.watchdog_force_reset();
@@ -272,7 +273,7 @@ bool CommandBeaconSp::execute_command()
     auto status{Command::execute_command()};
     Log.verboseln("BeaconSp");
     extern RadioBoard radio;
-    auto response{Response("SBI")};
+    auto response{Response{"SBI"}};
     status = radio.send_message(response) && status;
     extern AvionicsBoard avionics;
     return avionics.set_beacon_interval(m_seconds) && status;
@@ -304,7 +305,7 @@ bool CommandPicTimes::execute_command()
     auto status{Command::execute_command()};
     Log.verboseln("PicTimes");
     extern RadioBoard radio;
-    auto response{Response("SPT")};
+    auto response{Response{"SPT"}};
     status = radio.send_message(response) && status;
     extern AvionicsBoard avionics;
     return avionics.set_picture_time(m_time) && status;
@@ -337,7 +338,7 @@ bool CommandSetClock::execute_command()
     auto status{Command::execute_command()};
     Log.verboseln("SetClock");
     extern RadioBoard radio;
-    auto response{Response("SRC")};
+    auto response{Response{"SRC"}};
     status = radio.send_message(response) && status;
     extern AvionicsBoard avionics;
     return avionics.set_external_rtc(m_time) && status;
@@ -370,7 +371,7 @@ bool CommandGetPicTimes::execute_command()
     Log.verboseln("GetPicTimes");
     extern AvionicsBoard avionics;
     extern RadioBoard radio;
-    auto response{Response("GPT" + avionics.get_pic_times())};
+    auto response{Response{"GPT" + avionics.get_pic_times()}};
     return radio.send_message(response) && status;
 };
 
@@ -401,7 +402,7 @@ bool CommandGetTelemetry::execute_command()
     Log.verboseln("GetTelemetry");
     extern AvionicsBoard avionics;
     extern RadioBoard radio;
-    auto response{Response("GTY" + avionics.get_telemetry())};
+    auto response{Response{"GTY" + avionics.get_telemetry()}};
     return radio.send_message(response) && status;
 };
 
@@ -432,7 +433,7 @@ bool CommandGetPower::execute_command()
     Log.verboseln("GetPower");
     extern PowerBoard power;
     extern RadioBoard radio;
-    auto response{Response("GPW" + power.get_detail())};
+    auto response{Response{"GPW" + power.get_detail()}};
     return radio.send_message(response) && status;
 };
 
@@ -463,7 +464,7 @@ bool CommandGetPhotos::execute_command()
     Log.verboseln("GetPhotos");
     extern PayloadBoard payload;
     extern RadioBoard radio;
-    auto response{Response("GPC" + String(payload.get_photo_count()))};
+    auto response{Response{"GPC" + String(payload.get_photo_count())}};
     return radio.send_message(response) && status;
 };
 
@@ -493,9 +494,9 @@ bool CommandGetComms::execute_command()
     auto status{Command::execute_command()};
     Log.verboseln("GetComms");
     extern RadioBoard radio;
-    // todo: get status before response
-    auto response{Response("GCO" + String(radio.get_status()))};
-    return radio.send_message(response) && status;
+    Message message(Message::get_status, "");
+    Log.verboseln("Requesting Radio Status");
+    return radio.send_message(message) && status;
 };
 
 /**
@@ -525,7 +526,7 @@ bool CommandGetBeaconInterval::execute_command()
     Log.verboseln("GetBeaconInterval");
     extern AvionicsBoard avionics;
     extern RadioBoard radio;
-    auto response{Response("GBI" + String(avionics.get_beacon_interval()))};
+    auto response{Response{"GBI" + String(avionics.get_beacon_interval())}};
     return radio.send_message(response) && status;
 };
 
@@ -555,7 +556,7 @@ bool CommandSendTestPacket::execute_command()
     auto status{Command::execute_command()};
     Log.verboseln("SendTestPacket");
     extern RadioBoard radio;
-    auto response{Response("STPTEST")};
+    auto response{Response{"STPTEST"}};
     return radio.send_message(response) && status;
 };
 
@@ -585,7 +586,7 @@ bool CommandClearPicTimes::execute_command()
     auto status{Command::execute_command()};
     Log.verboseln("ClearPicTimes");
     extern RadioBoard radio;
-    auto response{Response("CPT")};
+    auto response{Response{"CPT"}};
     status = radio.send_message(response) && status;
     extern AvionicsBoard avionics;
     return avionics.clear_pic_times() && status;
@@ -617,7 +618,7 @@ bool CommandUnsetClock::execute_command()
     auto status{Command::execute_command()};
     Log.verboseln("Unset clock");
     extern RadioBoard radio;
-    auto response{Response("URC")};
+    auto response{Response{"URC"}};
     status = radio.send_message(response) && status;
     extern AvionicsBoard avionics;
     return avionics.unset_clock() && status;

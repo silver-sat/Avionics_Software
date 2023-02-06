@@ -47,13 +47,6 @@ public:
      *
      */
 
-    bool send_message(Message::message_type command, String content) const;
-
-    /**
-     * @brief Send message
-     *
-     */
-
     bool send_message(Message message) const;
 
     /**

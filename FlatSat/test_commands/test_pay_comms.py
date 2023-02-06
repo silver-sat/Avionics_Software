@@ -23,5 +23,7 @@ class TestPayComms:
         helper.issue("PayComms")
         message = helper.collect()
         assert helper.acknowledged(message)
+        helper.respond(helper.ACK + helper.GET_RADIO_STATUS)
+        helper.respond(helper.RES + "RADIO STATUS")
         message = helper.collect()
         assert helper.response_sent(message, "PYC")

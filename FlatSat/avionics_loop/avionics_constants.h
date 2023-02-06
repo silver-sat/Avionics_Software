@@ -68,6 +68,21 @@ constexpr unsigned FRAM_I2C_ADDRESS{0x50};  /**< FRAM I2C address @hideinitializ
 constexpr unsigned wait_for_i2c_device{10}; /**< wait for I2C device to become available */
 
 /**
+ * @brief Serial interface constant
+ *
+ */
+constexpr uint32_t serial_baud_rate{115200};  /**< speed of serial connection @hideinitializer */
+constexpr uint32_t serial1_baud_rate{115200}; /**< speed of serial1 connection @hideinitializer */
+
+/**
+ * @brief Process loop constants
+ *
+ */
+// todo: adjust to 45 minutes for full test
+constexpr unsigned long separation_delay{5 * seconds_to_milliseconds};
+constexpr unsigned long separation_time{0};
+
+/**
  * @brief KISS-defined constants
  *
  */
@@ -97,9 +112,16 @@ constexpr byte SWEEP_RECEIVER{'\x1B'};     /**< sweep transmitter */
 constexpr byte QUERY_REGISTER{'\x1C'};     /**< query radio register */
 
 /**
+ * @brief Local message content
+ * 
+ */
+const String ACK{"ACK"};
+const String NACK{"NACK"};
+const String RES{"RES"};
+
+/**
  * @brief Amateur radio call sign
  *
  */
 
 const String call_sign{"KC3CQJ-2"};
-

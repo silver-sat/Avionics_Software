@@ -35,21 +35,6 @@
 #include "PayloadBoard.h"
 
 /**
- * @brief Process loop constants
- *
- */
-
-// todo: adjust to 45 minutes for full test
-constexpr unsigned long separation_delay{ 5 * seconds_to_milliseconds };
-constexpr unsigned long separation_time{ 0 };
-
-/**
- * @brief Serial interface constant
- *
- */
-constexpr uint32_t serial_baud_rate{ 115200 }; /**< speed of serial connection @hideinitializer */
-
-/**
  * @brief Create the boards and command processor
  *
  */

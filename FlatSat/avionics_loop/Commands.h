@@ -17,14 +17,25 @@
  * GTY: GetTelemetry: reply with telemetry
  * GPW: GetPower: reply with power status
  * GPC: GetPhotos: reply with number of photos
- * GCO: GetComms: reply with Radio Board status
+ * GRS: GetComms: reply with Radio Board status
  * GBI: GetBeaconInterval: reply with beacon interval
  * NOP: NoOperate: subsumes Ping: acknowlege
  * STP: SendTestPacket: reply with test message
  * PYC: PayComms: subsumes Begin tweet : start payload in comms mode
  * TSL: TweeSlee: subsumes Halt: stop tweeting
  * WDG: Watchdog: force watchdog timeout (reset SAMD21)
- * HLT: halt, see TweeSlee
+ * INV: invalid
+ * UNK: unknown
+ * RMF: ModifyFrequency: modify radio frequency
+ * RMM: ModifyMode: modify radio mode
+ * RAF: AdjustFrequency: adjust radio frequency temporarily
+ * RTC: TransmitCW: transmit carrier wave
+ * RBR: BackgroundRSSI: radio background rssi
+ * RCR: CurrentRSSI: radio current rssi
+ * RST: SweepTransmitter: radio sweep transmitter
+ * RSR: SweepReceiver: radio sweep receiver
+ * RQR: QueryRegister: radio query register
+ * halt, see TweeSlee
  * s_call_sig deprecated
  * g_call_sig, deprecated
  */
