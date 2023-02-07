@@ -282,10 +282,7 @@ Command *CommandFactory::BuildCommand(const String tokens[], size_t token_count)
         if (token_count == 1)
         {
             char frequency[frequency_length]{};
-            for (auto i = 0; i < frequency_length; ++i)
-            {
-                frequency[i] = tokens[1][i];
-            }
+            memcpy(frequency, tokens[1].c_str(), frequency_length);
             return new CommandAdjustFrequency(frequency);
         }
         else
@@ -298,8 +295,7 @@ Command *CommandFactory::BuildCommand(const String tokens[], size_t token_count)
         if (token_count == 1)
         {
             char duration[duration_length]{};
-            duration[0] = tokens[1][0];
-            duration[1] = tokens[1][1];
+            memcpy(duration, tokens[1].c_str(), duration_length);
             return new CommandTransmitCW(duration);
         }
         else
@@ -338,19 +334,10 @@ Command *CommandFactory::BuildCommand(const String tokens[], size_t token_count)
             char stop_frequency[frequency_length]{};
             char number_of_steps[steps_length]{};
             char dwell_time[dwell_length]{};
-            for (auto i = 0; i < frequency_length; ++i)
-            {
-                start_frequency[i] = tokens[1][i];
-                stop_frequency[i] = tokens[2][i];
-            }
-            for (auto i = 0; i < steps_length; ++i)
-            {
-                number_of_steps[i] = tokens[3][i];
-            }
-            for (auto i = 0; i < dwell_length; ++i)
-            {
-                dwell_time[i] = tokens[4][i];
-            }
+            memcpy(start_frequency, tokens[1].c_str(), frequency_length);
+            memcpy(stop_frequency, tokens[2].c_str(), frequency_length);
+            memcpy(number_of_steps, tokens[3].c_str(), steps_length);
+            memcpy(dwell_time, tokens[4].c_str(), dwell_length);
             return new CommandSweepTransmitter(start_frequency, stop_frequency, number_of_steps, dwell_time);
         }
         else
@@ -366,19 +353,11 @@ Command *CommandFactory::BuildCommand(const String tokens[], size_t token_count)
             char stop_frequency[frequency_length]{};
             char number_of_steps[steps_length]{};
             char dwell_time[dwell_length]{};
-            for (auto i = 0; i < frequency_length; ++i)
-            {
-                start_frequency[i] = tokens[1][i];
-                stop_frequency[i] = tokens[2][i];
-            }
-            for (auto i = 0; i < steps_length; ++i)
-            {
-                number_of_steps[i] = tokens[3][i];
-            }
-            for (auto i = 0; i < dwell_length; ++i)
-            {
-                dwell_time[i] = tokens[4][i];
-            }
+            memcpy(start_frequency, tokens[1].c_str(), frequency_length);
+            memcpy(stop_frequency, tokens[2].c_str(), frequency_length);
+            memcpy(number_of_steps, tokens[3].c_str(), steps_length);
+            memcpy(dwell_time, tokens[4].c_str(), dwell_length);
+
             return new CommandSweepReceiver(start_frequency, stop_frequency, number_of_steps, dwell_time);
         }
         else
@@ -391,10 +370,7 @@ Command *CommandFactory::BuildCommand(const String tokens[], size_t token_count)
         if (token_count == 1)
         {
             char radio_register[register_length]{};
-            for (auto i = 0; i < register_length; ++i)
-            {
-                radio_register[i] = tokens[1][i];
-            }
+            memcpy(radio_register, tokens[1].c_str(), register_length);
             return new CommandQueryRegister(radio_register);
         }
         else

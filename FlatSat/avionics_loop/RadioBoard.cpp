@@ -179,6 +179,8 @@ bool RadioBoard::send_message(Message message) const
 {
     auto command = message.get_command();
     auto content = message.get_content();
+    Serial.print("message.get_content: ");
+    Serial.println(content.c_str());
     // todo: problem with C string not terminated
     content.length() == 0 ? Log.noticeln("Sending message: KISS command 0x%x", command) : Log.noticeln("Sending message: KISS command 0x%x, content: %s", command, content.c_str());
     Serial1.write(FEND);

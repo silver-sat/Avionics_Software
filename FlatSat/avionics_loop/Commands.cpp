@@ -868,7 +868,17 @@ bool CommandSweepTransmitter::execute_command()
     auto status{Command::execute_command()};
     Log.verboseln("SweepTransmitter");
     extern RadioBoard radio;
-    Message message(Message::sweep_tranmitter, String{m_start_frequency} + String{m_stop_frequency} + String{m_number_of_steps} + String{m_dwell_time});
+    char arguments[frequency_length + frequency_length + steps_length + dwell_length]{};
+    char* arg_ptr{};
+    arg_ptr = &arguments[0];
+    memcpy(arg_ptr, m_start_frequency, frequency_length);
+    arg_ptr += frequency_length;
+    memcpy(arg_ptr, m_stop_frequency, frequency_length);
+    arg_ptr += frequency_length;
+    memcpy(arg_ptr, m_number_of_steps, steps_length);
+    arg_ptr += steps_length;
+    memcpy(arg_ptr, m_dwell_time, dwell_length);
+    Message message{Message::sweep_tranmitter, String{arguments}};
     Log.verboseln("Requesting transmitter sweep");
     return radio.send_message(message) && status;
 }
@@ -899,7 +909,17 @@ bool CommandSweepReceiver::execute_command()
     auto status{Command::execute_command()};
     Log.verboseln("SweepReceiver");
     extern RadioBoard radio;
-    Message message(Message::sweep_receiver, String{m_start_frequency} + String{m_stop_frequency} + String{m_number_of_steps} + String{m_dwell_time});
+    char arguments[frequency_length + frequency_length + steps_length + dwell_length]{};
+    char* arg_ptr{};
+    arg_ptr = &arguments[0];
+    memcpy(arg_ptr, m_start_frequency, frequency_length);
+    arg_ptr += frequency_length;
+    memcpy(arg_ptr, m_stop_frequency, frequency_length);
+    arg_ptr += frequency_length;
+    memcpy(arg_ptr, m_number_of_steps, steps_length);
+    arg_ptr += steps_length;
+    memcpy(arg_ptr, m_dwell_time, dwell_length);
+    Message message{Message::sweep_receiver, String{arguments}};
     Log.verboseln("Requesting receiver sweep");
     return radio.send_message(message) && status;
 }

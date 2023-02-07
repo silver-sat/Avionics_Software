@@ -28,7 +28,7 @@ class TestMultipleFENDs:
         log = helper.collect("NoOperate")
         assert helper.not_signed(log)
         assert helper.acknowledged(log)
-        assert not(helper.no_logged_errors(log))
+        assert helper.no_logged_errors(log)
         assert helper.executed(log)
 
     ## two FENDs followed by complete command
@@ -38,7 +38,7 @@ class TestMultipleFENDs:
         log = helper.collect("NoOperate")
         assert helper.not_signed(log)
         assert helper.acknowledged(log)
-        assert not(helper.no_logged_errors(log))
+        assert helper.no_logged_errors(log)
         assert helper.executed(log)
 
     ## three FENDs followed by complete command
@@ -48,7 +48,7 @@ class TestMultipleFENDs:
         log = helper.collect("NoOperate")
         assert helper.not_signed(log)
         assert helper.acknowledged(log)
-        assert not(helper.no_logged_errors(log))
+        assert helper.no_logged_errors(log)
         assert helper.executed(log)
 
     ## five FENDs followed by complete command
@@ -58,5 +58,5 @@ class TestMultipleFENDs:
         log = helper.collect("NoOperate")
         assert helper.not_signed(log)
         assert helper.acknowledged(log)
-        assert not(helper.no_logged_errors(log))
+        assert helper.no_logged_errors(log)
         assert helper.executed(log)

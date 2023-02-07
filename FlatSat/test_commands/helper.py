@@ -261,7 +261,7 @@ def pictimes_sent(log):
 #
 def pictimes_zero_sent(log):
 
-    return any([item.detail.endswith("content RESGPT0") for item in log])
+    return any([item.detail.endswith("content: RESGPT0") for item in log])
 
 
 ## Collect through reset pin cleared
@@ -332,7 +332,7 @@ def local_get_comms_sent(log):
 
     return any(
         [
-            item.detail == "Sending local command: requesting Radio Board status"
+            item.detail == "Requesting radio status"
             for item in log
         ]
     )
@@ -342,7 +342,7 @@ def local_get_comms_sent(log):
 #
 def test_packet_sent(log):
 
-    return any([item.detail.endswith("content RESSTPTEST") for item in log])
+    return any([item.detail.endswith("content: RESSTPTEST") for item in log])
 
 
 ## Send FEND
