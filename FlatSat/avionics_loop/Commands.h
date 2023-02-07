@@ -423,16 +423,9 @@ private:
 class CommandBackgroundRSSI final : public Command
 {
 public:
-    CommandBackgroundRSSI(const char *duration)
-    {
-        m_duration[0] = duration[0];
-        m_duration[1] = duration[1];
-    }
+    CommandBackgroundRSSI() = default;
     bool acknowledge_command() override;
     bool execute_command() override;
-
-private:
-    char m_duration[2]{};
 };
 
 /**

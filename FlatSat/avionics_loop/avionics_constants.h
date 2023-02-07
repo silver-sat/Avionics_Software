@@ -71,8 +71,8 @@ constexpr unsigned wait_for_i2c_device{10}; /**< wait for I2C device to become a
  * @brief Serial interface constant
  *
  */
-constexpr uint32_t serial_baud_rate{115200};  /**< speed of serial connection @hideinitializer */
-constexpr uint32_t serial1_baud_rate{115200}; /**< speed of serial1 connection @hideinitializer */
+constexpr uint32_t serial_baud_rate{19200};  /**< speed of serial connection @hideinitializer */
+constexpr uint32_t serial1_baud_rate{19200}; /**< speed of serial1 connection @hideinitializer */
 
 /**
  * @brief Process loop constants

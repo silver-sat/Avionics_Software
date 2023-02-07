@@ -21,7 +21,7 @@ LOG_PORT = "/dev/tty.usbmodem11101"
 ## port for command input
 COMMAND_PORT = "/dev/tty.usbserial-A10MHKWZ"
 ## serial transmission speed
-BAUDRATE = 115200
+BAUDRATE = 19200
 ## default timeout for readline
 TIMEOUT = 5
 ## KISS frame end

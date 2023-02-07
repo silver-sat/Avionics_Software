@@ -714,7 +714,7 @@ bool CommandModifyMode::execute_command()
     Log.verboseln("ModifyMode");
     extern RadioBoard radio;
     Message message(Message::modify_mode, String(m_mode));
-    Log.verboseln("Requesting frequency modification");
+    Log.verboseln("Requesting mode modification");
     return radio.send_message(message) && status;
 }
 
@@ -745,7 +745,7 @@ bool CommandAdjustFrequency::execute_command()
     Log.verboseln("AdjustFrequency");
     extern RadioBoard radio;
     Message message(Message::adjust_frequency, String{m_frequency});
-    Log.verboseln("Requesting frequency modification");
+    Log.verboseln("Requesting frequency adjustment");
     return radio.send_message(message) && status;
 }
 
@@ -806,7 +806,7 @@ bool CommandBackgroundRSSI::execute_command()
     auto status{Command::execute_command()};
     Log.verboseln("BackgroundRSSI");
     extern RadioBoard radio;
-    Message message(Message::background_rssi, String{m_duration});
+    Message message{Message::background_rssi, ""};
     Log.verboseln("Requesting background RSSI");
     return radio.send_message(message) && status;
 }

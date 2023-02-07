@@ -18,6 +18,7 @@
  *
  */
 
+// todo: consider additional log messages for invalid commands
 Command *CommandFactory::BuildCommand(const String tokens[], size_t token_count)
 {
     if (tokens[0] == "SetClock")
@@ -256,10 +257,7 @@ Command *CommandFactory::BuildCommand(const String tokens[], size_t token_count)
         if (token_count == 1)
         {
             char frequency[frequency_length]{};
-            for (auto i = 0; i < frequency_length; ++i)
-            {
-                frequency[i] = tokens[1][i];
-            }
+            memcpy(frequency, tokens[1].c_str(), frequency_length);
             return new CommandModifyFrequency(frequency);
         }
         else
@@ -311,12 +309,9 @@ Command *CommandFactory::BuildCommand(const String tokens[], size_t token_count)
     }
     else if (tokens[0] == "BackgroundRSSI")
     {
-        if (token_count == 1)
+        if (token_count == 0)
         {
-            char duration[duration_length]{};
-            duration[0] = tokens[1][0];
-            duration[1] = tokens[1][1];
-            return new CommandBackgroundRSSI(duration);
+            return new CommandBackgroundRSSI();
         }
         else
         {
@@ -325,7 +320,7 @@ Command *CommandFactory::BuildCommand(const String tokens[], size_t token_count)
     }
     else if (tokens[0] == "CurrentRSSI")
     {
-        if (token_count == 1)
+        if (token_count == 0)
         {
             return new CommandCurrentRSSI();
         }
@@ -336,8 +331,9 @@ Command *CommandFactory::BuildCommand(const String tokens[], size_t token_count)
     }
     else if (tokens[0] == "SweepTransmitter")
     {
-        if (token_count == 1)
+        if (token_count == 4)
         {
+            // todo: assess other copying options
             char start_frequency[frequency_length]{};
             char stop_frequency[frequency_length]{};
             char number_of_steps[steps_length]{};
@@ -364,7 +360,7 @@ Command *CommandFactory::BuildCommand(const String tokens[], size_t token_count)
     }
     else if (tokens[0] == "SweepReceiver")
     {
-        if (token_count == 1)
+        if (token_count == 4)
         {
             char start_frequency[frequency_length]{};
             char stop_frequency[frequency_length]{};
@@ -399,7 +395,7 @@ Command *CommandFactory::BuildCommand(const String tokens[], size_t token_count)
             {
                 radio_register[i] = tokens[1][i];
             }
-            return new CommandAdjustFrequency(radio_register);
+            return new CommandQueryRegister(radio_register);
         }
         else
         {
