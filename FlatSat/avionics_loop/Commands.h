@@ -23,7 +23,7 @@
  * STP: SendTestPacket: reply with test message
  * PYC: PayComms: subsumes Begin tweet : start payload in comms mode
  * TSL: TweeSlee: subsumes Halt: stop tweeting
- * WDG: Watchdog: force watchdog timeout (reset SAMD21)
+ * WDG: ExternalWatchdog: force watchdog timeout (reset SAMD21)
  * INV: invalid
  * UNK: unknown
  * RMF: ModifyFrequency: modify radio frequency
@@ -42,6 +42,7 @@
 
 #pragma once
 
+#include "avionics_constants.h"
 #include "RTClib.h"
 
 /**
@@ -348,16 +349,15 @@ public:
 class CommandModifyFrequency final : public Command
 {
 public:
-    CommandModifyFrequency(const char *frequency)
+    CommandModifyFrequency(const char frequency[frequency_length])
     {
-        memcpy(m_frequency, frequency, length);
+        memcpy(m_frequency, frequency, frequency_length);
     }
     bool acknowledge_command() override;
     bool execute_command() override;
 
 private:
-    const static size_t length{9};
-    char m_frequency[length]{};
+    char m_frequency[frequency_length]{};
 };
 
 /**
@@ -386,14 +386,13 @@ class CommandAdjustFrequency final : public Command
 public:
     CommandAdjustFrequency(const char *frequency)
     {
-        memcpy(m_frequency, frequency, length);
+        memcpy(m_frequency, frequency, frequency_length);
     }
     bool acknowledge_command() override;
     bool execute_command() override;
 
 private:
-    const static size_t length{9};
-    char m_frequency[length]{};
+    char m_frequency[frequency_length]{};
 };
 
 /**
@@ -413,7 +412,7 @@ public:
     bool execute_command() override;
 
 private:
-    char m_duration[2]{};
+    char m_duration[duration_length]{};
 };
 
 /**
@@ -467,9 +466,6 @@ public:
     bool acknowledge_command() override;
     bool execute_command() override;
 private:
-    const static size_t frequency_length{9};
-    const static size_t steps_length{3};
-    const static size_t dwell_length{3};
     char m_start_frequency[frequency_length]{};
     char m_stop_frequency[frequency_length]{};
     char m_number_of_steps[steps_length]{};
@@ -494,9 +490,6 @@ public:
     bool acknowledge_command() override;
     bool execute_command() override;
 private:
-    const static size_t frequency_length{9};
-    const static size_t steps_length{3};
-    const static size_t dwell_length{3};
     char m_start_frequency[frequency_length]{};
     char m_stop_frequency[frequency_length]{};
     char m_number_of_steps[steps_length]{};
@@ -513,11 +506,10 @@ class CommandQueryRegister final : public Command
 public:
     CommandQueryRegister(const char* radio_register)
     {
-        memcpy(m_radio_register, radio_register, length);
+        memcpy(m_radio_register, radio_register, register_length);
     }
     bool acknowledge_command() override;
     bool execute_command() override;
 private:
-    const static size_t length{5};
-    char m_radio_register[length]{};
+    char m_radio_register[register_length]{};
 };

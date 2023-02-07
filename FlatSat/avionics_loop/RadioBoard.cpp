@@ -111,6 +111,7 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
                     {
                         char reply[RES.length() + 1];
                         strncpy(reply, buffer, RES.length());
+                        // todo: consider logging additional data if it exists
                         Log.infoln("Local message received: %s 0x%x", reply, buffer[RES.length()]);
                     }
                     m_received_start = false;

@@ -113,11 +113,21 @@ constexpr byte QUERY_REGISTER{'\x1C'};     /**< query radio register */
 
 /**
  * @brief Local message content
- * 
+ *
  */
 const String ACK{"ACK"};
 const String NACK{"NACK"};
 const String RES{"RES"};
+
+/**
+ * @brief Radio command parameter lengths
+ *
+ */
+constexpr size_t frequency_length{9};
+constexpr size_t duration_length{2};
+const static size_t steps_length{3};
+const static size_t dwell_length{3};
+const static size_t register_length{5};
 
 /**
  * @brief Amateur radio call sign
