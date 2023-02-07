@@ -35,21 +35,6 @@
 #include "PayloadBoard.h"
 
 /**
- * @brief Process loop constants
- *
- */
-
-// todo: adjust to 45 minutes for full test
-constexpr unsigned long separation_delay{ 5 * seconds_to_milliseconds };
-constexpr unsigned long separation_time{ 0 };
-
-/**
- * @brief Serial interface constant
- *
- */
-constexpr uint32_t serial_baud_rate{ 115200 }; /**< speed of serial connection @hideinitializer */
-
-/**
  * @brief Create the boards and command processor
  *
  */
@@ -82,7 +67,7 @@ unsigned long photo_maximum{ 0 };
 unsigned long photo_maximum_timestamp{};
 unsigned long payload_maximum{ 0 };
 unsigned long payload_maximum_timestamp{};
-unsigned long memory_minimum{ 32768 };
+long memory_minimum{ 32768 };
 unsigned long memory_minimum_timestamp{};
 unsigned long display_start_time{};
 constexpr int display_interval{ 30 * 1000 };
@@ -280,7 +265,7 @@ void loop() {
 
   // Record free memory
 
-  unsigned long free_memory{ freeMemory() };
+  auto free_memory{ freeMemory() };
   if (free_memory < memory_minimum) {
     memory_minimum = free_memory;
     memory_minimum_timestamp = millis();

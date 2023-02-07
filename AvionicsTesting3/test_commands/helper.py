@@ -21,13 +21,14 @@ LOG_PORT = "/dev/tty.usbmodem11101"
 ## port for command input
 COMMAND_PORT = "/dev/tty.usbserial-A10MHKWZ"
 ## serial transmission speed
-BAUDRATE = 115200
+BAUDRATE = 19200
 ## default timeout for readline
 TIMEOUT = 5
 ## KISS frame end
 FEND = b"\xC0"
 ## KISS frame type
-DATA_FRAME = b"\x00"
+LOCAL_FRAME = b"\x00"
+REMOTE_FRAME = b"\xAA"
 ## log entry field names
 Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
 ## serial port for commands and responses
@@ -91,7 +92,7 @@ def generate_signed(command):
 #
 def collect(command):
 
-    command_port.write(FEND + DATA_FRAME + command.encode("utf-8") + FEND)
+    command_port.write(FEND + REMOTE_FRAME + command.encode("utf-8") + FEND)
     log = []
     log_data = ""
     while ("Executed (" not in log_data) & ("Failed (" not in log_data):
@@ -161,7 +162,7 @@ def executed(log):
 #
 def collect_through_power_off(command, interval=60):
 
-    command_port.write(FEND + DATA_FRAME + command.encode("utf-8") + FEND)
+    command_port.write(FEND + REMOTE_FRAME + command.encode("utf-8") + FEND)
     log = []
     log_data = ""
     time.sleep(interval)
@@ -267,7 +268,7 @@ def pictimes_zero_sent(log):
 #
 def collect_through_reset_pin_cleared(command, interval=60):
 
-    command_port.write(FEND + DATA_FRAME + command.encode("utf-8") + FEND)
+    command_port.write(FEND + REMOTE_FRAME + command.encode("utf-8") + FEND)
     log = []
     log_data = ""
     while "Reset pin changed state to 1" not in log_data:

@@ -24,7 +24,7 @@ class TestBeaconSp:
 
         interval = 0
         # todo: fix single and double 0 error
-        helper.issue(f"BeaconSp 000")
+        helper.issue(f"BeaconSp {interval}")
         message = helper.collect()
         assert helper.acknowledged(message)
         message = helper.collect()
@@ -34,9 +34,9 @@ class TestBeaconSp:
     #
     def test_beacon_sp_0_signed(self):
 
-        interval = 0
+        interval = 60
         # todo: fix single and double 0 error
-        helper.issue(helper.generate_signed(f"BeaconSp 000"))
+        helper.issue(helper.generate_signed(f"BeaconSp {interval}"))
         message = helper.collect()
         assert helper.acknowledged(message)
         message = helper.collect()

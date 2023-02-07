@@ -26,5 +26,7 @@ class TestGetComms:
         assert helper.acknowledged(message)
         message = helper.collect()
         assert helper.local_status_request(message)
+        helper.respond(helper.ACK.encode("utf-8") + helper.STATUS)
+        helper.respond(helper.RES.encode("utf-8") + helper.STATUS + "Radio Status".encode("utf-8"))
         message = helper.collect()
-        assert helper.response_sent(message, "GCO")
+        assert helper.response_sent(message, "GRS")

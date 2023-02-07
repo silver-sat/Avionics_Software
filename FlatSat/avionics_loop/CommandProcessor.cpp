@@ -10,6 +10,7 @@
 
 #include "CommandProcessor.h"
 #include "log_utility.h"
+#include "Response.h"
 #include "RadioBoard.h"
 
 /**
@@ -22,24 +23,95 @@
 bool CommandProcessor::check_for_command()
 {
     extern RadioBoard radio;
-    if (radio.receive_command(m_command_buffer, maximum_command_length))
+    char source{};
+    if (radio.receive_frame(m_command_buffer, maximum_command_length, source))
     {
         String command_string{m_command_buffer};
-        Command* command{make_command(command_string)};
-        command->acknowledge_command();
-        Log.traceln("Command acknowledged");
-        if (command->execute_command())
+        Log.verboseln("Command source: 0x%x", source);
+        if (source == REMOTE_FRAME)
         {
-            Log.traceln("Executed (%l executed, %l failed, next sequence %l)", ++m_successful_commands, m_failed_commands, m_command_sequence);
-            delete command;
-            return true;
+            Command *command{make_command(command_string)};
+            command->acknowledge_command();
+            Log.traceln("Command acknowledged");
+
+            if (command->execute_command())
+            {
+                Log.traceln("Executed (%l executed, %l failed, next sequence %l)", ++m_successful_commands, m_failed_commands, m_command_sequence);
+                delete command;
+                return true;
+            }
+            else
+            {
+                Log.errorln("Failed (%l executed, %l failed, next sequence %l)", m_successful_commands, ++m_failed_commands, m_command_sequence);
+                delete command;
+                return false;
+            }
         }
         else
         {
-            Log.errorln("Failed (%l executed, %l failed, next sequence %i)", m_successful_commands, ++m_failed_commands, m_command_sequence);
-            delete command;
-            return false;
-        };
+            Response response{"INV"};
+            switch (command_string[0])
+            {
+            case 'A': // ACK
+                Log.verboseln("Received ACK, ignored");
+                break;
+            case 'N': // NACK
+                Log.verboseln("Received NACK, ignored");
+                break;
+            case 'R': // RESponse
+            {
+                extern RadioBoard radio;
+                auto type{command_string[RES.length()]};
+                auto radio_data{command_string.substring(RES.length()+1)};
+                Log.verboseln("Received type: 0x%x, %s", type, radio_data.c_str());
+                switch (type)
+                {
+                case GET_RADIO_STATUS:
+                    // todo: differentiate between local request for beacon and ground request
+                    response = {Response{"GRS" + radio_data}};
+                    break;
+                case MODIFY_FREQUENCY:
+                    response = {Response{"RMF" + radio_data}};
+                    break;
+                case MODIFY_MODE:
+                    response = {Response{"RMM" + radio_data}};
+                    break;
+                case ADJUST_FREQUENCY:
+                    response = {Response{"RAF" + radio_data}};
+                    break;
+                case TRANSMIT_CW:
+                    response = {Response{"RTC" + radio_data}};
+                    break;
+                case BACKGROUND_RSSI:
+                    response = {Response{"RBR" + radio_data}};
+                    break;
+                case CURRENT_RSSI:
+                    response = {Response{"RCR" + radio_data}};
+                    break;
+                case SWEEP_TRANMSMITTER:
+                    response = {Response{"RST" + radio_data}};
+                    break;
+                case SWEEP_RECEIVER:
+                    response = {Response{"RSR" + radio_data}};
+                    break;
+                case QUERY_REGISTER:
+                    response = {Response{"RQR" + radio_data}};
+                    break;
+                default:
+                    Log.errorln("Unknown local command type");
+                    response = {Response{"UNK" + radio_data}};
+                    break;
+                }
+                radio.send_message(response);
+                break;
+            }
+            default:
+                Log.errorln("Unknown local response type");
+                response = (Response{"UNK"});
+                radio.send_message(response);
+                break;
+            }
+        }
     };
     return true;
 };
@@ -47,13 +119,13 @@ bool CommandProcessor::check_for_command()
 /**
  * @brief Make command object
  *
- * @param buffer 
+ * @param buffer
  * @param command Command object
  * @return next command to process
  *
  */
 
-Command* CommandProcessor::make_command(String buffer)
+Command *CommandProcessor::make_command(String buffer)
 {
 
     // validate signature
@@ -73,7 +145,7 @@ Command* CommandProcessor::make_command(String buffer)
     else
     {
         Log.errorln("Invalid command");
-        String invalid[]{"Invalid"}; 
+        String invalid[]{"Invalid"};
         return command_factory.BuildCommand(invalid, 1);
     }
 };

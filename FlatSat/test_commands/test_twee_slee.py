@@ -1,13 +1,18 @@
 ##
 # @file test_twee_slee.py
-# @brief FlatSat test Avionics Board TweeSlee command
+# @brief Unit test Avionics Board TweeSlee command
 # @author Lee A. Congdon (lee@silversat.org)
-# @version 2.0.0
+# @version 1.1.0
 # @date 20 August 2022
 
-"""FlatSat test Avionics Board TweeSlee command"""
+"""Unit test Avionics Board TweeSlee command"""
 
 import helper
+import serial
+from collections import namedtuple
+
+## log entry field names
+Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
 
 ## Test TweeSlee command
 #
@@ -16,15 +21,46 @@ import helper
 class TestTweeSlee:
     """Test TweeSlee command"""
 
-    ## test active payload to sleep
+    ## active payload to sleep
     #
     def test_twee_slee(self):
 
-        helper.issue("TweeSlee")
-        message = helper.collect()
-        assert helper.acknowledged(message)
-        message = helper.collect()
-        assert helper.response_sent(message, "TSL")
-        message = helper.collect()
-        assert helper.local_halt_message_sent(message)
+        log = helper.collect("TweeSlee")
+        assert helper.not_signed(log)
+        assert helper.acknowledged(log)
+        assert helper.no_logged_errors(log)
+        assert helper.executed(log)
+        assert helper.local_stop_message_sent(log)
+        assert helper.payload_power_off(log)
 
+    ## error: invalid parameter
+    #
+    def test_twee_slee_param(self):
+        log = helper.collect("TweeSlee test")
+        assert helper.not_signed(log)
+        assert helper.acknowledged(log)
+        assert not helper.no_logged_errors(log)
+        assert not helper.executed(log)
+
+    ## active payload to sleep signed
+    #
+    def test_twee_slee_signed(self):
+
+        log = helper.collect(helper.generate_signed("TweeSlee"))
+        assert helper.signed(log)
+        assert helper.signature_valid(log)
+        assert helper.acknowledged(log)
+        assert helper.no_logged_errors(log)
+        assert helper.executed(log)
+        assert helper.local_stop_message_sent(log)
+        assert helper.payload_power_off(log)
+
+    ## error: invalid parameter signed
+    #
+    def test_twee_slee_param_signed(self):
+        log = helper.collect(helper.generate_signed("TweeSlee test"))
+        assert helper.signed(log)
+        assert helper.signature_valid(log)
+        assert helper.acknowledged(log)
+        assert not helper.no_logged_errors(log)
+        assert not helper.executed(log)

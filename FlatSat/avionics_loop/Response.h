@@ -33,6 +33,6 @@ public:
         String content)
     {
         m_command = response;
-        m_content = "RES" + content;
+        m_content = RES + content;
     }
 };

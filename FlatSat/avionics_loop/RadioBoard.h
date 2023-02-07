@@ -10,28 +10,9 @@
 
 #pragma once
 
+#include "avionics_constants.h"
 #include "Message.h"
 
-/**
- * @brief KISS defined constants
- *
- */
-// todo: consider changing case of constants
-constexpr byte FEND{'\xC0'};       /**< frame end */
-constexpr byte FESC{'\xDB'};       /**< frame escape */
-constexpr byte TFEND{'\xDC'};      /**< transposed frame end */
-constexpr byte TFESC{'\xDD'};      /**< transposed frame escape */
-constexpr byte DATA_FRAME{'\x00'}; /**< data frame */
-
-/**
- * @brief SilverSat defined KISS local command types
- *
- */
-// todo: consider changing case of constants
-constexpr byte DEPLOY_ANTENNA{'\x08'};    /**< deploy antenna */
-constexpr byte GET_RADIO_STATUS{'\x09'};  /**< request radio status */
-constexpr byte HALT('\x0A');              /**< halt */
-constexpr byte SEND_RADIO_STATUS{'\x0B'}; /**< return radio status */
 
 /**
  * @brief SilverSat Radio Board
@@ -55,26 +36,19 @@ public:
     bool deploy_antenna();
 
     /**
-     * @brief Assemble command from Serial1 port
+     * @brief Assemble command or response from Serial1 port
      *
      */
 
-    bool receive_command(char *buffer, const size_t length);
+    bool receive_frame(char *buffer, const size_t length, char& source);
 
-    /**
-     * @brief Send message
-     *
-     */
-
-    bool send_message(Message::message_type command, String content) const;
-    
     /**
      * @brief Send message
      *
      */
 
     bool send_message(Message message) const;
-    
+
     /**
      * @brief Get Radio Board status
      *
@@ -85,7 +59,8 @@ public:
 private:
     size_t m_buffer_index{0};
     bool m_received_start{false};
-    bool m_receiving_type{false};
+    bool m_received_type{false};
     bool m_received_escape{false};
+    bool m_remote_data{};
     long m_commands_received{0};
 };

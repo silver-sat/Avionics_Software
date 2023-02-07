@@ -1,11 +1,11 @@
 ##
-# @file test_get_telemetry.py
-# @brief Unit test Avionics Board GetTelemetry command
+# @file test_report_t.py
+# @brief Unit test Avionics Board ReportT command
 # @author Lee A. Congdon (lee@silversat.org)
 # @version 1.1.0
 # @date 21 August 2022
 
-"""Unit test Avionics Board GetTelemetry command"""
+"""Unit test Avionics Board ReportT command"""
 
 import helper
 import serial
@@ -14,49 +14,49 @@ from collections import namedtuple
 ## log entry field names
 Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
 
-## Test GetTelemetry command
+## Test ReportT command
 #
 
 
-class TestGetTelemetry:
-    """Test GetTelemetry command"""
+class TestReportT:
+    """Test ReportT command"""
 
-    ## get inertial telemetry
+    ## report realtime clock time
     #
-    def test_get_telemetry(self):
+    def test_report_t(self):
 
-        log = helper.collect("GetTelemetry")
+        log = helper.collect("ReportT")
         assert helper.not_signed(log)
         assert helper.acknowledged(log)
         assert helper.no_logged_errors(log)
-        assert helper.telemetry_sent(log)
+        assert helper.timestamp_sent(log)
         assert helper.executed(log)
 
     ## error: invalid parameter
     #
-    def test_get_telemetry_param(self):
-        log = helper.collect("GetTelemetry test")
+    def test_report_t_param(self):
+        log = helper.collect("ReportT test")
         assert helper.not_signed(log)
         assert helper.acknowledged(log)
         assert not helper.no_logged_errors(log)
         assert not helper.executed(log)
 
-    ## get inertial telemetry signed
+    ## report realtime clock time signed
     #
-    def test_get_telemetry_signed(self):
+    def test_report_t_signed(self):
 
-        log = helper.collect(helper.generate_signed("GetTelemetry"))
+        log = helper.collect(helper.generate_signed("ReportT"))
         assert helper.signed(log)
         assert helper.signature_valid(log)
         assert helper.acknowledged(log)
         assert helper.no_logged_errors(log)
-        assert helper.telemetry_sent(log)
+        assert helper.timestamp_sent(log)
         assert helper.executed(log)
 
     ## error: invalid parameter signed
     #
-    def test_get_telemetry_param_signed(self):
-        log = helper.collect(helper.generate_signed("GetTelemetry test"))
+    def test_report_t_param_signed(self):
+        log = helper.collect(helper.generate_signed("ReportT test"))
         assert helper.signed(log)
         assert helper.signature_valid(log)
         assert helper.acknowledged(log)

@@ -55,9 +55,9 @@ public:
 
         m_command = beacon;
         m_content = call_sign +
-                         String(power) +
-                         String(avionics) +
-                         String(radio) +
-                         String(payload);
+                    power +
+                    avionics +
+                    radio +
+                    payload;
     };
 };
