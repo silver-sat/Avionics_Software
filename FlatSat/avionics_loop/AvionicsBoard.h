@@ -171,10 +171,10 @@ private:
   ExternalWatchdog m_external_watchdog{};                                              /**< Watchdog */
   unsigned long m_beacon_interval{ 2 * minutes_to_seconds * seconds_to_milliseconds }; /**< Beacon interval */
   unsigned long m_last_beacon_time{ 0 };                                               /**< Last beacon time */
-  Beacon::status m_power_status{ Beacon::status::unknown };                            /**< Power Board status */
-  Beacon::status m_avionics_status{ Beacon::status::excellent };                       /**< Avionics Board status */
-  Beacon::status m_radio_status{ Beacon::status::unknown };                            /**< Radio Board status */
-  Beacon::status m_payload_status{ Beacon::status::unknown };                          /**< Payload Board status */
+  Beacon::Status m_power_status{ Beacon::Status::unknown };                            /**< Power Board status */
+  Beacon::Status m_avionics_status{ Beacon::Status::excellent };                       /**< Avionics Board status */
+  Beacon::Status m_radio_status{ Beacon::Status::unknown };                            /**< Radio Board status */
+  Beacon::Status m_payload_status{ Beacon::Status::unknown };                          /**< Payload Board status */
   size_t m_picture_count{ 0 };                                                         /**< Maximum picture count */
   DateTime m_picture_times[maximum_scheduled_pictures]{};                              /**< Scheduled picture times */
   ExternalRTC m_external_rtc{};                                                        /**< External Real Time Clock */
