@@ -25,16 +25,16 @@ public:
      * @brief board status for beacon
      *
      */
-    enum status
+    enum class Status
     {
-        excellent = 'E',
-        good = 'G',
-        fair = 'F',
-        poor = 'P',
-        critical = 'C',
-        on = 'N',
-        off = 'F',
-        unknown = 'U',
+        excellent,
+        good,
+        fair,
+        poor,
+        critical,
+        on,
+        off,
+        unknown,
     };
 
     /**
@@ -47,17 +47,35 @@ public:
      */
 
     Beacon(
-        status power,
-        status avionics,
-        status radio,
-        status payload)
+        Status power,
+        Status avionics,
+        Status radio,
+        Status payload)
     {
 
         m_command = beacon;
         m_content = call_sign +
-                    power +
-                    avionics +
-                    radio +
-                    payload;
+                    getStatus(power) +
+                    getStatus(avionics) +
+                    getStatus(radio) +
+                    getStatus(payload);
     };
+
+    const String getStatus(Status status)
+    {
+        switch (status)
+        {
+
+        case Status::excellent: return "E";
+        case Status::good: return "G";
+        case Status::fair: return "F";
+        case Status::poor: return "P";
+        case Status::critical: return "C";
+        case Status::on: return "N";
+        case Status::off: return "F";
+        case Status::unknown: return "U";
+        default: return "I";
+        }
+
+    }
 };
