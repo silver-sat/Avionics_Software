@@ -61,11 +61,13 @@ void setup() {
   String set_clock{ "SetClock 2023 3 15 10 10 30" };
   String invalid{ "Invalid 0 1 2 3 4 5 6 7 8 9" };
   String no_tokens{"     "};
+  String extra_blanks{"BeaconSP  180 "};
 
   print_test("ReportT: ", report_t);
   print_test("SetClock: ", set_clock);
   print_test("Invalid: ", invalid);
   print_test("no tokens: ", no_tokens);
+  print_test("extra blanks: ", extra_blanks);
 
 }
 
