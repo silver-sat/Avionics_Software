@@ -19,7 +19,7 @@
  * GPC: GetPhotos: reply with number of photos
  * GRS: GetComms: reply with Radio Board status
  * GBI: GetBeaconInterval: reply with beacon interval
- * NOP: NoOperate: subsumes Ping: acknowlege
+ * NOP: NoOperate: subsumes Ping: acknowledge
  * STP: SendTestPacket: reply with test message
  * PYC: PayComms: subsumes Begin tweet : start payload in comms mode
  * TSL: TweeSlee: subsumes Halt: stop tweeting

@@ -82,7 +82,7 @@ bool PayloadBoard::tweet()
 {
     if (!m_payload_active)
     {
-        Log.noticeln("Starting Twitter session");
+        Log.noticeln("Starting Communication session");
         // todo: delete timing of tweet session for flatsat test
         m_action_duration = tweet_duration;
         m_last_activity_time = millis();

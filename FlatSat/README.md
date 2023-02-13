@@ -1,12 +1,20 @@
-## Test Process Loop
-The AvionicsTesting3 folder contains unit test drivers for the command functions of the SilverSat Avionics Board. These drivers can be used to verify and exercise the functions of the board such as setting the realtime clock, telemetry collection, controlling beacon transmission, triggering the watchdog, and starting a Twitter session on the mock Payload Board.
+## Avionics Loop
+The "FlatSat" folder contains the Avionics Board software for testing the FlatSat configuration. This includes the process loop, hardware drivers, command processor, and interface software for the power, radio, and payload boards.
+
+The "FlatSat" folder contains drivers for testing
+the serial interface with the Radio Board in the "test_radio_interface" folder. These drivers can be used to test each of the command implementations that require communication between the Avionics Board and the Radio Board, such as getting radio status and changing radio settings. It can be used to test the beacon functions and the halt function.
+
+The FlatSat folder also contains
+unit test drivers for the command functions of the Avionics Board in the "test_commands" folder. These drivers can be used to verify and exercise the functions of the Avionics board such as setting the realtime clock, telemetry collection, controlling beacon transmission, triggering the watchdog, and starting a communication session on the mock Payload Board.
 
 The test_process_loop sketch is the main process loop for testing the Avionics Board. Software in the other subfolders is used to support development and testing of the test loop. In test_process_loop, the hardware devices on the Avionics Board are implemented as classes interfacing to real hardware. The other SilverSat boards: Power, Radio, and Payload, are implemented as mock devices in software for these tests. Each mock board performs a subset of the functionality provided by the actual board as needed to test the Avionics Board.
 
-The beacon and other local commands which Avionics sends to the Radio Board, the ground commands the Radio Board forwards to Avionics, and the messages Avionics sends to the Radio Board for forwarding to the ground are also represented as classes.
+The local messages which Avionics sends to the Radio Board, the ground commands the Radio Board forwards to Avionics, and the messages Avionics sends to the Radio Board for forwarding to the ground are represented as classes.
 
 ### Setup
-An "arduino_secrets.h" file is required to store the secret shared with the ground station for command signing. It must ```#define``` a sixteen-byte array named ```SECRET_HASH_KEY```, which is compiled into the sketch. DO NOT upload "arduino_secrets.h" to github. The software used to generate signed commands must use an identical sixteen-byte secret. For these tests, the secret is stored in "secret.txt". DO NOT upload "secret.txt" to github. The test_signing folder includes a Python program, "make_secret.py", which can be used to generate shared secrets. If the secrets are not identical, command signing will fail.
+Signed commands require that the Avionics Board and the ground share a secret. This secret is defined as a sixteen-byte array. 
+
+Following the Arduino convention, an "arduino_secrets.h" file is required to store the secret. It must ```#define``` a sixteen-byte array named ```SECRET_HASH_KEY```, which is compiled into the sketch. DO NOT upload "arduino_secrets.h" to github or other shared locations. The software used to generate signed commands must use an identical sixteen-byte secret. For these tests, the secret is stored in "secret.txt". DO NOT upload "secret.txt" to github. The test_signing folder includes a Python program, "make_secret.py", which can be used to generate shared secrets. If the secrets are not identical, command signing will fail.
 
 To setup a test environment, clone this repository to your computer or download a .zip file and extract the folders. Generate a secret and create an "arduino_secrets.h" file and a "secret.txt" file to store it. Add both to your ```.gitignore``` to prevent them from being uploaded to github. Install the Adafruit MPU6050 and FRAM libraries with dependencies using the Arduino Library Manager. Install the ArduinoLog and Arduino Crypto libraries by downloading and copying them into your library folder. Compile and upload the test_process_loop sketch to the Avionics Board microcontroller using the standard Arduino tools or alternative deployment tools.
 
