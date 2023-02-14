@@ -5,13 +5,14 @@
  * @version 1.2.0
  * @date 2022-09-27
  *
- *
+ * This file declares the class which parses command parameters and valiates command signatures
  */
 
 #pragma once
 
 #include <Arduino.h>
 
+// todo: move to avionics_constants.h
 /**
  * @brief CommandParser constants
  *

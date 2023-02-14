@@ -5,6 +5,9 @@
  * @version 1.0.0
  * @date 2022-10-23
  *
+ * Based on the Adafruit Sensor Library
+ *
+ * This file implements the class that interfaces with the Power Board
  *
  */
 
@@ -26,7 +29,9 @@ EPS_I::EPS_I()
  * @param wire wire object for I2C connections
  * @return true successful
  * @return false error
+ *
  */
+
 bool EPS_I::begin(uint8_t i2c_address, TwoWire *wire)
 {
   if (!i2c_dev)
@@ -46,6 +51,7 @@ bool EPS_I::begin(uint8_t i2c_address, TwoWire *wire)
  *
  * @return true if successful
  * @return false error
+ *
  */
 
 bool EPS_I::_init(void)
@@ -58,6 +64,7 @@ bool EPS_I::_init(void)
  * @brief Get the battery voltage
  *
  * @return float voltage
+ *
  */
 
 float EPS_I::getBatteryVoltage(void) const
@@ -70,6 +77,7 @@ float EPS_I::getBatteryVoltage(void) const
  * @brief Get the battery current
  *
  * @return float amperage
+ *
  */
 
 float EPS_I::getBatteryCurrent(void) const
@@ -82,6 +90,7 @@ float EPS_I::getBatteryCurrent(void) const
  * @brief Get the temperature at sensor 1
  *
  * @return float temperature
+ *
  */
 
 float EPS_I::getTemperatureSensor1(void) const
@@ -101,6 +110,7 @@ float EPS_I::getTemperatureSensor1(void) const
  * @brief Get the temperature at sensor 2
  *
  * @return float temperature
+ *
  */
 
 float EPS_I::getTemperatureSensor2(void) const
@@ -120,6 +130,7 @@ float EPS_I::getTemperatureSensor2(void) const
  * @brief Get the temperature at sensor 3
  *
  * @return float temperature
+ *
  */
 
 float EPS_I::getTemperatureSensor3(void) const
@@ -139,6 +150,7 @@ float EPS_I::getTemperatureSensor3(void) const
  * @brief Get the Z negative panel current
  *
  * @return float amperage
+ *
  */
 
 float EPS_I::getZNegativeCurrent(void) const
@@ -151,6 +163,7 @@ float EPS_I::getZNegativeCurrent(void) const
  * @brief Get the 5 volt current
  *
  * @return float voltage
+ *
  */
 
 float EPS_I::get5VCurrent(void) const
@@ -164,6 +177,7 @@ float EPS_I::get5VCurrent(void) const
  *
  * @return bool true ON
  * @return bool false OFF
+ *
  */
 
 bool EPS_I::getHeater1State(void) const
@@ -177,6 +191,7 @@ bool EPS_I::getHeater1State(void) const
  *
  * @return bool true ON
  * @return bool false OFF
+ *
  */
 
 bool EPS_I::getHeater2State(void) const
@@ -190,6 +205,7 @@ bool EPS_I::getHeater2State(void) const
  *
  * @return bool true ON
  * @return bool false OFF
+ *
  */
 
 bool EPS_I::getHeater3State(void) const
@@ -202,6 +218,7 @@ bool EPS_I::getHeater3State(void) const
  * @brief Read 16 bits of data from the EPS I
  *
  * @return raw 16 bits in correct endian format
+ *
  */
 
 uint16_t EPS_I::read_value(EPS_I_Read_Command command) const
@@ -220,6 +237,7 @@ uint16_t EPS_I::read_value(EPS_I_Read_Command command) const
  *
  * @param command command to execute
  * @param state state parameter for command
+ *
  */
 
 void EPS_I::write_command(EPS_I_Write_Command command, uint8_t state)

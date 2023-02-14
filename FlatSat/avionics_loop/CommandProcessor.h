@@ -5,6 +5,8 @@
  * @version 1.0.0
  * @date 2022-12-07
  *
+ * This file declares the class that checks for ground commands, validates
+ * and creates them and checks for local responses and processes them
  *
  */
 
@@ -14,7 +16,7 @@
 #include "CommandFactory.h"
 /**
  * @brief Check for command from Radio Board, make a Command object
- * 
+ *
  */
 class CommandProcessor final
 {
@@ -31,7 +33,7 @@ public:
      *
      */
 
-    Command* make_command(String buffer);
+    Command *make_command(String buffer);
 
 private:
     CommandParser command_parser{};

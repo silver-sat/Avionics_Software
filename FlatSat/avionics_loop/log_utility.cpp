@@ -5,16 +5,21 @@
  * @version 1.0.0
  * @date 2022-07-31
  *
+ * This file implements customized methods for the log facility
  *
  */
 
 #include "log_utility.h"
+
+// todo: consider replacing "%x" log entries with "%X"
+// todo: consider making custom classes printable and using "%p"
 
 /**
  * @brief Print log prefix
  *
  * @param _logOutput output
  * @param logLevel log level
+ * 
  */
 
 void printPrefix(Print *_logOutput, int logLevel)
@@ -27,6 +32,7 @@ void printPrefix(Print *_logOutput, int logLevel)
  * @brief Print log timestamp
  *
  * @param _logOutput output
+ * 
  */
 
 void printTimestamp(Print *_logOutput)
@@ -41,10 +47,12 @@ void printTimestamp(Print *_logOutput)
  *
  * @param timestamp output
  * @param msecs optional, default is current value of millis()
+ * 
  */
 
 void formatTimestamp(char *timestamp, const unsigned long msecs)
 {
+  // todo: move to avionics_constants.h
   // Division constants
   const unsigned long MSECS_PER_SEC = 1000;
   const unsigned long SECS_PER_MIN = 60;

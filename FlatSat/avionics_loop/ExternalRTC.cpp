@@ -5,6 +5,7 @@
  * @version 1.0.2
  * @date 2022-08-11
  *
+ * This file implements the class that interfaces with the external realtime clock
  *
  */
 
@@ -24,6 +25,7 @@ ExternalRTC::ExternalRTC(){};
  *
  * @return true successful
  * @return false error
+ *
  */
 
 bool ExternalRTC::begin(TwoWire *theWire)
@@ -35,7 +37,7 @@ bool ExternalRTC::begin(TwoWire *theWire)
     while ((!m_rtc.begin(theWire)) && ((millis() - delayStartTime) < wait_for_i2c_device))
     {
     }
-    
+
     if (!m_rtc.begin(theWire))
     {
         Log.errorln("Error starting realtime clock");
@@ -54,9 +56,10 @@ bool ExternalRTC::begin(TwoWire *theWire)
  * @param time
  * @return true successful
  * @return false error
+ *
  */
 
-bool ExternalRTC::set_time(const DateTime& time)
+bool ExternalRTC::set_time(const DateTime &time)
 {
     if (time.isValid())
     {
@@ -78,6 +81,7 @@ bool ExternalRTC::set_time(const DateTime& time)
  * @return * DateTime current time
  * @return true successful
  * @return false otherwise
+ *
  */
 
 bool ExternalRTC::get_time(DateTime &time)
@@ -104,6 +108,7 @@ bool ExternalRTC::get_time(DateTime &time)
  * @brief Get a timestamp
  *
  * @return String timestamp
+ *
  */
 
 String ExternalRTC::get_timestamp()
@@ -131,6 +136,7 @@ String ExternalRTC::get_timestamp()
  *
  * @return true successful
  * @return false error
+ *
  */
 
 // todo: consider removing from flight software
@@ -146,7 +152,9 @@ bool ExternalRTC::unset_clock()
  *
  * @return true
  * @return false
+ *
  */
+
 bool ExternalRTC::is_set() const
 {
     return m_rtc_is_set;

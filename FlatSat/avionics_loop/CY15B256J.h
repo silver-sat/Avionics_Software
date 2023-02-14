@@ -6,12 +6,16 @@
  * @date 2022-10-17
  *
  * Based on Adafruit_FRAM_I2C
+ *
+ * This file declares the class that interfaces with the Avionics Board FRAM
+ *
  */
 
 #pragma once
 
 #include <Adafruit_EEPROM_I2C.h>
 
+// todo: move to avionics_constants.h and convert to variable
 #define CY15B256J_DEFAULT_ADDRESS \
     (0x50) ///<* 1010 + A2 + A1 + A0 = 0x50 default */
 #define CY15B256J_SECONDARY_ADDRESS \

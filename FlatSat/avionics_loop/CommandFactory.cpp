@@ -5,7 +5,8 @@
  * @version 1.2.0
  * @date 2022-07-28
  *
- *
+ * This file implements the class used to build a new ground command.
+ * 
  */
 
 #include "avionics_constants.h"
@@ -14,7 +15,7 @@
 #include "log_utility.h"
 
 /**
- * @brief Construct a new  Command object
+ * @brief Construct a new Command object
  *
  */
 

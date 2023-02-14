@@ -6,6 +6,9 @@
  * @date 2022-10-17
  *
  * Based on Adafruit_FRAM_I2C
+ *
+ * This file implements the class that interfaces with the Avionics Board FRAM
+ *
  */
 
 #include "CY15B256J.h"

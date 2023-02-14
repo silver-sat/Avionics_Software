@@ -5,6 +5,7 @@
  * @version 1.0.1
  * @date 2022-08-11
  *
+ * This file declares the class that interfaces with the external realtime clock
  *
  */
 
@@ -17,6 +18,7 @@
  * @brief External realtime clock for testing the Avionics Board
  *
  */
+
 class ExternalRTC final
 {
 public:
@@ -39,7 +41,7 @@ public:
      *
      */
 
-    bool set_time(const DateTime& time);
+    bool set_time(const DateTime &time);
 
     /**
      * @brief Get the current external realtime clock time
@@ -60,7 +62,7 @@ public:
      *
      */
 
-    // todo: for testing only, remove from flight softwarebool unset_clock();
+    // todo: consider removing from flight software bool unset_clock();
 
     bool unset_clock();
 

@@ -5,6 +5,9 @@
  * @version 2.0.0
  * @date 2022-07-25
  *
+ * This file implements the Beacon class, which inherits from Message. Beacons are sent
+ * at intervals and include a call sign and status for the satellite boards. Beacon timing
+ * relies on a microcontroller timer.
  *
  */
 
@@ -66,16 +69,24 @@ public:
         switch (status)
         {
 
-        case Status::excellent: return "E";
-        case Status::good: return "G";
-        case Status::fair: return "F";
-        case Status::poor: return "P";
-        case Status::critical: return "C";
-        case Status::on: return "N";
-        case Status::off: return "F";
-        case Status::unknown: return "U";
-        default: return "I";
+        case Status::excellent:
+            return "E";
+        case Status::good:
+            return "G";
+        case Status::fair:
+            return "F";
+        case Status::poor:
+            return "P";
+        case Status::critical:
+            return "C";
+        case Status::on:
+            return "N";
+        case Status::off:
+            return "F";
+        case Status::unknown:
+            return "U";
+        default:
+            return "I";
         }
-
     }
 };

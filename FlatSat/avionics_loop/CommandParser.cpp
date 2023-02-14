@@ -5,6 +5,7 @@
  * @version 1.1.0
  * @date 2022-09-27
  *
+ * This file implements the class which parses command parameters and validates command signatures
  *
  */
 #include "CommandParser.h"
@@ -214,7 +215,7 @@ bool CommandParser::validate_signature(String &buffer, String &command_string, b
 
 bool CommandParser::parse_parameters(const String &command_string, String command_tokens[], size_t &token_index)
 {
-
+    // todo: consider replacing with tokenizer example
     Log.verboseln("Parsing command");
     token_index = 0;
     for (unsigned int string_index = 0; string_index < command_string.length(); string_index++)

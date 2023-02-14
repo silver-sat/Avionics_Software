@@ -5,6 +5,7 @@
  * @version 1.1.0
  * @date 2022-08-11
  *
+ * This file contains the global constants used by the Avionics Board software.
  *
  */
 

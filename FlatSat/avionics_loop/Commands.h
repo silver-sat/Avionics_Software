@@ -5,13 +5,21 @@
  * @version 1.2.0
  * @date 2022-07-25
  *
+ * This file declares and constructs all Command objects. Each ground command is derived
+ * from the Command class. Abbreviations listed are used in command responses.
+ *
  * Commands
+ *
+ * Change satellite state:
  *
  * SRC: SetClock: subsumes SetTime: set realtime clock
  * SBI: BeaconSP: set beacon spacing
  * SPT: PicTimes: set times for photos
  * CPT: ClearPicTimes: empty PicTimes queue
  * URC: UnsetClock: change the realtime clock status to unset for testing
+ *
+ * Get satellite state:
+ *
  * GRC: ReportT: subsumes GetTime: reply with realtime clock setting
  * GPT: GetPicTimes: reply with picture schedule
  * GTY: GetTelemetry: reply with telemetry
@@ -19,13 +27,22 @@
  * GPC: GetPhotos: reply with number of photos
  * GRS: GetComms: reply with Radio Board status
  * GBI: GetBeaconInterval: reply with beacon interval
+ *
+ * Invoke satellite operation:
+ *
  * NOP: NoOperate: subsumes Ping: acknowledge
  * STP: SendTestPacket: reply with test message
  * PYC: PayComms: subsumes Begin tweet : start payload in comms mode
  * TSL: TweeSlee: subsumes Halt: stop tweeting
  * WDG: ExternalWatchdog: force watchdog timeout (reset SAMD21)
+ *
+ * Invalid and unknown commands
+ *
  * INV: invalid
  * UNK: unknown
+ *
+ * Radio commands:
+ *
  * RMF: ModifyFrequency: modify radio frequency
  * RMM: ModifyMode: modify radio mode
  * RAF: AdjustFrequency: adjust radio frequency temporarily
@@ -35,9 +52,13 @@
  * RST: SweepTransmitter: radio sweep transmitter
  * RSR: SweepReceiver: radio sweep receiver
  * RQR: QueryRegister: radio query register
+ *
+ * Deprecated commands:
+ *
  * halt, see TweeSlee
  * s_call_sig deprecated
  * g_call_sig, deprecated
+ *
  */
 
 #pragma once
@@ -449,7 +470,7 @@ public:
 class CommandSweepTransmitter final : public Command
 {
 public:
-    CommandSweepTransmitter(const char* start_frequency, const char* stop_frequency, const char* number_of_steps, const char* dwell_time)
+    CommandSweepTransmitter(const char *start_frequency, const char *stop_frequency, const char *number_of_steps, const char *dwell_time)
     {
         memcpy(m_start_frequency, start_frequency, frequency_length);
         memcpy(m_stop_frequency, stop_frequency, frequency_length);
@@ -458,6 +479,7 @@ public:
     }
     bool acknowledge_command() override;
     bool execute_command() override;
+
 private:
     char m_start_frequency[frequency_length]{};
     char m_stop_frequency[frequency_length]{};
@@ -473,7 +495,7 @@ private:
 class CommandSweepReceiver final : public Command
 {
 public:
-    CommandSweepReceiver(const char* start_frequency, const char* stop_frequency, const char* number_of_steps, const char* dwell_time)
+    CommandSweepReceiver(const char *start_frequency, const char *stop_frequency, const char *number_of_steps, const char *dwell_time)
     {
         memcpy(m_start_frequency, start_frequency, frequency_length);
         memcpy(m_stop_frequency, stop_frequency, frequency_length);
@@ -482,6 +504,7 @@ public:
     }
     bool acknowledge_command() override;
     bool execute_command() override;
+
 private:
     char m_start_frequency[frequency_length]{};
     char m_stop_frequency[frequency_length]{};
@@ -497,12 +520,13 @@ private:
 class CommandQueryRegister final : public Command
 {
 public:
-    CommandQueryRegister(const char* radio_register)
+    CommandQueryRegister(const char *radio_register)
     {
         memcpy(m_radio_register, radio_register, register_length);
     }
     bool acknowledge_command() override;
     bool execute_command() override;
+
 private:
     char m_radio_register[register_length]{};
 };
