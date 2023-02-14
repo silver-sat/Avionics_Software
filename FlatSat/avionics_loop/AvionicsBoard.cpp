@@ -310,7 +310,7 @@ String AvionicsBoard::get_beacon_interval() {
 /**
  * @brief Trigger the watchdog
  *
- * todo: remove either external or internal watchdog, including .h and .cpp files and #includes as required
+ * todo: remove either external or internal watchdog, including .h and .cpp files and includes as required
  */
 
 void AvionicsBoard::trigger_watchdog() {

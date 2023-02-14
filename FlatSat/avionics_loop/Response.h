@@ -24,7 +24,7 @@ public:
     /**
      * @brief Construct a new Response::Response object
      *
-     * @param String content
+     * @param content contents of the response
      *
      *
      */

@@ -1,5 +1,5 @@
 /**
- * @file PayloadBoard.h
+ * @file PayloadBoard.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat Payload Board
  * @version 1.0.1

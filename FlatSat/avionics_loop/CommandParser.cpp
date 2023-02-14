@@ -66,7 +66,7 @@ void hex2bin(const char *src, byte *target)
  * @param[in] buffer sequence, salt, command and HMAC
  * @param[out] command_string command and parameters
  * @param[in] validation_required true if command must have valid signature
- * @param[in, out] command_sequence next valid command sequence number
+ * @param[in, out] expected_sequence next valid command sequence number
  * @return true valid signature
  * @return false invalid signature
  */

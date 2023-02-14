@@ -1,5 +1,5 @@
 ##
-# @file test_get_comms.py
+# @file test_get_comms_status.py
 # @brief FlatSat test Avionics Board GetComms command
 # @author Lee A. Congdon (lee@silversat.org)
 # @version 2.0.0

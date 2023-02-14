@@ -14,7 +14,7 @@
 #include "RadioBoard.h"
 
 /**
- * @brief Check for command
+ * @brief Check for command from Radio Board, make a Command object
  *
  * @return true no command or successful
  * @return false error
@@ -120,7 +120,6 @@ bool CommandProcessor::check_for_command()
  * @brief Make command object
  *
  * @param buffer
- * @param command Command object
  * @return next command to process
  *
  */
