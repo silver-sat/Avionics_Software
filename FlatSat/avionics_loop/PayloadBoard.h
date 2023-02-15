@@ -5,6 +5,7 @@
  * @version 1.0.0
  * @date 2022-07-24
  *
+ * This file declares the class which interfaces with the Payload Board
  *
  */
 
@@ -16,7 +17,7 @@
  * @brief PayloadBoard constants
  *
  */
-
+// todo: move to avionics_constants.h
 constexpr unsigned long tweet_duration{30 * seconds_to_milliseconds}; /**< test tweet duration */
 constexpr unsigned long photo_duration{15 * seconds_to_milliseconds}; /**< test photo duration */
 

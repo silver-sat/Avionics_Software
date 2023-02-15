@@ -6,7 +6,7 @@
  * @date 2022-07-31
  *
  * This file declares customized methods for the log facility
- * 
+ *
  */
 
 #pragma once

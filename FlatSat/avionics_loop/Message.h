@@ -5,6 +5,7 @@
  * @version 2.0.0
  * @date 2022-07-31
  *
+ * This file implements the outbound message class
  *
  */
 
@@ -60,13 +61,12 @@ public:
      *
      * @return true
      * @return false
+     *
      */
-    
-    // bool send()
-    // {
-    //     extern RadioBoard radio;
-    //     // return radio.send_message(*this);
-    // }
+
+    // todo: consider adding a send method and replacing multiple calls
+    // to the Radio Board send method
+
     /**
      * @brief Get the command
      *

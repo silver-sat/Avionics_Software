@@ -5,6 +5,7 @@
  * @version 1.0.1
  * @date 2022-07-24
  *
+ * This file implements the class which interfaces with the Payload Board
  *
  */
 
@@ -26,6 +27,7 @@ PayloadBoard::PayloadBoard(){
  *
  * @return true successful
  * @return false error
+ *
  */
 
 bool PayloadBoard::begin()
@@ -49,6 +51,7 @@ bool PayloadBoard::begin()
  *
  * @return true successful
  * @return false error
+ *
  */
 
 bool PayloadBoard::photo()
@@ -76,6 +79,7 @@ bool PayloadBoard::photo()
  *
  * @return true successful
  * @return false error
+ *
  */
 
 bool PayloadBoard::tweet()
@@ -102,6 +106,7 @@ bool PayloadBoard::tweet()
  *
  * @return true successful
  * @return false error
+ *
  */
 
 bool PayloadBoard::check_shutdown()
@@ -125,6 +130,7 @@ bool PayloadBoard::check_shutdown()
  *
  * @return true successful
  * @return false error
+ *
  */
 // todo: delete for flatsat test
 bool PayloadBoard::end_activity()
@@ -146,6 +152,7 @@ bool PayloadBoard::end_activity()
  *
  * @return true successful
  * @return false error
+ *
  */
 
 bool PayloadBoard::power_down()
@@ -163,6 +170,7 @@ bool PayloadBoard::power_down()
  *
  * @return true successful
  * @return false error
+ *
  */
 
 bool PayloadBoard::power_up()
@@ -180,7 +188,9 @@ bool PayloadBoard::power_up()
  *
  * @return true successful
  * @return false error
+ *
  */
+
 bool PayloadBoard::set_mode_comms()
 {
     digitalWrite(STATES_A_INT, HIGH);
@@ -199,7 +209,9 @@ bool PayloadBoard::set_mode_comms()
  *
  * @return true successful
  * @return false error
+ *
  */
+
 bool PayloadBoard::set_mode_photo()
 {
     digitalWrite(STATES_A_INT, LOW);
@@ -215,6 +227,7 @@ bool PayloadBoard::set_mode_photo()
  *
  * @return true successful
  * @return false error
+ *
  */
 
 bool PayloadBoard::power_down_signal_is_set() const
@@ -230,6 +243,7 @@ bool PayloadBoard::power_down_signal_is_set() const
  * @brief Get the photo count
  *
  * @return int photo count
+ *
  */
 
 int PayloadBoard::get_photo_count()
@@ -244,6 +258,7 @@ int PayloadBoard::get_photo_count()
  *
  * @return true active
  * @return false powered down
+ *
  */
 
 bool PayloadBoard::get_payload_active()

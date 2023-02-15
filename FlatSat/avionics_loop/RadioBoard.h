@@ -5,6 +5,7 @@
  * @version 1.2.0
  * @date 2022-07-24
  *
+ * The file declares the class that interfaces to the Radio Board
  *
  */
 
@@ -12,7 +13,6 @@
 
 #include "avionics_constants.h"
 #include "Message.h"
-
 
 /**
  * @brief SilverSat Radio Board
@@ -40,7 +40,7 @@ public:
      *
      */
 
-    bool receive_frame(char *buffer, const size_t length, char& source);
+    bool receive_frame(char *buffer, const size_t length, char &source);
 
     /**
      * @brief Send message

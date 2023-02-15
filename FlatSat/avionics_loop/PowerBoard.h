@@ -5,6 +5,7 @@
  * @version 1.1.0
  * @date 2022-07-24
  *
+ * This file declares the class that interfaces to the Power Board
  *
  */
 
@@ -27,7 +28,7 @@ public:
      * @brief Status of the Power Board
      *
      */
-    
+
     enum PowerStatus
     {
         excellent,
@@ -58,8 +59,7 @@ public:
     String get_detail();
 
 private:
-// todo: consider where power status is gathered and stored
+    // todo: consider where power status is gathered and stored
     PowerStatus m_power_status{fair};
     EPS_I eps_i{};
-    
 };

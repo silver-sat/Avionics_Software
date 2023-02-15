@@ -5,6 +5,7 @@
  * @version 1.3.0
  * @date 2022-07-24
  *
+ * This file implements the class that interfaces to the Radio Board
  *
  */
 
@@ -18,6 +19,7 @@
  *
  * @return true successful
  * @return false error
+ *
  */
 
 bool RadioBoard::begin()
@@ -44,6 +46,7 @@ bool RadioBoard::begin()
  *
  * @return true successful
  * @return false error
+ *
  */
 
 bool RadioBoard::deploy_antenna()
@@ -64,6 +67,7 @@ bool RadioBoard::deploy_antenna()
  *
  * @return true no command or successful
  * @return false error
+ *
  */
 
 bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
@@ -174,6 +178,7 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
  *
  * @return true successful
  * @return false error
+ *
  */
 
 bool RadioBoard::send_message(Message message) const
@@ -193,6 +198,7 @@ bool RadioBoard::send_message(Message message) const
  * @brief Get Radio Board status
  *
  * @return String status
+ *
  */
 
 String RadioBoard::get_status()

@@ -5,6 +5,7 @@
  * @version 1.0.0
  * @date 2023-02-03
  *
+ * This file implements the Response class
  *
  */
 
@@ -25,7 +26,6 @@ public:
      * @brief Construct a new Response::Response object
      *
      * @param content contents of the response
-     *
      *
      */
 
