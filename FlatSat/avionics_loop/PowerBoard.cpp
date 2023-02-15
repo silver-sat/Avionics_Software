@@ -5,6 +5,7 @@
  * @version 1.1.0
  * @date 2022-07-24
  *
+ * This file implements the class that interfaces to the Power Board
  *
  */
 
@@ -19,6 +20,7 @@ PowerBoard::PowerBoard(){};
  *
  * @return true successful
  * @return false error
+ *
  */
 
 bool PowerBoard::begin()
@@ -71,6 +73,7 @@ String PowerBoard::get_status()
  * @brief Get the power detail
  *
  * @return String power details
+ *
  */
 
 String PowerBoard::get_detail()

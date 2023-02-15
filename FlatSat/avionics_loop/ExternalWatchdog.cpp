@@ -5,6 +5,7 @@
  * @version 1.1.0
  * @date 2022-08-01
  *
+ * This file implements the class that interfaces with the external watchdog
  *
  */
 
@@ -18,7 +19,8 @@
  *
  */
 
-ExternalWatchdog::ExternalWatchdog() {
+ExternalWatchdog::ExternalWatchdog()
+{
   m_last_action_time = millis();
   pinMode(WDTICK, OUTPUT);
 }
@@ -28,8 +30,10 @@ ExternalWatchdog::ExternalWatchdog() {
  *
  */
 
-void ExternalWatchdog::trigger() {
-  if (!m_force_reset && (millis() - m_last_action_time > watchdog_lower_boundary)) {
+void ExternalWatchdog::trigger()
+{
+  if (!m_force_reset && (millis() - m_last_action_time > watchdog_lower_boundary))
+  {
     digitalWrite(WDTICK, HIGH);
     digitalWrite(WDTICK, LOW);
     m_last_action_time = millis();
@@ -41,6 +45,7 @@ void ExternalWatchdog::trigger() {
  *
  */
 
-void ExternalWatchdog::set_force_reset() {
+void ExternalWatchdog::set_force_reset()
+{
   m_force_reset = true;
 };

@@ -14,7 +14,7 @@
  * This is the setup and process loop for the SilverSat Avionics Board.
  *
  * The on-board devices are implemented as classes interfacing to real hardware and include an external watchdog timer, external realtime clock, inertial measurement
- * unit, and FRAM. The board also includes serial ports, I2C buses, and a SAMD21 processor. The SAMD21 internal watchdog timer is defined and activated as a backup 
+ * unit, and FRAM. The board also includes serial ports, I2C buses, and a SAMD21 processor. The SAMD21 internal watchdog timer is defined and activated as a backup
  * in the event hardware for the external timer is not available.
  *
  * The other boards: Power, Radio, and Payload, are represented as classes which provide interfaces to encapsulate their functions.
@@ -24,7 +24,7 @@
  *
  */
 
-#define INSTRUMENTATION  // Instrumentation for processor and memory usage
+#define INSTRUMENTATION // Instrumentation for processor and memory usage
 
 #include "log_utility.h"
 #include "Beacon.h"
@@ -55,22 +55,22 @@ unsigned long previous_time{};
 unsigned long current_time{};
 unsigned long duration{};
 unsigned long loop_start_time{};
-unsigned long loop_maximum{ 0 };
+unsigned long loop_maximum{0};
 unsigned long loop_maximum_timestamp{};
-unsigned long watchdog_maximum{ 0 };
+unsigned long watchdog_maximum{0};
 unsigned long watchdog_maximum_timestamp{};
-unsigned long beacon_maximum{ 0 };
+unsigned long beacon_maximum{0};
 unsigned long beacon_maximum_timestamp{};
-unsigned long command_maximum{ 0 };
+unsigned long command_maximum{0};
 unsigned long command_maximum_timestamp{};
-unsigned long photo_maximum{ 0 };
+unsigned long photo_maximum{0};
 unsigned long photo_maximum_timestamp{};
-unsigned long payload_maximum{ 0 };
+unsigned long payload_maximum{0};
 unsigned long payload_maximum_timestamp{};
-long memory_minimum{ 32768 };
+long memory_minimum{32768};
 unsigned long memory_minimum_timestamp{};
 unsigned long display_start_time{};
-constexpr int display_interval{ 30 * 1000 };
+constexpr int display_interval{30 * 1000};
 
 /**
  * @brief Helper function for memory use
@@ -80,21 +80,22 @@ constexpr int display_interval{ 30 * 1000 };
 #ifdef __arm__
 // should use uinstd.h to define sbrk but Due causes a conflict
 extern "C" char *sbrk(int incr);
-#else   // __ARM__
+#else  // __ARM__
 extern char *__brkval;
-#endif  // __arm__
+#endif // __arm__
 
-int freeMemory() {
+int freeMemory()
+{
   char top;
 #ifdef __arm__
   return &top - reinterpret_cast<char *>(sbrk(0));
 #elif defined(CORE_TEENSY) || (ARDUINO > 103 && ARDUINO != 151)
   return &top - __brkval;
-#else   // __arm__
+#else  // __arm__
   return __brkval ? &top - __brkval : &top - __malloc_heap_start;
-#endif  // __arm__
+#endif // __arm__
 }
-#endif  // INSTRUMENTATION
+#endif // INSTRUMENTATION
 
 /**
  * @brief Initialize the devices and the boards
@@ -104,11 +105,12 @@ int freeMemory() {
 void setup()
 
 {
-  // Initialize serial connection, log utility
+  // Initialize serial connection and log utility
 
   Serial.begin(serial_baud_rate);
-  while (!Serial) {
-    avionics.trigger_watchdog();  // OK to trigger the internal watchdog before initialization
+  while (!Serial)
+  {
+    avionics.trigger_watchdog(); // OK to trigger the internal watchdog before initialization
   };
   Log.setPrefix(printPrefix);
   Log.setSuffix(printSuffix);
@@ -144,14 +146,15 @@ void setup()
   // Wait for separation delay
 
   Log.noticeln("Beginning separation delay");
-  while (millis() - separation_time < separation_delay) {
+  while (millis() - separation_time < separation_delay)
+  {
     avionics.trigger_watchdog();
   };
   Log.noticeln("Ending separation delay");
 
   // Deploy antenna
 
-// todo: deploy antenna
+  // todo: deploy antenna
   Log.noticeln("Deploying antenna");
   // radio.deploy_antenna();
 
@@ -164,7 +167,7 @@ void setup()
 
   loop_start_time = micros();
   display_start_time = millis();
-#endif  // INSTRUMENTATION
+#endif // INSTRUMENTATION
 };
 
 /**
@@ -172,11 +175,12 @@ void setup()
  *
  */
 
-void loop() {
+void loop()
+{
 
 #ifdef INSTRUMENTATION
   previous_time = micros();
-#endif  // INSTRUMENTATION
+#endif // INSTRUMENTATION
 
   // Trigger the watchdog
 
@@ -184,12 +188,13 @@ void loop() {
 
 #ifdef INSTRUMENTATION
   duration = micros() - previous_time;
-  if (duration > watchdog_maximum) {
+  if (duration > watchdog_maximum)
+  {
     watchdog_maximum = duration;
     watchdog_maximum_timestamp = millis();
   }
   previous_time = micros();
-#endif  // INSTRUMENTATION
+#endif // INSTRUMENTATION
 
   // Send beacon
 
@@ -197,12 +202,13 @@ void loop() {
 
 #ifdef INSTRUMENTATION
   duration = micros() - previous_time;
-  if (duration > beacon_maximum) {
+  if (duration > beacon_maximum)
+  {
     beacon_maximum = duration;
     beacon_maximum_timestamp = millis();
   }
   previous_time = micros();
-#endif  // INSTRUMENTATION
+#endif // INSTRUMENTATION
 
   // Process command
 
@@ -210,12 +216,13 @@ void loop() {
 
 #ifdef INSTRUMENTATION
   duration = micros() - previous_time;
-  if (duration > command_maximum) {
+  if (duration > command_maximum)
+  {
     command_maximum = duration;
     command_maximum_timestamp = millis();
   }
   previous_time = micros();
-#endif  // INSTRUMENTATION
+#endif // INSTRUMENTATION
 
   // Take photo
 
@@ -223,12 +230,13 @@ void loop() {
 
 #ifdef INSTRUMENTATION
   duration = micros() - previous_time;
-  if (duration > photo_maximum) {
+  if (duration > photo_maximum)
+  {
     photo_maximum = duration;
     photo_maximum_timestamp = millis();
   }
   previous_time = micros();
-#endif  // INSTRUMENTATION
+#endif // INSTRUMENTATION
 
   // Shut off Payload Board if ready to sleep
 
@@ -236,14 +244,16 @@ void loop() {
 
 #ifdef INSTRUMENTATION
   duration = micros() - previous_time;
-  if (duration > payload_maximum) {
+  if (duration > payload_maximum)
+  {
     payload_maximum = duration;
     payload_maximum_timestamp = millis();
   }
-#endif  // INSTRUMENTATION
+#endif // INSTRUMENTATION
 
 #ifdef INSTRUMENTATION
-  if (millis() - display_start_time > display_interval) {
+  if (millis() - display_start_time > display_interval)
+  {
     char timestamp[20]{};
     formatTimestamp(timestamp, loop_maximum_timestamp);
     Log.verboseln("Maximum loop time %l microseconds at %s", loop_maximum, timestamp);
@@ -265,8 +275,9 @@ void loop() {
 
   // Record free memory
 
-  auto free_memory{ freeMemory() };
-  if (free_memory < memory_minimum) {
+  auto free_memory{freeMemory()};
+  if (free_memory < memory_minimum)
+  {
     memory_minimum = free_memory;
     memory_minimum_timestamp = millis();
   }
@@ -274,10 +285,11 @@ void loop() {
   // Record loop time
 
   duration = micros() - loop_start_time;
-  if (duration > loop_maximum) {
+  if (duration > loop_maximum)
+  {
     loop_maximum = duration;
     loop_maximum_timestamp = millis();
   }
   loop_start_time = micros();
-#endif  // INSTRUMENTATION
+#endif // INSTRUMENTATION
 };

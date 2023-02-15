@@ -5,6 +5,8 @@
  * @version 1.0.0
  * @date 2022-12-07
  *
+ * This file implements the class that checks for ground commands, validates
+ * and creates them and checks for local responses and processes them
  *
  */
 
@@ -14,10 +16,14 @@
 #include "RadioBoard.h"
 
 /**
- * @brief Check for command
+ * @brief Check for command from Radio Board
  *
  * @return true no command or successful
  * @return false error
+ *
+ * Check to determine if the Radio Board has received a frame. If so, either
+ * validate, acknowledge and execute ground command or process local message
+ *
  */
 
 bool CommandProcessor::check_for_command()
@@ -62,7 +68,7 @@ bool CommandProcessor::check_for_command()
             {
                 extern RadioBoard radio;
                 auto type{command_string[RES.length()]};
-                auto radio_data{command_string.substring(RES.length()+1)};
+                auto radio_data{command_string.substring(RES.length() + 1)};
                 Log.verboseln("Received type: 0x%x, %s", type, radio_data.c_str());
                 switch (type)
                 {
@@ -120,8 +126,10 @@ bool CommandProcessor::check_for_command()
  * @brief Make command object
  *
  * @param buffer
- * @param command Command object
  * @return next command to process
+ *
+ * For ground commands, validate signature, parse parameters, and construct
+ * Command object
  *
  */
 

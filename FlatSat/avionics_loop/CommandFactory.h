@@ -5,7 +5,7 @@
  * @version 1.3.0
  * @date 2022-07-28
  *
- *
+ * This file declares the class used to build a new ground command.
  */
 
 #pragma once

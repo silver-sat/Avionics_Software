@@ -1,5 +1,5 @@
 ##
-# @file test_unswet_realtime_clock.py
+# @file test_unset_realtime_clock.py
 # @brief FlatSat test Avionics Board UnsetClock command
 # @author Lee A. Congdon (lee@silversat.org)
 # @version 1.0.0

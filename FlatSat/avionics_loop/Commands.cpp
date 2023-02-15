@@ -5,6 +5,10 @@
  * @version 1.3.0
  * @date 2022-07-25
  *
+ * This file implements the acknowledge and execute methods for all Command objects.
+ * Virtual dispatch is used to select the correct methods based on command type. Each
+ * derived Command calls the base class acknowledgement method for sending an
+ * acknowledgement to the ground and the base execute method for logging.
  *
  */
 
@@ -23,6 +27,9 @@
  *
  * @return true successful
  * @return false error
+ *
+ * Called by each command type to send acknowledgment to the ground
+ *
  */
 
 bool Command::acknowledge_command()
@@ -38,6 +45,9 @@ bool Command::acknowledge_command()
  *
  * @return true successful
  * @return false error
+ *
+ * Send negative acknowledgement to the ground
+ *
  */
 
 bool Command::negative_acknowledge_command()
@@ -53,6 +63,9 @@ bool Command::negative_acknowledge_command()
  *
  * @return true successful
  * @return false error
+ *
+ * Log command execution
+ *
  */
 
 bool Command::execute_command()
@@ -869,7 +882,7 @@ bool CommandSweepTransmitter::execute_command()
     Log.verboseln("SweepTransmitter");
     extern RadioBoard radio;
     char arguments[frequency_length + frequency_length + steps_length + dwell_length]{};
-    char* arg_ptr{};
+    char *arg_ptr{};
     arg_ptr = &arguments[0];
     memcpy(arg_ptr, m_start_frequency, frequency_length);
     arg_ptr += frequency_length;
@@ -910,7 +923,7 @@ bool CommandSweepReceiver::execute_command()
     Log.verboseln("SweepReceiver");
     extern RadioBoard radio;
     char arguments[frequency_length + frequency_length + steps_length + dwell_length]{};
-    char* arg_ptr{};
+    char *arg_ptr{};
     arg_ptr = &arguments[0];
     memcpy(arg_ptr, m_start_frequency, frequency_length);
     arg_ptr += frequency_length;

@@ -6,12 +6,16 @@
  * @date 2022-10-17
  *
  * Based and dependent on Adafruit RTClib
+ *
+ * This file declares the class that interfaces with the external realtime clock
+ *
  */
 
 #pragma once
 
 #include <RTClib.h>
 
+// todo: move to avionics_constants.h
 /**
  * @brief DS1337 SQW pin mode settings
  *
@@ -60,32 +64,32 @@ enum Ds1337Alarm2Mode
 
 /**
  * @brief RTC based on the DS1337 chip connected via I2C and the Wire libary
- * 
+ *
  */
-class RTC_DS1337 final : RTC_I2C {
+class RTC_DS1337 final : RTC_I2C
+{
 public:
-  bool begin(TwoWire *wireInstance = &Wire);
-  void adjust(const DateTime &dt);
-  bool lostPower(void);
-  DateTime now();
-  Ds1337SqwPinMode readSqwPinMode();
-  void writeSqwPinMode(Ds1337SqwPinMode mode);
-  bool setAlarm1(const DateTime &dt, Ds1337Alarm1Mode alarm_mode);
-  bool setAlarm2(const DateTime &dt, Ds1337Alarm2Mode alarm_mode);
-  DateTime getAlarm1();
-  DateTime getAlarm2();
-  Ds1337Alarm1Mode getAlarm1Mode();
-  Ds1337Alarm2Mode getAlarm2Mode();
-  void disableAlarm(uint8_t alarm_num);
-  void clearAlarm(uint8_t alarm_num);
-  bool alarmFired(uint8_t alarm_num);
-  /*!
-      @brief  Convert the day of the week to a representation suitable for
-              storing in the DS1337: from 1 (Monday) to 7 (Sunday).
-      @param  d Day of the week as represented by the library:
-              from 0 (Sunday) to 6 (Saturday).
-      @return the converted value
-  */
-  static uint8_t dowToDS1337(uint8_t d) { return d == 0 ? 7 : d; }
-
+    bool begin(TwoWire *wireInstance = &Wire);
+    void adjust(const DateTime &dt);
+    bool lostPower(void);
+    DateTime now();
+    Ds1337SqwPinMode readSqwPinMode();
+    void writeSqwPinMode(Ds1337SqwPinMode mode);
+    bool setAlarm1(const DateTime &dt, Ds1337Alarm1Mode alarm_mode);
+    bool setAlarm2(const DateTime &dt, Ds1337Alarm2Mode alarm_mode);
+    DateTime getAlarm1();
+    DateTime getAlarm2();
+    Ds1337Alarm1Mode getAlarm1Mode();
+    Ds1337Alarm2Mode getAlarm2Mode();
+    void disableAlarm(uint8_t alarm_num);
+    void clearAlarm(uint8_t alarm_num);
+    bool alarmFired(uint8_t alarm_num);
+    /*!
+        @brief  Convert the day of the week to a representation suitable for
+                storing in the DS1337: from 1 (Monday) to 7 (Sunday).
+        @param  d Day of the week as represented by the library:
+                from 0 (Sunday) to 6 (Saturday).
+        @return the converted value
+    */
+    static uint8_t dowToDS1337(uint8_t d) { return d == 0 ? 7 : d; }
 };

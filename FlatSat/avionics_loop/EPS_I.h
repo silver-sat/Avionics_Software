@@ -6,6 +6,9 @@
  * @date 2022-10-23
  *
  * Based on the Adafruit Sensor Library
+ *
+ * This file declares the class that interfaces with the Power Board
+ *
  */
 
 #pragma once

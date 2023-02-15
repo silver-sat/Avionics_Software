@@ -5,6 +5,7 @@
  * @version 1.0.1
  * @date 2022-08-01
  *
+ * This file declares the class that interfaces with the external watchdog
  *
  */
 
@@ -14,14 +15,17 @@
  * @brief ExternalWatchdog constants
  *
  */
+// todo: move to avionics_constants.h
 
-constexpr unsigned long watchdog_lower_boundary{ 24 }; /**< 23.5 milliseconds */
+constexpr unsigned long watchdog_lower_boundary{24}; /**< 23.5 milliseconds */
 
 /**
  * @brief ExternalWatchdog
  *
  */
-class ExternalWatchdog final {
+
+class ExternalWatchdog final
+{
 public:
   /**
    * @brief Construct a new ExternalWatchdog object
@@ -45,6 +49,6 @@ public:
   void set_force_reset();
 
 private:
-  unsigned long m_last_action_time{ 0 };
-  bool m_force_reset{ false };
+  unsigned long m_last_action_time{0};
+  bool m_force_reset{false};
 };
