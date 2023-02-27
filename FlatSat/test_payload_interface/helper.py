@@ -21,7 +21,7 @@ LOG_PORT = "/dev/tty.usbmodem11101"
 ## port for command input
 COMMAND_PORT = "/dev/tty.usbserial-A10MHKWZ"
 ## serial transmission speed
-BAUDRATE = 19200
+BAUDRATE = 115200
 ## default timeout for readline
 TIMEOUT = 5
 ## KISS frame end
@@ -169,6 +169,7 @@ def collect_through_power_off(command, interval=60):
     while "Payload power off" not in log_data:
         log_data = log_port.readline().decode("utf-8").strip()
         log.append(Entry(*(log_data.split(maxsplit=2))))
+        print(log_data)
     return log
 
 

@@ -21,7 +21,7 @@ LOG_PORT = "/dev/tty.usbmodem11101"
 ## port for command input
 COMMAND_PORT = "/dev/tty.usbserial-A10MHKWZ"
 ## serial transmission speed
-BAUDRATE = 19200
+BAUDRATE = 115200
 ## default timeout for readline
 TIMEOUT = 5
 ## KISS frame end
@@ -160,7 +160,7 @@ def executed(log):
 
 ## Collect through power off check
 #
-def collect_through_power_off(command, interval=60):
+def collect_through_power_off(command, interval=30):
 
     command_port.write(FEND + REMOTE_FRAME + command.encode("utf-8") + FEND)
     log = []

@@ -193,10 +193,13 @@ bool PayloadBoard::set_mode_photo()
 
 bool PayloadBoard::power_down_signal_is_set() const
 {
-    bool a = digitalRead(SHUTDOWN_A);
-    bool b = digitalRead(SHUTDOWN_B);
-    bool c = digitalRead(SHUTDOWN_C);
-    return (a + b + c) >= 2;
+    auto a = digitalRead(SHUTDOWN_A);
+    auto b = digitalRead(SHUTDOWN_B);
+    auto c = digitalRead(SHUTDOWN_C);
+    if ((a + b + c) >= 2) {
+        Log.verboseln("Shutdown signal received");
+    }
+    return ((a + b + c) >= 2);
 };
 
 /**

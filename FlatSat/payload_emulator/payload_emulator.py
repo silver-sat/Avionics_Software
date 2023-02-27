@@ -69,6 +69,7 @@ while(True):
         shutdown_b.value = True
         shutdown_c.value = True
         time.sleep(1.0)
+    else:
         shutdown_a.value = False
         shutdown_b.value = False
         shutdown_c.value = False

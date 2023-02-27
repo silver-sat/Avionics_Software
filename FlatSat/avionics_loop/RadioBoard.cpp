@@ -75,8 +75,7 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
     while (Serial1.available())
     {
         char character{Serial1.read()};
-        // todo: format with "%C"
-        Log.verboseln("Character received: 0x%x", character);
+        // Log.verboseln("Character received: 0x%x", character);
         if (m_received_start)
         {
             if (!m_received_type)

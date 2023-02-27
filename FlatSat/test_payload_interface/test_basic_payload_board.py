@@ -19,10 +19,10 @@ Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
 ## Basic Payload Board testing
 #
 
+
 class TestPayloadBoardInterface:
     """Test basic Payload Board interface"""
 
-    
     ## no beacon
     #
     def test_beacon_sp_0(self):
@@ -48,7 +48,7 @@ class TestPayloadBoardInterface:
     ## set picture times
     #
     def test_pic_times(self):
-        start_time = time.gmtime(time.time() + 60)
+        start_time = time.gmtime(time.time() + 30)
         start_time = time.strftime("%Y %m %d %H %M %S", start_time)
         log = helper.collect_through_power_off(f"PicTimes {start_time}")
         assert helper.not_signed(log)
