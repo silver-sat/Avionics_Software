@@ -548,7 +548,7 @@ bool CommandPayComms::execute_command()
     auto response{Response{"PYC"}};
     status = radio.send_message(response) && status;
     extern PayloadBoard payload;
-    return payload.tweet() && status;
+    return payload.communicate() && status;
 };
 
 /**

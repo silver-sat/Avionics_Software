@@ -18,7 +18,7 @@ import time
 ## port for command input and output
 COMMAND_PORT = "/dev/tty.usbserial-A10MHKWZ"
 ## serial transmission speed
-BAUDRATE = 19200
+BAUDRATE = 115200
 ## default timeout for readline
 TIMEOUT = 5
 ## KISS frame end

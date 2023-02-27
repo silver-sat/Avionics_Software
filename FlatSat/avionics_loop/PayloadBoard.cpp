@@ -2,7 +2,7 @@
  * @file PayloadBoard.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat Payload Board
- * @version 1.0.1
+ * @version 1.1.0
  * @date 2022-07-24
  *
  * This file implements the class which interfaces with the Payload Board
@@ -11,16 +11,6 @@
 
 #include "PayloadBoard.h"
 #include "log_utility.h"
-#include <Arduino.h>
-
-/**
- * @brief Construct a new PayloadBoard::PayloadBoard object
- *
- */
-
-PayloadBoard::PayloadBoard(){
-
-};
 
 /**
  * @brief Initialize Payload Board
@@ -43,6 +33,7 @@ bool PayloadBoard::begin()
     pinMode(SHUTDOWN_B, INPUT);
     pinMode(SHUTDOWN_C, INPUT);
     power_down();
+    Log.traceln("Payload Board initialization complete");
     return true;
 };
 
@@ -60,9 +51,6 @@ bool PayloadBoard::photo()
     if (!m_payload_active)
     {
         Log.noticeln("Starting photo session");
-        // todo: delete timing of photo for flatsat test
-        m_action_duration = photo_duration;
-        m_last_activity_time = millis();
         set_mode_photo();
         power_up();
         return true;
@@ -75,21 +63,18 @@ bool PayloadBoard::photo()
 };
 
 /**
- * @brief Power up Payload Board and tweet
+ * @brief Power up Payload Board and communicate
  *
  * @return true successful
  * @return false error
  *
  */
 
-bool PayloadBoard::tweet()
+bool PayloadBoard::communicate()
 {
     if (!m_payload_active)
     {
         Log.noticeln("Starting Communication session");
-        // todo: delete timing of tweet session for flatsat test
-        m_action_duration = tweet_duration;
-        m_last_activity_time = millis();
         set_mode_comms();
         power_up();
         return true;
@@ -111,41 +96,22 @@ bool PayloadBoard::tweet()
 
 bool PayloadBoard::check_shutdown()
 {
-    // todo: delete for flatsat test
-    if (m_payload_active && millis() - m_last_activity_time > m_action_duration)
-    {
-        end_activity();
-    }
-    if (power_down_signal_is_set() && m_payload_active)
+    if (m_payload_active && power_down_signal_is_set())
     {
         Log.verboseln("Powering down payload");
-        m_power_down_signal = false;
         power_down();
     }
     return true;
 }
 
-/**
- * @brief End payload session
- *
- * @return true successful
- * @return false error
- *
- */
-// todo: delete for flatsat test
-bool PayloadBoard::end_activity()
-{
-    if (!m_payload_active)
-    {
-        Log.traceln("No payload activity");
+    /**
+     * @brief Get the photo count
+     * 
+     */
+    // todo: count is not reliable, recommending deprecating the GetPhotos command
+    int PayloadBoard::get_photo_count() const {
+        return -1;
     }
-    else
-    {
-        Log.traceln("Payload activity ending");
-    }
-    m_power_down_signal = true;
-    return true;
-};
 
 /**
  * @brief Power down Payload Board
@@ -196,11 +162,7 @@ bool PayloadBoard::set_mode_comms()
     digitalWrite(STATES_A_INT, HIGH);
     digitalWrite(STATES_B_INT, HIGH);
     digitalWrite(STATES_C_INT, HIGH);
-    Log.verboseln("Payload mode set to tweet");
-    if (m_photo_count > 0)
-    {
-        m_photo_count -= 1;
-    }
+    Log.verboseln("Payload mode set to communicate");
     return true;
 };
 
@@ -218,7 +180,6 @@ bool PayloadBoard::set_mode_photo()
     digitalWrite(STATES_B_INT, LOW);
     digitalWrite(STATES_C_INT, LOW);
     Log.verboseln("Payload mode set to photo");
-    m_photo_count += 1;
     return true;
 };
 
@@ -232,26 +193,14 @@ bool PayloadBoard::set_mode_photo()
 
 bool PayloadBoard::power_down_signal_is_set() const
 {
-    bool a = digitalRead(SHUTDOWN_A);
-    bool b = digitalRead(SHUTDOWN_B);
-    bool c = digitalRead(SHUTDOWN_C);
-    // todo: return (a + b + c) >= 2;
-    return m_power_down_signal;
+    auto a = digitalRead(SHUTDOWN_A);
+    auto b = digitalRead(SHUTDOWN_B);
+    auto c = digitalRead(SHUTDOWN_C);
+    if ((a + b + c) >= 2) {
+        Log.verboseln("Shutdown signal received");
+    }
+    return ((a + b + c) >= 2);
 };
-
-/**
- * @brief Get the photo count
- *
- * @return int photo count
- *
- */
-
-int PayloadBoard::get_photo_count()
-{
-    // todo: provide I2C interface to FRAM to access photo count
-
-    return m_photo_count;
-}
 
 /**
  * @brief Get the payload activity status
@@ -261,7 +210,7 @@ int PayloadBoard::get_photo_count()
  *
  */
 
-bool PayloadBoard::get_payload_active()
+bool PayloadBoard::get_payload_active() const
 {
     return m_payload_active;
 };

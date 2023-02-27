@@ -32,8 +32,8 @@
  *
  * NOP: NoOperate: subsumes Ping: acknowledge
  * STP: SendTestPacket: reply with test message
- * PYC: PayComms: subsumes Begin tweet : start payload in comms mode
- * TSL: TweeSlee: subsumes Halt: stop tweeting
+ * PYC: PayComms: subsumes Begin tweet : start payload in communications mode
+ * TSL: TweeSlee: subsumes Halt: stop communicating
  * WDG: ExternalWatchdog: force watchdog timeout (reset SAMD21)
  *
  * Invalid and unknown commands

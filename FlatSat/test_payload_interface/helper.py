@@ -160,7 +160,7 @@ def executed(log):
 
 ## Collect through power off check
 #
-def collect_through_power_off(command, interval=30):
+def collect_through_power_off(command, interval=60):
 
     command_port.write(FEND + REMOTE_FRAME + command.encode("utf-8") + FEND)
     log = []
@@ -169,6 +169,7 @@ def collect_through_power_off(command, interval=30):
     while "Payload power off" not in log_data:
         log_data = log_port.readline().decode("utf-8").strip()
         log.append(Entry(*(log_data.split(maxsplit=2))))
+        print(log_data)
     return log
 
 
