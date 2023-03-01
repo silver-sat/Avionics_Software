@@ -75,6 +75,7 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
     while (Serial1.available())
     {
         char character{Serial1.read()};
+        // Caution: enabling character logging will cause non-printable characters to interfere with automated tests
         // Log.verboseln("Character received: 0x%x", character);
         if (m_received_start)
         {
@@ -185,7 +186,14 @@ bool RadioBoard::send_message(Message message) const
     auto command = message.get_command();
     auto content = message.get_content();
     // todo: problem with C string not terminated
-    content.length() == 0 ? Log.noticeln("Sending message: KISS command 0x%x", command) : Log.noticeln("Sending message: KISS command 0x%x, content: %s", command, content.c_str());
+    if (content.length() == 0)
+    {
+        Log.noticeln("Sending message: KISS command 0x%x", command);
+    }
+    else
+    {
+        Log.noticeln("Sending message: KISS command 0x%x, content: %s", command, content.c_str());
+    }
     Serial1.write(FEND);
     Serial1.write(command);
     Serial1.write(content.c_str());

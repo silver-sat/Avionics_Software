@@ -45,6 +45,8 @@ shutdown_c = DigitalInOut(board.D8)
 shutdown_c.direction = Direction.OUTPUT
 shutdown_c.value = False
 
+payload_active = False
+
 print("Starting Payload Board emulator")
 
 while(True):
@@ -56,6 +58,7 @@ while(True):
     # print(f"states_c: {states_c.value}")
     # time.sleep(1.0)
     if (payload_on_a.value + payload_on_b.value + payload_on_c.value) > 2:
+        payload_active = True
         print("Payload Board activated")
         random_multiplier = random.randrange(8, 12) / 10.0
         if (states_a.value + states_b.value + states_c.value) > 2:
@@ -70,6 +73,9 @@ while(True):
         shutdown_c.value = True
         time.sleep(1.0)
     else:
+        if (payload_active):
+            print("Shutdown received")
+            payload_active = False
         shutdown_a.value = False
         shutdown_b.value = False
         shutdown_c.value = False
