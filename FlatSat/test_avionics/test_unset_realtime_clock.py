@@ -7,12 +7,10 @@
 
 """FlatSat test Avionics Board UnsetClock command"""
 
-import helper
+import utility
 
 ## Test UnsetClock command
 #
-
-
 class TestUnsetClock:
     """Test UnsetClock command"""
 
@@ -20,9 +18,16 @@ class TestUnsetClock:
     #
     def test_unsset_realtime_clock(self):
 
-        helper.issue("UnsetClock")
-        message = helper.collect_message()
-        assert helper.acknowledged(message)
-        message = helper.collect_message()
-        assert helper.response_sent(message, "URC")
+        utility.issue("UnsetClock")
+        # check log
+        log = utility.collect()
+        assert utility.not_signed(log)
+        assert utility.acknowledged_log(log)
+        assert utility.no_logged_errors(log)
+        assert utility.executed(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.acknowledged(message)
+        message = utility.collect_message()
+        assert utility.response_sent(message, "URC")
 

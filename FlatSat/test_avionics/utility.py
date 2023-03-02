@@ -1,11 +1,11 @@
 ##
-# @file helper.py
-# @brief FlatSat test Avionics Board helper functions
+# @file utility.py
+# @brief FlatSat test Avionics Board utility functions
 # @author Lee A. Congdon (lee@silversat.org)
 # @version 2.0.0
 # @date 20 August 2022
 
-"""FlatSat test Avionics Board helper functions"""
+"""FlatSat test Avionics Board utility functions"""
 
 import serial
 from collections import namedtuple
@@ -60,18 +60,22 @@ command_counter = 0
 
 ## Collect initialization
 #
+# Initialization messages on Avionics Board startup
+#
 def collect_initialization():
 
     log = []
     log_data = ""
     while "Avionics Process initialization completed" not in log_data:
         log_data = log_port.readline().decode("utf-8").strip()
-        log.append(Entry(*(log_data.split(maxsplit=2))))
         print(log_data)
+        log.append(Entry(*(log_data.split(maxsplit=2))))
     return log
 
 
 ## Verify initialization complete
+#
+# Verify final initialization message received
 #
 def initialization_complete(log):
 
@@ -79,12 +83,20 @@ def initialization_complete(log):
         [item.detail == "Avionics Process initialization completed" for item in log]
     )
 
+
 ## FENDs received
 #
+# Unsolicted message to Radio Board to clear buffer during initialization
+#
 def fends_received(message):
-    return(message == (FEND + FEND))
+    return message == (FEND + FEND)
+
 
 ## Generate signed command
+#
+# Sequence, salt, command and HMAC separated by pipe characters
+# Command is blank delimited
+# secret.txt must be identical to secret compiled into Avionics software
 #
 def generate_signed(command):
     secret = open("secret.txt", "rb").read()
@@ -111,13 +123,19 @@ def generate_signed(command):
         f"{command_hmac.hexdigest()}"
     )
 
+
 ## Issue command
+#
+# Commands must be framed with KISS encoding
 #
 def issue(command):
 
     command_port.write(FEND + REMOTE_FRAME + command.encode("utf-8") + FEND)
 
-## Issue command and collect response
+
+## Collect log response
+#
+# Command processing ends with an Executed or Failed log entry
 #
 def collect_log():
 
@@ -129,7 +147,10 @@ def collect_log():
         log.append(Entry(*(log_data.split(maxsplit=2))))
     return log
 
-## Collect response
+
+## Collect message response
+#
+# Commands generate one or more messages, captured individually
 #
 def collect_message():
 
@@ -141,12 +162,16 @@ def collect_message():
 
 ## Simulate response to local command
 #
+# Simulate Radio Board KISS-encoded local frame response to local command
+#
 def respond(command):
 
     command_port.write(FEND + LOCAL_FRAME + command + FEND)
 
 
 ## Send FEND
+#
+# Transmit a FEND on the command port
 #
 def send_FEND(count=1):
 
@@ -158,12 +183,16 @@ def send_FEND(count=1):
 
 ## Verify command acknowledged
 #
+# Each command is ACKed or NACKed in a message
+#
 def acknowledged_message(message):
 
     return bytes("ACK".encode("utf-8")) in message
 
 
 ## Verify command negative acknowledged
+#
+# Each command is ACKed or NACKed in a message
 #
 def negative_acknowledged_message(message):
 
@@ -172,12 +201,16 @@ def negative_acknowledged_message(message):
 
 ## Verify response sent
 #
+# Each command receives a RESponse message
+#
 def response_sent(message, type):
 
     return bytes(("RES" + type).encode("utf-8")) in message
 
 
 ## Verify beacon message sent
+#
+# Beacons are sent periodically at the beacon interval
 #
 def local_beacon_message_sent(message):
 
@@ -186,8 +219,8 @@ def local_beacon_message_sent(message):
 
 ## Verify local recover antenna message sent
 #
-
-
+# Recover antenna will be sent if standard deployment fails
+#
 def local_recover_antenna(message):
 
     return message.startswith(FEND + MANUAL_RELEASE)
@@ -195,14 +228,16 @@ def local_recover_antenna(message):
 
 ## Verify local status request message sent
 #
-
-
+# Radio status requested for a GetComms command
+#
 def local_status_request(message):
 
     return message.startswith(FEND + STATUS)
 
 
 ## Verify local halt message sent
+#
+# Local halt message sent for TweeSlee command
 #
 def local_halt_message_sent(message):
 
@@ -211,12 +246,16 @@ def local_halt_message_sent(message):
 
 ## Verify local modify frequency message sent
 #
+# Local command for ModifyFrequency command
+#
 def local_modify_frequency_message_sent(message):
 
     return message.startswith(FEND + MODIFY_FREQ)
 
 
 ## Verify local modify mode message sent
+#
+# Local command for ModifyMode command
 #
 def local_modify_mode_message_sent(message):
 
@@ -225,12 +264,16 @@ def local_modify_mode_message_sent(message):
 
 ## Verify local adjust frequency message sent
 #
+# Local command for AdjustFrequency command
+#
 def local_adjust_frequency_message_sent(message):
 
     return message.startswith(FEND + ADJUST_FREQ)
 
 
 ## Verify local transmit carrier message sent
+#
+# Local command for TransmitCW command
 #
 def local_transmit_carrier_message_sent(message):
 
@@ -239,12 +282,16 @@ def local_transmit_carrier_message_sent(message):
 
 ## Verify local background RSSI message sent
 #
+# Local command for BackgroundRSSI command
+#
 def local_background_rssi_message_sent(message):
 
     return message.startswith(FEND + BACKGROUND_RSSI)
 
 
 ## Verify local current RSSI message sent
+#
+# Local command for CurrentRSSI command
 #
 def local_current_rssi_message_sent(message):
 
@@ -253,12 +300,16 @@ def local_current_rssi_message_sent(message):
 
 ## Verify local sweep transmitter message sent
 #
+# Local command for SweepTransmitter command
+#
 def local_sweep_transmitter_message_sent(message):
 
     return message.startswith(FEND + SWEEP_TRANSMITTER)
 
 
 ## Verify local sweep receiver message sent
+#
+# Local command for SweepReceiver command
 #
 def local_sweep_receiver_message_sent(message):
 
@@ -267,9 +318,12 @@ def local_sweep_receiver_message_sent(message):
 
 ## Verify local query register message sent
 #
+# Local command for QueryRegister command
+#
 def local_query_register_message_sent(message):
 
     return message.startswith(FEND + QUERY_REGISTER)
+
 
 ## Verify command not signed
 #
@@ -305,6 +359,7 @@ def acknowledged_log(log):
 
     return any([item.detail == "Acknowledging command" for item in log])
 
+
 ## Verify command negative acknowledged
 #
 def negative_acknowledged_log(log):
@@ -335,6 +390,8 @@ def executed(log):
 
 ## Collect through power off check
 #
+# Assumes Payload Board is active for less than "interval" seconds
+#
 def collect_through_power_off(command, interval=60):
 
     command_port.write(FEND + REMOTE_FRAME + command.encode("utf-8") + FEND)
@@ -363,6 +420,8 @@ def payload_power_off(log):
 
 
 ## Collect through two beacon tranmissions
+#
+# Assumes beacon spacing is less than interval
 #
 def collect_two_beacons(interval):
 
@@ -495,6 +554,7 @@ def integer_sent_GBI(log):
     pattern = re.compile(r"\s(RESGBI)(\d+)$")
     return any([pattern.search(item.detail) for item in log])
 
+
 ## Verify integer sent get photo count
 #
 def integer_sent_GPC(log):
@@ -504,14 +564,17 @@ def integer_sent_GPC(log):
 
 ## Verify local GetComms message sent
 #
+# todo: consider checking message
+#
 def local_get_comms_sent(log):
 
-    return any(
-        [
-            item.detail == "Requesting radio status"
-            for item in log
-        ]
-    )
+    return any([item.detail == "Requesting radio status" for item in log])
+
+## Verify time sent
+#
+def time_sent(log):
+
+    return any([item.detail.contains("RESGRC") for item in log])
 
 
 ## Verify test packet sent
@@ -521,19 +584,12 @@ def test_packet_sent(log):
     return any([item.detail.endswith("content: RESSTPTEST") for item in log])
 
 
-## Send FEND
-#
-def send_FEND(count=1):
-    index = 0
-    while index < count:
-        command_port.write(FEND)
-        index += 1
+# todo: verify beacon power_sent
+
+# todo: verify deploy antenna sent
+
 
 ## Discard messages
 #
 def discard_messages():
     command_port.reset_input_buffer()
-
-# todo: verify beacon power_sent
-
-# todo: verify deploy antenna sent

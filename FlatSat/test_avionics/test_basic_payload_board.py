@@ -7,12 +7,11 @@
 
 """Test Basic Payload Board interface functions"""
 
-import helper
+import utility
 import time
 
 ## Basic Payload Board testing
 #
-
 class TestPayloadBoardInterface:
     """Test basic Payload Board interface"""
 
@@ -20,68 +19,70 @@ class TestPayloadBoardInterface:
     #
     def test_beacon_sp_0(self):
 
-        helper.issue(f"BeaconSp 0")
+        utility.issue(f"BeaconSp 0")
         # check log
-        log = helper.collect_log()
-        assert helper.not_signed(log)
-        assert helper.acknowledged_log(log)
-        assert helper.no_logged_errors(log)
-        assert helper.executed(log)
+        log = utility.collect_log()
+        assert utility.not_signed(log)
+        assert utility.acknowledged_log(log)
+        assert utility.no_logged_errors(log)
+        assert utility.executed(log)
         # check messages
-        message = helper.collect_message()
-        assert helper.acknowledged_message(message)
-        message = helper.collect_message()
-        assert helper.response_sent(message, "SBI")
+        message = utility.collect_message()
+        assert utility.acknowledged_message(message)
+        message = utility.collect_message()
+        assert utility.response_sent(message, "SBI")
 
     ## set realtime clock with current time
     #
     def test_set_clock(self):
 
         utc_time = time.strftime("%Y %m %d %H %M %S", time.gmtime())
-        helper.issue(f"SetClock {utc_time}")
+        utility.issue(f"SetClock {utc_time}")
         # check log
-        log = helper.collect_log()
-        assert helper.not_signed(log)
-        assert helper.acknowledged_log(log)
-        assert helper.no_logged_errors(log)
-        assert helper.executed(log)
+        log = utility.collect_log()
+        assert utility.not_signed(log)
+        assert utility.acknowledged_log(log)
+        assert utility.no_logged_errors(log)
+        assert utility.executed(log)
         # check messages
-        message = helper.collect_message()
-        assert helper.acknowledged_message(message)
-        message = helper.collect_message()
-        assert helper.response_sent(message, "SRC")
+        message = utility.collect_message()
+        assert utility.acknowledged_message(message)
+        message = utility.collect_message()
+        assert utility.response_sent(message, "SRC")
 
     ## set picture times
     #
     def test_pic_times(self):
+
         start_time = time.gmtime(time.time() + 30)
         start_time = time.strftime("%Y %m %d %H %M %S", start_time)
-        # check logs
-        log = helper.collect_through_power_off(f"PicTimes {start_time}")
-        assert helper.not_signed(log)
-        assert helper.acknowledged_log(log)
-        assert helper.no_logged_errors(log)
-        assert helper.executed(log)
-        assert helper.payload_power_off(log)
+        # check log
+        log = utility.collect_through_power_off(f"PicTimes {start_time}")
+        assert utility.not_signed(log)
+        assert utility.acknowledged_log(log)
+        assert utility.no_logged_errors(log)
+        assert utility.executed(log)
+        assert utility.payload_power_off(log)
         # check messages
-        message = helper.collect_message()
-        assert helper.acknowledged_message(message)
-        message = helper.collect_message()
-        assert helper.response_sent(message, "SPT")
+        message = utility.collect_message()
+        assert utility.acknowledged_message(message)
+        message = utility.collect_message()
+        assert utility.response_sent(message, "SPT")
 
     ## start payload communications
     #
 
     def test_pay_comms(self):
-        # check logs
-        log = helper.collect_through_power_off("PayComms")
-        assert helper.not_signed(log)
-        assert helper.acknowledged_log(log)
-        assert helper.no_logged_errors(log)
-        assert helper.executed(log)
-        assert helper.payload_power_off(log)
+        
+        # check log
+        log = utility.collect_through_power_off("PayComms")
+        assert utility.not_signed(log)
+        assert utility.acknowledged_log(log)
+        assert utility.no_logged_errors(log)
+        assert utility.executed(log)
+        assert utility.payload_power_off(log)
         # check messages
-        message = helper.collect_message()
-        assert helper.acknowledged_message(message)
-        message = helper.collect_message()
-        assert helper.response_sent(message, "PYC")
+        message = utility.collect_message()
+        assert utility.acknowledged_message(message)
+        message = utility.collect_message()
+        assert utility.response_sent(message, "PYC")

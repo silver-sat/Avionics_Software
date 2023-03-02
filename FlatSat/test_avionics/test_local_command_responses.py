@@ -7,12 +7,10 @@
 
 """FlatSat test Avionics Board local command responses"""
 
-import helper
+import utility
 
 ## Test local command responses
 #
-
-
 class TestLocalResponses:
     """Test local command responses"""
 
@@ -20,76 +18,76 @@ class TestLocalResponses:
     #
     def test_beacon(self):
 
-        helper.respond(helper.BEACON)
+        utility.respond(utility.BEACON)
 
     ## manual antenna release command
     #
     def test_manual_antenna(self):
 
-        helper.respond(helper.MANUAL_RELEASE)
+        utility.respond(utility.MANUAL_RELEASE)
 
     ## status command
     #
     def test_status(self):
 
-        helper.respond(helper.STATUS)
+        utility.respond(utility.STATUS)
 
     ## halt command
     #
     def test_halt(self):
 
-        helper.respond(helper.HALT)
+        utility.respond(utility.HALT)
 
     ## modify frequency command
     #
     def test_modify_frequency(self):
 
-        helper.respond(helper.MODIFY_FREQ)
+        utility.respond(utility.MODIFY_FREQ)
 
     ## manual antenna release command
     #
     def test_modify_mode(self):
 
-        helper.respond(helper.MODIFY_MODE)
+        utility.respond(utility.MODIFY_MODE)
 
     ## adjust frequency command
     #
     def test_adjust_frequency(self):
 
-        helper.respond(helper.ADJUST_FREQ)
+        utility.respond(utility.ADJUST_FREQ)
 
     ## transmit carrier wave command
     #
     def test_transmit_cw(self):
 
-        helper.respond(helper.TRANSMIT_CARRIER)
+        utility.respond(utility.TRANSMIT_CARRIER)
 
     ## background rssi command
     #
     def test_background_rssi(self):
 
-        helper.respond(helper.BACKGROUND_RSSI)
+        utility.respond(utility.BACKGROUND_RSSI)
 
     ## current rssi command
     #
     def test_current_rssi(self):
 
-        helper.respond(helper.CURRENT_RSSI)
+        utility.respond(utility.CURRENT_RSSI)
 
     ## sweep transmitter command
     #
     def test_sweep_transmitter(self):
 
-        helper.respond(helper.SWEEP_TRANSMITTER)
+        utility.respond(utility.SWEEP_TRANSMITTER)
 
     ## sweep receiver command
     #
     def test_sweep_receiver(self):
 
-        helper.respond(helper.SWEEP_RECEIVER)
+        utility.respond(utility.SWEEP_RECEIVER)
 
     ## query register command
     #
     def test_query_register(self):
 
-        helper.respond(helper.QUERY_REGISTER)
+        utility.respond(utility.QUERY_REGISTER)

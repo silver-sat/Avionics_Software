@@ -7,12 +7,10 @@
 
 """FlatSat test Avionics Board PayComms command"""
 
-import helper
+import utility
 
 ## Test PayComms command
 #
-
-
 class TestPayComms:
     """Test PayComms command"""
 
@@ -20,8 +18,63 @@ class TestPayComms:
     #
     def test_pay_comms(self):
 
-        helper.issue("PayComms")
-        message = helper.collect_message()
-        assert helper.acknowledged_message(message)
-        message = helper.collect_message()
-        assert helper.response_sent(message, "PYC")
+        # check log
+        log = utility.collect_through_power_off("PayComms")
+        assert utility.not_signed(log)
+        assert utility.acknowledged(log)
+        assert utility.no_logged_errors(log)
+        assert utility.executed(log)
+        assert utility.payload_power_off(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.acknowledged_message(message)
+        message = utility.collect_message()
+        assert utility.response_sent(message, "PYC")
+
+    ## error: invalid parameter
+    #
+    def test_pay_comms_param(self):
+
+        utility.issue("PayComms test")
+        # check log
+        log = utility.collect_log()
+        assert utility.not_signed(log)
+        assert utility.negative_acknowledged_log(log)
+        assert not utility.no_logged_errors(log)
+        assert not utility.executed(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.negative_acknowledged_message(message)
+
+    ## start payload communications signed
+    #
+    def test_pay_comms_signed(self):
+
+        log = utility.collect_through_power_off(utility.generate_signed("PayComms"))
+        assert utility.signed(log)
+        assert utility.signature_valid(log)
+        assert utility.acknowledged(log)
+        assert utility.no_logged_errors(log)
+        assert utility.executed(log)
+        assert utility.payload_power_off(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.acknowledged_message(message)
+        message = utility.collect_message()
+        assert utility.response_sent(message, "PYC")
+
+    ## error: invalid parameter signed
+    #
+    def test_pay_comms_param_signed(self):
+
+        utility.issue(utility.generate_signed("PayComms test"))
+        # check log
+        log = utility.collect()
+        assert utility.signed(log)
+        assert utility.signature_valid(log)
+        assert utility.negative_acknowledged_log(log)
+        assert not utility.no_logged_errors(log)
+        assert not utility.executed(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.negative_acknowledged_message(message)
