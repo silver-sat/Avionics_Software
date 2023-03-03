@@ -20,7 +20,8 @@ class TestClearPicTimes:
 
         utility.issue("PicTimes 2025 11 11 10 10 0")
         utility.collect_log()
-        utility.discard_messages()
+        message = utility.collect_message()
+        message = utility.collect_message()
 
         utility.issue("ClearPicTimes")
         # check log
@@ -39,7 +40,8 @@ class TestClearPicTimes:
         log = utility.collect_log()
         assert utility.pictimes_zero_sent(log)
         # discard messages
-        utility.discard_messages()
+        message = utility.collect_message()
+        message = utility.collect_message()
 
     ## error: invalid parameter
     #
@@ -62,14 +64,15 @@ class TestClearPicTimes:
 
         utility.issue("PicTimes 2023 11 11 10 10 0")
         utility.collect_log()
-        utility.discard_messages()
+        message = utility.collect_message()
+        message = utility.collect_message()
 
         utility.issue(utility.generate_signed("ClearPicTimes"))
         # check log
         log = utility.collect_log()
         assert utility.signed(log)
         assert utility.signature_valid(log)
-        assert utility.acknowledged(log)
+        assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
         assert utility.executed(log)
         # check messages
@@ -79,10 +82,11 @@ class TestClearPicTimes:
         assert utility.response_sent(message, "CPT")
         # check picture queue
         utility.issue("GetPicTimes")
-        log = utility.collect()
+        log = utility.collect_log()
         assert utility.pictimes_zero_sent(log)
         # discard messages
-        utility.discard_messages()
+        message = utility.collect_message()
+        message = utility.collect_message()
 
     ## error: invalid parameter signed
     #

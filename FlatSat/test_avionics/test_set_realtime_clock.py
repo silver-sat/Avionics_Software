@@ -104,42 +104,48 @@ class TestSetClock:
         # check log
         log = utility.collect_log()
         assert utility.not_signed(log)
-        assert utility.negative_acknowledged_log(log)
+        assert utility.acknowledged_log(log)
         assert not utility.no_logged_errors(log)
         assert not utility.executed(log)
         # check messages
         message = utility.collect_message()
-        assert utility.negative_acknowledged_message(message)
+        assert utility.acknowledged_message(message)
+        message = utility.collect_message()
+        assert utility.response_sent(message, "SRC")
 
     ## error: time to early
     #
     def test_set_clock_time_too_early(self):
 
-        utility.collect("SetClock 2020 10 10 10 10 10")
+        utility.issue("SetClock 2020 10 10 10 10 10")
         # check log
         log = utility.collect_log()
         assert utility.not_signed(log)
-        assert utility.negative_acknowledged_log(log)
+        assert utility.acknowledged_log(log)
         assert not utility.no_logged_errors(log)
         assert not utility.executed(log)
         # check messages
         message = utility.collect_message()
-        assert utility.negative_acknowledged_message(message)
+        assert utility.acknowledged_message(message)
+        message = utility.collect_message()
+        assert utility.response_sent(message, "SRC")
 
     ## error: time too late
     #
     def test_set_clock_time_too_late(self):
 
-        utility.collect("SetClock 2100 3 4 5 6 7")
+        utility.issue("SetClock 2100 3 4 5 6 7")
         # check log
         log = utility.collect_log()
         assert utility.not_signed(log)
-        assert utility.negative_acknowledged_log(log)
+        assert utility.acknowledged_log(log)
         assert not utility.no_logged_errors(log)
         assert not utility.executed(log)
         # check messages
         message = utility.collect_message()
-        assert utility.negative_acknowledged_message(message)
+        assert utility.acknowledged_message(message)
+        message = utility.collect_message()
+        assert utility.response_sent(message, "SRC")
 
     ## set realtime clock signed
     #
@@ -240,12 +246,14 @@ class TestSetClock:
         log = utility.collect_log()
         assert utility.signed(log)
         assert utility.signature_valid(log)
-        assert utility.negative_acknowledged_log(log)
+        assert utility.acknowledged_log(log)
         assert not utility.no_logged_errors(log)
         assert not utility.executed(log)
         # check messages
         message = utility.collect_message()
-        assert utility.negative_acknowledged_message(message)
+        assert utility.acknowledged_message(message)
+        message = utility.collect_message()
+        assert utility.response_sent(message, "SRC")
 
     ## error: time to early signed
     #
@@ -256,12 +264,14 @@ class TestSetClock:
         log = utility.collect_log()
         assert utility.signed(log)
         assert utility.signature_valid(log)
-        assert utility.negative_acknowledged_log(log)
+        assert utility.acknowledged_log(log)
         assert not utility.no_logged_errors(log)
         assert not utility.executed(log)
         # check messages
         message = utility.collect_message()
-        assert utility.negative_acknowledged_message(message)
+        assert utility.acknowledged_message(message)
+        message = utility.collect_message()
+        assert utility.response_sent(message, "SRC")
 
     ## error: time too late
     #
@@ -272,9 +282,11 @@ class TestSetClock:
         log = utility.collect_log()
         assert utility.signed(log)
         assert utility.signature_valid(log)
-        assert utility.negative_acknowledged_log(log)
+        assert utility.acknowledged_log(log)
         assert not utility.no_logged_errors(log)
         assert not utility.executed(log)
         # check messages
         message = utility.collect_message()
-        assert utility.negative_acknowledged_message(message)
+        assert utility.acknowledged_message(message)
+        message = utility.collect_message()
+        assert utility.response_sent(message, "SRC")

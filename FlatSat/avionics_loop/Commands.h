@@ -373,12 +373,13 @@ public:
     CommandModifyFrequency(const char frequency[frequency_length])
     {
         memcpy(m_frequency, frequency, frequency_length);
+        m_frequency[frequency_length] = '\0';
     }
     bool acknowledge_command() override;
     bool execute_command() override;
 
 private:
-    char m_frequency[frequency_length]{};
+    char m_frequency[frequency_length + 1]{};
 };
 
 /**
@@ -389,12 +390,15 @@ private:
 class CommandModifyMode final : public Command
 {
 public:
-    CommandModifyMode(const char mode) : m_mode{mode} {};
+    CommandModifyMode(const char mode) {
+        m_mode[0] = mode;
+        m_mode[1] = '\0';
+    };
     bool acknowledge_command() override;
     bool execute_command() override;
 
 private:
-    char m_mode{};
+    char m_mode[2]{};
 };
 
 /**
@@ -408,12 +412,13 @@ public:
     CommandAdjustFrequency(const char *frequency)
     {
         memcpy(m_frequency, frequency, frequency_length);
+        m_frequency[frequency_length] = '\0';
     }
     bool acknowledge_command() override;
     bool execute_command() override;
 
 private:
-    char m_frequency[frequency_length]{};
+    char m_frequency[frequency_length + 1]{};
 };
 
 /**
@@ -428,12 +433,13 @@ public:
     {
         m_duration[0] = duration[0];
         m_duration[1] = duration[1];
+        m_duration[2] = '\0';
     }
     bool acknowledge_command() override;
     bool execute_command() override;
 
 private:
-    char m_duration[duration_length]{};
+    char m_duration[duration_length + 1]{};
 };
 
 /**
@@ -473,18 +479,22 @@ public:
     CommandSweepTransmitter(const char *start_frequency, const char *stop_frequency, const char *number_of_steps, const char *dwell_time)
     {
         memcpy(m_start_frequency, start_frequency, frequency_length);
+        m_start_frequency[frequency_length] = '\0';
         memcpy(m_stop_frequency, stop_frequency, frequency_length);
+        m_stop_frequency[frequency_length] = '\0';
         memcpy(m_number_of_steps, number_of_steps, steps_length);
+        m_number_of_steps[steps_length] = '\0';
         memcpy(m_dwell_time, dwell_time, dwell_length);
+        m_dwell_time[dwell_length] = '\0';
     }
     bool acknowledge_command() override;
     bool execute_command() override;
 
 private:
-    char m_start_frequency[frequency_length]{};
-    char m_stop_frequency[frequency_length]{};
-    char m_number_of_steps[steps_length]{};
-    char m_dwell_time[dwell_length]{};
+    char m_start_frequency[frequency_length + 1]{};
+    char m_stop_frequency[frequency_length + 1]{};
+    char m_number_of_steps[steps_length + 1]{};
+    char m_dwell_time[dwell_length + 1]{};
 };
 
 /**
@@ -498,18 +508,22 @@ public:
     CommandSweepReceiver(const char *start_frequency, const char *stop_frequency, const char *number_of_steps, const char *dwell_time)
     {
         memcpy(m_start_frequency, start_frequency, frequency_length);
+        m_start_frequency[frequency_length] = '\0';
         memcpy(m_stop_frequency, stop_frequency, frequency_length);
+        m_stop_frequency[frequency_length] = '\0';
         memcpy(m_number_of_steps, number_of_steps, steps_length);
+        m_number_of_steps[steps_length] = '\0';
         memcpy(m_dwell_time, dwell_time, dwell_length);
+        m_dwell_time[dwell_length] = '\0';
     }
     bool acknowledge_command() override;
     bool execute_command() override;
 
 private:
-    char m_start_frequency[frequency_length]{};
-    char m_stop_frequency[frequency_length]{};
-    char m_number_of_steps[steps_length]{};
-    char m_dwell_time[dwell_length]{};
+    char m_start_frequency[frequency_length + 1]{};
+    char m_stop_frequency[frequency_length + 1]{};
+    char m_number_of_steps[steps_length + 1]{};
+    char m_dwell_time[dwell_length + 1]{};
 };
 
 /**
@@ -523,10 +537,11 @@ public:
     CommandQueryRegister(const char *radio_register)
     {
         memcpy(m_radio_register, radio_register, register_length);
+        m_radio_register[register_length] = '\0';
     }
     bool acknowledge_command() override;
     bool execute_command() override;
 
 private:
-    char m_radio_register[register_length]{};
+    char m_radio_register[register_length + 1]{};
 };

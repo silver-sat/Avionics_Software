@@ -22,7 +22,7 @@ class TestReportT:
         # check log
         log = utility.collect_log()
         assert utility.not_signed(log)
-        assert utility.acknowledged(log)
+        assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
         assert utility.timestamp_sent(log)
         assert utility.executed(log)
@@ -56,7 +56,7 @@ class TestReportT:
         log = utility.collect_log()
         assert utility.signed(log)
         assert utility.signature_valid(log)
-        assert utility.acknowledged(log)
+        assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
         assert utility.timestamp_sent(log)
         assert utility.executed(log)
@@ -70,7 +70,7 @@ class TestReportT:
     #
     def test_report_t_param_signed(self):
 
-        log = utility.collect(utility.generate_signed("ReportT test"))
+        log = utility.issue(utility.generate_signed("ReportT test"))
         # check log
         log = utility.collect_log()
         assert utility.signed(log)

@@ -43,7 +43,7 @@ class TestInvalid:
         assert not utility.executed(log)
         # check messages
         message = utility.collect_message()
-        assert utility.negative_acknowledged(message)
+        assert utility.negative_acknowledged_message(message)
 
     ## error: invalid parameter
     #
@@ -58,7 +58,7 @@ class TestInvalid:
         assert not utility.executed(log)
         # check messages
         message = utility.collect_message()
-        assert utility.negative_acknowledged(message)
+        assert utility.negative_acknowledged_message(message)
 
     ## error: invalid parameters
     #
@@ -73,7 +73,7 @@ class TestInvalid:
         assert not utility.executed(log)
         # check messages
         message = utility.collect_message()
-        assert utility.negative_acknowledged(message)
+        assert utility.negative_acknowledged_message(message)
 
     ## error: invalid parameters
     #
@@ -88,7 +88,7 @@ class TestInvalid:
         assert not utility.executed(log)
         # check messages
         message = utility.collect_message()
-        assert utility.negative_acknowledged(message)
+        assert utility.negative_acknowledged_message(message)
 
     ## error: invalid parameters
     #
@@ -103,7 +103,7 @@ class TestInvalid:
         assert not utility.executed(log)
         # check messages
         message = utility.collect_message()
-        assert utility.negative_acknowledged(message)
+        assert utility.negative_acknowledged_message(message)
 
     ## invalid command signed
     #
@@ -119,7 +119,7 @@ class TestInvalid:
         assert not utility.executed(log)
         # check messages
         message = utility.collect_message()
-        assert utility.negative_acknowledged(message)
+        assert utility.negative_acknowledged_message(message)
 
     ## error: invalid parameter signed
     #
@@ -135,7 +135,7 @@ class TestInvalid:
         assert not utility.executed(log)
         # check messages
         message = utility.collect_message()
-        assert utility.negative_acknowledged(message)
+        assert utility.negative_acknowledged_message(message)
 
     ## error: invalid parameters signed
     #
@@ -151,7 +151,7 @@ class TestInvalid:
         assert not utility.executed(log)
         # check messages
         message = utility.collect_message()
-        assert utility.negative_acknowledged(message)
+        assert utility.negative_acknowledged_message(message)
 
     ## error: invalid parameters signed
     #
@@ -169,7 +169,7 @@ class TestInvalid:
         assert not utility.executed(log)
         # check messages
         message = utility.collect_message()
-        assert utility.negative_acknowledged(message)
+        assert utility.negative_acknowledged_message(message)
 
     ## error: invalid parameters signed
     #
@@ -187,4 +187,4 @@ class TestInvalid:
         assert not utility.executed(log)
         # check messages
         message = utility.collect_message()
-        assert utility.negative_acknowledged(message)
+        assert utility.negative_acknowledged_message(message)

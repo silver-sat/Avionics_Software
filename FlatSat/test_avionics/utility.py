@@ -154,7 +154,7 @@ def collect_log():
 #
 def collect_message():
 
-    message = command_port.read()  # read first FEND
+    message = command_port.read_until(expected=FEND)
     message = message + command_port.read_until(expected=FEND)
     print(f"Message: {message}")
     return message
@@ -392,9 +392,8 @@ def executed(log):
 #
 # Assumes Payload Board is active for less than "interval" seconds
 #
-def collect_through_power_off(command, interval=60):
+def collect_through_power_off(interval=60):
 
-    command_port.write(FEND + REMOTE_FRAME + command.encode("utf-8") + FEND)
     log = []
     log_data = ""
     time.sleep(interval)
@@ -503,7 +502,6 @@ def pictimes_zero_sent(log):
 #
 def collect_through_reset_pin_cleared(command, interval=60):
 
-    command_port.write(FEND + REMOTE_FRAME + command.encode("utf-8") + FEND)
     log = []
     log_data = ""
     while "Reset pin changed state to 1" not in log_data:
@@ -587,9 +585,3 @@ def test_packet_sent(log):
 # todo: verify beacon power_sent
 
 # todo: verify deploy antenna sent
-
-
-## Discard messages
-#
-def discard_messages():
-    command_port.reset_input_buffer()

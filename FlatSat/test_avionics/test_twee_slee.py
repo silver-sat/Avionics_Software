@@ -20,7 +20,7 @@ class TestTweeSlee:
 
         utility.issue("TweeSlee")
         # check log
-        log = utility.collect()
+        log = utility.collect_log()
         assert utility.not_signed(log)
         assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
@@ -41,7 +41,7 @@ class TestTweeSlee:
 
         utility.issue("TweeSlee test")
         # check log
-        log = utility.collect()
+        log = utility.collect_log()
         assert utility.not_signed(log)
         assert utility.negative_acknowledged_log(log)
         assert not utility.no_logged_errors(log)
@@ -56,7 +56,7 @@ class TestTweeSlee:
 
         utility.issue(utility.generate_signed("TweeSlee"))
         # check log
-        log = utility.collect()
+        log = utility.collect_log()
         assert utility.signed(log)
         assert utility.signature_valid(log)
         assert utility.acknowledged_log(log)
@@ -78,7 +78,7 @@ class TestTweeSlee:
 
         utility.issue(utility.generate_signed("TweeSlee test"))
         # check log
-        log = utility.collect()
+        log = utility.collect_log()
         assert utility.signed(log)
         assert utility.signature_valid(log)
         assert utility.negative_acknowledged_log(log)

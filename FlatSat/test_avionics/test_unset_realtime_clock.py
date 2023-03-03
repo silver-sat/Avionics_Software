@@ -20,14 +20,14 @@ class TestUnsetClock:
 
         utility.issue("UnsetClock")
         # check log
-        log = utility.collect()
+        log = utility.collect_log()
         assert utility.not_signed(log)
         assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
         assert utility.executed(log)
         # check messages
         message = utility.collect_message()
-        assert utility.acknowledged(message)
+        assert utility.acknowledged_message(message)
         message = utility.collect_message()
         assert utility.response_sent(message, "URC")
 

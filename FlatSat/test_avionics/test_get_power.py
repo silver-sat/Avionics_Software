@@ -53,10 +53,10 @@ class TestGetPower:
 
         utility.issue(utility.generate_signed("GetPower"))
         # check log
-        log = utility.collect()
+        log = utility.collect_log()
         assert utility.signed(log)
         assert utility.signature_valid(log)
-        assert utility.acknowledged(log)
+        assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
         assert utility.power_sent(log)
         assert utility.executed(log)

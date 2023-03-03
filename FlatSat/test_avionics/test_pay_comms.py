@@ -18,10 +18,11 @@ class TestPayComms:
     #
     def test_pay_comms(self):
 
+        utility.issue("PayComms")
         # check log
-        log = utility.collect_through_power_off("PayComms")
+        log = utility.collect_through_power_off()
         assert utility.not_signed(log)
-        assert utility.acknowledged(log)
+        assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
         assert utility.executed(log)
         assert utility.payload_power_off(log)
@@ -50,10 +51,12 @@ class TestPayComms:
     #
     def test_pay_comms_signed(self):
 
-        log = utility.collect_through_power_off(utility.generate_signed("PayComms"))
+        utility.issue(utility.generate_signed("PayComms"))
+        # check log
+        log = utility.collect_through_power_off()
         assert utility.signed(log)
         assert utility.signature_valid(log)
-        assert utility.acknowledged(log)
+        assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
         assert utility.executed(log)
         assert utility.payload_power_off(log)
@@ -69,7 +72,7 @@ class TestPayComms:
 
         utility.issue(utility.generate_signed("PayComms test"))
         # check log
-        log = utility.collect()
+        log = utility.collect_log()
         assert utility.signed(log)
         assert utility.signature_valid(log)
         assert utility.negative_acknowledged_log(log)

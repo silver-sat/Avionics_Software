@@ -52,16 +52,16 @@ class TestGetBeaconInterval:
 
         utility.issue(utility.generate_signed("GetBeaconInterval"))
         # check log
-        log = utility.collect()
+        log = utility.collect_log()
         assert utility.signed(log)
         assert utility.signature_valid(log)
-        assert utility.acknowledged(log)
+        assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
         assert utility.integer_sent_GBI(log)
         assert utility.executed(log)
         # check messages
         message = utility.collect_message()
-        assert utility.negative_acknowledged_message(message)
+        assert utility.acknowledged_message(message)
         message = utility.collect_message()
         assert utility.response_sent(message, "GBI")
 

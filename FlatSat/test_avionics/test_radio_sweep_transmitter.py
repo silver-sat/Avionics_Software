@@ -30,7 +30,7 @@ class TestSweepTransmitter:
         # check messages
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
-        message = utility.collect - MemoryError()
+        message = utility.collect_message()
         assert utility.local_sweep_transmitter_message_sent(message)
         utility.respond(utility.ACK.encode("utf-8") + utility.SWEEP_TRANSMITTER)
         utility.respond(

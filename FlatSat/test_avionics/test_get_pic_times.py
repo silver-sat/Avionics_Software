@@ -20,13 +20,14 @@ class TestGetPicTimes:
 
         utility.issue("PicTimes 2025 11 11 10 10 0")
         utility.collect_log()
-        utility.discard_messages()
+        message = utility.collect_message()
+        message = utility.collect_message()
 
         utility.issue("GetPicTimes")
         # check log
         log = utility.collect_log()
         assert utility.not_signed(log)
-        assert utility.acknowledged(log)
+        assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
         assert utility.pictimes_sent(log)
         assert utility.executed(log)
@@ -57,14 +58,15 @@ class TestGetPicTimes:
 
         utility.issue("PicTimes 2025 11 11 10 10 0")
         utility.collect_log()
-        utility.discard_messages()
+        message = utility.collect_message()
+        message = utility.collect_message()
 
         utility.issue(utility.generate_signed("GetPicTimes"))
         # check log
         log = utility.collect_log()
         assert utility.signed(log)
         assert utility.signature_valid(log)
-        assert utility.acknowledged(log)
+        assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
         assert utility.pictimes_sent(log)
         assert utility.executed(log)

@@ -45,9 +45,11 @@ class TestWatchdog:
     #
     def test_watchdog(self):
 
-        log = utility.collect_through_reset_pin_cleared("Watchdog")
+        utility.issue("Watchdog")
+        # check log
+        log = utility.collect_through_reset_pin_cleared()
         assert utility.not_signed(log)
-        assert utility.acknowledged(log)
+        assert utility.acknowledged_log(log)
         assert not utility.no_logged_errors(log)
         assert utility.executed(log)
         assert utility.reset_pin_set(log)
@@ -57,9 +59,9 @@ class TestWatchdog:
     #
     def test_watchdog_param(self):
         
-        log = utility.collect("Watchdog test")
+        log = utility.collect_log("Watchdog test")
         assert utility.not_signed(log)
-        assert utility.acknowledged(log)
+        assert utility.acknowledged_log(log)
         assert not utility.no_logged_errors(log)
         assert not utility.executed(log)
 
@@ -67,10 +69,11 @@ class TestWatchdog:
     #
     def test_watchdog_signed(self):
 
-        log = utility.collect_through_reset_pin_cleared(utility.generate_signed("Watchdog"))
+        utility.issue(utility.generate_signed("Watchdog"))
+        log = utility.collect_through_reset_pin_cleared()
         assert utility.signed(log)
         assert utility.signature_valid(log)
-        assert utility.acknowledged(log)
+        assert utility.acknowledged_log(log)
         assert not utility.no_logged_errors(log)
         assert utility.executed(log)
         assert utility.reset_pin_set(log)
@@ -79,9 +82,9 @@ class TestWatchdog:
     ## error: invalid parameter signed
     #
     def test_watchdog_param_signed(self):
-        log = utility.collect(utility.generate_signed("Watchdog test"))
+        log = utility.collect_log(utility.generate_signed("Watchdog test"))
         assert utility.signed(log)
         assert utility.signature_valid(log)
-        assert utility.acknowledged(log)
+        assert utility.acknowledged_log(log)
         assert not utility.no_logged_errors(log)
         assert not utility.executed(log)

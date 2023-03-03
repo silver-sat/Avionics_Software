@@ -1,11 +1,11 @@
 ##
-# @file payload_emulator.py
+# @file payload_simulator.py
 # @brief FlatSat emulate Payload Board interface
 # @author Lee A. Congdon (lee@silversat.org)
 # @version 1.0.0
 # @date 19 February 2023
 
-"""FlatSat emulate Payload Board interface"""
+"""FlatSat simulate Payload Board interface"""
 
 import board
 from digitalio import DigitalInOut, Direction, Pull
@@ -47,7 +47,7 @@ shutdown_c.value = False
 
 payload_active = False
 
-print("Starting Payload Board emulator")
+print("Starting Payload Board simulator")
 
 while(True):
     # print(f"payload_on_a: {payload_on_a.value}")
@@ -59,7 +59,7 @@ while(True):
     # time.sleep(1.0)
     if (payload_on_a.value + payload_on_b.value + payload_on_c.value) > 2:
         payload_active = True
-        print("Payload Board activated")
+        print("Simulated Payload Board activated")
         random_multiplier = random.randrange(8, 12) / 10.0
         if (states_a.value + states_b.value + states_c.value) > 2:
             print("Communications mode")

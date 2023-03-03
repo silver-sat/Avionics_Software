@@ -9,7 +9,6 @@
 
 import serial
 import datetime
-import time
 
 COMMAND_PORT = "/dev/tty.usbserial-A10MHKWZ"
 BAUDRATE = 115200

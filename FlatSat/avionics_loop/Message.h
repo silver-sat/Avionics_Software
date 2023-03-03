@@ -11,6 +11,7 @@
 
 #pragma once
 
+#include "log_utility.h"
 // #include "RadioBoard.h"
 #include <Arduino.h>
 
@@ -54,7 +55,7 @@ public:
      */
 
     Message() = default;
-    Message(message_type command, String content) : m_command{command}, m_content{content} {}
+    Message(message_type command, String content) : m_command{command}, m_content{content}{}
 
     /**
      * @brief Send message to Radio Board

@@ -1,7 +1,7 @@
 /**
- * @file payload_emulator_tester.ino
+ * @file payload_simulator_tester.ino
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief Avionics Board code to test the Payload Board emulator
+ * @brief Avionics Board code to test the Payload Board simulator
  * @version 1.0.0
  * @date 2023-02-26
  *
@@ -26,7 +26,7 @@ void setup()
     while (!Serial)
         ;
 
-    Serial.println("Emulator test initializing");
+    Serial.println("Simulator test initializing");
     pinMode(PLD_ON_A_INT, OUTPUT);
     pinMode(PLD_ON_B_INT, OUTPUT);
     pinMode(PLD_ON_C_INT, OUTPUT);
@@ -36,9 +36,9 @@ void setup()
     pinMode(SHUTDOWN_A, INPUT);
     pinMode(SHUTDOWN_B, INPUT);
     pinMode(SHUTDOWN_C, INPUT);
-    Serial.println("Emulator test initialization complete");
+    Serial.println("Simulator test initialization complete");
 
-    Serial.println("Powering down payload emulator");
+    Serial.println("Powering down payload simulator");
 
     digitalWrite(PLD_ON_A_INT, LOW);
     digitalWrite(PLD_ON_B_INT, LOW);
@@ -54,7 +54,7 @@ void setup()
     digitalWrite(STATES_B_INT, LOW);
     digitalWrite(STATES_C_INT, LOW);
 
-    Serial.println("Powering up payload emulator");
+    Serial.println("Powering up payload simulator");
 
     digitalWrite(PLD_ON_A_INT, HIGH);
     digitalWrite(PLD_ON_B_INT, HIGH);
@@ -81,7 +81,7 @@ void setup()
 
     Serial.println("Shutdown signal received");
 
-    Serial.println("Powering down payload emulator");
+    Serial.println("Powering down payload simulator");
 
     digitalWrite(PLD_ON_A_INT, LOW);
     digitalWrite(PLD_ON_B_INT, LOW);
@@ -97,7 +97,7 @@ void setup()
     digitalWrite(STATES_B_INT, HIGH);
     digitalWrite(STATES_C_INT, HIGH);
 
-    Serial.println("Powering up payload emulator");
+    Serial.println("Powering up payload simulator");
 
     digitalWrite(PLD_ON_A_INT, HIGH);
     digitalWrite(PLD_ON_B_INT, HIGH);
@@ -124,7 +124,7 @@ void setup()
 
     Serial.println("Shutdown signal received");
 
-    Serial.println("Powering down payload emulator");
+    Serial.println("Powering down payload simulator");
 
     digitalWrite(PLD_ON_A_INT, LOW);
     digitalWrite(PLD_ON_B_INT, LOW);

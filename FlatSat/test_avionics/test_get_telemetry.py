@@ -22,7 +22,7 @@ class TestGetTelemetry:
         # check log
         log = utility.collect_log()
         assert utility.not_signed(log)
-        assert utility.acknowledged(log)
+        assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
         assert utility.telemetry_sent(log)
         assert utility.executed(log)
@@ -39,7 +39,7 @@ class TestGetTelemetry:
         utility.issue("GetTelemetry test")
         log = utility.collect_log()
         assert utility.not_signed(log)
-        assert utility.acknowledged_log(log)
+        assert utility.negative_acknowledged_log(log)
         assert not utility.no_logged_errors(log)
         assert not utility.executed(log)
         # check messages
@@ -56,7 +56,7 @@ class TestGetTelemetry:
         log = utility.collect_log()
         assert utility.signed(log)
         assert utility.signature_valid(log)
-        assert utility.acknowledged(log)
+        assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
         assert utility.telemetry_sent(log)
         assert utility.executed(log)

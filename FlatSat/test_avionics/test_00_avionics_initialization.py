@@ -23,7 +23,7 @@ class TestAvionicsInitialization:
     ## Validate initization completion
     #
     def test_completion(self):
-        
+
         log = utility.collect_initialization()
         assert utility.initialization_complete(log)
         assert utility.no_logged_errors(log)
@@ -31,6 +31,23 @@ class TestAvionicsInitialization:
         assert utility.fends_received(message)
 
         """Set the realtime clock"""
+
+    ## Turn off the beacon
+    #
+    def test_set_beacon_interval(self):
+
+        utility.issue(f"BeaconSp 0")
+        # check log
+        log = utility.collect_log()
+        assert utility.not_signed(log)
+        assert utility.acknowledged_log(log)
+        assert utility.no_logged_errors(log)
+        assert utility.executed(log)
+        # check message traffic
+        message = utility.collect_message()
+        assert utility.acknowledged_message(message)
+        message = utility.collect_message()
+        assert utility.response_sent(message, "SBI")
 
     ## Set the realtime clock
     #

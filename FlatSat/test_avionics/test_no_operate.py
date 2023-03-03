@@ -71,8 +71,8 @@ class TestNoOperate:
         assert utility.signed(log)
         assert utility.signature_valid(log)
         assert utility.acknowledged_log(log)
-        assert not utility.no_logged_errors(log)
-        assert not utility.executed(log)
+        assert utility.no_logged_errors(log)
+        assert utility.executed(log)
         # check messages
         message = utility.collect_message()
         assert utility.acknowledged_message(message)

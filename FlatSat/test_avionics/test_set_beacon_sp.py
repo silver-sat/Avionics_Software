@@ -35,7 +35,8 @@ class TestBeaconSp:
         log = utility.collect_two_beacons(interval)
         assert utility.beacon_interval(interval, log)
         # discard messages
-        utility.discard_messages()
+        message = utility.collect_message()
+        message = utility.collect_message()
 
     ## 120 second spacing
     #
@@ -58,7 +59,8 @@ class TestBeaconSp:
         log = utility.collect_two_beacons(interval)
         assert utility.beacon_interval(interval, log)
         # discard messages
-        utility.discard_messages()
+        message = utility.collect_message()
+        message = utility.collect_message()
 
     ## 90 second spacing
     #
@@ -81,7 +83,8 @@ class TestBeaconSp:
         log = utility.collect_two_beacons(interval)
         assert utility.beacon_interval(interval, log)
         # discard messages
-        utility.discard_messages()
+        message = utility.collect_message()
+        message = utility.collect_message()
 
     ## no beacon
     #
@@ -104,7 +107,8 @@ class TestBeaconSp:
         log = utility.collect_two_beacons(interval)
         assert utility.beacon_interval(interval, log)
         # discard messages
-        utility.discard_messages()
+        message = utility.collect_message()
+        message = utility.collect_message()
 
     ## error: no parameter
     #
@@ -173,7 +177,8 @@ class TestBeaconSp:
         log = utility.collect_two_beacons(interval)
         assert utility.beacon_interval(interval, log)
         # discard messages
-        utility.discard_messages()
+        message = utility.collect_message()
+        message = utility.collect_message()
 
     ## 120 second spacing signed
     #
@@ -197,7 +202,8 @@ class TestBeaconSp:
         log = utility.collect_two_beacons(interval)
         assert utility.beacon_interval(interval, log)
         # discard messages
-        utility.discard_messages()
+        message = utility.collect_message()
+        message = utility.collect_message()
 
     ## 90 second spacing signed
     #
@@ -221,7 +227,8 @@ class TestBeaconSp:
         log = utility.collect_two_beacons(interval)
         assert utility.beacon_interval(interval, log)
         # discard messages
-        utility.discard_messages()
+        message = utility.collect_message()
+        message = utility.collect_message()
 
     ## no beacon signed
     #
@@ -245,7 +252,8 @@ class TestBeaconSp:
         log = utility.collect_two_beacons(interval)
         assert utility.beacon_interval(interval, log)
         # discard messages
-        utility.discard_messages()
+        message = utility.collect_message()
+        message = utility.collect_message()
 
     ## error: no parameter signed
     #

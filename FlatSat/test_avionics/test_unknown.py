@@ -20,7 +20,7 @@ class TestUnknownCommand:
 
         utility.issue("Unknown")
         # check log
-        log = utility.collect()
+        log = utility.collect_log()
         assert utility.not_signed(log)
         assert utility.negative_acknowledged_log(log)
         assert not utility.no_logged_errors(log)
@@ -35,7 +35,7 @@ class TestUnknownCommand:
 
         utility.issue("Unknown test")
         # check log
-        log = utility.collect()
+        log = utility.collect_log()
         assert utility.not_signed(log)
         assert utility.negative_acknowledged_log(log)
         assert not utility.no_logged_errors(log)
@@ -50,7 +50,7 @@ class TestUnknownCommand:
 
         utility.issue("GetRandom")
         # check log
-        log = utility.collect()
+        log = utility.collect_log()
         assert utility.not_signed(log)
         assert utility.negative_acknowledged_log(log)
         assert not utility.no_logged_errors(log)
@@ -65,7 +65,7 @@ class TestUnknownCommand:
 
         utility.issue("GetRandom test")
         # check log
-        log = utility.collect()
+        log = utility.collect_log()
         assert utility.not_signed(log)
         assert utility.negative_acknowledged_log(log)
         assert not utility.no_logged_errors(log)
@@ -80,7 +80,7 @@ class TestUnknownCommand:
 
         utility.issue(utility.generate_signed("Unknown"))
         # check log
-        log = utility.collect()
+        log = utility.collect_log()
         assert utility.signed(log)
         assert utility.signature_valid(log)
         assert utility.negative_acknowledged_log(log)
@@ -96,7 +96,7 @@ class TestUnknownCommand:
 
         utility.issue(utility.generate_signed("Unknown test"))
         # check log
-        log = utility.collect()
+        log = utility.collect_log()
         assert utility.signed(log)
         assert utility.signature_valid(log)
         assert utility.negative_acknowledged_log(log)
@@ -112,7 +112,7 @@ class TestUnknownCommand:
 
         utility.issue(utility.generate_signed("GetRandom"))
         # check log
-        log = utility.collect()
+        log = utility.collect_log()
         assert utility.signed(log)
         assert utility.signature_valid(log)
         assert utility.negative_acknowledged_log(log)
@@ -128,7 +128,7 @@ class TestUnknownCommand:
 
         log = utility.issue(utility.generate_signed("GetRandom test"))
         # check log
-        log = utility.collect()
+        log = utility.collect_log()
         assert utility.signed(log)
         assert utility.signature_valid(log)
         assert utility.negative_acknowledged_log(log)

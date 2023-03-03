@@ -141,7 +141,7 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
                 default:
                     Log.errorln("FESC followed by invalid character, command ignored");
                     m_received_start = false;
-                    continue; // restart command
+                    break; // restart command
                 }
             }
             else if (character == FESC)
@@ -185,7 +185,6 @@ bool RadioBoard::send_message(Message message) const
 {
     auto command = message.get_command();
     auto content = message.get_content();
-    // todo: problem with C string not terminated
     if (content.length() == 0)
     {
         Log.noticeln("Sending message: KISS command 0x%x", command);

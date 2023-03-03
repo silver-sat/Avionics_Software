@@ -75,7 +75,7 @@ class TestSendTestPacket:
         log = utility.collect_log()
         assert utility.signed(log)
         assert utility.signature_valid(log)
-        assert utility.negativer_acknowledged_log(log)
+        assert utility.negative_acknowledged_log(log)
         assert not utility.no_logged_errors(log)
         assert not utility.executed(log)
         # check messages

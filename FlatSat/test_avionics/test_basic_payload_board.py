@@ -56,8 +56,9 @@ class TestPayloadBoardInterface:
 
         start_time = time.gmtime(time.time() + 30)
         start_time = time.strftime("%Y %m %d %H %M %S", start_time)
+        utility.issue(f"PicTimes {start_time}")
         # check log
-        log = utility.collect_through_power_off(f"PicTimes {start_time}")
+        log = utility.collect_through_power_off()
         assert utility.not_signed(log)
         assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
@@ -74,8 +75,9 @@ class TestPayloadBoardInterface:
 
     def test_pay_comms(self):
         
+        utility.issue("PayComms")
         # check log
-        log = utility.collect_through_power_off("PayComms")
+        log = utility.collect_through_power_off()
         assert utility.not_signed(log)
         assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)

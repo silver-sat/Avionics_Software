@@ -24,7 +24,7 @@ class TestMultipleFENDs:
         # check log
         log = utility.collect_log()
         assert utility.not_signed(log)
-        assert utility.acknowledged(log)
+        assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
         assert utility.executed(log)
         # check messages
@@ -42,7 +42,7 @@ class TestMultipleFENDs:
         # check log
         log = utility.collect_log()
         assert utility.not_signed(log)
-        assert utility.acknowledged(log)
+        assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
         assert utility.executed(log)
         # check messages
@@ -60,7 +60,7 @@ class TestMultipleFENDs:
         # check log
         log = utility.collect_log()
         assert utility.not_signed(log)
-        assert utility.acknowledged(log)
+        assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
         assert utility.executed(log)
         # check messages
@@ -78,7 +78,7 @@ class TestMultipleFENDs:
         # check log
         log = utility.collect_log()
         assert utility.not_signed(log)
-        assert utility.acknowledged(log)
+        assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
         assert utility.executed(log)
         # check messages
