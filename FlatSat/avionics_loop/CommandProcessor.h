@@ -38,6 +38,7 @@ public:
 private:
     CommandParser command_parser{};
     CommandFactory command_factory{};
+    char m_source{};
     bool m_validation_required{false};
     long m_command_sequence{1};
     char m_command_buffer[maximum_command_length + 1]{""};

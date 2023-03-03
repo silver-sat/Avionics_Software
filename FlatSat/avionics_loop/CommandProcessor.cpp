@@ -29,12 +29,11 @@
 bool CommandProcessor::check_for_command()
 {
     extern RadioBoard radio;
-    char source{};
-    if (radio.receive_frame(m_command_buffer, maximum_command_length, source))
+    if (radio.receive_frame(m_command_buffer, maximum_command_length, m_source))
     {
         String command_string{m_command_buffer};
-        Log.verboseln("Command source: 0x%x", source);
-        if (source == REMOTE_FRAME)
+        Log.verboseln("Command source: 0x%x", m_source);
+        if (m_source == REMOTE_FRAME)
         {
             Command *command{make_command(command_string)};
             command->acknowledge_command();
