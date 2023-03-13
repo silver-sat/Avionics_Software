@@ -881,7 +881,7 @@ bool CommandSweepTransmitter::execute_command()
     auto status{Command::execute_command()};
     Log.verboseln("SweepTransmitter");
     extern RadioBoard radio;
-    char arguments[frequency_length + frequency_length + steps_length + dwell_length]{};
+    char arguments[frequency_length + frequency_length + steps_length + dwell_length + 1]{};
     char *arg_ptr{};
     arg_ptr = &arguments[0];
     memcpy(arg_ptr, m_start_frequency, frequency_length);

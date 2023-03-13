@@ -13,6 +13,15 @@
 #include "log_utility.h"
 
 /**
+ * @brief Payload Board constants
+ *
+ *
+ */
+// todo: consider moving to avionics_constants.h
+constexpr int payload_startup_delay{10 * seconds_to_milliseconds};
+constexpr int payload_shutdown_delay{30 * seconds_to_milliseconds};
+
+/**
  * @brief Initialize Payload Board
  *
  * @return true successful
@@ -35,7 +44,7 @@ bool PayloadBoard::begin()
     power_down();
     Log.traceln("Payload Board initialization complete");
     return true;
-};
+}
 
 /**
  * @brief Power up Payload Board and take photo
@@ -53,6 +62,7 @@ bool PayloadBoard::photo()
         Log.noticeln("Starting photo session");
         set_mode_photo();
         power_up();
+        m_startup_timer = millis() + payload_startup_delay;
         return true;
     }
     else
@@ -60,7 +70,7 @@ bool PayloadBoard::photo()
         Log.errorln("Payload already active");
         return false;
     }
-};
+}
 
 /**
  * @brief Power up Payload Board and communicate
@@ -77,6 +87,7 @@ bool PayloadBoard::communicate()
         Log.noticeln("Starting Communication session");
         set_mode_comms();
         power_up();
+        m_startup_timer = millis() + payload_startup_delay;
         return true;
     }
     else
@@ -84,7 +95,7 @@ bool PayloadBoard::communicate()
         Log.errorln("Payload already active");
         return false;
     }
-};
+}
 
 /**
  * @brief Shut off Payload Board if ready to sleep
@@ -96,22 +107,36 @@ bool PayloadBoard::communicate()
 
 bool PayloadBoard::check_shutdown()
 {
-    if (m_payload_active && power_down_signal_is_set())
+    if (m_payload_active && (millis() > m_startup_timer) && shutdown_signal_is_set())
     {
-        Log.verboseln("Powering down payload");
-        power_down();
+        if (m_in_shutdown_delay)
+        {
+            if (millis() > m_shutdown_timer)
+            {
+                Log.verboseln("Powering down payload");
+                power_down();
+                m_in_shutdown_delay = false;
+            }
+        }
+        else
+        {
+            Log.verboseln("Starting payload shutdown delay");
+            m_in_shutdown_delay = true;
+            m_shutdown_timer = millis() + payload_shutdown_delay;
+        }
     }
     return true;
 }
 
-    /**
-     * @brief Get the photo count
-     * 
-     */
-    // todo: count is not reliable, recommending deprecating the GetPhotos command
-    int PayloadBoard::get_photo_count() const {
-        return -1;
-    }
+/**
+ * @brief Get the photo count
+ *
+ */
+// todo: count is not reliable, recommending deprecating the GetPhotos command
+int PayloadBoard::get_photo_count() const
+{
+    return -1;
+}
 
 /**
  * @brief Power down Payload Board
@@ -123,13 +148,13 @@ bool PayloadBoard::check_shutdown()
 
 bool PayloadBoard::power_down()
 {
-    digitalWrite(PLD_ON_A_INT, LOW);
-    digitalWrite(PLD_ON_B_INT, LOW);
-    digitalWrite(PLD_ON_C_INT, LOW);
+    digitalWrite(PLD_ON_A_INT, HIGH);
+    digitalWrite(PLD_ON_B_INT, HIGH);
+    digitalWrite(PLD_ON_C_INT, HIGH);
     m_payload_active = false;
     Log.verboseln("Payload power off");
     return true;
-};
+}
 
 /**
  * @brief Power up Payload Board
@@ -141,13 +166,13 @@ bool PayloadBoard::power_down()
 
 bool PayloadBoard::power_up()
 {
-    digitalWrite(PLD_ON_A_INT, HIGH);
-    digitalWrite(PLD_ON_B_INT, HIGH);
-    digitalWrite(PLD_ON_C_INT, HIGH);
+    digitalWrite(PLD_ON_A_INT, LOW);
+    digitalWrite(PLD_ON_B_INT, LOW);
+    digitalWrite(PLD_ON_C_INT, LOW);
     m_payload_active = true;
     Log.verboseln("Payload power on");
     return true;
-};
+}
 
 /**
  * @brief Set the mode to communications
@@ -164,7 +189,7 @@ bool PayloadBoard::set_mode_comms()
     digitalWrite(STATES_C_INT, HIGH);
     Log.verboseln("Payload mode set to communicate");
     return true;
-};
+}
 
 /**
  * @brief Set the mode to photograph
@@ -181,7 +206,7 @@ bool PayloadBoard::set_mode_photo()
     digitalWrite(STATES_C_INT, LOW);
     Log.verboseln("Payload mode set to photo");
     return true;
-};
+}
 
 /**
  * @brief Check Payload Board shutdown signal
@@ -191,16 +216,13 @@ bool PayloadBoard::set_mode_photo()
  *
  */
 
-bool PayloadBoard::power_down_signal_is_set() const
+bool PayloadBoard::shutdown_signal_is_set() const
 {
-    auto a = digitalRead(SHUTDOWN_A);
-    auto b = digitalRead(SHUTDOWN_B);
-    auto c = digitalRead(SHUTDOWN_C);
-    if ((a + b + c) >= 2) {
-        Log.verboseln("Shutdown signal received");
-    }
-    return ((a + b + c) >= 2);
-};
+    auto shutdown_a = digitalRead(SHUTDOWN_A);
+    auto shutdown_b = digitalRead(SHUTDOWN_B);
+    auto shutdown_c = digitalRead(SHUTDOWN_C);
+    return (shutdown_a + shutdown_b + shutdown_c) >= 2;
+}
 
 /**
  * @brief Get the payload activity status
@@ -213,4 +235,4 @@ bool PayloadBoard::power_down_signal_is_set() const
 bool PayloadBoard::get_payload_active() const
 {
     return m_payload_active;
-};
+}
