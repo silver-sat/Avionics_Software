@@ -90,8 +90,11 @@ private:
      * @brief Evaluate power down signal
      * 
      */
-    bool power_down_signal_is_set() const;
+    bool shutdown_signal_is_set() const;
 
 private:
     bool m_payload_active{false};
+    long unsigned int m_startup_timer{};
+    bool m_in_shutdown_delay{false};
+    long unsigned int m_shutdown_timer{};
 };

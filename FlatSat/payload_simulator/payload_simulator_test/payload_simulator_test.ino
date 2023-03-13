@@ -2,7 +2,7 @@
  * @file payload_simulator_tester.ino
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Avionics Board code to test the Payload Board simulator
- * @version 1.0.0
+ * @version 1.1.0
  * @date 2023-02-26
  *
  *
@@ -36,13 +36,14 @@ void setup()
     pinMode(SHUTDOWN_A, INPUT);
     pinMode(SHUTDOWN_B, INPUT);
     pinMode(SHUTDOWN_C, INPUT);
+
     Serial.println("Simulator test initialization complete");
 
     Serial.println("Powering down payload simulator");
 
-    digitalWrite(PLD_ON_A_INT, LOW);
-    digitalWrite(PLD_ON_B_INT, LOW);
-    digitalWrite(PLD_ON_C_INT, LOW);
+    digitalWrite(PLD_ON_A_INT, HIGH);
+    digitalWrite(PLD_ON_B_INT, HIGH);
+    digitalWrite(PLD_ON_C_INT, HIGH);
 
     Serial.println("Delaying 10 seconds");
 
@@ -56,36 +57,37 @@ void setup()
 
     Serial.println("Powering up payload simulator");
 
-    digitalWrite(PLD_ON_A_INT, HIGH);
-    digitalWrite(PLD_ON_B_INT, HIGH);
-    digitalWrite(PLD_ON_C_INT, HIGH);
-
-    Serial.println("Waiting for shutdown signal");
-
-    auto shutdown_a{digitalRead(SHUTDOWN_A)};
-    auto shutdown_b{digitalRead(SHUTDOWN_B)};
-    auto shutdown_c{digitalRead(SHUTDOWN_C)};
-    do
-    {
-        // Serial.print("shutdown_a: ");
-        // Serial.println(shutdown_a);
-        // Serial.print("shutdown_b: ");
-        // Serial.println(shutdown_b);
-        // Serial.print("shutdown_c: ");
-        // Serial.println(shutdown_c);
-        // delay(1 * 1000);
-        shutdown_a = digitalRead(SHUTDOWN_A);
-        shutdown_b = digitalRead(SHUTDOWN_B);
-        shutdown_c = digitalRead(SHUTDOWN_C);
-    } while ((shutdown_a + shutdown_b + shutdown_c) < 2);
-
-    Serial.println("Shutdown signal received");
-
-    Serial.println("Powering down payload simulator");
-
     digitalWrite(PLD_ON_A_INT, LOW);
     digitalWrite(PLD_ON_B_INT, LOW);
     digitalWrite(PLD_ON_C_INT, LOW);
+
+    Serial.println("Waiting for simulator to initialize");
+    delay(30 * 1000);
+
+    Serial.println("Waiting for shutdown signal");
+
+    {
+        auto shutdown_a{digitalRead(SHUTDOWN_A)};
+        auto shutdown_b{digitalRead(SHUTDOWN_B)};
+        auto shutdown_c{digitalRead(SHUTDOWN_C)};
+        do
+        {
+            shutdown_a = digitalRead(SHUTDOWN_A);
+            shutdown_b = digitalRead(SHUTDOWN_B);
+            shutdown_c = digitalRead(SHUTDOWN_C);
+        } while ((shutdown_a + shutdown_b + shutdown_c) < 2);
+    }
+
+    Serial.println("Shutdown signal received");
+
+    Serial.println("Waiting for shutdown completion");
+    delay(30 * 1000);
+
+    Serial.println("Powering down payload simulator");
+
+    digitalWrite(PLD_ON_A_INT, HIGH);
+    digitalWrite(PLD_ON_B_INT, HIGH);
+    digitalWrite(PLD_ON_C_INT, HIGH);
 
     Serial.println("Delaying 10 seconds");
 
@@ -99,36 +101,37 @@ void setup()
 
     Serial.println("Powering up payload simulator");
 
-    digitalWrite(PLD_ON_A_INT, HIGH);
-    digitalWrite(PLD_ON_B_INT, HIGH);
-    digitalWrite(PLD_ON_C_INT, HIGH);
-
-    Serial.println("Waiting for shutdown signal");
-
-    shutdown_a = digitalRead(SHUTDOWN_A);
-    shutdown_b = digitalRead(SHUTDOWN_B);
-    shutdown_c = digitalRead(SHUTDOWN_C);
-    do
-    {
-        // Serial.print("shutdown_a: ");
-        // Serial.println(shutdown_a);
-        // Serial.print("shutdown_b: ");
-        // Serial.println(shutdown_b);
-        // Serial.print("shutdown_c: ");
-        // Serial.println(shutdown_c);
-        // delay(1 * 1000);
-        shutdown_a = digitalRead(SHUTDOWN_A);
-        shutdown_b = digitalRead(SHUTDOWN_B);
-        shutdown_c = digitalRead(SHUTDOWN_C);
-    } while ((shutdown_a + shutdown_b + shutdown_c) < 2);
-
-    Serial.println("Shutdown signal received");
-
-    Serial.println("Powering down payload simulator");
-
     digitalWrite(PLD_ON_A_INT, LOW);
     digitalWrite(PLD_ON_B_INT, LOW);
     digitalWrite(PLD_ON_C_INT, LOW);
+
+    Serial.println("Waiting for simulator to initialize");
+    delay(30 * 1000);
+
+    Serial.println("Waiting for shutdown signal");
+
+    {
+        auto shutdown_a = digitalRead(SHUTDOWN_A);
+        auto shutdown_b = digitalRead(SHUTDOWN_B);
+        auto shutdown_c = digitalRead(SHUTDOWN_C);
+        do
+        {
+            shutdown_a = digitalRead(SHUTDOWN_A);
+            shutdown_b = digitalRead(SHUTDOWN_B);
+            shutdown_c = digitalRead(SHUTDOWN_C);
+        } while ((shutdown_a + shutdown_b + shutdown_c) < 2);
+    }
+
+    Serial.println("Shutdown signal received");
+
+    Serial.println("Waiting for shutdown completion");
+    delay(30 * 1000);
+
+    Serial.println("Powering down payload simulator");
+
+    digitalWrite(PLD_ON_A_INT, HIGH);
+    digitalWrite(PLD_ON_B_INT, HIGH);
+    digitalWrite(PLD_ON_C_INT, HIGH);
 }
 
 void loop()
