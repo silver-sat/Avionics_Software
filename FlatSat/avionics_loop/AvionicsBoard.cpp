@@ -365,13 +365,6 @@ void AvionicsBoard::trigger_watchdog()
 };
 
 /**
- * @brief Initialize I2C bus switch
- *
- * @return true successful
- * @return false error
- */
-
-/**
  * @brief Enable I2C bus switch
  *
  * @return true successful
@@ -406,8 +399,8 @@ String AvionicsBoard::read_fram(size_t address)
 
 bool AvionicsBoard::unset_clock()
 // todo: consider eliminating command
-// todo: clear the picture queue when unsetting clock
 {
   Log.verboseln("Unsetting the realtime clock");
+  clear_pic_times();
   return m_external_rtc.unset_clock();
 }
