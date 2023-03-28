@@ -60,11 +60,8 @@ bool AvionicsBoard::begin()
   // Non-Critical I2C
 
   Log.traceln("Initializing non-critical I2C bus");
-  // todo: consider leaving busswitch always enabled
-  busswitch_begin();
   busswitch_enable();
   Wire1.begin();
-  busswitch_disable();
   Log.traceln("Non-critical I2C bus initialization completed");
 
   // Inertial Management Unit
@@ -374,13 +371,6 @@ void AvionicsBoard::trigger_watchdog()
  * @return false error
  */
 
-bool AvionicsBoard::busswitch_begin()
-{
-  Log.verboseln("Initializing I2C bus switch");
-  pinMode(EN_EXT_I2C, OUTPUT);
-  return true;
-};
-
 /**
  * @brief Enable I2C bus switch
  *
@@ -392,20 +382,6 @@ bool AvionicsBoard::busswitch_enable()
 {
   Log.verboseln("Enabling I2C bus switch");
   digitalWrite(EN_EXT_I2C, LOW);
-  return true;
-};
-
-/**
- * @brief Disable I2C bus switch
- *
- * @return true successful
- * @return false error
- */
-
-bool AvionicsBoard::busswitch_disable()
-{
-  Log.verboseln("Disabling I2C bus switch");
-  digitalWrite(EN_EXT_I2C, HIGH);
   return true;
 };
 

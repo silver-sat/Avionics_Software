@@ -150,20 +150,6 @@ public:
 
    bool busswitch_enable();
 
-   /**
-    * @brief Disable I2C bus switch
-    *
-    */
-
-   bool busswitch_disable();
-
-   /**
-    * @brief Initialize I2C bus switch
-    *
-    */
-
-   bool busswitch_begin();
-
 private:
    /**
     * @brief Avionics Board member variables
