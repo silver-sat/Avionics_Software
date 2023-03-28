@@ -55,13 +55,6 @@ public:
     bool get_payload_active() const;
 
     /**
-     * @brief Get the photo count
-     * 
-     */
-    // todo: count is not reliable, recommending deprecating the GetPhotos command
-    int get_photo_count() const;
-
-    /**
      * @brief Power down Payload Board
      *
      */

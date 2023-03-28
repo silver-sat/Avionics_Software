@@ -129,16 +129,6 @@ bool PayloadBoard::check_shutdown()
 }
 
 /**
- * @brief Get the photo count
- *
- */
-// todo: count is not reliable, recommending deprecating the GetPhotos command
-int PayloadBoard::get_photo_count() const
-{
-    return -1;
-}
-
-/**
  * @brief Power down Payload Board
  *
  * @return true successful

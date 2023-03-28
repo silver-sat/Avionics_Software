@@ -366,37 +366,6 @@ bool CommandGetPower::execute_command()
 };
 
 /**
- * @brief Acknowledge GetPhotos command
- *
- * @return true successful
- * @return false error
- */
-
-bool CommandGetPhotos::acknowledge_command()
-{
-    auto status{Command::acknowledge_command()};
-    Log.verboseln("GetPhotos");
-    return status;
-};
-
-/**
- * @brief  Execute GetPhotos command
- *
- * @return true successful
- * @return false error
- */
-
-bool CommandGetPhotos::execute_command()
-{
-    auto status{Command::execute_command()};
-    Log.verboseln("GetPhotos");
-    extern PayloadBoard payload;
-    extern RadioBoard radio;
-    auto response{Response{"GPC" + String(payload.get_photo_count())}};
-    return radio.send_message(response) && status;
-};
-
-/**
  * @brief Acknowledge GetComms command
  *
  * @return true successful

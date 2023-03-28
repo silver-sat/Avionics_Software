@@ -2,7 +2,7 @@
  * @file CommandFactory.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Generate command objects
- * @version 1.2.0
+ * @version 1.2.1
  * @date 2022-07-28
  *
  * This file implements the class used to build a new ground command.
@@ -158,17 +158,6 @@ Command *CommandFactory::BuildCommand(const String tokens[], size_t token_count)
         if (token_count == 0)
         {
             return new CommandGetPower();
-        }
-        else
-        {
-            return new CommandInvalid(); // Wrong number of parameters
-        }
-    }
-    else if (tokens[0] == "GetPhotos")
-    {
-        if (token_count == 0)
-        {
-            return new CommandGetPhotos();
         }
         else
         {
