@@ -2,12 +2,15 @@
  * @file Beacon.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat beacon messages
- * @version 2.0.0
+ * @version 2.1.0
  * @date 2022-07-25
  *
  * This file implements the Beacon class, which inherits from Message. Beacons are sent
- * at intervals and include a call sign and status for the satellite boards. Beacon timing
- * relies on a microcontroller timer.
+ * at intervals and include a call sign and status for the Power, Avionics, and Payload boards.
+ * 
+ * Beacon timing relies on a microcontroller timer. The realtime clock is not used for beacon timing.
+ * 
+ * The Radio Board provides its own status and adds it to the beacon prior to transmission.
  *
  */
 
@@ -41,18 +44,16 @@ public:
     };
 
     /**
-     * @brief Construct a new Beacon:: Beacon object
+     * @brief Construct a new Beacon::Beacon object
      *
      * @param power status
      * @param avionics status
-     * @param radio status
      * @param payload status
      */
 
     Beacon(
         Status power,
         Status avionics,
-        Status radio,
         Status payload)
     {
 
@@ -60,7 +61,6 @@ public:
         m_content = call_sign +
                     getStatus(power) +
                     getStatus(avionics) +
-                    getStatus(radio) +
                     getStatus(payload);
     };
 
