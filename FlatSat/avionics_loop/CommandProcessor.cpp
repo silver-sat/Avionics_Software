@@ -72,7 +72,6 @@ bool CommandProcessor::check_for_command()
                 switch (type)
                 {
                 case GET_RADIO_STATUS:
-                    // todo: differentiate between local request for beacon and ground request
                     response = {Response{"GRS" + radio_data}};
                     break;
                 case MODIFY_FREQUENCY:
