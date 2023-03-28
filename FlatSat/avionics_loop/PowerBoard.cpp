@@ -42,8 +42,6 @@ String PowerBoard::get_status()
 
     // todo: access power data from Power Board
     String status{};
-    extern AvionicsBoard avionics;
-    avionics.busswitch_enable();
     switch (m_power_status)
     {
     case excellent:
@@ -65,7 +63,6 @@ String PowerBoard::get_status()
         status = "U";
         break;
     };
-    avionics.busswitch_disable();
     return status;
 };
 
