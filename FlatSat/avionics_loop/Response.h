@@ -29,8 +29,7 @@ public:
      *
      */
 
-    Response(
-        String content)
+    explicit Response(String content)
     {
         m_command = response;
         m_content = RES + content;
