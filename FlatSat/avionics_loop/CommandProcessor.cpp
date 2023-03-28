@@ -65,7 +65,6 @@ bool CommandProcessor::check_for_command()
                 break;
             case 'R': // RESponse
             {
-                extern RadioBoard radio;
                 auto type{command_string[RES.length()]};
                 auto radio_data{command_string.substring(RES.length() + 1)};
                 Log.verboseln("Received type: 0x%x, %s", type, radio_data.c_str());

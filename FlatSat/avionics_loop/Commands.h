@@ -112,7 +112,7 @@ public:
 class CommandSetClock final : public Command
 {
 public:
-    CommandSetClock(DateTime time) : m_time{time} {};
+    explicit CommandSetClock(DateTime time) : m_time{time} {};
     bool acknowledge_command() override;
     bool execute_command() override;
 
@@ -129,7 +129,7 @@ private:
 class CommandBeaconSp final : public Command
 {
 public:
-    CommandBeaconSp(int seconds) : m_seconds{seconds} {};
+    explicit CommandBeaconSp(int seconds) : m_seconds{seconds} {};
     bool acknowledge_command() override;
     bool execute_command() override;
 
@@ -146,7 +146,7 @@ private:
 class CommandPicTimes final : public Command
 {
 public:
-    CommandPicTimes(DateTime time) : m_time{time} {};
+    explicit CommandPicTimes(DateTime time) : m_time{time} {};
     bool acknowledge_command() override;
     bool execute_command() override;
 
@@ -370,7 +370,7 @@ public:
 class CommandModifyFrequency final : public Command
 {
 public:
-    CommandModifyFrequency(const char frequency[frequency_length])
+    explicit CommandModifyFrequency(const char frequency[frequency_length])
     {
         memcpy(m_frequency, frequency, frequency_length);
         m_frequency[frequency_length] = '\0';
@@ -390,7 +390,7 @@ private:
 class CommandModifyMode final : public Command
 {
 public:
-    CommandModifyMode(const char mode) {
+    explicit CommandModifyMode(const char mode) {
         m_mode[0] = mode;
         m_mode[1] = '\0';
     };
@@ -409,7 +409,7 @@ private:
 class CommandAdjustFrequency final : public Command
 {
 public:
-    CommandAdjustFrequency(const char *frequency)
+    explicit CommandAdjustFrequency(const char *frequency)
     {
         memcpy(m_frequency, frequency, frequency_length);
         m_frequency[frequency_length] = '\0';
@@ -429,7 +429,7 @@ private:
 class CommandTransmitCW final : public Command
 {
 public:
-    CommandTransmitCW(const char *duration)
+    explicit CommandTransmitCW(const char *duration)
     {
         m_duration[0] = duration[0];
         m_duration[1] = duration[1];
@@ -534,7 +534,7 @@ private:
 class CommandQueryRegister final : public Command
 {
 public:
-    CommandQueryRegister(const char *radio_register)
+    explicit CommandQueryRegister(const char *radio_register)
     {
         memcpy(m_radio_register, radio_register, register_length);
         m_radio_register[register_length] = '\0';

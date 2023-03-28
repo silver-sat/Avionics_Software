@@ -63,10 +63,10 @@ void formatTimestamp(char *timestamp, const unsigned long msecs)
   const unsigned long secs = msecs / MSECS_PER_SEC;
 
   // Time in components
-  const unsigned long MilliSeconds = msecs % MSECS_PER_SEC;
-  const unsigned long Seconds = secs % SECS_PER_MIN;
-  const unsigned long Minutes = (secs / SECS_PER_MIN) % SECS_PER_MIN;
-  const unsigned long Hours = (secs % SECS_PER_DAY) / SECS_PER_HOUR;
+  int MilliSeconds = msecs % MSECS_PER_SEC;
+  int Seconds = secs % SECS_PER_MIN;
+  int Minutes = (secs / SECS_PER_MIN) % SECS_PER_MIN;
+  int Hours = (secs % SECS_PER_DAY) / SECS_PER_HOUR;
 
   sprintf(timestamp, "%02d:%02d:%02d.%03d ", Hours, Minutes, Seconds, MilliSeconds);
 }
@@ -119,4 +119,5 @@ void printLogLevel(Print *_logOutput, int logLevel)
 void printSuffix(Print *_logOutput, int logLevel)
 {
   _logOutput->print("");
+  auto null = logLevel; // use parameter to avoid compiler warning
 }
