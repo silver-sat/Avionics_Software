@@ -17,13 +17,15 @@ import hmac
 import time
 
 ## port for log output
-LOG_PORT = "/dev/tty.usbmodem11101"
+LOG_PORT = "/dev/tty.usbmodem11301"
 ## port for command input and output
 COMMAND_PORT = "/dev/tty.usbserial-A10MHKWZ"
 ## serial transmission speed
 BAUDRATE = 115200
 ## default timeout for readline
 TIMEOUT = 5
+## extended timeout for readline
+EXTENDED_TIMEOUT = 120
 ## KISS frame end
 FEND = b"\xC0"
 ## KISS frame type
@@ -392,15 +394,19 @@ def executed(log):
 #
 # Assumes Payload Board is active for less than "interval" seconds
 #
-def collect_through_power_off(interval=60):
+def collect_through_power_off(interval=120):
 
     log = []
     log_data = ""
-    time.sleep(interval)
-    while "Payload power off" not in log_data:
+    log_port.timeout = interval
+    no_power_off = True
+    while no_power_off:
         log_data = log_port.readline().decode("utf-8").strip()
         log.append(Entry(*(log_data.split(maxsplit=2))))
         print(log_data)
+        if "Payload power off" in log_data:
+            no_power_off = False
+    log_port.timeout = TIMEOUT
     return log
 
 
@@ -567,6 +573,7 @@ def integer_sent_GPC(log):
 def local_get_comms_sent(log):
 
     return any([item.detail == "Requesting radio status" for item in log])
+
 
 ## Verify time sent
 #

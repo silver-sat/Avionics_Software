@@ -28,7 +28,7 @@ simulator_unknown = 4
 
 # activity times
 
-startup_delay = 10.0
+startup_delay = 30.0
 mean_photo_time = 30.0
 mean_communications_time = 60.0
 shutdown_delay = 10.0

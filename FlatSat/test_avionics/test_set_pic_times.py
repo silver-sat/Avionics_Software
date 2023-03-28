@@ -23,7 +23,7 @@ class TestPicTimes:
         start_time = time.strftime("%Y %m %d %H %M %S", start_time)
         utility.issue(f"PicTimes {start_time}")
         # check log
-        log = utility.collect_through_power_off()
+        log = utility.collect_through_power_off(utility.EXTENDED_TIMEOUT)
         assert utility.not_signed(log)
         assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
@@ -141,7 +141,7 @@ class TestPicTimes:
         start_time = time.strftime("%Y %m %d %H %M %S", start_time)
         utility.issue(utility.generate_signed(f"PicTimes {start_time}"))
         # check log
-        log = utility.collect_through_power_off()
+        log = utility.collect_through_power_off(utility.EXTENDED_TIMEOUT)
         assert utility.signed(log)
         assert utility.signature_valid(log)
         assert utility.acknowledged_log(log)

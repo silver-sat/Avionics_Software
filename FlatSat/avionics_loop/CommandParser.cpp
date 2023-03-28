@@ -226,7 +226,7 @@ bool CommandParser::parse_parameters(const String &command_string, String comman
         }
         else
         {
-            Log.verboseln("Token processed: %s", command_tokens[token_index].c_str());
+            // Log.verboseln("Token processed: %s", command_tokens[token_index].c_str());
             if (token_index++ > command_parameter_limit)
             {
                 Log.warningln("Too many command parameters");
@@ -235,7 +235,7 @@ bool CommandParser::parse_parameters(const String &command_string, String comman
         }
     }
     // todo: evaluate duplicate code
-    Log.verboseln("Token processed: %s", command_tokens[token_index].c_str());
+    // Log.verboseln("Token processed: %s", command_tokens[token_index].c_str());
     if (token_index > command_parameter_limit)
     {
         Log.warningln("Too many command parameters");
