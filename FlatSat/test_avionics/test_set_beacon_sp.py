@@ -103,9 +103,8 @@ class TestBeaconSp:
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
         assert utility.response_sent(message, "SBI")
-        # verify beacon interval
-        log = utility.collect_two_beacons(interval)
-        assert utility.beacon_interval(interval, log)
+        # verify no beacons sent
+        assert utility.collect_timeout()
         # discard messages
         message = utility.collect_message()
         message = utility.collect_message()
@@ -248,9 +247,8 @@ class TestBeaconSp:
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
         assert utility.response_sent(message, "SBI")
-        # verify beacon interval
-        log = utility.collect_two_beacons(interval)
-        assert utility.beacon_interval(interval, log)
+        # verify no beacons sent
+        assert utility.collect_timeout()
         # discard messages
         message = utility.collect_message()
         message = utility.collect_message()

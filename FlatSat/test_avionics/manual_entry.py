@@ -27,3 +27,6 @@ def now1m():
 
 def issue(string):
     return (cp.write(FEND + REMOTE_FRAME + string.encode("utf-8") + FEND))
+
+def read():
+    return cp.read_all()

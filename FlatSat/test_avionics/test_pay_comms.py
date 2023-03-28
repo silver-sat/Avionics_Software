@@ -20,7 +20,7 @@ class TestPayComms:
 
         utility.issue("PayComms")
         # check log
-        log = utility.collect_through_power_off()
+        log = utility.collect_through_power_off(utility.EXTENDED_TIMEOUT)
         assert utility.not_signed(log)
         assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
@@ -53,7 +53,7 @@ class TestPayComms:
 
         utility.issue(utility.generate_signed("PayComms"))
         # check log
-        log = utility.collect_through_power_off()
+        log = utility.collect_through_power_off(utility.EXTENDED_TIMEOUT)
         assert utility.signed(log)
         assert utility.signature_valid(log)
         assert utility.acknowledged_log(log)

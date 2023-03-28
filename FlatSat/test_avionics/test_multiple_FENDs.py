@@ -8,7 +8,6 @@
 """FlatSat test Avionics Board multiples FENDs"""
 
 import utility
-import serial
 
 ## Test incomplete commands
 #
