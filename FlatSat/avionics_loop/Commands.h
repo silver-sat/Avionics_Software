@@ -24,7 +24,6 @@
  * GPT: GetPicTimes: reply with picture schedule
  * GTY: GetTelemetry: reply with telemetry
  * GPW: GetPower: reply with power status
- * GPC: GetPhotos: reply with number of photos
  * GRS: GetComms: reply with Radio Board status
  * GBI: GetBeaconInterval: reply with beacon interval
  *
@@ -58,6 +57,7 @@
  * halt, see TweeSlee
  * s_call_sig deprecated
  * g_call_sig, deprecated
+ * GPC: GetPhotos: reply with number of photos (Avionics Board does not have an accurate count)
  *
  */
 
