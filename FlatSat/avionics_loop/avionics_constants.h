@@ -135,4 +135,4 @@ const static size_t register_length{5};
  *
  */
 
-const String call_sign{"KC3CQJ 2"};
+const String call_sign{"KC3CQJ"};
