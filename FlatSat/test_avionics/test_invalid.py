@@ -105,6 +105,22 @@ class TestInvalid:
         message = utility.collect_message()
         assert utility.negative_acknowledged_message(message)
 
+    ## error: buffer overflow
+    #
+    def test_buffer_overflow(self):
+        string = "0123456789"
+        utility.issue(string * 30)
+        # check log
+        log = utility.collect_log()
+        assert utility.not_signed(log)
+        assert utility.negative_acknowledged_log(log)
+        assert not utility.no_logged_errors(log)
+        assert utility.buffer_overflow(log)
+        assert not utility.executed(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.negative_acknowledged_message(message)
+
     ## invalid command signed
     #
     def test_invalid_signed(self):
@@ -184,6 +200,23 @@ class TestInvalid:
         assert utility.signature_valid(log)
         assert utility.negative_acknowledged_log(log)
         assert not utility.no_logged_errors(log)
+        assert not utility.executed(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.negative_acknowledged_message(message)
+
+    ## error: buffer overflow signed
+    #
+    def test_buffer_overflow_signed(self):
+        string = "0123456789"
+        utility.issue(utility.generate_signed(string * 30))
+        # check log
+        log = utility.collect_log()
+        assert utility.signed(log)
+        assert utility.signature_invalid(log)
+        assert utility.negative_acknowledged_log(log)
+        assert not utility.no_logged_errors(log)
+        assert utility.buffer_overflow(log)
         assert not utility.executed(log)
         # check messages
         message = utility.collect_message()

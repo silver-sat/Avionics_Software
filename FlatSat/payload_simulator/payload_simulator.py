@@ -72,15 +72,15 @@ timer_end = 0
 print("Starting Payload Board simulator")
 
 while True:
-    
+
     if (payload_on_a.value + payload_on_b.value + payload_on_c.value) < 2:
-         if power_state != power_on:
+        if power_state != power_on:
             print("Power is on")
             power_state = power_on
             simulator_state = simulator_startup
             state_transition = True
     else:
-         if power_state != power_off:
+        if power_state != power_off:
             print("Power is off")
             power_state = power_off
             simulator_state = simulator_off
@@ -103,10 +103,12 @@ while True:
             random_multiplier = random.randrange(8, 12) / 10.0
             if (states_a.value + states_b.value + states_c.value) < 2:
                 print("Photo mode")
-                timer_end = time.monotonic() + (mean_photo_time*random_multiplier)
+                timer_end = time.monotonic() + (mean_photo_time * random_multiplier)
             else:
                 print("Communications mode")
-                timer_end = time.monotonic() + (mean_communications_time * random_multiplier)
+                timer_end = time.monotonic() + (
+                    mean_communications_time * random_multiplier
+                )
             state_transition = False
         if time.monotonic() >= timer_end:
             simulator_state = simulator_shutdown_requested
@@ -123,4 +125,3 @@ while True:
         if time.monotonic() >= timer_end:
             print("Shutdown complete")
             simulator_state = simulator_off
-

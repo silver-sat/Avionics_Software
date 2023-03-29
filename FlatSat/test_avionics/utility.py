@@ -589,6 +589,13 @@ def test_packet_sent(log):
     return any([item.detail.endswith("content: RESSTPTEST") for item in log])
 
 
+## Verify buffer overflow
+#
+def buffer_overflow(log):
+
+    return any([("Buffer overflow" in item.detail) for item in log])
+
+
 # todo: verify beacon power_sent
 
 # todo: verify deploy antenna sent

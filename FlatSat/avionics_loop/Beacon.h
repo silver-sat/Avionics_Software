@@ -58,7 +58,7 @@ public:
     {
 
         m_command = beacon;
-        m_content = call_sign +
+        m_content = call_sign + " " +
                     getStatus(power) +
                     getStatus(avionics) +
                     getStatus(payload);
