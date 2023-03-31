@@ -543,11 +543,9 @@ def telemetry_sent(log):
 
 ## Verify power sent
 #
-# Checks partial response
-#
 def power_sent(log):
     pattern = re.compile(
-        r"\s(RESGPW)(VP1\d+\.\d+)(CP1\d+\.\d+)(VP2\d+\.\d+)(CP2\d+\.\d+)(VP3\d+\.\d+)(CP3\d+\.\d+)"
+        r"\s(RESGPW)(BBV\d+\.\d+)(BBC\d+\.\d+)(TS1-*\d+\.\d+)(TS2-*\d+\.\d+)(TS3-*\d+\.\d+)(5VC\d+\.\d+)(H1S\d)(H2S\d)(H3S\d)"
     )
     return any([pattern.search(item.detail) for item in log])
 

@@ -55,7 +55,7 @@ bool AvionicsBoard::begin()
   else
   {
     Log.errorln("External realtime clock not initialized");
-  };
+  }
 
   // Non-Critical I2C
 
@@ -170,16 +170,8 @@ bool AvionicsBoard::check_beacon()
 {
   if ((millis() - m_last_beacon_time > m_beacon_interval) && (m_beacon_interval > 0))
   {
-    // todo: retrieve and store power status
     extern PowerBoard power;
-    if (power.get_status() == "U")
-    {
-      m_power_status = Beacon::Status::unknown;
-    }
-    else
-    {
-      m_power_status = Beacon::Status::unknown;
-    }
+    m_power_status = power.get_status();
     m_avionics_status = Beacon::Status::excellent;
     extern PayloadBoard payload;
     if (payload.get_payload_active())

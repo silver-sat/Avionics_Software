@@ -2,7 +2,7 @@
  * @file PowerBoard.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat Power Board
- * @version 1.1.0
+ * @version 2.0.0
  * @date 2022-07-24
  *
  * This file implements the class that interfaces to the Power Board
@@ -11,7 +11,6 @@
 
 #include "PowerBoard.h"
 #include "log_utility.h"
-#include "AvionicsBoard.h"
 
 PowerBoard::PowerBoard(){};
 
@@ -26,9 +25,18 @@ PowerBoard::PowerBoard(){};
 bool PowerBoard::begin()
 {
     Log.traceln("Power Board initializing");
-    // todo: consider opening I2C bus full time
     // todo: consider getting initial values
-    return true;
+    Log.traceln("Initializaing EPS-I");
+    if (eps_i.begin())
+    {
+        Log.traceln("EPS-I initialization completed");
+        return true;
+    }
+    else
+    {
+        Log.errorln("EPS-I not initialized");
+        return false;
+    }
 }
 
 /**
@@ -37,33 +45,14 @@ bool PowerBoard::begin()
  * @return String letter grade for beacon
  */
 
-String PowerBoard::get_status()
+Beacon::Status PowerBoard::get_status()
 {
-
-    // todo: access power data from Power Board
-    String status{};
-    switch (m_power_status)
-    {
-    case excellent:
-        status = "A";
-        break;
-    case good:
-        status = "B";
-        break;
-    case fair:
-        status = "C";
-        break;
-    case poor:
-        status = "D";
-        break;
-    case critical:
-        status = "F";
-        break;
-    default:
-        status = "U";
-        break;
-    };
-    return status;
+    // todo: develop and implement battery status beacon character
+    if(eps_i.getBatteryVoltage() >= 3.5) {
+        return Beacon::Status::excellent;
+    } else {
+        return Beacon::Status::fair;
+    }
 };
 
 /**
@@ -75,49 +64,13 @@ String PowerBoard::get_status()
 
 String PowerBoard::get_detail()
 {
-
-    // todo: open non-critical I2C bus, access power data from Power Board]
-    // todo: integrate with EPS_I driver
-
-    return "VP100.000" // Panel 1 voltage and current
-           "CP100.000"
-           "VP200.000" // Panel 2 voltage and current
-           "CP200.000"
-           "VP300.000" // Panel 3 voltage and current
-           "CP300.000"
-           "VP400.000" // Panel 4 voltage and current
-           "CP400.000"
-           "VP500.000" // Panel 5 voltage and current
-           "CP500.000"
-           "VP600.000" // Panel 6 voltage and current
-           "CP600.000"
-           "TPV00.000" // Total voltage and current (three channels)
-           "TPC00.000"
-           "O3V00.000" // Output voltage of LUP3.3V and LUP5V
-           "O5V00.000"
-           "BPV00.000" // Battery pack voltage, current and temperature
-           "BPC00.000"
-           "BPT00.000"
-           "MT100.000" // Main and external temperature sensors
-           "MT200.000"
-           "MT300.000"
-           "MT400.000"
-           "ET100.000"
-           "ET200.000"
-           "ET300.000"
-           "CFS00.000" // Critial fail status
-           "OS500.000" // On off status for power buses
-           "OS300.000"
-           "OSR00.000"
-           "OSC00.000"
-           "IO100.000" // On off status for GPIO
-           "IO200.000"
-           "IO300.000"
-           "IO400.000"
-           "IO500.000"
-           "IO600.000"
-           "CMS00.000" // Charge mode status
-           "SLS00.000" // Self lock mode status
-           "BHS00.000" // Battery heater status
-        ;
+    return "BBV" + String(eps_i.getBatteryVoltage()) +
+        "BBC" + String(eps_i.getBatteryCurrent()) +
+        "TS1" + String(eps_i.getTemperatureSensor1()) +
+        "TS2" + String(eps_i.getTemperatureSensor2()) +
+        "TS3" + String(eps_i.getTemperatureSensor3()) +
+        "5VC" + String(eps_i.get5VCurrent()) +
+        "H1S" + String(eps_i.getHeater1State()) +
+        "H2S" + String(eps_i.getHeater2State()) +
+        "H3S" + String(eps_i.getHeater3State());
 };

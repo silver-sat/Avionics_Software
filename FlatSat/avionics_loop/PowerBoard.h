@@ -2,7 +2,7 @@
  * @file PowerBoard.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat Power Board
- * @version 1.1.0
+ * @version 2.0.0
  * @date 2022-07-24
  *
  * This file declares the class that interfaces to the Power Board
@@ -12,6 +12,7 @@
 #pragma once
 
 #include "EPS_I.h"
+#include "Beacon.h"
 #include <Arduino.h>
 
 /**
@@ -50,7 +51,7 @@ public:
      *
      */
 
-    String get_status();
+    Beacon::Status get_status();
 
     /**
      * @brief Get the power detail
@@ -59,7 +60,5 @@ public:
     String get_detail();
 
 private:
-    // todo: consider where power status is gathered and stored
-    PowerStatus m_power_status{fair};
     EPS_I eps_i{};
 };
