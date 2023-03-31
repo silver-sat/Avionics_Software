@@ -5,22 +5,12 @@
  * @version 1.0.0
  * @date 2022-10-23
  *
- * Based on the Adafruit Sensor Library
- *
  * This file implements the class that interfaces with the Power Board
  *
  */
 
 #include "EPS_I.h"
-
-/**
- * @brief Construct a new eps i::eps i object
- *
- */
-EPS_I::EPS_I()
-{
-  i2c_dev = nullptr;
-}
+#include "log_utility.h"
 
 /**
  * @brief Set up the hardware and initialize I2C
@@ -32,18 +22,13 @@ EPS_I::EPS_I()
  *
  */
 
-bool EPS_I::begin(uint8_t i2c_address, TwoWire *wire)
+bool EPS_I::begin()
 {
-  if (!i2c_dev)
+  if (m_i2c_dev.begin())
   {
-    i2c_dev = new Adafruit_I2CDevice(i2c_address, wire);
+    return _init();
   }
-
-  if (i2c_dev->begin())
-  {
-    return false;
-  }
-  return _init();
+  return false;
 }
 
 /**
@@ -56,7 +41,7 @@ bool EPS_I::begin(uint8_t i2c_address, TwoWire *wire)
 
 bool EPS_I::_init(void)
 {
-  // todo: initialize EPS I
+  // todo: initialize EPS I here if required
   return true;
 }
 
@@ -67,7 +52,7 @@ bool EPS_I::_init(void)
  *
  */
 
-float EPS_I::getBatteryVoltage(void) const
+float EPS_I::getBatteryVoltage(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETBATTERYINFO_BATTERY_BATT_VOLT)};
   return static_cast<float>(value) * GETBATTERYINFO_BATTERY_BATT_VOLT_COEFFICIENT;
@@ -80,7 +65,7 @@ float EPS_I::getBatteryVoltage(void) const
  *
  */
 
-float EPS_I::getBatteryCurrent(void) const
+float EPS_I::getBatteryCurrent(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETBATTERYINFO_BATTERY_BATT_CURR)};
   return static_cast<float>(value) * GETBATTERYINFO_BATTERY_BATT_CURR_COEFFICIENT;
@@ -93,7 +78,7 @@ float EPS_I::getBatteryCurrent(void) const
  *
  */
 
-float EPS_I::getTemperatureSensor1(void) const
+float EPS_I::getTemperatureSensor1(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETTEMPERATURESINFO_TEMPERATURES_BATTERY0)};
   if (value < 0x8000)
@@ -113,7 +98,7 @@ float EPS_I::getTemperatureSensor1(void) const
  *
  */
 
-float EPS_I::getTemperatureSensor2(void) const
+float EPS_I::getTemperatureSensor2(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETTEMPERATURESINFO_TEMPERATURES_BATTERY1)};
   if (value < 0x8000)
@@ -133,7 +118,7 @@ float EPS_I::getTemperatureSensor2(void) const
  *
  */
 
-float EPS_I::getTemperatureSensor3(void) const
+float EPS_I::getTemperatureSensor3(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETTEMPERATURESINFO_TEMPERATURES_BATTERY2)};
   if (value < 0x8000)
@@ -153,7 +138,7 @@ float EPS_I::getTemperatureSensor3(void) const
  *
  */
 
-float EPS_I::getZNegativeCurrent(void) const
+float EPS_I::getZNegativeCurrent(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETSOLARPANELSINFO_SOLAR_Z_CURR_NEG)};
   return static_cast<float>(value) * GETSOLARPANELSINFO_SOLAR_Z_CURR_NEG_COEFFICIENT;
@@ -166,7 +151,7 @@ float EPS_I::getZNegativeCurrent(void) const
  *
  */
 
-float EPS_I::get5VCurrent(void) const
+float EPS_I::get5VCurrent(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETBUSESINFO_BUSES_BUS_5V_CURR)};
   return static_cast<float>(value) * GETBUSESINFO_BUSES_BUS_5V_CURR_COEFFICIENT;
@@ -180,10 +165,10 @@ float EPS_I::get5VCurrent(void) const
  *
  */
 
-bool EPS_I::getHeater1State(void) const
+bool EPS_I::getHeater1State(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETCONFIGURATIONINFO_CONFIG_OUTPUTCONDITIONS1)};
-  return 0x0001 & (value >> static_cast<uint8_t>(EPS_I_Output_Condition_1::Heater_1));
+  return 0x0001 && (value >> static_cast<uint8_t>(EPS_I_Output_Condition_1::Heater_1));
 };
 
 /**
@@ -194,10 +179,10 @@ bool EPS_I::getHeater1State(void) const
  *
  */
 
-bool EPS_I::getHeater2State(void) const
+bool EPS_I::getHeater2State(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETCONFIGURATIONINFO_CONFIG_OUTPUTCONDITIONS1)};
-  return 0x0001 & (value >> static_cast<uint8_t>(EPS_I_Output_Condition_1::Heater_2));
+  return 0x0001 && (value >> static_cast<uint8_t>(EPS_I_Output_Condition_1::Heater_2));
 };
 
 /**
@@ -208,10 +193,10 @@ bool EPS_I::getHeater2State(void) const
  *
  */
 
-bool EPS_I::getHeater3State(void) const
+bool EPS_I::getHeater3State(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETCONFIGURATIONINFO_CONFIG_OUTPUTCONDITIONS1)};
-  return 0x0001 & (value >> static_cast<uint8_t>(EPS_I_Output_Condition_1::Heater_3));
+  return 0x0001 && (value >> static_cast<uint8_t>(EPS_I_Output_Condition_1::Heater_3));
 };
 
 /**
@@ -221,14 +206,14 @@ bool EPS_I::getHeater3State(void) const
  *
  */
 
-uint16_t EPS_I::read_value(EPS_I_Read_Command command) const
+uint16_t EPS_I::read_value(EPS_I_Read_Command command)
 {
   uint8_t return_buffer[2];
   uint16_t value;
   uint8_t command_byte{static_cast<uint8_t>(command)};
-  i2c_dev->write_then_read(&command_byte, 1, return_buffer, 2, true);
+  m_i2c_dev.write_then_read(&command_byte, 1, return_buffer, 2, false);
   value = return_buffer[1] | (return_buffer[0] << 8);
-
+  Log.verboseln("EPS-I reading from register %X is %X", command, value);
   return value;
 }
 
@@ -243,5 +228,5 @@ uint16_t EPS_I::read_value(EPS_I_Read_Command command) const
 void EPS_I::write_command(EPS_I_Write_Command command, uint8_t state)
 {
   uint8_t command_byte{static_cast<uint8_t>(command)};
-  i2c_dev->write(&state, 1, true, &command_byte, 1);
+  m_i2c_dev.write(&state, 1, true, &command_byte, 1);
 }

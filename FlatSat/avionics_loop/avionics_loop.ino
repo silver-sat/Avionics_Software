@@ -127,9 +127,9 @@ void setup()
 
   // Initialize Power Board
 
-  Log.noticeln("Initializing Power Board interface");
+  Log.noticeln("Initializing Power Board");
   power.begin();
-  Log.noticeln("Power Board interface initialization completed");
+  Log.noticeln("Power Board initialization completed");
 
   // Initialize Radio Board
 
