@@ -26,7 +26,7 @@ bool PowerBoard::begin()
 {
     Log.traceln("Power Board initializing");
     // todo: consider getting initial values
-    Log.traceln("Initializaing EPS-I");
+    Log.traceln("Initializing EPS-I");
     if (eps_i.begin())
     {
         Log.traceln("EPS-I initialization completed");

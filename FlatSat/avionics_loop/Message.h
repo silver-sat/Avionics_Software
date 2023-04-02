@@ -12,7 +12,7 @@
 #pragma once
 
 #include "log_utility.h"
-// #include "RadioBoard.h"
+#include "avionics_constants.h"
 #include <Arduino.h>
 
 /**
@@ -29,24 +29,24 @@ public:
 
     enum message_type
     {
-        acknowledgement = 0xAA,
-        negative_acknowledgement = 0xAA,
-        response = 0xAA,
-        invalid = 0xAA,
-        beacon = 0x07,
-        antenna_release = 0x08,
-        get_status = 0x09,
-        halt = 0x0A,
-        modify_frequency = 0x0B,
-        modify_mode = 0x0C,
-        adjust_frequency = 0x0D,
-        transmit_cw = 0x17,
-        background_rssi = 0x18,
-        current_rssi = 0x19,
-        sweep_tranmitter = 0x1A,
-        sweep_receiver = 0x1B,
-        query_register = 0x1C,
-        ping = 0x33,
+        acknowledgement = REMOTE_FRAME,
+        negative_acknowledgement = REMOTE_FRAME,
+        response = REMOTE_FRAME,
+        invalid = REMOTE_FRAME,
+        beacon = BEACON,
+        antenna_release = DIGITALIO_RELEASE,
+        get_status = GET_RADIO_STATUS,
+        halt = HALT,
+        modify_frequency = MODIFY_FREQUENCY,
+        modify_mode = MODIFY_MODE,
+        adjust_frequency = ADJUST_FREQUENCY,
+        transmit_cw = TRANSMIT_CW,
+        background_rssi = BACKGROUND_RSSI,
+        current_rssi = CURRENT_RSSI,
+        sweep_tranmitter = SWEEP_TRANMSMITTER,
+        sweep_receiver = SWEEP_RECEIVER,
+        query_register = QUERY_REGISTER,
+        // ping = 0x33, // todo: validate source from radio documentation
     };
 
     /**

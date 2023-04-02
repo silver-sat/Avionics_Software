@@ -8,11 +8,16 @@
  * This file declares the class that interfaces with the Intertial
  * Management Unit
  *
+ * RTC and IMU have the same I2C addresses but are located on different buses
+ * 
  */
 
 #pragma once
 
 #include <Adafruit_MPU6050.h>
+
+constexpr unsigned IMU_I2C_ADDRESS{0x68};   /**< inertial measurement unit I2C address @hideinitializer */
+
 
 /**
  * @brief Inertial Management Unit

@@ -58,48 +58,30 @@ constexpr unsigned PAYLOAD_OC{16u};        /**< payload over current @hideinitia
 constexpr unsigned RESET{0u};              /**< reset the processor @hideinitializer */
 
 /**
- * @brief I2C Addresses
+ * @brief I2C delay constant
  *
- * RTC and IMU have the same addresses but are located on different buses
  */
 
-constexpr unsigned RTC_I2C_ADDRESS{0x68};   /**< realtime clock I2C address @hideinitializer */
-constexpr unsigned IMU_I2C_ADDRESS{0x68};   /**< inertial measurement unit I2C address @hideinitializer */
-constexpr unsigned FRAM_I2C_ADDRESS{0x50};  /**< FRAM I2C address @hideinitializer */
 constexpr unsigned wait_for_i2c_device{10}; /**< wait for I2C device to become available */
 
 /**
- * @brief Serial interface constant
+ * @brief Local message content
  *
  */
-constexpr uint32_t serial_baud_rate{115200};  /**< speed of serial connection @hideinitializer */
-constexpr uint32_t serial1_baud_rate{115200}; /**< speed of serial1 connection @hideinitializer */
 
-/**
- * @brief Process loop constants
- *
- */
-// todo: adjust to 45 minutes for full test
-constexpr unsigned long separation_delay{5 * seconds_to_milliseconds};
-constexpr unsigned long separation_time{0};
-
-/**
- * @brief KISS-defined constants
- *
- */
-constexpr byte FEND{'\xC0'};  /**< frame end */
-constexpr byte FESC{'\xDB'};  /**< frame escape */
-constexpr byte TFEND{'\xDC'}; /**< transposed frame end */
-constexpr byte TFESC{'\xDD'}; /**< transposed frame escape */
+const String ACK{"ACK"};
+const String NACK{"NACK"};
+const String RES{"RES"};
 
 /**
  * @brief SilverSat defined KISS local command types
  *
  */
+
 constexpr byte LOCAL_FRAME{'\x00'};        /**< local data frame */
 constexpr byte REMOTE_FRAME{'\xAA'};       /**< remote data frame */
 constexpr byte BEACON{'\x07'};             /**< beacon */
-constexpr byte MANUAL_RELEASE{'\x08'};     /**< deploy antenna in recovery mode */
+constexpr byte DIGITALIO_RELEASE{'\x08'};  /**< deploy antenna in recovery mode */
 constexpr byte GET_RADIO_STATUS{'\x09'};   /**< request radio status */
 constexpr byte HALT{'\x0A'};               /**< stop transmission */
 constexpr byte MODIFY_FREQUENCY{'\x0B'};   /**< change radio frequency */
@@ -113,26 +95,12 @@ constexpr byte SWEEP_RECEIVER{'\x1B'};     /**< sweep transmitter */
 constexpr byte QUERY_REGISTER{'\x1C'};     /**< query radio register */
 
 /**
- * @brief Local message content
- *
- */
-const String ACK{"ACK"};
-const String NACK{"NACK"};
-const String RES{"RES"};
-
-/**
  * @brief Radio command parameter lengths
  *
  */
+
 constexpr size_t frequency_length{9};
 constexpr size_t duration_length{2};
 const static size_t steps_length{3};
 const static size_t dwell_length{3};
 const static size_t register_length{5};
-
-/**
- * @brief Amateur radio call sign
- *
- */
-
-const String call_sign{"KC3CQJ"};

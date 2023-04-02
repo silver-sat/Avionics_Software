@@ -2,7 +2,7 @@
  * @file avionics_loop.ino
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Avionics Board Setup and Process Loop
- * @version 1.2.0
+ * @version 1.3.0
  * @date 2022-07-24
  *
  */
@@ -24,26 +24,37 @@
  *
  */
 
-#undef INSTRUMENTATION // Instrumentation for processor and memory usage
+#define INSTRUMENTATION // Instrumentation for processor and memory usage
 
 #include "log_utility.h"
 #include "Beacon.h"
-#include "CommandProcessor.h"
 #include "PowerBoard.h"
 #include "AvionicsBoard.h"
 #include "RadioBoard.h"
 #include "PayloadBoard.h"
+#include "Antenna.h"
+#include "CommandProcessor.h"
 
 /**
- * @brief Create the boards and command processor
+ * @brief Process loop constants
+ *
+ */
+constexpr uint32_t serial_baud_rate{115200}; /**< speed of serial connection @hideinitializer */
+
+// todo: adjust to 45 minutes for full test
+constexpr unsigned long separation_delay{5 * seconds_to_milliseconds};
+
+/**
+ * @brief Create the boards, antenna, and command processor
  *
  */
 
-AvionicsBoard avionics;
-PayloadBoard payload;
-RadioBoard radio;
-PowerBoard power;
-CommandProcessor command_processor;
+AvionicsBoard avionics{};
+PayloadBoard payload{};
+RadioBoard radio{};
+PowerBoard power{};
+Antenna antenna{};
+CommandProcessor command_processor{};
 
 #ifdef INSTRUMENTATION
 /**
@@ -127,9 +138,9 @@ void setup()
 
   // Initialize Power Board
 
-  Log.noticeln("Initializing Power Board");
+  Log.noticeln("Initializing Power Board interface");
   power.begin();
-  Log.noticeln("Power Board initialization completed");
+  Log.noticeln("Power Board interface initialization completed");
 
   // Initialize Radio Board
 
@@ -146,7 +157,8 @@ void setup()
   // Wait for separation delay
 
   Log.noticeln("Beginning separation delay");
-  while (millis() - separation_time < separation_delay)
+  unsigned long separation_timer_start{millis()};
+  while ((millis() - separation_timer_start) < separation_delay)
   {
     avionics.trigger_watchdog();
   };
@@ -154,9 +166,9 @@ void setup()
 
   // Deploy antenna
 
-  // todo: deploy antenna
-  Log.noticeln("Deploying antenna");
-  // radio.deploy_antenna();
+  Log.noticeln("Beginning antenna deployment");
+  antenna.deploy();
+  Log.noticeln("Antenna deployment completed");
 
   // Initialization complete
 
@@ -224,7 +236,7 @@ void loop()
   previous_time = micros();
 #endif // INSTRUMENTATION
 
-  // Take photo
+  // Check for photo time
 
   avionics.check_photo();
 
@@ -292,4 +304,4 @@ void loop()
   }
   loop_start_time = micros();
 #endif // INSTRUMENTATION
-};
+}
