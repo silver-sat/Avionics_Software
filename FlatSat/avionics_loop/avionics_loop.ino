@@ -269,7 +269,7 @@ void loop()
     formatTimestamp(timestamp, RAM_minimum_timestamp);
     Log.verboseln("Minimum free RAM %l bytes at %s", RAM_minimum, timestamp);
     display_start_time = millis();
-    Log.verboseln("Current free RAM %l", FreeRam());
+    Log.verboseln("Current free RAM %l bytes", FreeRam());
   }
 
   // Record free RAM

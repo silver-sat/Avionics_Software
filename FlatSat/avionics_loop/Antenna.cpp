@@ -40,6 +40,10 @@ bool Antenna::deploy()
     Log.noticeln("Reading antenna state");
     byte antenna_state[4]{};
     m_i2c_dev.read(antenna_state, 4);
+    Log.verboseln("Antenna byte 1: %X", antenna_state[0]);
+    Log.verboseln("Antenna byte 2: %X", antenna_state[1]);
+    Log.verboseln("Antenna byte 3: %X", antenna_state[2]);
+    Log.verboseln("Antenna byte 4: %X", antenna_state[3]);
     if (antenna_state[3] == 0xFF)
     {
         Log.noticeln("Antenna doors open");
@@ -62,6 +66,10 @@ bool Antenna::deploy()
 
     Log.noticeln("Reading antenna state");
     m_i2c_dev.read(antenna_state, 4);
+    Log.verboseln("Antenna byte 1: %X", antenna_state[0]);
+    Log.verboseln("Antenna byte 2: %X", antenna_state[1]);
+    Log.verboseln("Antenna byte 3: %X", antenna_state[2]);
+    Log.verboseln("Antenna byte 4: %X", antenna_state[3]);
     if (antenna_state[3] == 0xFF)
     {
         Log.noticeln("Antenna doors open");
@@ -83,6 +91,10 @@ bool Antenna::deploy()
 
     Log.noticeln("Reading antenna state");
     m_i2c_dev.read(antenna_state, 4);
+    Log.verboseln("Antenna byte 1: %X", antenna_state[0]);
+    Log.verboseln("Antenna byte 2: %X", antenna_state[1]);
+    Log.verboseln("Antenna byte 3: %X", antenna_state[2]);
+    Log.verboseln("Antenna byte 4: %X", antenna_state[3]);
     if (antenna_state[3] == 0xFF)
     {
         Log.noticeln("Antenna doors open");
