@@ -40,7 +40,6 @@
  *
  */
 constexpr uint32_t serial_baud_rate{115200}; /**< speed of serial connection @hideinitializer */
-
 // todo: adjust to 45 minutes for full test
 constexpr unsigned long separation_delay{5 * seconds_to_milliseconds};
 
@@ -78,8 +77,8 @@ unsigned long photo_maximum{0};
 unsigned long photo_maximum_timestamp{};
 unsigned long payload_maximum{0};
 unsigned long payload_maximum_timestamp{};
-long memory_minimum{32768};
-unsigned long memory_minimum_timestamp{};
+long RAM_minimum{32768};
+unsigned long RAM_minimum_timestamp{};
 unsigned long display_start_time{};
 constexpr int display_interval{30 * 1000};
 
@@ -87,25 +86,13 @@ constexpr int display_interval{30 * 1000};
  * @brief Helper function for memory use
  *
  */
+extern "C" char *sbrk(int i);
 
-#ifdef __arm__
-// should use uinstd.h to define sbrk but Due causes a conflict
-extern "C" char *sbrk(int incr);
-#else  // __ARM__
-extern char *__brkval;
-#endif // __arm__
-
-int freeMemory()
-{
-  char top;
-#ifdef __arm__
-  return &top - reinterpret_cast<char *>(sbrk(0));
-#elif defined(CORE_TEENSY) || (ARDUINO > 103 && ARDUINO != 151)
-  return &top - __brkval;
-#else  // __arm__
-  return __brkval ? &top - __brkval : &top - __malloc_heap_start;
-#endif // __arm__
+int FreeRam () {
+  char stack_dummy = 0;
+  return &stack_dummy - sbrk(0);
 }
+
 #endif // INSTRUMENTATION
 
 /**
@@ -279,19 +266,19 @@ void loop()
     Log.verboseln("Maximum photo processing time %l microseconds at %s", photo_maximum, timestamp);
     formatTimestamp(timestamp, payload_maximum_timestamp);
     Log.verboseln("Maximum payload processing time %l microseconds at %s", payload_maximum, timestamp);
-    formatTimestamp(timestamp, memory_minimum_timestamp);
-    Log.verboseln("Minimum free memory %l bytes at %s", memory_minimum, timestamp);
+    formatTimestamp(timestamp, RAM_minimum_timestamp);
+    Log.verboseln("Minimum free RAM %l bytes at %s", RAM_minimum, timestamp);
     display_start_time = millis();
-    Log.verboseln("Current free memory %l bytes", freeMemory());
+    Log.verboseln("Current free RAM %l", FreeRam());
   }
 
-  // Record free memory
+  // Record free RAM
 
-  auto free_memory{freeMemory()};
-  if (free_memory < memory_minimum)
+  auto free_RAM{FreeRam()};
+  if (free_RAM < RAM_minimum)
   {
-    memory_minimum = free_memory;
-    memory_minimum_timestamp = millis();
+    RAM_minimum = free_RAM;
+    RAM_minimum_timestamp = millis();
   }
 
   // Record loop time
