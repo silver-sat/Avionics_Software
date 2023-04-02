@@ -14,6 +14,13 @@
 #include "log_utility.h"
 #include "AvionicsBoard.h"
 
+constexpr uint32_t serial1_baud_rate{115200}; /**< speed of serial1 connection @hideinitializer */
+constexpr byte FEND{'\xC0'};  /**< frame end */
+constexpr byte FESC{'\xDB'};  /**< frame escape */
+constexpr byte TFEND{'\xDC'}; /**< transposed frame end */
+constexpr byte TFESC{'\xDD'}; /**< transposed frame escape */
+
+
 /**
  * @brief Initialize the Radio Board
  *
@@ -53,7 +60,7 @@ bool RadioBoard::deploy_antenna()
 {
     Log.traceln("Sending local command: deploy antenna");
     Serial1.write(FEND);
-    Serial1.write(MANUAL_RELEASE);
+    Serial1.write(DIGITALIO_RELEASE);
     Serial1.write(FEND);
     return true;
 }

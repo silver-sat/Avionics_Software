@@ -25,6 +25,7 @@ class TestAvionicsInitialization:
     def test_completion(self):
 
         log = utility.collect_initialization()
+        assert utility.antenna_deployed(log)
         assert utility.initialization_complete(log)
         assert utility.no_logged_errors(log)
         message = utility.collect_message()

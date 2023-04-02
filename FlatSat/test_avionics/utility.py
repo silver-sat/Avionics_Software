@@ -64,14 +64,16 @@ command_counter = 0
 #
 # Initialization messages on Avionics Board startup
 #
-def collect_initialization():
+def collect_initialization(interval=30):
 
     log = []
     log_data = ""
+    log_port.timeout = interval
     while "Avionics Process initialization completed" not in log_data:
         log_data = log_port.readline().decode("utf-8").strip()
         print(log_data)
         log.append(Entry(*(log_data.split(maxsplit=2))))
+        log_port.timeout = TIMEOUT
     return log
 
 
@@ -592,6 +594,11 @@ def test_packet_sent(log):
 def buffer_overflow(log):
 
     return any([("Buffer overflow" in item.detail) for item in log])
+
+## Verify antenna deployed
+#
+def antenna_deployed(log):
+    return any((item.detail == "Antenna doors open" for item in log))
 
 
 # todo: verify beacon power_sent

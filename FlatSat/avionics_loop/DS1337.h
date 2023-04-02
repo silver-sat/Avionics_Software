@@ -8,6 +8,8 @@
  * Based and dependent on Adafruit RTClib
  *
  * This file declares the class that interfaces with the external realtime clock
+ * 
+ * RTC and IMU have the same I2C addresses but are located on different buses
  *
  */
 
@@ -15,7 +17,9 @@
 
 #include <RTClib.h>
 
-// todo: move to avionics_constants.h
+// todo: resolve object creation location and use address constant
+constexpr unsigned RTC_I2C_ADDRESS{0x68};   /**< realtime clock I2C address @hideinitializer */
+
 /**
  * @brief DS1337 SQW pin mode settings
  *

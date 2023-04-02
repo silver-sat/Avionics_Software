@@ -29,7 +29,7 @@ public:
     bool begin();
 
     /**
-     * @brief Notify radio board to deploy antenna
+     * @brief Notify radio board to deploy antenna via DigitalIO
      *
      */
 

@@ -20,6 +20,14 @@
 #include "avionics_constants.h"
 #include <Arduino.h>
 
+
+/**
+ * @brief Amateur radio call sign
+ *
+ */
+
+const String call_sign{"KC3CQJ"};
+
 /**
  * @brief Beacon message
  *
