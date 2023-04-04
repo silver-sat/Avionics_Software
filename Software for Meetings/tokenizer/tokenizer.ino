@@ -1,81 +1,104 @@
 /**
  * @file tokenizer.ino
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief Mentor solution to February 18th tokenizer challenge
- *   https://docs.google.com/presentation/d/1Xw3lUu81yLnpkeHwMXOLl7wfIG3j5VsndNmMz3wN4bU/edit?usp=sharing
+ * @brief Another tokenizer
  * @version 1.0.0
- * @date 2023-02-11
+ * @date 2023-04-03
  *
  *
  */
 
-void tokenizer(const String &command, String tokens[], size_t &token_count) {
-  size_t token_index{ 0 };
-  bool in_token{ false };
-  for (auto character : command) {
-    if (!in_token) {
-      if (character == ' ') {
-        continue;  // ignore leading, trailing, and extra blanks
-      } else {
-        in_token = true;
-      }
-    } else {  // in token
-      if (character == ' ') {
-        in_token = false;
-        if (++token_index > 10) {
-          Serial.println("Error: too many tokens");
-          break;
+constexpr size_t max_tokens{10}; // Allow up to 10 tokens
+
+struct Tokens
+{
+    bool error{false};          // Parsing error (i.e. too many tokens)
+    size_t count{0};            // number of tokens parsed
+    String token[max_tokens]{}; // token contents
+};
+
+/**
+ * @brief Parse blank delimited tokens in input string
+ * 
+ * @param input String to be tokenized
+ * @return Tokens results
+ */
+
+Tokens tokenizer(const String input)
+{
+    Tokens result{};
+    bool in_token{false};
+    for (auto character : input)
+    {
+        if (character == ' ')
+        {
+            if (in_token)
+                in_token = false;
         }
-        continue;
-      }
+        else
+        {
+            if (!in_token)
+            {
+                if (++result.count > max_tokens)
+                {
+                    result.error = true;
+                    break;
+                }
+                in_token = true;
+            }
+            result.token[result.count - 1] += character;
+        }
     }
-    tokens[token_index] += character;  // add character to token
-  }
-  if (in_token) {
-    if (++token_index > 10) {
-      Serial.println("Error: too many tokens");
+    return result;
+}
+
+/**
+ * @brief Print formatted test results
+ * 
+ * @param result output of tokenizer()
+ */
+
+void printTokens(const Tokens result)
+{
+    Serial.println("---Starting test---");
+    if (result.error)
+    {
+        Serial.println("Parsing error");
     }
-  }
-  token_count = token_index;
+    else
+    {
+        Serial.println("Token count is " + String(result.count));
+        for (size_t index{0}; index < result.count; ++index)
+            Serial.println(result.token[index]);
+    }
+    Serial.println("---Ending test---\n");
 }
 
-void print_test(const String command) {
-  size_t token_count{};
-  String tokens[10]{};
-  Serial.print("Starting test: ");
-  Serial.println(command);
-  tokenizer(command, tokens, token_count);
-  Serial.print("Number of tokens: ");
-  if (token_count > 10) {
-    Serial.println("10+");
-    token_count = 10;
-  } else {
-    Serial.println(token_count);
-  }
-  Serial.println("Tokens:");
-  for (size_t i = 0; i < token_count; ++i) {
-    Serial.println(tokens[i]);
-  }
-  Serial.print("Ending test\n\n");
+/**
+ * @brief Execute test cases
+ * 
+ */
+
+void setup()
+{
+    Serial.begin(115200);
+    while (!Serial)
+        ;
+    printTokens(tokenizer("NoOperate"));
+    printTokens(tokenizer("Invalid 2 3 4 5 6 7 8 9 10"));
+    printTokens(tokenizer("Invalid 2 3 4 5 6 7 8 9 10     "));
+    printTokens(tokenizer("Invalid 2 3 4 5 6 7 8 9 10     11"));
+    printTokens(tokenizer("Invalid 2 3 4 5 6 7 8 9 10     11 12  "));
+    printTokens(tokenizer("SetClock 2023 11 11 10 10 10"));
+    printTokens(tokenizer("SetClock   2023   11   11   10   10   10"));
+    printTokens(tokenizer("     NoOperate"));
+    printTokens(tokenizer("     SetClock 2023 11 11 10 10   10      "));
+    printTokens(tokenizer(""));
 }
 
-void setup() {
-  Serial.begin(115200);
+/**
+ * @brief Arduino loop function
+ * 
+ */
 
-  String report_t{ "ReportT" };
-  String set_clock{ "SetClock 2023 3 15 10 10 30" };
-  String invalid{ "Invalid 0 1 2 3 4 5 6 7 8 9" };
-  String no_tokens{ "     " };
-  String extra_blanks{ "BeaconSP  180 " };
-  String ten_tokens_trailing_blank{ "Invalid 0 1 2 3 4 5 6 7 8 " };
-
-  print_test(report_t);
-  print_test(set_clock);
-  print_test(invalid);
-  print_test(no_tokens);
-  print_test(extra_blanks);
-  print_test(ten_tokens_trailing_blank);
-}
-
-void loop() {
-}
+void loop() {}
