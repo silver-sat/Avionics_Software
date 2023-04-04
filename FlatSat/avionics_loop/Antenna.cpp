@@ -30,9 +30,7 @@ bool Antenna::deploy()
     unsigned long antenna_timer_start{millis()};
     extern AvionicsBoard avionics;
     while ((millis() - antenna_timer_start) < antenna_delay)
-    {
         avionics.trigger_watchdog();
-    }
     Log.noticeln("Ending antenna delay");
 
     // Validate successful deployment
@@ -46,7 +44,7 @@ bool Antenna::deploy()
     Log.verboseln("Antenna byte 4: %X", antenna_state[3]);
     if (antenna_state[3] == 0xFF)
     {
-        Log.noticeln("Antenna doors open");
+        Log.noticeln("All antenna doors open");
         return true;
     }
 
@@ -57,9 +55,7 @@ bool Antenna::deploy()
     m_i2c_dev.write(&algorithm2_all, 1);
     antenna_timer_start = millis();
     while ((millis() - antenna_timer_start) < antenna_delay)
-    {
         avionics.trigger_watchdog();
-    }
     Log.noticeln("Ending antenna delay");
 
     // Validate successful deployment
@@ -72,7 +68,7 @@ bool Antenna::deploy()
     Log.verboseln("Antenna byte 4: %X", antenna_state[3]);
     if (antenna_state[3] == 0xFF)
     {
-        Log.noticeln("Antenna doors open");
+        Log.noticeln("All antenna doors open");
         return true;
     }
 
@@ -83,9 +79,7 @@ bool Antenna::deploy()
     radio.deploy_antenna();
     antenna_timer_start = millis();
     while ((millis() - antenna_timer_start) < antenna_delay)
-    {
         avionics.trigger_watchdog();
-    }
 
     // Validate successful deployment
 
@@ -97,7 +91,7 @@ bool Antenna::deploy()
     Log.verboseln("Antenna byte 4: %X", antenna_state[3]);
     if (antenna_state[3] == 0xFF)
     {
-        Log.noticeln("Antenna doors open");
+        Log.noticeln("All antenna doors open");
         return true;
     }
     else

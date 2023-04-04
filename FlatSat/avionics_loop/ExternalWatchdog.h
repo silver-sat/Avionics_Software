@@ -15,7 +15,6 @@
  * @brief ExternalWatchdog constants
  *
  */
-// todo: move to avionics_constants.h
 
 constexpr unsigned long watchdog_lower_boundary{24}; /**< 23.5 milliseconds */
 

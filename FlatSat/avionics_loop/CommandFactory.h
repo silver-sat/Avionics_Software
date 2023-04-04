@@ -25,5 +25,5 @@ public:
      *
      */
 
-    Command *BuildCommand(const String tokens[], size_t token_count);
+    Command *BuildCommand(const String tokens[], const size_t token_count);
 };

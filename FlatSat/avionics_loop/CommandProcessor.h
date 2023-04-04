@@ -14,10 +14,12 @@
 
 #include "CommandParser.h"
 #include "CommandFactory.h"
+
 /**
  * @brief Check for command from Radio Board, make a Command object
  *
  */
+
 class CommandProcessor final
 {
 public:

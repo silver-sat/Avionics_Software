@@ -38,7 +38,7 @@ bool Command::acknowledge_command()
     Message message{Message::acknowledgement, ACK};
     extern RadioBoard radio;
     return radio.send_message(message);
-};
+}
 
 /**
  * @brief Negative acknowledge the command
@@ -56,7 +56,7 @@ bool Command::negative_acknowledge_command()
     Message message{Message::negative_acknowledgement, NACK};
     extern RadioBoard radio;
     return radio.send_message(message);
-};
+}
 
 /**
  * @brief Execute the command
@@ -72,7 +72,7 @@ bool Command::execute_command()
 {
     Log.traceln("Executing command");
     return true;
-};
+}
 
 /**
  * @brief Acknowlege SetClock command
@@ -119,7 +119,7 @@ bool CommandBeaconSp::acknowledge_command()
     auto status{Command::acknowledge_command()};
     Log.verboseln("BeaconSp: %d seconds", m_seconds);
     return status;
-};
+}
 
 /**
  * @brief Execute BeaconSp command
@@ -137,7 +137,7 @@ bool CommandBeaconSp::execute_command()
     status = radio.send_message(response) && status;
     extern AvionicsBoard avionics;
     return avionics.set_beacon_interval(m_seconds) && status;
-};
+}
 
 /**
  * @brief Acknowlege PicTimes command
@@ -170,7 +170,7 @@ bool CommandPicTimes::execute_command()
     status = radio.send_message(response) && status;
     extern AvionicsBoard avionics;
     return avionics.set_picture_time(m_time) && status;
-};
+}
 
 /**
  * @brief Acknowledge ClearPicTimes command
@@ -184,7 +184,7 @@ bool CommandClearPicTimes::acknowledge_command()
     auto status{Command::acknowledge_command()};
     Log.verboseln("ClearPicTimes");
     return status;
-};
+}
 
 /**
  * @brief Execute ClearPicTimes command
@@ -202,7 +202,7 @@ bool CommandClearPicTimes::execute_command()
     status = radio.send_message(response) && status;
     extern AvionicsBoard avionics;
     return avionics.clear_pic_times() && status;
-};
+}
 
 /**
  * @brief Acknowledge UnsetClock command
@@ -248,7 +248,7 @@ bool CommandReportT::acknowledge_command()
     auto status{Command::acknowledge_command()};
     Log.verboseln("ReportT");
     return status;
-};
+}
 
 /**
  * @brief Execute ReportT command
@@ -264,13 +264,11 @@ bool CommandReportT::execute_command()
     extern AvionicsBoard avionics;
     auto timestamp{avionics.get_timestamp()};
     if (timestamp == "ERROR")
-    {
         status = false;
-    };
     extern RadioBoard radio;
     auto response{Response{"GRC" + timestamp}};
     return radio.send_message(response) && status;
-};
+}
 
 /**
  * @brief Acknowledge GetPicTimes command
@@ -284,7 +282,7 @@ bool CommandGetPicTimes::acknowledge_command()
     auto status{Command::acknowledge_command()};
     Log.verboseln("GetPicTimes");
     return status;
-};
+}
 
 /**
  * @brief  Execute GetPicTimes command
@@ -301,7 +299,7 @@ bool CommandGetPicTimes::execute_command()
     extern RadioBoard radio;
     auto response{Response{"GPT" + avionics.get_pic_times()}};
     return radio.send_message(response) && status;
-};
+}
 
 /**
  * @brief Acknowledge GetTelemetry command
@@ -315,7 +313,7 @@ bool CommandGetTelemetry::acknowledge_command()
     auto status{Command::acknowledge_command()};
     Log.verboseln("GetTelemetry");
     return status;
-};
+}
 
 /**
  * @brief  Execute GetTelemetry command
@@ -332,7 +330,7 @@ bool CommandGetTelemetry::execute_command()
     extern RadioBoard radio;
     auto response{Response{"GTY" + avionics.get_telemetry()}};
     return radio.send_message(response) && status;
-};
+}
 
 /**
  * @brief Acknowledge GetPower command
@@ -346,7 +344,7 @@ bool CommandGetPower::acknowledge_command()
     auto status{Command::acknowledge_command()};
     Log.verboseln("GetPower");
     return status;
-};
+}
 
 /**
  * @brief  Execute GetPower command
@@ -363,7 +361,7 @@ bool CommandGetPower::execute_command()
     extern RadioBoard radio;
     auto response{Response{"GPW" + power.get_detail()}};
     return radio.send_message(response) && status;
-};
+}
 
 /**
  * @brief Acknowledge GetComms command
@@ -377,7 +375,7 @@ bool CommandGetComms::acknowledge_command()
     auto status{Command::acknowledge_command()};
     Log.verboseln("GetComms");
     return status;
-};
+}
 
 /**
  * @brief  Execute GetComms command
@@ -394,7 +392,7 @@ bool CommandGetComms::execute_command()
     Message message(Message::get_status, "");
     Log.verboseln("Requesting radio status");
     return radio.send_message(message) && status;
-};
+}
 
 /**
  * @brief Acknowledge GetBeaconInterval command
@@ -408,7 +406,7 @@ bool CommandGetBeaconInterval::acknowledge_command()
     auto status{Command::acknowledge_command()};
     Log.verboseln("GetBeaconInterval");
     return status;
-};
+}
 
 /**
  * @brief  Execute GetBeaconInterval command
@@ -425,7 +423,7 @@ bool CommandGetBeaconInterval::execute_command()
     extern RadioBoard radio;
     auto response{Response{"GBI" + String(avionics.get_beacon_interval())}};
     return radio.send_message(response) && status;
-};
+}
 
 /**
  * @brief Acknowledge NoOperate command
@@ -439,7 +437,7 @@ bool CommandNoOperate::acknowledge_command()
     auto status{Command::acknowledge_command()};
     Log.verboseln("NoOperate");
     return status;
-};
+}
 
 /**
  * @brief Execute NoOperate command
@@ -455,7 +453,7 @@ bool CommandNoOperate::execute_command()
     extern RadioBoard radio;
     auto response{Response{"NOP"}};
     return radio.send_message(response) && status;
-};
+}
 
 /**
  * @brief Acknowledge SendTestPacket command
@@ -469,7 +467,7 @@ bool CommandSendTestPacket::acknowledge_command()
     auto status{Command::acknowledge_command()};
     Log.verboseln("SendTestPacket");
     return status;
-};
+}
 
 /**
  * @brief Execute SendTestPacket command
@@ -485,7 +483,7 @@ bool CommandSendTestPacket::execute_command()
     extern RadioBoard radio;
     auto response{Response{"STPTEST"}};
     return radio.send_message(response) && status;
-};
+}
 
 /**
  * @brief Acknowledge PayComms command
@@ -499,7 +497,7 @@ bool CommandPayComms::acknowledge_command()
     auto status{Command::acknowledge_command()};
     Log.verboseln("PayComms");
     return status;
-};
+}
 
 /**
  * @brief Execute PayComms command
@@ -510,7 +508,6 @@ bool CommandPayComms::acknowledge_command()
 
 bool CommandPayComms::execute_command()
 {
-
     auto status{Command::execute_command()};
     Log.verboseln("PayComms");
     extern RadioBoard radio;
@@ -518,7 +515,7 @@ bool CommandPayComms::execute_command()
     status = radio.send_message(response) && status;
     extern PayloadBoard payload;
     return payload.communicate() && status;
-};
+}
 
 /**
  * @brief Acknowledge TweeSlee command
@@ -532,7 +529,7 @@ bool CommandTweeSlee::acknowledge_command()
     auto status{Command::acknowledge_command()};
     Log.verboseln("TweeSlee");
     return status;
-};
+}
 
 /**
  * @brief Execute TweeSlee command
@@ -554,7 +551,7 @@ bool CommandTweeSlee::execute_command()
     Log.traceln("Sending local command: halt");
     auto message{Message(Message::halt, "")};
     return radio.send_message(message) && status;
-};
+}
 
 /**
  * @brief Acknowledge Watchdog command
@@ -568,7 +565,7 @@ bool CommandWatchdog::acknowledge_command()
     auto status{Command::acknowledge_command()};
     Log.verboseln("Watchdog");
     return status;
-};
+}
 
 /**
  * @brief Execute Watchdog command
@@ -586,7 +583,7 @@ bool CommandWatchdog::execute_command()
     extern AvionicsBoard avionics;
     avionics.watchdog_force_reset();
     return status;
-};
+}
 
 /**
  * @brief Acknowledge invalid command
@@ -599,7 +596,7 @@ bool CommandInvalid::acknowledge_command()
     Command::negative_acknowledge_command();
     Log.verboseln("Invalid");
     return false;
-};
+}
 
 /**
  * @brief Execute invalid command
@@ -611,7 +608,7 @@ bool CommandInvalid::execute_command()
 {
     Log.errorln("Cannot execute invalid command");
     return false;
-};
+}
 
 /**
  * @brief Acknowledge unknown command
@@ -624,7 +621,7 @@ bool CommandUnknown::acknowledge_command()
     Command::negative_acknowledge_command();
     Log.verboseln("Unknown");
     return false;
-};
+}
 
 /**
  * @brief Execute unknown command

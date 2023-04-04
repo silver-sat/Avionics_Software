@@ -53,7 +53,7 @@ Beacon::Status PowerBoard::get_status()
     } else {
         return Beacon::Status::fair;
     }
-};
+}
 
 /**
  * @brief Get the power detail
@@ -73,4 +73,4 @@ String PowerBoard::get_detail()
         "H1S" + String(eps_i.getHeater1State()) +
         "H2S" + String(eps_i.getHeater2State()) +
         "H3S" + String(eps_i.getHeater3State());
-};
+}

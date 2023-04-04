@@ -19,8 +19,8 @@
  *
  * The other boards: Power, Radio, and Payload, are represented as classes which provide interfaces to encapsulate their functions.
  *
- * The beacon message which Avionics sends to the Radio Board, the command messages the Radio
- * Board forwards to Avionics, and the response and local command messages sent to the Radio Board are also represented as classes.
+ * The beacon message which Avionics sends to the Radio Board, the command messages the Radio Board forwards to Avionics,
+ * and the response and local command messages sent to the Radio Board are also represented as classes.
  *
  */
 
@@ -49,9 +49,9 @@ constexpr unsigned long separation_delay{5 * seconds_to_milliseconds};
  */
 
 AvionicsBoard avionics{};
-PayloadBoard payload{};
-RadioBoard radio{};
 PowerBoard power{};
+RadioBoard radio{};
+PayloadBoard payload{};
 Antenna antenna{};
 CommandProcessor command_processor{};
 
@@ -88,7 +88,8 @@ constexpr int display_interval{30 * 1000};
  */
 extern "C" char *sbrk(int i);
 
-int FreeRam () {
+int FreeRam()
+{
   char stack_dummy = 0;
   return &stack_dummy - sbrk(0);
 }
@@ -107,9 +108,7 @@ void setup()
 
   Serial.begin(serial_baud_rate);
   while (!Serial)
-  {
     avionics.trigger_watchdog(); // OK to trigger the internal watchdog before initialization
-  };
   Log.setPrefix(printPrefix);
   Log.setSuffix(printSuffix);
   Log.begin(LOG_LEVEL_VERBOSE, &Serial);
@@ -167,7 +166,7 @@ void setup()
   loop_start_time = micros();
   display_start_time = millis();
 #endif // INSTRUMENTATION
-};
+}
 
 /**
  * @brief Execute the Avionics functions
@@ -248,9 +247,16 @@ void loop()
     payload_maximum = duration;
     payload_maximum_timestamp = millis();
   }
-#endif // INSTRUMENTATION
 
-#ifdef INSTRUMENTATION
+  // Record free RAM
+
+  auto free_RAM{FreeRam()};
+  if (free_RAM < RAM_minimum)
+  {
+    RAM_minimum = free_RAM;
+    RAM_minimum_timestamp = millis();
+  }
+
   if (millis() - display_start_time > display_interval)
   {
     char timestamp[20]{};
@@ -270,15 +276,6 @@ void loop()
     Log.verboseln("Minimum free RAM %l bytes at %s", RAM_minimum, timestamp);
     display_start_time = millis();
     Log.verboseln("Current free RAM %l bytes", FreeRam());
-  }
-
-  // Record free RAM
-
-  auto free_RAM{FreeRam()};
-  if (free_RAM < RAM_minimum)
-  {
-    RAM_minimum = free_RAM;
-    RAM_minimum_timestamp = millis();
   }
 
   // Record loop time

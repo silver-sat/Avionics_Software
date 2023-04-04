@@ -12,14 +12,13 @@
 
 #include <Arduino.h>
 
-// todo: move to avionics_constants.h
 /**
  * @brief CommandParser constants
  *
  */
 
 constexpr char command_message_separator{'|'}; /**< separator for signed command */
-constexpr size_t buffer_token_limit{4};        /**< number of signed command sections */
+constexpr size_t buffer_part_limit{4};         /**< number of signed command parts */
 constexpr size_t maximum_sequence_length{10};  /**< maximum digits in sequence number */
 constexpr size_t maximum_command_length{200};  /**< maximum characters in command */
 constexpr size_t command_parameter_limit{10};  /**< maximum command parameters */
@@ -35,16 +34,16 @@ class CommandParser final
 {
 public:
     /**
-     * @brief Parse command parameters
-     *
-     */
-
-    bool parse_parameters(const String &command_string, String command_tokens[], size_t &token_index);
-
-    /**
      * @brief Validate the commmand signature
      *
      */
 
     bool validate_signature(String &buffer, String &command_string, const bool validation_required, long &command_sequence);
+
+    /**
+     * @brief Parse command parameters
+     *
+     */
+
+    bool parse_parameters(const String &command_string, String command_tokens[], size_t &token_index);
 };

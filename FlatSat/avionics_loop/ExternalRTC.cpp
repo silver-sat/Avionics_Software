@@ -35,8 +35,7 @@ bool ExternalRTC::begin(TwoWire *theWire)
     // Wait for realtime clock--not immediately available after processor reset with no power cycle
     unsigned long delayStartTime = millis();
     while ((!m_rtc.begin(theWire)) && ((millis() - delayStartTime) < wait_for_i2c_device))
-    {
-    }
+        ;
 
     if (!m_rtc.begin(theWire))
     {
@@ -93,9 +92,7 @@ bool ExternalRTC::get_time(DateTime &time)
     }
     time = m_rtc.now();
     if (time.isValid())
-    {
         return true;
-    }
     else
     {
         Log.errorln("Invalid time");
@@ -120,9 +117,7 @@ String ExternalRTC::get_timestamp()
     }
     DateTime time = m_rtc.now();
     if (time.isValid())
-    {
         return m_rtc.now().timestamp();
-    }
     else
     {
         Log.errorln("Invalid time");

@@ -15,11 +15,10 @@
 #include "AvionicsBoard.h"
 
 constexpr uint32_t serial1_baud_rate{115200}; /**< speed of serial1 connection @hideinitializer */
-constexpr byte FEND{'\xC0'};  /**< frame end */
-constexpr byte FESC{'\xDB'};  /**< frame escape */
-constexpr byte TFEND{'\xDC'}; /**< transposed frame end */
-constexpr byte TFESC{'\xDD'}; /**< transposed frame escape */
-
+constexpr byte FEND{'\xC0'};                  /**< frame end */
+constexpr byte FESC{'\xDB'};                  /**< frame escape */
+constexpr byte TFEND{'\xDC'};                 /**< transposed frame end */
+constexpr byte TFESC{'\xDD'};                 /**< transposed frame escape */
 
 /**
  * @brief Initialize the Radio Board
@@ -111,14 +110,11 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
                 continue; // drop command type
             }
             else if (character == FEND)
-            {
                 if (m_buffer_index > 0)
                 {
                     buffer[m_buffer_index++] = '\0';
                     if (source == REMOTE_FRAME)
-                    {
                         Log.infoln("Command received (count %l): %s", ++m_commands_received, buffer);
-                    }
                     else
                     {
                         char reply[RES.length() + 1];
@@ -130,10 +126,7 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
                     return true; // command or response received
                 }
                 else
-                {
                     Log.errorln("No command received");
-                }
-            }
             if (m_received_escape)
             {
                 m_received_escape = false;
@@ -157,13 +150,9 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
                 continue; // drop escape character
             }
             if (m_buffer_index < length)
-            {
                 buffer[m_buffer_index++] = character;
-            }
             else
-            {
                 Log.errorln("Buffer overflow, ignored: 0x%x", character);
-            }
         }
         else if (character == FEND)
         {
@@ -173,9 +162,7 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
             m_received_type = false;
         }
         else
-        {
             Log.errorln("FEND is not first character of command");
-        }
     }
     return false;
 }
@@ -193,13 +180,9 @@ bool RadioBoard::send_message(Message message) const
     auto command = message.get_command();
     auto content = message.get_content();
     if (content.length() == 0)
-    {
         Log.noticeln("Sending message: KISS command 0x%x", command);
-    }
     else
-    {
         Log.noticeln("Sending message: KISS command 0x%x, content: %s", command, content.c_str());
-    }
     Serial1.write(FEND);
     Serial1.write(command);
     Serial1.write(content.c_str());
@@ -220,6 +203,6 @@ String RadioBoard::get_status()
     Serial1.write(FEND);
     Serial1.write(GET_RADIO_STATUS);
     Serial1.write(FEND);
-    // todo: retrieve and store Radio Board status
+    // todo: consider storing Radio Board status
     return "unknown";
 }

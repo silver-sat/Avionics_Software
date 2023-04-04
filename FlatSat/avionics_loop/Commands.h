@@ -112,7 +112,7 @@ public:
 class CommandSetClock final : public Command
 {
 public:
-    explicit CommandSetClock(DateTime time) : m_time{time} {};
+    explicit CommandSetClock(const DateTime time) : m_time{time} {};
     bool acknowledge_command() override;
     bool execute_command() override;
 
@@ -129,7 +129,7 @@ private:
 class CommandBeaconSp final : public Command
 {
 public:
-    explicit CommandBeaconSp(int seconds) : m_seconds{seconds} {};
+    explicit CommandBeaconSp(const int seconds) : m_seconds{seconds} {};
     bool acknowledge_command() override;
     bool execute_command() override;
 
@@ -146,7 +146,7 @@ private:
 class CommandPicTimes final : public Command
 {
 public:
-    explicit CommandPicTimes(DateTime time) : m_time{time} {};
+    explicit CommandPicTimes(const DateTime time) : m_time{time} {};
     bool acknowledge_command() override;
     bool execute_command() override;
 
@@ -390,7 +390,8 @@ private:
 class CommandModifyMode final : public Command
 {
 public:
-    explicit CommandModifyMode(const char mode) {
+    explicit CommandModifyMode(const char mode)
+    {
         m_mode[0] = mode;
         m_mode[1] = '\0';
     };
