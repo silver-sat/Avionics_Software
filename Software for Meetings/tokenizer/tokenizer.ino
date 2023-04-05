@@ -61,7 +61,7 @@ void tokenizer(const String &command, String tokens[], size_t &token_count)
 void print_result(const String &command, const String tokens[], const size_t token_count)
 {
     Serial.println("For command: \"" + command + '\"');
-    if (token_count == -1)
+    if (static_cast<int>(token_count) == -1)
     {
         Serial.println("Parsing error");
     }

@@ -23,7 +23,6 @@ constexpr size_t maximum_tokens{10};
 void tokenizer(const String &command, String tokens[], size_t &token_count)
 {
     String trimmed_command{command};
-    size_t command_index{0};
     size_t token_index{0};
     while (trimmed_command.length() > 0)
     {
@@ -33,7 +32,7 @@ void tokenizer(const String &command, String tokens[], size_t &token_count)
             return;
         }
         trimmed_command.trim();
-        size_t next_blank{trimmed_command.indexOf(' ')};
+        int next_blank{trimmed_command.indexOf(' ')};
         if (next_blank == -1)
         { // no more blanks in command
             tokens[token_index++] = trimmed_command;
@@ -60,7 +59,7 @@ void tokenizer(const String &command, String tokens[], size_t &token_count)
 void print_result(const String &command, const String tokens[], const size_t token_count)
 {
     Serial.println("For command: \"" + command + '\"');
-    if (token_count == -1)
+    if (static_cast<int>(token_count) == -1)
     {
         Serial.println("Parsing error");
     }
