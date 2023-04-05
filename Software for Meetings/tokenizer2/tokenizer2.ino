@@ -1,52 +1,51 @@
 /**
- * @file tokenizer.ino
+ * @file tokenizer2.ino
  * @author Lee A. Congdon (lee@silversat.org)
- * @brief tokenizer implementation with character manipulation
+ * @brief tokenizer implementation with String methods
  * @version 1.0.0
- * @date 2023-04-03
+ * @date 2023-04-05
  *
  * Implements https://docs.google.com/presentation/d/1Xw3lUu81yLnpkeHwMXOLl7wfIG3j5VsndNmMz3wN4bU/edit?usp=sharing
  *
  */
 
-constexpr size_t maximum_tokens{10}; // Allow up to 10 tokens
+constexpr size_t maximum_tokens{10};
 
 /**
- * @brief Parse the command string into tokens
+ * @brief Parse command for blank-delimited tokens
  *
- * @param command string to be parsed
- * @param tokens String array of tokens
- * @param token_count token count, -1 if error
+ * @param [in] command blank delimited command string
+ * @param [out] tokens String array of tokens
+ * @param [out] token_count token count, -1 if error
  *
  */
 
 void tokenizer(const String &command, String tokens[], size_t &token_count)
 {
-    for (size_t index{0}; index < maximum_tokens; ++index)
-        tokens[index] = "";
-    token_count = 0;
-    bool in_token{false};
-    for (auto character : command)
+    String trimmed_command{command};
+    size_t command_index{0};
+    size_t token_index{0};
+    while (trimmed_command.length() > 0)
     {
-        if (character == ' ')
+        if (token_index >= maximum_tokens)
         {
-            if (in_token)
-                in_token = false;
+            token_count = -1; // too many tokens
+            return;
+        }
+        trimmed_command.trim();
+        size_t next_blank{trimmed_command.indexOf(' ')};
+        if (next_blank == -1)
+        { // no more blanks in command
+            tokens[token_index++] = trimmed_command;
+            trimmed_command = "";
         }
         else
         {
-            if (!in_token)
-            {
-                if (++token_count > maximum_tokens)
-                {
-                    token_count = -1; // too many tokens
-                    break;
-                }
-                in_token = true;
-            }
-            tokens[token_count - 1] += character;
+            tokens[token_index++] = trimmed_command.substring(0, next_blank);
+            trimmed_command = trimmed_command.substring(next_blank);
         }
     }
+    token_count = token_index;
 }
 
 /**
