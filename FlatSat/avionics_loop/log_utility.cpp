@@ -52,7 +52,6 @@ void printTimestamp(Print *_logOutput)
 
 void formatTimestamp(char *timestamp, const unsigned long msecs)
 {
-  // todo: move to avionics_constants.h
   // Division constants
   const unsigned long MSECS_PER_SEC = 1000;
   const unsigned long SECS_PER_MIN = 60;
@@ -119,5 +118,4 @@ void printLogLevel(Print *_logOutput, int logLevel)
 void printSuffix(Print *_logOutput, int logLevel)
 {
   _logOutput->print("");
-  auto null = logLevel; // use parameter to avoid compiler warning
 }

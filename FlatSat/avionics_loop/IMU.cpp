@@ -14,17 +14,6 @@
 #include "log_utility.h"
 #include "avionics_constants.h"
 
-
-
-/**
- * @brief Construct a new IMU::IMU object
- *
- */
-
-IMU::IMU(){
-
-};
-
 /**
  * @brief Initialize inertial management unit
  *
@@ -37,13 +26,12 @@ bool IMU::begin(TwoWire *theWire)
     unsigned long delayStartTime{millis()};
     // wait for IMU to become available
     while ((!m_mpu.begin(IMU_I2C_ADDRESS, theWire)) && ((millis() - delayStartTime) < wait_for_i2c_device))
-    {
-    }
+        ;
     if (!m_mpu.begin(IMU_I2C_ADDRESS, theWire))
     {
         Log.errorln("Cannot initialize inertial management unit");
         return false;
-    };
+    }
 
     m_mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
     String prefix{"Accelerometer range set to: "};
@@ -61,7 +49,7 @@ bool IMU::begin(TwoWire *theWire)
     case MPU6050_RANGE_16_G:
         Log.verboseln((prefix + "+-16G").c_str());
         break;
-    };
+    }
 
     m_mpu.setGyroRange(MPU6050_RANGE_500_DEG);
     prefix = {"Gyro range set to: "};
@@ -79,7 +67,7 @@ bool IMU::begin(TwoWire *theWire)
     case MPU6050_RANGE_2000_DEG:
         Log.verboseln("+- 2000 deg/s");
         break;
-    };
+    }
 
     m_mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
     prefix = {"Filter bandwidth set to: "};
@@ -106,10 +94,10 @@ bool IMU::begin(TwoWire *theWire)
     case MPU6050_BAND_5_HZ:
         Log.verboseln((prefix + "5 Hz").c_str());
         break;
-    };
+    }
 
     return true;
-};
+}
 
 /**
  * @brief Get acceleration
@@ -130,7 +118,7 @@ String IMU::get_acceleration()
                   String(m_a.acceleration.z, 3);
 
     return data;
-};
+}
 
 /**
  * @brief Get rotation
@@ -150,7 +138,7 @@ String IMU::get_rotation()
                   String(m_g.gyro.z, 3);
 
     return data;
-};
+}
 
 /**
  * @brief Get temperature
@@ -166,7 +154,7 @@ String IMU::get_temperature()
                   String(m_temp.temperature, 3);
 
     return data;
-};
+}
 
 /**
  * @brief Update the data from the IMU

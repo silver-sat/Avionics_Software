@@ -24,7 +24,7 @@
  * @brief Avionics Board constants
  *
  */
-// todo: move to avionics_constants.h
+
 constexpr uint16_t minimum_beacon_interval{1 * minutes_to_seconds};  /**< Restrict to a reasonable value */
 constexpr uint16_t maximum_beacon_interval{10 * minutes_to_seconds}; /**< Restrict to a reasonable value */
 constexpr size_t maximum_scheduled_pictures{5};                      /**< Assume small number of pictures in one orbit */
@@ -35,6 +35,7 @@ constexpr uint16_t maximum_valid_year{2040};                         /**< Restri
  * @brief Avionics Board class for managing the microcontroller and peripherals
  *
  */
+
 class AvionicsBoard final
 {
 public:
@@ -57,7 +58,7 @@ public:
     *
     */
 
-   bool set_external_rtc(DateTime time);
+   bool set_external_rtc(const DateTime time);
 
    /**
     * @brief Get a timestamp
@@ -71,8 +72,7 @@ public:
     *
     */
 
-   // todo: consider using TimeSpan
-   bool set_beacon_interval(int seconds);
+   bool set_beacon_interval(const int seconds);
 
    /**
     * @brief Send a beacon if the beacon interval has elapsed
@@ -86,7 +86,7 @@ public:
     *
     */
 
-   bool set_picture_time(DateTime time);
+   bool set_picture_time(const DateTime time);
 
    /**
     * @brief Check time for photo and start payload if required
@@ -134,7 +134,7 @@ public:
     *
     */
 
-   String read_fram(size_t address);
+   String read_fram(const size_t address);
 
    /**
     * @brief Unset the realtime clock
@@ -161,7 +161,6 @@ private:
    unsigned long m_last_beacon_time{0};                                               /**< Last beacon time */
    Beacon::Status m_power_status{Beacon::Status::unknown};                            /**< Power Board status */
    Beacon::Status m_avionics_status{Beacon::Status::excellent};                       /**< Avionics Board status */
-   Beacon::Status m_radio_status{Beacon::Status::unknown};                            /**< Radio Board status */
    Beacon::Status m_payload_status{Beacon::Status::unknown};                          /**< Payload Board status */
    size_t m_picture_count{0};                                                         /**< Maximum picture count */
    DateTime m_picture_times[maximum_scheduled_pictures]{};                            /**< Scheduled picture times */

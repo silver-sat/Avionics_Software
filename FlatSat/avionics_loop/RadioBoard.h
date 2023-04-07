@@ -47,7 +47,7 @@ public:
      *
      */
 
-    bool send_message(Message message) const;
+    bool send_message(const Message message) const;
 
     /**
      * @brief Get Radio Board status

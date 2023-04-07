@@ -17,7 +17,7 @@
  *
  *
  */
-// todo: consider moving to avionics_constants.h
+
 constexpr int payload_startup_delay{30 * seconds_to_milliseconds};
 constexpr int payload_shutdown_delay{10 * seconds_to_milliseconds};
 

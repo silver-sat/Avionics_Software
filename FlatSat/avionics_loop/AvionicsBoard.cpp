@@ -16,7 +16,6 @@
 #include <Adafruit_SleepyDog.h>
 #include "PayloadBoard.h"
 
-// todo: if internal watchdog is used, move to avionics_constants.h
 constexpr int internal_watchdog_interval{2 * seconds_to_milliseconds}; /**< internal watchdog interval **/
 
 /**
@@ -49,13 +48,9 @@ bool AvionicsBoard::begin()
   Log.traceln("Initializing external realtime clock");
 
   if (m_external_rtc.begin(&Wire))
-  {
     Log.traceln("External realtime clock initialization completed");
-  }
   else
-  {
     Log.errorln("External realtime clock not initialized");
-  }
 
   // Non-Critical I2C
 
@@ -69,29 +64,21 @@ bool AvionicsBoard::begin()
   Log.traceln("Initializing inertial measurement unit");
   auto status = m_imu.begin(&Wire1);
   if (status)
-  {
     Log.traceln("Inertial measurement unit initialization completed");
-  }
   else
-  {
     Log.errorln("Inertial management unit not initialized");
-  }
 
   // FRAM
 
   Log.traceln("Initializing FRAM");
   status = m_fram.begin(FRAM_I2C_ADDRESS, &Wire1);
   if (status)
-  {
     Log.traceln("FRAM initialization completed");
-  }
   else
-  {
     Log.errorln("FRAM not initialized");
-  }
 
   return true;
-};
+}
 
 /**
  * @brief Force the watchdog to reset the processor
@@ -104,7 +91,7 @@ void AvionicsBoard::watchdog_force_reset()
   m_external_watchdog.set_force_reset();
   Watchdog.disable();
   Watchdog.enable(0);
-};
+}
 
 /**
  * @brief Set the external realtime clock
@@ -124,7 +111,7 @@ bool AvionicsBoard::set_external_rtc(const DateTime time)
   }
 
   return m_external_rtc.set_time(time);
-};
+}
 
 /**
  * @brief Get a timestamp
@@ -135,7 +122,7 @@ bool AvionicsBoard::set_external_rtc(const DateTime time)
 String AvionicsBoard::get_timestamp()
 {
   return m_external_rtc.get_timestamp();
-};
+}
 
 /**
  * @brief Set beacon interval
@@ -156,7 +143,7 @@ bool AvionicsBoard::set_beacon_interval(const int seconds)
   }
   m_beacon_interval = seconds * seconds_to_milliseconds;
   return true;
-};
+}
 
 /**
  * @brief Send a beacon if the beacon interval has elapsed
@@ -173,22 +160,19 @@ bool AvionicsBoard::check_beacon()
     extern PowerBoard power;
     m_power_status = power.get_status();
     m_avionics_status = Beacon::Status::excellent;
+    // todo: determine whether to send beacon during communications session
     extern PayloadBoard payload;
     if (payload.get_payload_active())
-    {
       m_payload_status = Beacon::Status::on;
-    }
     else
-    {
       m_payload_status = Beacon::Status::off;
-    }
     extern RadioBoard radio;
     Beacon beacon{m_power_status, m_avionics_status, m_payload_status};
     radio.send_message(beacon);
     m_last_beacon_time = millis();
-  };
+  }
   return true;
-};
+}
 
 /**
  * @brief Set the time for the next payload photo
@@ -199,7 +183,7 @@ bool AvionicsBoard::check_beacon()
  *
  */
 
-bool AvionicsBoard::set_picture_time(DateTime time)
+bool AvionicsBoard::set_picture_time(const DateTime time)
 {
   if (!m_external_rtc.is_set())
   {
@@ -228,20 +212,16 @@ bool AvionicsBoard::set_picture_time(DateTime time)
     return false;
   }
   size_t index{m_picture_count++};
-  for (; index > 0; index--)
+  for (; index > 0; --index)
   {
     if (time > m_picture_times[index - 1])
-    {
       break;
-    }
     else
-    {
       m_picture_times[index] = m_picture_times[index - 1];
-    }
   }
   m_picture_times[index] = time;
   return true;
-};
+}
 
 /**
  * @brief Check time for photo and start payload if required
@@ -255,9 +235,7 @@ bool AvionicsBoard::set_picture_time(DateTime time)
 bool AvionicsBoard::check_photo()
 {
   if (!m_external_rtc.is_set())
-  {
     return false;
-  }
   DateTime time{};
   if (!m_external_rtc.get_time(time))
   {
@@ -274,11 +252,9 @@ bool AvionicsBoard::check_photo()
   if ((m_picture_count > 0) && (time >= m_picture_times[0]))
   {
     Log.traceln("Photo time reached %s", get_timestamp().c_str());
-    for (size_t index = 0; index < m_picture_count; index++)
-    {
+    for (size_t index = 0; index < m_picture_count; ++index)
       m_picture_times[index] = m_picture_times[index + 1];
-    }
-    m_picture_count--;
+    --m_picture_count;
     extern PayloadBoard payload;
     if (payload.get_payload_active())
     {
@@ -286,12 +262,10 @@ bool AvionicsBoard::check_photo()
       return false;
     }
     else
-    {
       payload.photo();
-    }
-  };
+  }
   return true;
-};
+}
 
 /**
  * @brief Get picture times
@@ -302,12 +276,10 @@ bool AvionicsBoard::check_photo()
 String AvionicsBoard::get_pic_times()
 {
   String response{m_picture_count};
-  for (size_t index = 0; index < m_picture_count; index++)
-  {
+  for (size_t index = 0; index < m_picture_count; ++index)
     response += m_picture_times[index].timestamp();
-  }
   return response;
-};
+}
 
 /**
  * @brief Clear picture times
@@ -320,7 +292,7 @@ bool AvionicsBoard::clear_pic_times()
 {
   m_picture_count = 0;
   return true;
-};
+}
 
 /**
  * @brief Get telemetry
@@ -331,7 +303,7 @@ bool AvionicsBoard::clear_pic_times()
 String AvionicsBoard::get_telemetry()
 {
   return m_imu.get_acceleration() + m_imu.get_rotation() + m_imu.get_temperature();
-};
+}
 
 /**
  * @brief Get the beacon interval
@@ -342,7 +314,7 @@ String AvionicsBoard::get_telemetry()
 String AvionicsBoard::get_beacon_interval()
 {
   return String(m_beacon_interval / seconds_to_milliseconds);
-};
+}
 
 /**
  * @brief Trigger the watchdog
@@ -354,7 +326,7 @@ void AvionicsBoard::trigger_watchdog()
 {
   m_external_watchdog.trigger();
   Watchdog.reset();
-};
+}
 
 /**
  * @brief Enable I2C bus switch
@@ -368,7 +340,7 @@ bool AvionicsBoard::busswitch_enable()
   Log.verboseln("Enabling I2C bus switch");
   digitalWrite(EN_EXT_I2C, LOW);
   return true;
-};
+}
 
 /**
  * @brief Read byte from FRAM
@@ -377,10 +349,10 @@ bool AvionicsBoard::busswitch_enable()
  * @return String byte read
  */
 
-String AvionicsBoard::read_fram(size_t address)
+String AvionicsBoard::read_fram(const size_t address)
 {
   return String(m_fram.read(address));
-};
+}
 
 /**
  * @brief Unset the realtime clock

@@ -27,12 +27,6 @@ constexpr unsigned IMU_I2C_ADDRESS{0x68};   /**< inertial measurement unit I2C a
 class IMU final
 {
 public:
-    /**
-     * @brief Construct a new IMU::IMU object
-     *
-     */
-
-    IMU();
 
     /**
      * @brief Initialize inertial management unit

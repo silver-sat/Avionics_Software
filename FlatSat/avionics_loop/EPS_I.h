@@ -1049,7 +1049,7 @@ private:
    *
    */
 
-  void write_command(EPS_I_Write_Command command, uint8_t state);
+  void write_command(const EPS_I_Write_Command command, const uint8_t state);
 
   Adafruit_I2CDevice m_i2c_dev{Adafruit_I2CDevice(EPS_I_I2C_ADDRESS, &Wire1)};
 };

@@ -31,7 +31,7 @@ void setup() {
   uint8_t buffer[]{0xBB, 0xBB};
   i2c_dev.write_then_read(&command, 1, buffer, 2, false);
   Serial.print("Write then Read: ");
-  for (uint8_t i=0; i<2; i++) {
+  for (uint8_t i=0; i<2; ++i) {
     Serial.print("0x"); Serial.print(buffer[i], HEX); Serial.print(", ");
   }
   Serial.println();

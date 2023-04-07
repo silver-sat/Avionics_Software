@@ -36,6 +36,7 @@ bool CommandProcessor::check_for_command()
         if (m_source == REMOTE_FRAME)
         {
             Command *command{make_command(command_string)};
+            Log.verboseln("Command object memory address: %X", *command);
             command->acknowledge_command();
             Log.traceln("Command acknowledged");
 
@@ -117,7 +118,7 @@ bool CommandProcessor::check_for_command()
         }
     };
     return true;
-};
+}
 
 /**
  * @brief Make command object
@@ -153,4 +154,4 @@ Command *CommandProcessor::make_command(String buffer)
         String invalid[]{"Invalid"};
         return command_factory.BuildCommand(invalid, 1);
     }
-};
+}

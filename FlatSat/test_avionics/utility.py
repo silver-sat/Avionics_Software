@@ -598,7 +598,7 @@ def buffer_overflow(log):
 ## Verify antenna deployed
 #
 def antenna_deployed(log):
-    return any((item.detail == "Antenna doors open" for item in log))
+    return any((item.detail == "All antenna doors open" for item in log))
 
 
 # todo: verify beacon power_sent

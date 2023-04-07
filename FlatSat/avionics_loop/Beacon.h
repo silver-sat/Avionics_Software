@@ -7,9 +7,9 @@
  *
  * This file implements the Beacon class, which inherits from Message. Beacons are sent
  * at intervals and include a call sign and status for the Power, Avionics, and Payload boards.
- * 
+ *
  * Beacon timing relies on a microcontroller timer. The realtime clock is not used for beacon timing.
- * 
+ *
  * The Radio Board provides its own status and adds it to the beacon prior to transmission.
  *
  */
@@ -20,13 +20,12 @@
 #include "avionics_constants.h"
 #include <Arduino.h>
 
-
 /**
  * @brief Amateur radio call sign
  *
  */
 
-const String call_sign{"KC3CQJ"};
+const String call_sign{"KC3VVW"};
 
 /**
  * @brief Beacon message
@@ -54,15 +53,15 @@ public:
     /**
      * @brief Construct a new Beacon::Beacon object
      *
-     * @param power status
-     * @param avionics status
-     * @param payload status
+     * @param power Power Board status
+     * @param avionics Avionics Board status
+     * @param payload Payload Board status
      */
 
     Beacon(
-        Status power,
-        Status avionics,
-        Status payload)
+        const Status power,
+        const Status avionics,
+        const Status payload)
     {
 
         m_command = beacon;
@@ -70,13 +69,12 @@ public:
                     getStatus(power) +
                     getStatus(avionics) +
                     getStatus(payload);
-    };
+    }
 
-    const String getStatus(Status status)
+    const String getStatus(const Status status)
     {
         switch (status)
         {
-
         case Status::excellent:
             return "E";
         case Status::good:

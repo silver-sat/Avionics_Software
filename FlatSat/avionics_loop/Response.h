@@ -29,7 +29,7 @@ public:
      *
      */
 
-    explicit Response(String content)
+    explicit Response(const String content)
     {
         m_command = response;
         m_content = RES + content;
