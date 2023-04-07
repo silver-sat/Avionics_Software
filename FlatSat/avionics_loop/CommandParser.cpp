@@ -195,36 +195,35 @@ bool CommandParser::validate_signature(String &buffer, String &command_string, c
  *
  * @param[in] command_string command string
  * @param[out] command_tokens tokens
- * @param[out] token_index number of tokens
+ * @param[out] token_count number of tokens
  * @return true successful
  * @return false failure
  */
 
-bool CommandParser::parse_parameters(const String &command_string, String command_tokens[], size_t &token_index)
+bool CommandParser::parse_parameters(const String &command_string, String command_tokens[], size_t &token_count)
 {
-    // todo: consider replacing with tokenizer example
-    Log.verboseln("Parsing command");
-    token_index = 0;
-    for (unsigned int string_index = 0; string_index < command_string.length(); ++string_index)
+    size_t token_index{0};
+    String command{command_string};
+    while (command.length() > 0)
     {
-        if (command_string.charAt(string_index) != ' ')
-            command_tokens[token_index] += command_string.charAt(string_index);
+        if (token_index >= command_parameter_limit)
+        {
+            Log.warningln("Too many command parameters");
+            return false;
+        }
+        command.trim();
+        int next_blank{command.indexOf(' ')};
+        if (next_blank == -1)
+        {
+            command_tokens[token_index++] = command;
+            command = "";
+        }
         else
         {
-            // Log.verboseln("Token processed: %s", command_tokens[token_index].c_str());
-            if (token_index++ > command_parameter_limit)
-            {
-                Log.warningln("Too many command parameters");
-                return false;
-            }
+            command_tokens[token_index++] = command.substring(0, next_blank);
+            command = command.substring(next_blank);
         }
     }
-    // todo: evaluate duplicate code
-    // Log.verboseln("Token processed: %s", command_tokens[token_index].c_str());
-    if (token_index > command_parameter_limit)
-    {
-        Log.warningln("Too many command parameters");
-        return false;
-    }
+    token_count = token_index;
     return true;
 }

@@ -45,5 +45,5 @@ public:
      *
      */
 
-    bool parse_parameters(const String &command_string, String command_tokens[], size_t &token_index);
+    bool parse_parameters(const String &command_string, String command_tokens[], size_t &token_count);
 };
