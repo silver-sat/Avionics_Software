@@ -33,6 +33,7 @@ bool ExternalRTC::begin(TwoWire *theWire)
     Log.verboseln("Starting external realtime clock");
 
     // Wait for realtime clock--not immediately available after processor reset with no power cycle
+    // todo: consider lengthening wait time
     unsigned long delayStartTime = millis();
     while ((!m_rtc.begin(theWire)) && ((millis() - delayStartTime) < wait_for_i2c_device))
         ;

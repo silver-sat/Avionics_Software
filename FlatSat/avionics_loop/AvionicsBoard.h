@@ -72,7 +72,6 @@ public:
     *
     */
 
-   // todo: consider using TimeSpan
    bool set_beacon_interval(const int seconds);
 
    /**
