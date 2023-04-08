@@ -21,70 +21,66 @@ class TestWatchdog:
     #
     def test_watchdog(self):
 
-        utility.issue("Watchdog")
-        message = utility.collect_message()
-        assert utility.acknowledged_message(message)
-        message = utility.collect_message()
-        assert utility.response_sent(message, "WDG")
-        message = utility.collect_message()
-        assert utility.reset()
-
-    ## trigger watchdog signed
-    #
-    def test_watchdog_signed(self):
-
-        utility.issue(utility.generate_signed("Watchdog"))
-        message = utility.collect_message()
-        assert utility.acknowledged_message(message)
-        message = utility.collect_message()
-        assert utility.response_sent(message, "WDG")
-        message = utility.collect_message()
-        assert utility.reset()
-   
-    ## trigger watchdog
-    #
-    def test_watchdog(self):
-
+        # todo: verify watchdog reset
         utility.issue("Watchdog")
         # check log
-        log = utility.collect_through_reset_pin_cleared()
+        log = utility.collect_log()
         assert utility.not_signed(log)
         assert utility.acknowledged_log(log)
         assert not utility.no_logged_errors(log)
         assert utility.executed(log)
-        assert utility.reset_pin_set(log)
-        assert utility.reset_pin_cleared(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.acknowledged_message(message)
+        message = utility.collect_message()
+        assert utility.response_sent(message, "WDG")
 
     ## error: invalid parameter
     #
     def test_watchdog_param(self):
-        
-        log = utility.collect_log("Watchdog test")
+
+        utility.issue("Watchdog test")
+        # check log
+        log = utility.collect_log()
         assert utility.not_signed(log)
-        assert utility.acknowledged_log(log)
+        assert utility.negative_acknowledged_log(log)
         assert not utility.no_logged_errors(log)
         assert not utility.executed(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.negative_acknowledged_message(message)
 
     ## trigger watchdog signed
     #
     def test_watchdog_signed(self):
 
+        # todo: verify watchdog reset
         utility.issue(utility.generate_signed("Watchdog"))
-        log = utility.collect_through_reset_pin_cleared()
+        # check log
+        log = utility.collect_log()
         assert utility.signed(log)
         assert utility.signature_valid(log)
         assert utility.acknowledged_log(log)
         assert not utility.no_logged_errors(log)
         assert utility.executed(log)
-        assert utility.reset_pin_set(log)
-        assert utility.reset_pin_cleared(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.acknowledged_message(message)
+        message = utility.collect_message()
+        assert utility.response_sent(message, "WDG")
 
     ## error: invalid parameter signed
     #
     def test_watchdog_param_signed(self):
-        log = utility.collect_log(utility.generate_signed("Watchdog test"))
+
+        utility.issue(utility.generate_signed("Watchdog test"))
+        log = utility.collect_log()
+        # check log
         assert utility.signed(log)
         assert utility.signature_valid(log)
-        assert utility.acknowledged_log(log)
+        assert utility.negative_acknowledged_log(log)
         assert not utility.no_logged_errors(log)
         assert not utility.executed(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.negative_acknowledged_message(message)

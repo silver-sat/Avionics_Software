@@ -178,6 +178,7 @@ void loop()
 
 #ifdef INSTRUMENTATION
   previous_time = micros();
+  // todo: turn GPIOA on and off to enable loop timing
 #endif // INSTRUMENTATION
 
   // Trigger the watchdog

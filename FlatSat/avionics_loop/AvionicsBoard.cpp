@@ -141,6 +141,7 @@ bool AvionicsBoard::set_beacon_interval(const int seconds)
                 minimum_beacon_interval, maximum_beacon_interval);
     return false;
   }
+  m_last_beacon_time = millis(); // set beacon start to present time
   m_beacon_interval = seconds * seconds_to_milliseconds;
   return true;
 }
