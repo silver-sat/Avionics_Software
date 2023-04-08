@@ -1,5 +1,5 @@
 ##
-# @file test_z_local_command_responses.py
+# @file test_local_command_responses.py
 # @brief FlatSat test Avionics Board local command responses
 # @author Lee A. Congdon (lee@silversat.org)
 # @version 2.0.0

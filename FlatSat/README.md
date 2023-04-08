@@ -1,19 +1,25 @@
 ## Avionics Loop
-The "FlatSat" folder contains the Avionics Board software for testing the FlatSat configuration. This includes the process loop, hardware drivers, command processor, and interface software for the power, radio, and payload boards.
+The "FlatSat" folder contains the Avionics Board software for testing and operating the FlatSat configuration. 
+This includes the process loop, hardware drivers, command processor, and interface software for the power, radio, and payload boards.
 
+### Test Drivers
 The "FlatSat" folder contains drivers for testing
-the serial interface with the Radio Board in the "test_radio_interface" folder. These drivers can be used to test each of the local command implementations that require communication between the Avionics Board and the Radio Board, such as getting radio status and changing radio settings. The test drivers can be used to test the beacon functions and the halt function.
+the serial interface with the Radio Board in the "test_avionics" folder. These drivers can be used to test each of the local command implementations that require communication between the Avionics Board and the Radio Board, such as getting radio status and changing radio settings. The test drivers can be used to test the beacon functions and the halt function.
 
 The FlatSat folder also contains
-unit test drivers for the command functions of the Avionics Board in the "test_commands" folder. These drivers can be used to verify and exercise the functions of the Avionics board such as setting the realtime clock, telemetry collection, controlling beacon transmission, triggering the watchdog, and starting a communication session on the mock Payload Board.
+unit test drivers for the command functions of the Avionics Board in the "test_avionics" folder. These drivers can be used to verify and exercise the functions of the Avionics board such as setting the realtime clock, telemetry collection, controlling beacon transmission, and triggering the watchdog.
 
-The "avionics_loop.ino" sketch is the main process loop for testing and operating the Avionics Board. In avionics_loop, the hardware devices on the Avionics Board are implemented as classes interfacing to real hardware. The other SilverSat boards: Power, Radio, and Payload, are implemented as classes which interface with the boards. 
+Also in the "test_avionics" folder are drivers to test the interface with the Payload Board, Power Board, and Antenna. These drivers are augmented by simulators in the "payload_simulator", "eps_simulator", and "antenna_simulator" folders, which contain Python programs suitable for execution on an Adafruit Metro M0 (payload) and Adafruit Grand Central (eps and antenna). When appropriately connected, these simulators respond to the interfaces similarly to the actual devices, thus allowing testing without the entire Flatsat configuration. The folders also include simple programs for testing the simulators.
 
-The local messages which Avionics sends to the Radio Board, the ground commands the Radio Board forwards to Avionics, and the messages Avionics sends to the Radio Board for forwarding to the ground are also represented as classes.
+### Software
+The "avionics_loop.ino" sketch is the main process loop for testing and operating the Avionics Board. In avionics_loop, the hardware devices on the Avionics Board are implemented as classes interfacing to real hardware. The other SilverSat boards: Power, Radio, and Payload, are implemented as classes which interface with those boards. 
 
-The Avionics Board connects to the Radio Board via the Serial1 interface. It connects to the realtime clock via an I2C connection. The Radio Board connects to the IMU, the FRAM, the antenna, and the Power Board via a second I2C connection. Accessing the antenna and the Power Board require activation of an I2C switch. The Radio Board connects to the Payload Board via digital IO.
+The local messages which Avionics sends to the Radio Board, the ground commands the Radio Board forwards to Avionics, and the responses Avionics sends to the Radio Board for forwarding to the ground are also represented as classes.
 
-The "FlatSat" folder includes an interface to the Arduino log library, which can be used to log status information on the Radio Board Serial interface.
+The Avionics Board connects to the Radio Board via the Serial1 interface. It connects to the realtime clock via the critical I2C connection. The Avionics Board connects to the IMU, the FRAM, the antenna, and the Power Board via a second I2C connection. Accessing the antenna and the Power Board require activation of an I2C switch. The Avionics Board connects to the Payload Board via digital IO lines.
+
+### Libraries
+The "FlatSat" folder includes an interface to the Arduino log library, which can be used to log status information on the Radio Board Serial interface. Adafruit libaries are used to support the internal watchdog, I2C devices, the MPU6050, the FRAM, the real time clock,  The Arduino Crypto library is used to support command signing.
 
 ### Setup
 Signed commands require that the Avionics Board and the ground share a secret. This secret is defined as a sixteen-byte array. 
@@ -26,16 +32,20 @@ The "avionics_loop.ino" sketch has extensive logging capabilities based on the A
 
 The "avionics_loop.ino" file has instrumentation for tracking processing time and memory usage that is enabled by ```#define INSTRUMENTATION```. The log utility is used to display the instrumentation data.
 
-The "avionics_loop" sketch receives commands and sends messages and local commands to and from the Radion Board via the "Serial1" port. It sends log data to the "Serial" port. After uploading your sketch, verify that the Avionics Board has initialized properly by opening a terminal connection to the "Serial" port and reviewing the log entries. Terminal emulators known to work include the Arduino IDE Serial Monitor, the VS Code Arduino extension Serial Monitor, and the tio terminal emulator. (```tio -b 115200 -m INLCRNL,ONLCRNL [portname]```). If you are using a bootloader, be aware that use of
+The "avionics_loop" sketch receives commands and sends messages and local commands to and from the Radion Board via the "Serial1" port. It sends log data to the "Serial" port. After uploading your sketch, verify that the Avionics Board has initialized properly by opening a terminal connection to the "Serial" port and reviewing the log entries. Terminal emulators known to work include the Arduino IDE Serial Monitor, the VS Code Arduino extension Serial Monitor, and the tio terminal emulator. (```tio -m INLCRNL [portname]```). If you are using a bootloader, be aware that use of
 a serial monitor can interfere with uploading. If you aren't using the Arduino toolset, disconnect your serial monitor software before using the bootloader.
 
 ### Testing
 
-You can use the "Serial1" port to send commands to the Avionics Board and observe the responses. The commands be KISS formatted. Since commands in general use utf-8 single-byte printable characters, commands can typically be generated by adding FEND [0xC0] at the front and the end of the command. The first FEND must be following by the appropriate command byte as defined in https://docs.google.com/document/d/1Vwpk0ab0HoC62mU7A1fQwpmhmtmZO0VwPtXjQipe0v0/edit?usp=sharing. Be aware that the command bytes are not printable characters.
+You can use the "Serial1" port to send commands to the Avionics Board and observe the responses. The commands must be KISS formatted. Since commands in general use utf-8 single-byte printable characters, commands can typically be generated by adding FEND [0xC0] at the front and end of the command. The first FEND must be following by the appropriate command byte as defined in https://docs.google.com/document/d/1Vwpk0ab0HoC62mU7A1fQwpmhmtmZO0VwPtXjQipe0v0/edit?usp=sharing. Be aware that the command bytes are not printable characters.
 
 The Avionics Board implements the KISS escape processing protocol, although it is not currently in use.
 
-The "FlatSat/test_commands" folder includes python programs for unit testing each of the Avionics Board commands. These programs are designed to be managed and executed using pytest. After resetting the microcontroller you may run the entire suite of command unit tests by entering ```pytest``` on the command line while in the "FlatSat/test_commands" directory. (Depending on your configuration, ```python3 -m pytest``` may be required.) pytest also allows selective execution of tests. See https://docs.pytest.org/ for additional information. Be sure to run the ```test_avionics_initialization.py``` test first any time the microcontroller is restarted to process the initialization messages. You can also review the startup messages in a serial monitor and then end the serial monitor session before running automated tests. To test signed commands, the "secret.txt" file must include the same secret as the "arduino_secrets.h" file used to build "avionics_loop.ino."
+The "FlatSat/test_avionics" folder includes python programs for unit testing each of the Avionics Board commands and for interfacing to the rest of the satellite. These programs are designed to be managed and executed using pytest. After resetting the microcontroller you may run the entire suite of tests by entering ```pytest``` on the command line while in the "FlatSat/test_avionics" directory. (Depending on your configuration, ```python3 -m pytest``` may be required.) 
+
+pytest also allows selective execution of tests. See https://docs.pytest.org/ for additional information. Be sure to run the ```test_00_avionics_initialization.py``` test first any time the microcontroller is restarted to process the initialization messages. You can also review the startup messages in a serial monitor and then end the serial monitor session before running automated tests. To test signed commands, the "secret.txt" file must include the same secret as the "arduino_secrets.h" file used to build "avionics_loop.ino." The "utility.py" program in "avionics_test" contains functions to issue commands and to generate signed commands. 
+
+You can observe traffic on the Serial1 port using a USB adaptor device and tio. ```tio -x [portname]``` will display the traffice as hex bytes. Note that this will interfere with the automated tests, so should only be used when manually entering commands on the (separate) Serial port. It may also be useful to open terminals showing output from the payload simulator and the eps/antenna simulator.
 
 ### Documentation
 

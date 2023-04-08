@@ -15,8 +15,6 @@
 /**
  * @brief Set up the hardware and initialize I2C
  *
- * @param i2c_address address of the device
- * @param wire wire object for I2C connections
  * @return true successful
  * @return false error
  *
