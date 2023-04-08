@@ -62,7 +62,7 @@ constexpr unsigned RESET{0u};              /**< reset the processor @hideinitial
  *
  */
 
-constexpr unsigned wait_for_i2c_device{10}; /**< wait for I2C device to become available */
+constexpr unsigned wait_for_i2c_device{20}; /**< wait for I2C device to become available */
 
 /**
  * @brief Local message content

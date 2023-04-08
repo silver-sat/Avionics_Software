@@ -9,7 +9,7 @@
 
 import serial
 from collections import namedtuple
-from datetime import timedelta
+import datetime
 import re
 import secrets
 import hashlib
@@ -32,7 +32,7 @@ FEND = b"\xC0"
 LOCAL_FRAME = b"\x00"
 REMOTE_FRAME = b"\xAA"
 BEACON = b"\x07"
-MANUAL_RELEASE = b"\x08"
+DIGITALIO_RELEASE = b"\x08"
 STATUS = b"\x09"
 HALT = b"\x0a"
 MODIFY_FREQ = b"\x0B"
@@ -57,8 +57,8 @@ command_port = serial.Serial(COMMAND_PORT, BAUDRATE, timeout=TIMEOUT)
 log_port = serial.Serial(LOG_PORT, BAUDRATE, timeout=TIMEOUT)
 ## maximum read length
 read_length = 256
-## counter for sequencing commands
-command_counter = 0
+## call sign
+call_sign = "KC3VVW"
 
 ## Collect initialization
 #
@@ -73,7 +73,7 @@ def collect_initialization(interval=30):
         log_data = log_port.readline().decode("utf-8").strip()
         print(log_data)
         log.append(Entry(*(log_data.split(maxsplit=2))))
-        log_port.timeout = TIMEOUT
+    log_port.timeout = TIMEOUT
     return log
 
 
@@ -106,9 +106,7 @@ def generate_signed(command):
     secret = open("secret.txt", "rb").read()
     salt = secrets.token_bytes(16)
     # todo: implement sequence number testing
-    global command_counter
-    command_counter += 1
-    sequence = repr(command_counter).encode("utf-8")
+    sequence = get_next_sequence().encode("utf-8")
     separator = "|".encode("utf-8")
     command = command.encode("utf-8")
     command_hmac = hmac.new(secret, digestmod=hashlib.blake2s)
@@ -162,6 +160,20 @@ def collect_message():
     message = message + command_port.read_until(expected=FEND)
     print(f"Message: {message}")
     return message
+
+
+## Collect local acknowledgement or negative acknowledgement
+#
+# Local ACKs and NACKs generate multiple log entries
+#
+def collect_ack_or_nack():
+
+    log = []
+    log_data = ""
+    while ("Received ACK" not in log_data) & ("Received NACK" not in log_data):
+        log_data = log_port.readline().decode("utf-8").strip()
+        log.append(Entry(*(log_data.split(maxsplit=2))))
+    return log
 
 
 ## Simulate response to local command
@@ -218,7 +230,7 @@ def response_sent(message, type):
 #
 def local_beacon_message_sent(message):
 
-    return message.startswith(FEND + BEACON)
+    return message.startswith(FEND + BEACON + call_sign.encode("utf-8"))
 
 
 ## Verify local recover antenna message sent
@@ -227,7 +239,7 @@ def local_beacon_message_sent(message):
 #
 def local_recover_antenna(message):
 
-    return message.startswith(FEND + MANUAL_RELEASE)
+    return message.startswith(FEND + DIGITALIO_RELEASE)
 
 
 ## Verify local status request message sent
@@ -450,21 +462,21 @@ def beacon_interval(length, log):
     seconds1, milliseconds1 = seconds1.split(".")
     hours2, minutes2, seconds2 = log[-2].timestamp.split(":")
     seconds2, milliseconds2 = seconds2.split(".")
-    timedelta1 = timedelta(
+    timedelta1 = datetime.timedelta(
         hours=int(hours1),
         minutes=int(minutes1),
         seconds=int(seconds1),
         milliseconds=int(milliseconds1),
     )
-    timedelta2 = timedelta(
+    timedelta2 = datetime.timedelta(
         hours=int(hours2),
         minutes=int(minutes2),
         seconds=int(seconds2),
         milliseconds=int(milliseconds2),
     )
-    return (timedelta1 - timedelta2 - timedelta(seconds=length)) < timedelta(
-        seconds=0.5
-    )
+    return (
+        timedelta1 - timedelta2 - datetime.timedelta(seconds=length)
+    ) < datetime.timedelta(seconds=0.5)
 
 
 ## Collect beacons with timeout
@@ -595,10 +607,63 @@ def buffer_overflow(log):
 
     return any([("Buffer overflow" in item.detail) for item in log])
 
+
 ## Verify antenna deployed
 #
 def antenna_deployed(log):
     return any((item.detail == "All antenna doors open" for item in log))
+
+
+## Get next sequence number
+#
+def get_next_sequence():
+    issue("NoOperate")
+    log = collect_log()
+    for item in log:
+        if "next sequence" in item.detail:
+            sequence = item.detail
+            sequence = sequence.removesuffix(")")
+            sequence = sequence.rsplit(maxsplit=1)
+            sequence = sequence[-1]
+    collect_message()  # clear ACK from NoOperate
+    collect_message()  # clear RES from NoOperate
+    return sequence
+
+
+## Verify local message received
+#
+def local_message_received(log):
+    return any((item.detail.startswith("Local message received:") for item in log))
+
+
+## Verify ACK or NACK ignored
+#
+# todo: handle NACK
+#
+def ack_or_nack_ignored(log):
+    return any("Received ACK, ignored" in item.detail for item in log)
+
+
+## Manual entry aids
+#
+
+
+def now():
+    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y %m %d %H %M %S")
+
+
+def now1m():
+    return (
+        datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(seconds=60)
+    ).strftime("%Y %m %d %H %M %S")
+
+
+def issue(string):
+    return command_port.write(FEND + REMOTE_FRAME + string.encode("utf-8") + FEND)
+
+
+def read():
+    return command_port.read_all()
 
 
 # todo: verify beacon power_sent

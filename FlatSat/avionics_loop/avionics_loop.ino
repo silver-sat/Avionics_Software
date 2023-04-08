@@ -80,7 +80,7 @@ unsigned long payload_maximum_timestamp{};
 long RAM_minimum{32768};
 unsigned long RAM_minimum_timestamp{};
 unsigned long display_start_time{};
-constexpr int display_interval{30 * 1000};
+constexpr int display_interval{5 * minutes_to_seconds * seconds_to_milliseconds};
 
 /**
  * @brief Helper function for memory use
