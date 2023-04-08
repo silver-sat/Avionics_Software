@@ -110,11 +110,19 @@ class TestInvalid:
     def test_buffer_overflow(self):
         string = "0123456789"
         utility.issue(string * 30)
-        utility.send_FEND()
+        utility.issue("NoOperate")
         # check log
-        log = utility.collect_through_second_FEND()
+        log = utility.collect_log()
+        assert utility.not_signed(log)
+        assert utility.acknowledged_log(log)
         assert not utility.no_logged_errors(log)
-        assert not utility.executed(log)
+        assert utility.executed(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.acknowledged_message(message)
+        message = utility.collect_message()
+        assert utility.response_sent(message, "NOP")
+
 
     ## invalid command signed
     #
@@ -220,9 +228,18 @@ class TestInvalid:
     #
     def test_buffer_overflow_signed(self):
         string = "0123456789"
-        utility.issue(utility.generate_signed(string * 30))
-        utility.send_FEND()  # clear error condition
+        command = utility.generate_signed(string * 30)
+        utility.issue(command)
+        utility.issue("NoOperate")
         # check log
-        log = utility.collect_through_second_FEND()
+        log = utility.collect_log()
+        assert utility.not_signed(log)
+        assert utility.acknowledged_log(log)
         assert not utility.no_logged_errors(log)
-        assert not utility.executed(log)
+        assert utility.executed(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.acknowledged_message(message)
+        message = utility.collect_message()
+        assert utility.response_sent(message, "NOP")
+

@@ -150,26 +150,6 @@ def collect_log():
     return log
 
 
-## Collect through second FEND
-#
-# Overflow ends with a FEND
-#
-def collect_through_second_FEND():
-
-    log = []
-    log_data = ""
-    start_count = 0
-    while True:
-        log_data = log_port.readline().decode("utf-8").strip()
-        print(log_data)
-        log.append(Entry(*(log_data.split(maxsplit=2))))
-        if "Starting command collection" in log_data:
-            start_count += 1
-        if start_count >= 2:
-            break
-    return log
-
-
 ## Collect message response
 #
 # Commands generate one or more messages, captured individually
