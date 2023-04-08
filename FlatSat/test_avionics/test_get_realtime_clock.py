@@ -1,5 +1,5 @@
 ##
-# @file test_report_t.py
+# @file test_get_realtime_clock.py
 # @brief FlatSat test Avionics Board ReportT command
 # @author Lee A. Congdon (lee@silversat.org)
 # @version 2.0.0
