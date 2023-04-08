@@ -117,10 +117,12 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
                         Log.infoln("Command received (count %l): %s", ++m_commands_received, buffer);
                     else
                     {
-                        char reply[RES.length() + 1];
-                        strncpy(reply, buffer, RES.length());
+                        char reply[20]; // todo: fix magic number, ACK, NACK, or RES
+                        memcpy(reply, buffer, 3); // todo: fix magic number
+                        reply[3] = '\0';
+                        byte command{buffer[3]};
                         // todo: consider logging additional data if it exists
-                        Log.infoln("Local message received: %s 0x%x", reply, buffer[RES.length()]);
+                        Log.infoln("Local message received: %s %x", reply, command);
                     }
                     m_received_start = false;
                     return true; // command or response received
@@ -152,7 +154,11 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
             if (m_buffer_index < length)
                 buffer[m_buffer_index++] = character;
             else
+            {
                 Log.errorln("Buffer overflow, ignored: 0x%x", character);
+                m_received_start = false;
+                break; // restart command
+            }
         }
         else if (character == FEND)
         {

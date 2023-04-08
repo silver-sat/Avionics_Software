@@ -30,14 +30,14 @@ class TestInvalid:
         message = utility.collect_message()
         assert utility.negative_acknowledged_message(message)
 
-    ## invalid command signed
+    ## error: invalid parameter
     #
-    def test_invalid_signed(self):
+    def test_invalid_param(self):
 
-        utility.issue(utility.generate_signed("Invalid"))
+        utility.issue("Invalid test")
         # check log
         log = utility.collect_log()
-        assert utility.signed(log)
+        assert utility.not_signed(log)
         assert utility.negative_acknowledged_log(log)
         assert not utility.no_logged_errors(log)
         assert not utility.executed(log)
@@ -45,11 +45,11 @@ class TestInvalid:
         message = utility.collect_message()
         assert utility.negative_acknowledged_message(message)
 
-    ## error: invalid parameter
+    ## error: extra blanks
     #
-    def test_invalid_param(self):
+    def test_invalid_extra_blanks(self):
 
-        utility.issue("Invalid test")
+        utility.issue("  Invalid   test   ")
         # check log
         log = utility.collect_log()
         assert utility.not_signed(log)
@@ -110,16 +110,11 @@ class TestInvalid:
     def test_buffer_overflow(self):
         string = "0123456789"
         utility.issue(string * 30)
+        utility.send_FEND()
         # check log
-        log = utility.collect_log()
-        assert utility.not_signed(log)
-        assert utility.negative_acknowledged_log(log)
+        log = utility.collect_through_second_FEND()
         assert not utility.no_logged_errors(log)
-        assert utility.buffer_overflow(log)
         assert not utility.executed(log)
-        # check messages
-        message = utility.collect_message()
-        assert utility.negative_acknowledged_message(message)
 
     ## invalid command signed
     #
@@ -142,6 +137,22 @@ class TestInvalid:
     def test_invalid_param_signed(self):
 
         utility.issue(utility.generate_signed("Invalid test"))
+        # check log
+        log = utility.collect_log()
+        assert utility.signed(log)
+        assert utility.signature_valid(log)
+        assert utility.negative_acknowledged_log(log)
+        assert not utility.no_logged_errors(log)
+        assert not utility.executed(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.negative_acknowledged_message(message)
+
+    ## error: extra blanks signed
+    #
+    def test_extra_blanks_signed(self):
+
+        utility.issue(utility.generate_signed("  Invalid   test   "))
         # check log
         log = utility.collect_log()
         assert utility.signed(log)
@@ -210,14 +221,8 @@ class TestInvalid:
     def test_buffer_overflow_signed(self):
         string = "0123456789"
         utility.issue(utility.generate_signed(string * 30))
+        utility.send_FEND()  # clear error condition
         # check log
-        log = utility.collect_log()
-        assert utility.signed(log)
-        assert utility.signature_invalid(log)
-        assert utility.negative_acknowledged_log(log)
+        log = utility.collect_through_second_FEND()
         assert not utility.no_logged_errors(log)
-        assert utility.buffer_overflow(log)
         assert not utility.executed(log)
-        # check messages
-        message = utility.collect_message()
-        assert utility.negative_acknowledged_message(message)

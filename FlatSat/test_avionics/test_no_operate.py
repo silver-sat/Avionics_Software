@@ -30,6 +30,23 @@ class TestNoOperate:
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
         assert utility.response_sent(message, "NOP")
+    
+    ## no operation extra blanks
+    #
+    def test_no_operate_extra_blanks(self):
+
+        utility.issue("   NoOperate   ")
+        # check log
+        log = utility.collect_log()
+        assert utility.not_signed(log)
+        assert utility.acknowledged_log(log)
+        assert utility.no_logged_errors(log)
+        assert utility.executed(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.acknowledged_message(message)
+        message = utility.collect_message()
+        assert utility.response_sent(message, "NOP")
 
     ## error: invalid parameter
     #
@@ -78,6 +95,25 @@ class TestNoOperate:
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
         assert utility.response_sent(message, "NOP")
+
+    ## no operation signed extra blanks
+    #
+    def test_no_operate_signed_extra_blanks(self):
+
+        utility.issue(utility.generate_signed("   NoOperate   "))
+        # check log
+        log = utility.collect_log()
+        assert utility.signed(log)
+        assert utility.signature_valid(log)
+        assert utility.acknowledged_log(log)
+        assert utility.no_logged_errors(log)
+        assert utility.executed(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.acknowledged_message(message)
+        message = utility.collect_message()
+        assert utility.response_sent(message, "NOP")
+
 
     ## error: invalid parameter signed
     #
