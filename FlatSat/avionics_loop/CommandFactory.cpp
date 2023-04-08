@@ -146,7 +146,7 @@ Command *CommandFactory::BuildCommand(const String tokens[], const size_t token_
             return new CommandTweeSlee();
         else
             return new CommandInvalid(); // Wrong number of parameters
-    else if (tokens[0] == "ExternalWatchdog")
+    else if (tokens[0] == "Watchdog")
         if (argument_count == 0)
             return new CommandWatchdog();
         else

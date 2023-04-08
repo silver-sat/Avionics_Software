@@ -518,17 +518,6 @@ def pictimes_zero_sent(log):
     return any([item.detail.endswith("content: RESGPT0") for item in log])
 
 
-## Collect through reset pin cleared
-#
-def collect_through_reset_pin_cleared(command, interval=60):
-
-    log = []
-    log_data = ""
-    while "Reset pin changed state to 1" not in log_data:
-        log_data = log_port.readline().decode("utf-8").strip()
-        log.append(Entry(*(log_data.split(maxsplit=2))))
-    return log
-
 
 ## Verify reset pin set
 #
