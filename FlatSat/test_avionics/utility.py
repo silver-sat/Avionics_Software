@@ -658,3 +658,38 @@ def read():
 # todo: verify beacon power_sent
 
 # todo: verify deploy antenna sent
+
+def exercise_avionics():
+    issue(f"SetClock {now()}")
+    log = collect_log()
+    message = collect_message()
+    message = collect_message()
+    issue("BeaconSp 60")
+    log = collect_log()
+    message = collect_message()
+    message = collect_message()
+
+    while True:
+        time.sleep(5)
+        issue("GetComms")
+        log = collect_log()
+        message = collect_message()
+        message = collect_message()
+        message = collect_message()
+        time.sleep(5)
+        issue(f"PicTimes {now1m()}")
+        log = collect_log()
+        message = collect_message()
+        message = collect_message()
+        time.sleep(5)
+        issue(f"GetPower")
+        log = collect_log()
+        message = collect_message()
+        message = collect_message()
+        time.sleep(5)
+        issue(f"GetTelemetry")
+        log = collect_log()
+        message = collect_message()
+        message = collect_message()
+
+

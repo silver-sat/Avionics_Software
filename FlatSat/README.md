@@ -49,5 +49,7 @@ You can observe traffic on the Serial1 port using a USB adaptor device and tio. 
 
 ### Documentation
 
+The SilverSat Avionics Board document in the repository provides an overview of the Avionics Board hardware, software and commands.
+
 Documentation for the software and tests can be viewed by running doxygen (https://doxygen.nl/) using the provided Doxyfile and then opening docs/index.html in a browser. Modifications to the Doxyfile may be required to reflect your directory structure.
 
