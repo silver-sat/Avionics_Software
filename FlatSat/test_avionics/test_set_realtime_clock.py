@@ -111,7 +111,7 @@ class TestSetClock:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "SRC")
+        assert utility.response_sent(message, "ERR")
 
     ## error: time to early
     #
@@ -128,7 +128,7 @@ class TestSetClock:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "SRC")
+        assert utility.response_sent(message, "ERR")
 
     ## error: time too late
     #
@@ -145,7 +145,7 @@ class TestSetClock:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "SRC")
+        assert utility.response_sent(message, "ERR")
 
     ## set realtime clock signed
     #
@@ -253,7 +253,7 @@ class TestSetClock:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "SRC")
+        assert utility.response_sent(message, "ERR")
 
     ## error: time to early signed
     #
@@ -271,7 +271,7 @@ class TestSetClock:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "SRC")
+        assert utility.response_sent(message, "ERR")
 
     ## error: time too late
     #
@@ -289,4 +289,4 @@ class TestSetClock:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "SRC")
+        assert utility.response_sent(message, "ERR")

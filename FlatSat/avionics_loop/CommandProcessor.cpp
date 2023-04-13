@@ -106,13 +106,13 @@ bool CommandProcessor::check_for_command()
                     response = {Response{"UNK" + radio_data}};
                     break;
                 }
-                radio.send_message(response);
+                response.send();
                 break;
             }
             default:
                 Log.errorln("Unknown local response type");
                 response = (Response{"UNK"});
-                radio.send_message(response);
+                response.send();
                 break;
             }
         }

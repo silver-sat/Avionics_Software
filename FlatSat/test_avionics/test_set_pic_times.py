@@ -97,7 +97,7 @@ class TestPicTimes:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "SPT")
+        assert utility.response_sent(message, "ERR")
 
     ## error: date too early
     #
@@ -114,7 +114,7 @@ class TestPicTimes:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "SPT")
+        assert utility.response_sent(message, "ERR")
 
     ## error: date too late
     #
@@ -131,7 +131,7 @@ class TestPicTimes:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "SPT")
+        assert utility.response_sent(message, "ERR")
 
     ## set picture times signed
     #
@@ -222,7 +222,7 @@ class TestPicTimes:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "SPT")
+        assert utility.response_sent(message, "ERR")
 
     ## error: date too early signed
     #
@@ -240,7 +240,7 @@ class TestPicTimes:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "SPT")
+        assert utility.response_sent(message, "ERR")
 
     ## error: date too late signed
     #
@@ -258,4 +258,4 @@ class TestPicTimes:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "SPT")
+        assert utility.response_sent(message, "ERR")

@@ -205,6 +205,7 @@ bool RadioBoard::send_message(Message message) const
 
 String RadioBoard::get_status()
 {
+    // todo: replace with message
     Log.traceln("Sending local command: requesting Radio Board status");
     Serial1.write(FEND);
     Serial1.write(GET_RADIO_STATUS);

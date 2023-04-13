@@ -10,8 +10,9 @@
 
 #include "Antenna.h"
 #include "avionics_constants.h"
+#include "log_utility.h"
 #include "AvionicsBoard.h"
-#include "RadioBoard.h"
+// #include "RadioBoard.h"
 
 /**
  * @brief Antenna constants
@@ -35,6 +36,7 @@ bool Antenna::deploy()
 
     // Validate successful deployment
 
+    // todo: refactor duplicate code
     Log.noticeln("Reading antenna state");
     byte antenna_state[4]{};
     m_i2c_dev.read(antenna_state, 4);
@@ -72,11 +74,10 @@ bool Antenna::deploy()
         return true;
     }
 
-    // Notifying Radio Board to deploy antenna via DigitalIO
+    // Notify Radio Board to deploy antenna via DigitalIO mode A
 
-    Log.errorln("Antenna door(s) not open; issuing Radio Board command to deploy via DigitalIO");
-    extern RadioBoard radio;
-    radio.deploy_antenna();
+    Log.errorln("Antenna door(s) not open; issuing Radio Board command to deploy via DigitalIO mode A");
+    Message message{Message::antenna_release, "A"};
     antenna_timer_start = millis();
     while ((millis() - antenna_timer_start) < antenna_delay)
         avionics.trigger_watchdog();
@@ -94,9 +95,31 @@ bool Antenna::deploy()
         Log.noticeln("All antenna doors open");
         return true;
     }
-    else
+
+    // Notify Radio Board to deploy antenna via DigitalIO mode B
+
+    Log.errorln("Antenna door(s) not open; issuing Radio Board command to deploy via DigitalIO mode B");
+    message = Message{Message::antenna_release, "B"};
+    antenna_timer_start = millis();
+    while ((millis() - antenna_timer_start) < antenna_delay)
+        avionics.trigger_watchdog();
+
+    // Validate successful deployment
+
+    Log.noticeln("Reading antenna state");
+    m_i2c_dev.read(antenna_state, 4);
+    Log.verboseln("Antenna byte 1: %X", antenna_state[0]);
+    Log.verboseln("Antenna byte 2: %X", antenna_state[1]);
+    Log.verboseln("Antenna byte 3: %X", antenna_state[2]);
+    Log.verboseln("Antenna byte 4: %X", antenna_state[3]);
+    if (antenna_state[3] == 0xFF)
     {
-        Log.fatalln("Antenna door(s) not open, attempting to continue");
-        return false;
+        Log.noticeln("All antenna doors open");
+        return true;
     }
+
+    // Unable to open all doors, attempt to continue
+ 
+    Log.fatalln("Antenna door(s) not open, attempting to continue");
+    return false;
 }
