@@ -2,7 +2,7 @@
 # @file utility.py
 # @brief FlatSat test Avionics Board utility functions
 # @author Lee A. Congdon (lee@silversat.org)
-# @version 2.0.0
+# @version 3.0.0
 # @date 20 August 2022
 
 """FlatSat test Avionics Board utility functions"""
@@ -59,10 +59,33 @@ log_port = serial.Serial(LOG_PORT, BAUDRATE, timeout=TIMEOUT)
 read_length = 256
 ## call sign
 call_sign = "KC3VVW"
+## timestamp pattern
+timestamp_pattern = re.compile(
+    r"RESGRC20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)$"
+)
+## pictimes pattern
+pictimes_pattern = re.compile(
+    r"RESGPT[0-5](20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)){0,5}$"
+)
+## telemetry pattern
+telemetry_pattern = re.compile(
+    r"(RESGTYAX-?\d+\.\d+)(AY-?\d+\.\d+)(AZ-?\d+\.\d+)(RX-?\d+\.\d+)(RY-?\d+\.\d+)(RZ-?\d+\.\d+)(T-?\d+\.\d+)$"
+)
+## power pattern
+power_pattern = re.compile(
+    r"(RESGPW)(BBV\d+\.\d+)(BBC\d+\.\d+)(TS1-*\d+\.\d+)(TS2-*\d+\.\d+)(TS3-*\d+\.\d+)(5VC\d+\.\d+)(H1S\d)(H2S\d)(H3S\d)$"
+)
+## beacon interval pattern
+beacon_interval_pattern = re.compile(r"(RESGBI)(\d+)$")
+## test packet pattern
+test_packet_pattern = re.compile(r"STPTEST$")
+## modify frequency pattern
+modify_frequency_pattern = re.compile(r"RMF\d{9}$")
+## modify mode pattern
+modify_mode_pattern = re.compile(r"RMM\d$")
+## Initialization services
 
 ## Collect initialization
-#
-# Initialization messages on Avionics Board startup
 #
 def collect_initialization(interval=30):
 
@@ -77,9 +100,13 @@ def collect_initialization(interval=30):
     return log
 
 
-## Verify initialization complete
+## Verify antenna deployed
 #
-# Verify final initialization message received
+def antenna_deployed(log):
+    return any((item.detail == "All antenna doors open" for item in log))
+
+
+## Verify initialization complete
 #
 def initialization_complete(log):
 
@@ -90,10 +117,186 @@ def initialization_complete(log):
 
 ## FENDs received
 #
-# Unsolicted message to Radio Board to clear buffer during initialization
-#
 def fends_received(message):
     return message == (FEND + FEND)
+
+
+## Command services
+
+## Issue command
+#
+# Commands must be framed with KISS encoding
+#
+def issue(command):
+
+    command_port.write(FEND + REMOTE_FRAME + command.encode("utf-8") + FEND)
+
+
+## Collect log response
+#
+# Command processing ends with an Executed or Failed log entry
+#
+def collect_log():
+    log = []
+    log_data = ""
+    while ("Executed (" not in log_data) & ("Failed (" not in log_data):
+        log_data = log_port.readline().decode("utf-8").strip()
+        print(log_data)
+        log.append(Entry(*(log_data.split(maxsplit=2))))
+    return log
+
+
+## Collect message response
+#
+# Commands generate one or more messages, captured individually
+#
+def collect_message():
+
+    message = command_port.read_until(expected=FEND)
+    message = message + command_port.read_until(expected=FEND)
+    print(f"Message: {message}")
+    return message
+
+
+## Collect log radio response
+#
+def collect_log_radio_response():
+    log = []
+    log_data = ""
+    while "Sending message:" not in log_data:
+        log_data = log_port.readline().decode("utf-8").strip()
+        print(log_data)
+        log.append(Entry(*(log_data.split(maxsplit=2))))
+    return log
+
+
+## Verify command acknowledged
+#
+def acknowledged_log(log):
+
+    return any([item.detail == "Acknowledging command" for item in log])
+
+
+## Verify command negative acknowledged
+#
+def negative_acknowledged_log(log):
+
+    return any([item.detail == "Negative acknowledging command" for item in log])
+
+
+## Verify command acknowledged
+#
+# Each command is ACKed or NACKed in a message
+#
+def acknowledged_message(message):
+
+    return bytes("ACK".encode("utf-8")) in message
+
+
+## Verify command negative acknowledged
+#
+# Each command is ACKed or NACKed in a message
+#
+def negative_acknowledged_message(message):
+
+    return bytes("NACK".encode("utf-8")) in message
+
+
+## Collect local acknowledgement or negative acknowledgement
+#
+# Local ACKs and NACKs generate multiple log entries
+#
+def collect_ack_or_nack():
+
+    log = []
+    log_data = ""
+    while ("Received ACK" not in log_data) & ("Received NACK" not in log_data):
+        log_data = log_port.readline().decode("utf-8").strip()
+        log.append(Entry(*(log_data.split(maxsplit=2))))
+    return log
+
+
+## Verify response sent
+#
+# Each command receives a RESponse message
+#
+def response_sent(message, type):
+
+    return bytes(("RES" + type).encode("utf-8")) in message
+
+
+## Verify error response sent
+#
+# Some commands generate an error RESponse message
+#
+def error_response(message):
+
+    return bytes(("RESERR").encode("utf-8")) in message
+
+
+## Verify command not signed
+#
+def not_signed(log):
+
+    return any([item.detail == "Command is not signed" for item in log])
+
+
+## Verify command signed
+#
+def signed(log):
+
+    return any([item.detail == "Command is signed" for item in log])
+
+
+## Verify signature valid
+#
+def signature_valid(log):
+
+    return any([item.detail == "Command signature valid" for item in log])
+
+
+## Verify signature invalid
+#
+def signature_invalid(log):
+
+    return any([item.detail == "Command signature invalid" for item in log])
+
+
+## Verify no errors logged
+#
+def no_logged_errors(log):
+
+    return not any(
+        [
+            (item.level == "FATAL")
+            | (item.level == "ERROR")
+            | (item.level == "WARNING")
+            for item in log
+        ]
+    )
+
+
+## Verify command executed
+#
+def executed(log):
+
+    return any([item.detail.startswith("Executed (") for item in log])
+
+
+## Get next sequence number
+#
+def get_next_sequence():
+    issue("NoOperate")
+    log = collect_log()
+    for item in log:
+        if "next sequence" in item.detail:
+            sequence = item.detail
+            sequence = sequence.removesuffix(")")
+            sequence = sequence.rsplit(maxsplit=1)
+            sequence = sequence[-1]
+    collect_message()  # clear ACK from NoOperate
+    collect_message()  # clear RES from NoOperate
+    return sequence
 
 
 ## Generate signed command
@@ -126,103 +329,7 @@ def generate_signed(command):
     )
 
 
-## Issue command
-#
-# Commands must be framed with KISS encoding
-#
-def issue(command):
-
-    command_port.write(FEND + REMOTE_FRAME + command.encode("utf-8") + FEND)
-
-
-## Collect log response
-#
-# Command processing ends with an Executed or Failed log entry
-#
-def collect_log():
-
-    log = []
-    log_data = ""
-    while ("Executed (" not in log_data) & ("Failed (" not in log_data):
-        log_data = log_port.readline().decode("utf-8").strip()
-        print(log_data)
-        log.append(Entry(*(log_data.split(maxsplit=2))))
-    return log
-
-
-## Collect message response
-#
-# Commands generate one or more messages, captured individually
-#
-def collect_message():
-
-    message = command_port.read_until(expected=FEND)
-    message = message + command_port.read_until(expected=FEND)
-    print(f"Message: {message}")
-    return message
-
-
-## Collect local acknowledgement or negative acknowledgement
-#
-# Local ACKs and NACKs generate multiple log entries
-#
-def collect_ack_or_nack():
-
-    log = []
-    log_data = ""
-    while ("Received ACK" not in log_data) & ("Received NACK" not in log_data):
-        log_data = log_port.readline().decode("utf-8").strip()
-        log.append(Entry(*(log_data.split(maxsplit=2))))
-    return log
-
-
-## Simulate response to local command
-#
-# Simulate Radio Board KISS-encoded local frame response to local command
-#
-def respond(command):
-
-    command_port.write(FEND + LOCAL_FRAME + command + FEND)
-
-
-## Send FEND
-#
-# Transmit a FEND on the command port
-#
-def send_FEND(count=1):
-
-    index = 0
-    while index < count:
-        command_port.write(FEND)
-        index += 1
-
-
-## Verify command acknowledged
-#
-# Each command is ACKed or NACKed in a message
-#
-def acknowledged_message(message):
-
-    return bytes("ACK".encode("utf-8")) in message
-
-
-## Verify command negative acknowledged
-#
-# Each command is ACKed or NACKed in a message
-#
-def negative_acknowledged_message(message):
-
-    return bytes("NACK".encode("utf-8")) in message
-
-
-## Verify response sent
-#
-# Each command receives a RESponse message
-#
-def response_sent(message, type):
-
-    return bytes(("RES" + type).encode("utf-8")) in message
-
+## Change satellite state services
 
 ## Verify beacon message sent
 #
@@ -233,6 +340,208 @@ def local_beacon_message_sent(message):
     return message.startswith(FEND + BEACON + call_sign.encode("utf-8"))
 
 
+## Collect through two beacon tranmissions
+#
+# Assumes beacon spacing is less than interval
+#
+def collect_two_beacons(interval):
+
+    log = []
+    time.sleep(interval)
+    log_data = log_port.readline().decode("utf-8").strip()
+    log.append(Entry(*(log_data.split(maxsplit=2))))
+    time.sleep(interval)
+    log_data = log_port.readline().decode("utf-8").strip()
+    log.append(Entry(*(log_data.split(maxsplit=2))))
+    return log
+
+
+## Verify beacon interval
+#
+def beacon_interval(length, log):
+
+    hours1, minutes1, seconds1 = log[-1].timestamp.split(":")
+    seconds1, milliseconds1 = seconds1.split(".")
+    hours2, minutes2, seconds2 = log[-2].timestamp.split(":")
+    seconds2, milliseconds2 = seconds2.split(".")
+    timedelta1 = datetime.timedelta(
+        hours=int(hours1),
+        minutes=int(minutes1),
+        seconds=int(seconds1),
+        milliseconds=int(milliseconds1),
+    )
+    timedelta2 = datetime.timedelta(
+        hours=int(hours2),
+        minutes=int(minutes2),
+        seconds=int(seconds2),
+        milliseconds=int(milliseconds2),
+    )
+    return (
+        timedelta1 - timedelta2 - datetime.timedelta(seconds=length)
+    ) < datetime.timedelta(seconds=0.5)
+
+
+## Collect beacons with timeout
+#
+def collect_timeout(interval=60):
+
+    index = 0
+    beacons_found = 0
+    while index < 2:
+        log_data = log_port.readline().decode("utf-8").strip()
+        if "Transmitting beacon" in log_data:
+            beacons_found += 1
+        index += 1
+    return beacons_found == 0
+
+
+## Payload services
+
+## Collect through power off check
+#
+# Assumes Payload Board is active for less than "interval" seconds
+#
+def collect_through_power_off(interval=120):
+
+    log = []
+    log_data = ""
+    log_port.timeout = interval
+    no_power_off = True
+    while no_power_off:
+        log_data = log_port.readline().decode("utf-8").strip()
+        log.append(Entry(*(log_data.split(maxsplit=2))))
+        print(log_data)
+        if "Payload power off" in log_data:
+            no_power_off = False
+    log_port.timeout = TIMEOUT
+    return log
+
+
+## Verify payload power off
+#
+def payload_power_off(log):
+
+    return any([item.detail == "Payload power off" for item in log])
+
+
+## Get satellite state services
+
+## Verify log timestamp sent
+#
+def log_timestamp_sent(log):
+    return any([timestamp_pattern.search(item.detail) for item in log])
+
+
+## Verify message timestamp sent
+def message_timestamp_sent(message):
+    return timestamp_pattern.search(message[2:-1].decode("utf-8"))
+
+
+## Verify log pictimes sent
+#
+def log_pictimes_sent(log):
+    return any([pictimes_pattern.search(item.detail) for item in log])
+
+
+## Verify message pictimes sent
+#
+def message_pictimes_sent(message):
+    return pictimes_pattern.search(message[2:-1].decode("utf-8"))
+
+
+## Verify zero pictimes sent
+#
+def pictimes_zero_sent(log):
+
+    return any([item.detail.endswith("content: RESGPT0") for item in log])
+
+
+## Verify log telemetry sent
+#
+def log_telemetry_sent(log):
+    return any([telemetry_pattern.search(item.detail) for item in log])
+
+
+## Verify message telemetry sent
+#
+def message_telemetry_sent(message):
+    return telemetry_pattern.search(message[2:-1].decode("utf-8"))
+
+
+## Verify log power sent
+#
+def log_power_sent(log):
+    return any([power_pattern.search(item.detail) for item in log])
+
+
+## Verify messaage power sent
+#
+def message_power_sent(message):
+    return power_pattern.search(message[2:-1].decode("utf-8"))
+
+
+## Verify log local GetComms sent
+#
+def log_local_status_request(log):
+
+    return any([item.detail == "Requesting radio status" for item in log])
+
+
+## Verify message local GetComms sent
+#
+def message_local_status_request(message):
+
+    return message.startswith(FEND + STATUS)
+
+
+# todo: verify remote log and message sent
+
+## Verify log beacon interval sent
+#
+def log_beacon_interval_sent(log):
+    return any([beacon_interval_pattern.search(item.detail) for item in log])
+
+
+## Verify message beacon interval sent
+#
+def message_beacon_interval_sent(message):
+    return beacon_interval_pattern.search(message[2:-1].decode("utf-8"))
+
+
+## Verify time sent
+#
+def time_sent(log):
+
+    return any([item.detail.contains("RESGRC") for item in log])
+
+
+## Invoke satellite operation services
+
+
+## Verify log test packet sent
+#
+def log_test_packet_sent(log):
+    return any([test_packet_pattern.search(item.detail) for item in log])
+
+
+## Verify message test packet sent
+#
+def message_test_packet_sent(message):
+    return test_packet_pattern.search(message[2:-1].decode("utf-8"))
+
+
+## Invalid and unknown command services
+
+
+## Verify buffer overflow
+#
+def buffer_overflow(log):
+
+    return any([("Buffer overflow" in item.detail) for item in log])
+
+
+## Radio command services
+
 ## Verify local recover antenna message sent
 #
 # Recover antenna will be sent if standard deployment fails
@@ -242,40 +551,84 @@ def local_recover_antenna(message):
     return message.startswith(FEND + DIGITALIO_RELEASE)
 
 
-## Verify local status request message sent
-#
-# Radio status requested for a GetComms command
-#
-def local_status_request(message):
-
-    return message.startswith(FEND + STATUS)
-
-
-## Verify local halt message sent
+## Verify log local halt message sent
 #
 # Local halt message sent for TweeSlee command
 #
-def local_halt_message_sent(message):
+def log_local_halt_message_sent(log):
+    return any([item.detail == "Sending local command: halt" for item in log])
 
+
+## Verify message local halt message sent
+#
+# Local halt message sent for TweeSlee command
+#
+def message_local_halt_message_sent(message):
     return message.startswith(FEND + HALT)
 
 
-## Verify local modify frequency message sent
+## Verify log local modify frequency message sent
 #
 # Local command for ModifyFrequency command
 #
-def local_modify_frequency_message_sent(message):
+def log_local_modify_frequency_sent(log):
+    return any([item.detail == "Requesting frequency modification" for item in log])
 
+
+## Verify message local modify frequency message sent
+#
+# Local command for ModifyFrequency command
+#
+def message_local_modify_frequency_sent(message):
     return message.startswith(FEND + MODIFY_FREQ)
 
 
-## Verify local modify mode message sent
+## Verify log remote modify frequency message sent
+#
+# Response for ModifyFrequency command
+#
+def log_remote_modify_frequency_sent(log):
+    return any([modify_frequency_pattern.search(item.detail) for item in log])
+
+
+## Verify message remote modify frequency message sent
+#
+# Response for ModifyFrequency command
+#
+def message_remote_modify_frequency_sent(message):
+    return modify_frequency_pattern.search(message[2:-1].decode("utf-8"))
+
+
+## Verify log local modify mode message sent
 #
 # Local command for ModifyMode command
 #
-def local_modify_mode_message_sent(message):
+def log_local_modify_mode_sent(message):
+    return any([item.detail == "Requesting mode modification" for item in log])
 
+
+## Verify message local modify mode message sent
+#
+# Local command for ModifyMode command
+#
+def message_local_modify_mode_sent(message):
     return message.startswith(FEND + MODIFY_MODE)
+
+
+## Verify log remote modify mode message sent
+#
+# Local command for ModifyMode command
+#
+def log_local_modify_mode_sent(log):
+    return any([modify_mode_pattern.search(log) for item in log])
+
+
+## Verify message remote modify mode message sent
+#
+# Local command for ModifyMode command
+#
+def message_local_modify_mode_sent(message):
+    return modify_mode_pattern.search(message[2:-1].decode("utf-8"))
 
 
 ## Verify local adjust frequency message sent
@@ -341,284 +694,6 @@ def local_query_register_message_sent(message):
     return message.startswith(FEND + QUERY_REGISTER)
 
 
-## Verify command not signed
-#
-def not_signed(log):
-
-    return any([item.detail == "Command is not signed" for item in log])
-
-
-## Verify command signed
-#
-def signed(log):
-
-    return any([item.detail == "Command is signed" for item in log])
-
-
-## Verify signature valid
-#
-def signature_valid(log):
-
-    return any([item.detail == "Command signature valid" for item in log])
-
-
-## Verify signature invalid
-#
-def signature_invalid(log):
-
-    return any([item.detail == "Command signature invalid" for item in log])
-
-
-## Verify command acknowledged
-#
-def acknowledged_log(log):
-
-    return any([item.detail == "Acknowledging command" for item in log])
-
-
-## Verify command negative acknowledged
-#
-def negative_acknowledged_log(log):
-
-    return any([item.detail == "Negative acknowledging command" for item in log])
-
-
-## Verify no errors logged
-#
-def no_logged_errors(log):
-
-    return not any(
-        [
-            (item.level == "FATAL")
-            | (item.level == "ERROR")
-            | (item.level == "WARNING")
-            for item in log
-        ]
-    )
-
-
-## Verify command executed
-#
-def executed(log):
-
-    return any([item.detail.startswith("Executed (") for item in log])
-
-
-## Collect through power off check
-#
-# Assumes Payload Board is active for less than "interval" seconds
-#
-def collect_through_power_off(interval=120):
-
-    log = []
-    log_data = ""
-    log_port.timeout = interval
-    no_power_off = True
-    while no_power_off:
-        log_data = log_port.readline().decode("utf-8").strip()
-        log.append(Entry(*(log_data.split(maxsplit=2))))
-        print(log_data)
-        if "Payload power off" in log_data:
-            no_power_off = False
-    log_port.timeout = TIMEOUT
-    return log
-
-
-## Verify local stop message sent
-#
-def local_stop_message_sent(log):
-
-    return any([item.detail == "Sending local command: halt" for item in log])
-
-
-## Verify payload power off
-#
-def payload_power_off(log):
-
-    return any([item.detail == "Payload power off" for item in log])
-
-
-## Collect through two beacon tranmissions
-#
-# Assumes beacon spacing is less than interval
-#
-def collect_two_beacons(interval):
-
-    log = []
-    time.sleep(interval)
-    log_data = log_port.readline().decode("utf-8").strip()
-    log.append(Entry(*(log_data.split(maxsplit=2))))
-    time.sleep(interval)
-    log_data = log_port.readline().decode("utf-8").strip()
-    log.append(Entry(*(log_data.split(maxsplit=2))))
-    return log
-
-
-## Verify beacon interval
-#
-def beacon_interval(length, log):
-
-    hours1, minutes1, seconds1 = log[-1].timestamp.split(":")
-    seconds1, milliseconds1 = seconds1.split(".")
-    hours2, minutes2, seconds2 = log[-2].timestamp.split(":")
-    seconds2, milliseconds2 = seconds2.split(".")
-    timedelta1 = datetime.timedelta(
-        hours=int(hours1),
-        minutes=int(minutes1),
-        seconds=int(seconds1),
-        milliseconds=int(milliseconds1),
-    )
-    timedelta2 = datetime.timedelta(
-        hours=int(hours2),
-        minutes=int(minutes2),
-        seconds=int(seconds2),
-        milliseconds=int(milliseconds2),
-    )
-    return (
-        timedelta1 - timedelta2 - datetime.timedelta(seconds=length)
-    ) < datetime.timedelta(seconds=0.5)
-
-
-## Collect beacons with timeout
-#
-def collect_timeout(interval=60):
-
-    index = 0
-    beacons_found = 0
-    while index < 2:
-        log_data = log_port.readline().decode("utf-8").strip()
-        if "Transmitting beacon" in log_data:
-            beacons_found += 1
-        index += 1
-    return beacons_found == 0
-
-
-## Verify timestamp sent
-#
-def timestamp_sent(log):
-    pattern = re.compile(
-        r"\sRESGRC20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)$"
-    )
-    return any([pattern.search(item.detail) for item in log])
-
-
-## Verify pictimes sent
-#
-def pictimes_sent(log):
-    pattern = re.compile(
-        r"\sRESGPT[0-5](20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)){0,5}$"
-    )
-    return any([pattern.search(item.detail) for item in log])
-
-
-## Verify zero pictimes sent
-#
-def pictimes_zero_sent(log):
-
-    return any([item.detail.endswith("content: RESGPT0") for item in log])
-
-
-
-## Verify reset pin set
-#
-def reset_pin_set(log):
-
-    return any([item.detail == "Reset pin changed state to 0" for item in log])
-
-
-## Verify reset pin cleared
-#
-def reset_pin_cleared(log):
-
-    return any([item.detail == "Reset pin changed state to 1" for item in log])
-
-
-## Verify telemetry sent
-#
-# Temperature truncated in match string
-#
-def telemetry_sent(log):
-    pattern = re.compile(
-        r"\s(RESGTYAX-?\d+\.\d+)(AY-?\d+\.\d+)(AZ-?\d+\.\d+)(RX-?\d+\.\d+)(RY-?\d+\.\d+)(RZ-?\d+\.\d+)(T-?\d+\.\d+)$"
-    )
-    return any([pattern.search(item.detail) for item in log])
-
-
-## Verify power sent
-#
-def power_sent(log):
-    pattern = re.compile(
-        r"\s(RESGPW)(BBV\d+\.\d+)(BBC\d+\.\d+)(TS1-*\d+\.\d+)(TS2-*\d+\.\d+)(TS3-*\d+\.\d+)(5VC\d+\.\d+)(H1S\d)(H2S\d)(H3S\d)"
-    )
-    return any([pattern.search(item.detail) for item in log])
-
-
-## Verify integer sent get beacon spacing
-#
-def integer_sent_GBI(log):
-    pattern = re.compile(r"\s(RESGBI)(\d+)$")
-    return any([pattern.search(item.detail) for item in log])
-
-
-## Verify integer sent get photo count
-#
-def integer_sent_GPC(log):
-    pattern = re.compile(r"\s(RESGPC)(\d+)$")
-    return any([pattern.search(item.detail) for item in log])
-
-
-## Verify local GetComms message sent
-#
-# todo: consider checking message
-#
-def local_get_comms_sent(log):
-
-    return any([item.detail == "Requesting radio status" for item in log])
-
-
-## Verify time sent
-#
-def time_sent(log):
-
-    return any([item.detail.contains("RESGRC") for item in log])
-
-
-## Verify test packet sent
-#
-def test_packet_sent(log):
-
-    return any([item.detail.endswith("content: RESSTPTEST") for item in log])
-
-
-## Verify buffer overflow
-#
-def buffer_overflow(log):
-
-    return any([("Buffer overflow" in item.detail) for item in log])
-
-
-## Verify antenna deployed
-#
-def antenna_deployed(log):
-    return any((item.detail == "All antenna doors open" for item in log))
-
-
-## Get next sequence number
-#
-def get_next_sequence():
-    issue("NoOperate")
-    log = collect_log()
-    for item in log:
-        if "next sequence" in item.detail:
-            sequence = item.detail
-            sequence = sequence.removesuffix(")")
-            sequence = sequence.rsplit(maxsplit=1)
-            sequence = sequence[-1]
-    collect_message()  # clear ACK from NoOperate
-    collect_message()  # clear RES from NoOperate
-    return sequence
-
-
 ## Verify local message received
 #
 def local_message_received(log):
@@ -655,9 +730,8 @@ def read():
     return command_port.read_all()
 
 
-# todo: verify beacon power_sent
+## Exercise avionics board
 
-# todo: verify deploy antenna sent
 
 def exercise_avionics():
     issue(f"SetClock {now()}")
@@ -693,3 +767,24 @@ def exercise_avionics():
         message = collect_message()
 
 
+## Radio simulator services
+
+## Simulate response to local command
+#
+# Simulate Radio Board KISS-encoded local frame response to local command
+#
+def respond(command):
+
+    command_port.write(FEND + LOCAL_FRAME + command + FEND)
+
+
+## Send FEND
+#
+# Transmit a FEND on the command port
+#
+def send_FEND(count=1):
+
+    index = 0
+    while index < count:
+        command_port.write(FEND)
+        index += 1

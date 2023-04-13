@@ -2,7 +2,7 @@
 # @file test_set_pic_times.py
 # @brief FlatSat test Avionics Board PicTimes command
 # @author Lee A. Congdon (lee@silversat.org)
-# @version 2.0.0
+# @version 2.0.1
 # @date 20 August 2022
 
 """FlatSat test Avionics Board PicTimes command"""
@@ -34,8 +34,6 @@ class TestPicTimes:
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
         assert utility.response_sent(message, "SPT")
-        message = utility.collect_message()
-        message = utility.collect_message()
 
     ## error: incorrect number of parameters
     #
@@ -97,7 +95,7 @@ class TestPicTimes:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "ERR")
+        assert utility.error_response(message)
 
     ## error: date too early
     #
@@ -114,7 +112,7 @@ class TestPicTimes:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "ERR")
+        assert utility.error_response(message)
 
     ## error: date too late
     #
@@ -131,7 +129,7 @@ class TestPicTimes:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "ERR")
+        assert utility.error_response(message)
 
     ## set picture times signed
     #
@@ -153,8 +151,6 @@ class TestPicTimes:
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
         assert utility.response_sent(message, "SPT")
-        message = utility.collect_message()
-        message = utility.collect_message()
 
     ## error: no parameters signed
     #
@@ -222,7 +218,7 @@ class TestPicTimes:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "ERR")
+        assert utility.error_response(message)
 
     ## error: date too early signed
     #
@@ -240,7 +236,7 @@ class TestPicTimes:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "ERR")
+        assert utility.error_response(message)
 
     ## error: date too late signed
     #
@@ -258,4 +254,4 @@ class TestPicTimes:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "ERR")
+        assert utility.error_response(message)

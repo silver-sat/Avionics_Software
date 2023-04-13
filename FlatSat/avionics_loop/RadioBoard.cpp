@@ -122,7 +122,7 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
                         reply[3] = '\0';
                         byte command{buffer[3]};
                         // todo: consider logging additional data if it exists
-                        Log.infoln("Local message received: %s %x", reply, command);
+                        Log.infoln("Local message received: %s %X", reply, command);
                     }
                     m_received_start = false;
                     return true; // command or response received

@@ -1,8 +1,8 @@
 ##
-# @file test_set_realtime_clock.py
+# @file test_set_clock.py
 # @brief FlatSat test Avionics Board SetClock command
 # @author Lee A. Congdon (lee@silversat.org)
-# @version 2.0.0
+# @version 2.0.1
 # @date 21 August 2022
 
 """FlatSat test Avionics Board SetClock command"""
@@ -111,7 +111,7 @@ class TestSetClock:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "ERR")
+        assert utility.error_response(message)
 
     ## error: time to early
     #
@@ -128,7 +128,7 @@ class TestSetClock:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "ERR")
+        assert utility.error_response(message)
 
     ## error: time too late
     #
@@ -145,7 +145,7 @@ class TestSetClock:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "ERR")
+        assert utility.error_response(message)
 
     ## set realtime clock signed
     #
@@ -253,7 +253,7 @@ class TestSetClock:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "ERR")
+        assert utility.error_response(message)
 
     ## error: time to early signed
     #
@@ -271,7 +271,7 @@ class TestSetClock:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "ERR")
+        assert utility.error_response(message)
 
     ## error: time too late
     #
@@ -289,4 +289,4 @@ class TestSetClock:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "ERR")
+        assert utility.error_response(message)

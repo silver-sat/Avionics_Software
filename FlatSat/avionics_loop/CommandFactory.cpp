@@ -23,11 +23,11 @@
 
 /**
  * @brief Construct a new command object
- * 
- * @param[in] tokens command and arguments 
+ *
+ * @param[in] tokens command and arguments
  * @param token_count number of tokens including command
  * @return Command* command object to be executed
- * 
+ *
  */
 
 Command *CommandFactory::BuildCommand(const String tokens[], const size_t token_count)
@@ -152,16 +152,16 @@ Command *CommandFactory::BuildCommand(const String tokens[], const size_t token_
         else
             return new CommandInvalid(); // Wrong number of parameters
     else if (tokens[0] == "ModifyFrequency")
-        if (argument_count == 1)
+        if ((argument_count == 1) && (tokens[1].length() == frequency_length))
         {
             char frequency[frequency_length]{};
             memcpy(frequency, tokens[1].c_str(), frequency_length);
             return new CommandModifyFrequency(frequency);
         }
         else
-            return new CommandInvalid(); // Wrong number of parameters
+            return new CommandInvalid(); // Wrong number of parameters or wrong parameter length
     else if (tokens[0] == "ModifyMode")
-        if (argument_count == 1)
+        if ((argument_count == 1) && (tokens[1].length() == mode_length))
         {
             char mode{tokens[1][0]};
             return new CommandModifyMode(mode);
