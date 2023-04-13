@@ -155,7 +155,7 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
                 buffer[m_buffer_index++] = character;
             else
             {
-                Log.errorln("Buffer overflow, ignored: 0x%x", character);
+                Log.errorln("Buffer overflow, ignored: %X", character);
                 m_received_start = false;
                 break; // restart command
             }
@@ -186,30 +186,12 @@ bool RadioBoard::send_message(Message message) const
     auto command = message.get_command();
     auto content = message.get_content();
     if (content.length() == 0)
-        Log.noticeln("Sending message: KISS command 0x%x", command);
+        Log.noticeln("Sending message: KISS command %X", command);
     else
-        Log.noticeln("Sending message: KISS command 0x%x, content: %s", command, content.c_str());
+        Log.noticeln("Sending message: KISS command %X, content: %s", command, content.c_str());
     Serial1.write(FEND);
     Serial1.write(command);
     Serial1.write(content.c_str());
     Serial1.write(FEND);
     return true;
-}
-
-/**
- * @brief Get Radio Board status
- *
- * @return String status
- *
- */
-
-String RadioBoard::get_status()
-{
-    // todo: replace with message
-    Log.traceln("Sending local command: requesting Radio Board status");
-    Serial1.write(FEND);
-    Serial1.write(GET_RADIO_STATUS);
-    Serial1.write(FEND);
-    // todo: consider storing Radio Board status
-    return "unknown";
 }

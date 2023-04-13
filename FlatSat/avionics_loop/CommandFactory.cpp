@@ -169,7 +169,7 @@ Command *CommandFactory::BuildCommand(const String tokens[], const size_t token_
         else
             return new CommandInvalid(); // Wrong number of parameters
     else if (tokens[0] == "AdjustFrequency")
-        if (argument_count == 1)
+        if ((argument_count == 1) && tokens[1].length() == frequency_length)
         {
             char frequency[frequency_length]{};
             memcpy(frequency, tokens[1].c_str(), frequency_length);
@@ -178,7 +178,7 @@ Command *CommandFactory::BuildCommand(const String tokens[], const size_t token_
         else
             return new CommandInvalid(); // Wrong number of parameters
     else if (tokens[0] == "TransmitCW")
-        if (argument_count == 1)
+        if ((argument_count == 1) && tokens[1].length() == duration_length)
         {
             char duration[duration_length]{};
             memcpy(duration, tokens[1].c_str(), duration_length);

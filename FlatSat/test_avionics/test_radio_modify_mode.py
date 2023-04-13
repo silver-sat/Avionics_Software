@@ -30,7 +30,7 @@ class TestModifyMode:
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.local_modify_mode_sent(message)
+        assert utility.message_local_modify_mode_sent(message)
         utility.respond(utility.ACK.encode("utf-8") + utility.MODIFY_MODE)
         utility.respond(
             utility.RES.encode("utf-8") + utility.MODIFY_MODE + "1".encode("utf-8")
@@ -46,7 +46,7 @@ class TestModifyMode:
     #
     def test_modify_mode_two_param(self):
 
-        utility.issue("ModifyMode 123456789 123456789")
+        utility.issue("ModifyMode 1 1")
         # check log
         log = utility.collect_log()
         assert utility.not_signed(log)
@@ -72,11 +72,11 @@ class TestModifyMode:
         message = utility.collect_message()
         assert utility.negative_acknowledged_message(message)
 
-    ## error: parameter length short
+    ## error: parameter missing
     #
-    def test_modify_mode_short_param(self):
+    def test_modify_mode_missing_param(self):
 
-        utility.issue("ModifyMode 12345678")
+        utility.issue("ModifyMode")
         # check log
         log = utility.collect_log()
         assert utility.not_signed(log)
@@ -91,7 +91,7 @@ class TestModifyMode:
     #
     def test_modify_mode_long_param(self):
 
-        utility.issue("ModifyMode 1234567890")
+        utility.issue("ModifyMode 12")
         # check log
         log = utility.collect_log()
         assert utility.not_signed(log)
@@ -106,7 +106,7 @@ class TestModifyMode:
     #
     def test_modify_mode_signed(self):
 
-        utility.issue(utility.generate_signed("ModifyMode 123456789"))
+        utility.issue(utility.generate_signed("ModifyMode 1"))
         # check log
         log = utility.collect_log()
         assert utility.signed(log)
@@ -122,9 +122,7 @@ class TestModifyMode:
         assert utility.message_local_modify_mode_sent(message)
         utility.respond(utility.ACK.encode("utf-8") + utility.MODIFY_MODE)
         utility.respond(
-            utility.RES.encode("utf-8")
-            + utility.MODIFY_MODE
-            + "123456789".encode("utf-8")
+            utility.RES.encode("utf-8") + utility.MODIFY_MODE + "1".encode("utf-8")
         )
         # check log
         log = utility.collect_log_radio_response()
@@ -137,7 +135,7 @@ class TestModifyMode:
     #
     def test_modify_mode_signed_two_param(self):
 
-        utility.issue(utility.generate_signed("ModifyMode 123456789 123456789"))
+        utility.issue(utility.generate_signed("ModifyMode 1 1"))
         # check log
         log = utility.collect_log()
         assert utility.signed(log)
@@ -165,11 +163,11 @@ class TestModifyMode:
         message = utility.collect_message()
         assert utility.negative_acknowledged_message(message)
 
-    ## error: parameter length short signed
+    ## error: parameter missing signed
     #
-    def test_modify_mode_signed_short_param(self):
+    def test_modify_mode_signed_missing_param(self):
 
-        utility.issue(utility.generate_signed("ModifyMode 12345678"))
+        utility.issue(utility.generate_signed("ModifyMode"))
         # check log
         log = utility.collect_log()
         assert utility.signed(log)
@@ -185,7 +183,7 @@ class TestModifyMode:
     #
     def test_modify_mode_signed_long_param(self):
 
-        utility.issue(utility.generate_signed("ModifyMode 1234567890"))
+        utility.issue(utility.generate_signed("ModifyMode 12"))
         # check log
         log = utility.collect_log()
         assert utility.signed(log)

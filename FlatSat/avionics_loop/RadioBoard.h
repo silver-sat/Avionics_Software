@@ -49,13 +49,6 @@ public:
 
     bool send_message(const Message message) const;
 
-    /**
-     * @brief Get Radio Board status
-     *
-     */
-
-    String get_status();
-
 private:
     size_t m_buffer_index{0};
     bool m_received_start{false};

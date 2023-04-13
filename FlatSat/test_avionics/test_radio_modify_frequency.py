@@ -74,6 +74,21 @@ class TestModifyFrequency:
         message = utility.collect_message()
         assert utility.negative_acknowledged_message(message)
 
+    ## error: parameter missing
+    #
+    def test_modify_frequency_missing_param(self):
+
+        utility.issue("ModifyFrequency")
+        # check log
+        log = utility.collect_log()
+        assert utility.not_signed(log)
+        assert utility.negative_acknowledged_log(log)
+        assert not utility.no_logged_errors(log)
+        assert not utility.executed(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.negative_acknowledged_message(message)
+
     ## error: parameter length short
     #
     def test_modify_frequency_short_param(self):
@@ -156,6 +171,22 @@ class TestModifyFrequency:
     def test_modify_frequency_signed_invalid_param(self):
 
         utility.issue(utility.generate_signed("ModifyFrequency test"))
+        # check log
+        log = utility.collect_log()
+        assert utility.signed(log)
+        assert utility.signature_valid(log)
+        assert utility.negative_acknowledged_log(log)
+        assert not utility.no_logged_errors(log)
+        assert not utility.executed(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.negative_acknowledged_message(message)
+
+    ## error: parameter missing signed
+    #
+    def test_modify_frequency_signed_missing_param(self):
+
+        utility.issue(utility.generate_signed("ModifyFrequency"))
         # check log
         log = utility.collect_log()
         assert utility.signed(log)

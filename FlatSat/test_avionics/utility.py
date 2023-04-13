@@ -83,6 +83,11 @@ test_packet_pattern = re.compile(r"STPTEST$")
 modify_frequency_pattern = re.compile(r"RMF\d{9}$")
 ## modify mode pattern
 modify_mode_pattern = re.compile(r"RMM\d$")
+## adjust frequency pattern
+adjust_frequency_pattern = re.compile(r"RAF\d{9}$")
+## transmit CW pattern
+transmit_CW_pattern = re.compile(r"RTC\d{2}$")
+
 ## Initialization services
 
 ## Collect initialization
@@ -603,7 +608,7 @@ def message_remote_modify_frequency_sent(message):
 #
 # Local command for ModifyMode command
 #
-def log_local_modify_mode_sent(message):
+def log_local_modify_mode_sent(log):
     return any([item.detail == "Requesting mode modification" for item in log])
 
 
@@ -619,34 +624,80 @@ def message_local_modify_mode_sent(message):
 #
 # Local command for ModifyMode command
 #
-def log_local_modify_mode_sent(log):
-    return any([modify_mode_pattern.search(log) for item in log])
+def log_remote_modify_mode_sent(log):
+    return any([modify_mode_pattern.search(item.detail) for item in log])
 
 
 ## Verify message remote modify mode message sent
 #
 # Local command for ModifyMode command
 #
-def message_local_modify_mode_sent(message):
+def message_remote_modify_mode_sent(message):
     return modify_mode_pattern.search(message[2:-1].decode("utf-8"))
 
 
-## Verify local adjust frequency message sent
+## Verify log local adjust frequency message sent
 #
 # Local command for AdjustFrequency command
 #
-def local_adjust_frequency_message_sent(message):
+def log_local_adjust_frequency_sent(log):
+    return any([item.detail == "Requesting frequency adjustment" for item in log])
 
+
+## Verify message local adjust frequency message sent
+#
+# Local command for AdjustFrequency command
+#
+def message_local_adjust_frequency_sent(message):
     return message.startswith(FEND + ADJUST_FREQ)
 
 
-## Verify local transmit carrier message sent
+## Verify log remote adjust frequency message sent
+#
+# Response for AdjustFrequency command
+#
+def log_remote_adjust_frequency_sent(log):
+    return any([adjust_frequency_pattern.search(item.detail) for item in log])
+
+
+## Verify message remote adjust frequency message sent
+#
+# Response for AdjustFrequency command
+#
+def message_remote_adjust_frequency_sent(message):
+    return adjust_frequency_pattern.search(message[2:-1].decode("utf-8"))
+
+
+## Verify log local transmit CW message sent
 #
 # Local command for TransmitCW command
 #
-def local_transmit_carrier_message_sent(message):
+def log_local_transmit_CW_sent(log):
+    return any([item.detail == "Requesting carrier wave" for item in log])
 
+
+## Verify message local transmit CW message sent
+#
+# Local command for TransmitCW command
+#
+def message_local_transmit_CW_sent(message):
     return message.startswith(FEND + TRANSMIT_CARRIER)
+
+
+## Verify log remote transmit CW message sent
+#
+# Local command for TransmitCW command
+#
+def log_remote_transmit_CW_sent(log):
+    return any([transmit_CW_pattern.search(item.detail) for item in log])
+
+
+## Verify message remote transmit CW message sent
+#
+# Local command for TransmitCW command
+#
+def message_remote_transmit_CW_sent(message):
+    return transmit_CW_pattern.search(message[2:-1].decode("utf-8"))
 
 
 ## Verify local background RSSI message sent

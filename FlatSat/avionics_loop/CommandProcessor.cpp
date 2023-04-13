@@ -32,7 +32,7 @@ bool CommandProcessor::check_for_command()
     if (radio.receive_frame(m_command_buffer, maximum_command_length, m_source))
     {
         String command_string{m_command_buffer};
-        Log.verboseln("Command source: 0x%x", m_source);
+        Log.verboseln("Command source: %X", m_source);
         if (m_source == REMOTE_FRAME)
         {
             Command *command{make_command(command_string)};
@@ -68,7 +68,7 @@ bool CommandProcessor::check_for_command()
             {
                 auto type{command_string[RES.length()]};
                 auto radio_data{command_string.substring(RES.length() + 1)};
-                Log.verboseln("Received type: 0x%x, %s", type, radio_data.c_str());
+                Log.verboseln("Received type: %X, %s", type, radio_data.c_str());
                 switch (type)
                 {
                 case GET_RADIO_STATUS:
