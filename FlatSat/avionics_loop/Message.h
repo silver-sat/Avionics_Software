@@ -11,17 +11,17 @@
 
 #pragma once
 
-#include "log_utility.h"
 #include "avionics_constants.h"
-#include <Arduino.h>
 
 /**
  * @brief Messages sent by the Avionics Board
  *
  */
+
 class Message
 {
 public:
+
     /**
      * @brief message types
      *
@@ -55,32 +55,31 @@ public:
      */
 
     Message() = default;
-    Message(message_type command, String content) : m_command{command}, m_content{content}{}
+    Message(message_type command, String content) : m_command{command}, m_content{content} {}
 
     /**
-     * @brief Send message to Radio Board
+     * @brief Send message via the Radio Board
      *
-     * @return true
-     * @return false
+     * @return true success
+     * @return false error
      *
      */
 
-    // todo: consider adding a send method and replacing multiple calls
-    // to the Radio Board send method
+    bool send();
 
     /**
      * @brief Get the command
      *
      */
 
-    message_type get_command() const { return m_command; }
+    message_type get_command() const;
 
     /**
      * @brief Get the content
      *
      */
 
-    String get_content() const { return m_content; }
+    String get_content() const;
 
 protected:
     message_type m_command{};

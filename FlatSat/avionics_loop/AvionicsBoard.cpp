@@ -167,9 +167,8 @@ bool AvionicsBoard::check_beacon()
       m_payload_status = Beacon::Status::on;
     else
       m_payload_status = Beacon::Status::off;
-    extern RadioBoard radio;
     Beacon beacon{m_power_status, m_avionics_status, m_payload_status};
-    radio.send_message(beacon);
+    beacon.send();
     m_last_beacon_time = millis();
   }
   return true;
