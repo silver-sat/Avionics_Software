@@ -2,7 +2,7 @@
 # @file test_get_comms_status.py
 # @brief FlatSat test Avionics Board GetComms command
 # @author Lee A. Congdon (lee@silversat.org)
-# @version 2.0.0
+# @version 2.0.1
 # @date 22 August 2022
 
 """FlatSat test Avionics Board GetComms command"""
@@ -24,17 +24,19 @@ class TestGetComms:
         assert utility.not_signed(log)
         assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
-        assert utility.local_get_comms_sent(log)
+        assert utility.log_local_status_request(log)
         assert utility.executed(log)
         # check messages
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.local_status_request(message)
+        assert utility.message_local_status_request(message)
+        # todo: radio will send these messages 
         utility.respond(utility.ACK.encode("utf-8") + utility.STATUS)
         utility.respond(utility.RES.encode("utf-8") + utility.STATUS + "Radio Status".encode("utf-8"))
         message = utility.collect_message()
         assert utility.response_sent(message, "GRS")
+        # todo: add check for radio status sent
 
     ## error: invalid parameter
     #
@@ -62,17 +64,19 @@ class TestGetComms:
         assert utility.signature_valid(log)
         assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
-        assert utility.local_get_comms_sent(log)
+        assert utility.log_local_status_request(log)
         assert utility.executed(log)
         # check messages
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.local_status_request(message)
+        assert utility.message_local_status_request(message)
+        # todo: radio will send these messages 
         utility.respond(utility.ACK.encode("utf-8") + utility.STATUS)
         utility.respond(utility.RES.encode("utf-8") + utility.STATUS + "Radio Status".encode("utf-8"))
         message = utility.collect_message()
         assert utility.response_sent(message, "GRS")
+        # todo: add check for radio status sent
 
     ## error: invalid parameter signed
     #

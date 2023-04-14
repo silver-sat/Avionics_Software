@@ -2,7 +2,7 @@
 # @file test_get_beacon_interval.py
 # @brief FlatSat test Avionics Board GetBeaconInterval command
 # @author Lee A. Congdon (lee@silversat.org)
-# @version 2.0.0
+# @version 2.0.1
 # @date 22 August 2022
 
 """FlatSat test Avionics Board GetBeaconInterval command"""
@@ -24,12 +24,13 @@ class TestGetBeaconInterval:
         assert utility.not_signed(log)
         assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
+        assert utility.log_beacon_interval_sent(log)
         assert utility.executed(log)
         # check messages
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "GBI")
+        assert utility.message_beacon_interval_sent(message)
 
     ## error: invalid parameter
     #
@@ -57,13 +58,14 @@ class TestGetBeaconInterval:
         assert utility.signature_valid(log)
         assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
-        assert utility.integer_sent_GBI(log)
+        assert utility.log_beacon_interval_sent(log)
         assert utility.executed(log)
         # check messages
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "GBI")
+        assert utility.message_beacon_interval_sent(message)
+
 
     ## error: invalid parameter signed
     #

@@ -2,7 +2,7 @@
 # @file test_set_beacon_sp.py
 # @brief FlatSat test Avionics Board BeaconSp command
 # @author Lee A. Congdon (lee@silversat.org)
-# @version 2.0.0
+# @version 2.0.1
 # @date 21 August 2022
 
 """FlatSat test Avionics Board BeaconSp command"""
@@ -34,9 +34,11 @@ class TestBeaconSp:
         # verify beacon interval
         log = utility.collect_two_beacons(interval)
         assert utility.beacon_interval(interval, log)
-        # discard messages
+        # verify beacon messages
         message = utility.collect_message()
+        utility.local_beacon_message_sent(message)
         message = utility.collect_message()
+        utility.local_beacon_message_sent(message)
 
     ## 120 second spacing
     #
@@ -58,9 +60,11 @@ class TestBeaconSp:
         # verify beacon interval
         log = utility.collect_two_beacons(interval)
         assert utility.beacon_interval(interval, log)
-        # discard messages
+        # verify beacon messages
         message = utility.collect_message()
+        utility.local_beacon_message_sent(message)
         message = utility.collect_message()
+        utility.local_beacon_message_sent(message)
 
     ## 90 second spacing
     #
@@ -82,9 +86,11 @@ class TestBeaconSp:
         # verify beacon interval
         log = utility.collect_two_beacons(interval)
         assert utility.beacon_interval(interval, log)
-        # discard messages
+        # verify beacon messages
         message = utility.collect_message()
+        utility.local_beacon_message_sent(message)
         message = utility.collect_message()
+        utility.local_beacon_message_sent(message)
 
     ## no beacon
     #
@@ -105,9 +111,6 @@ class TestBeaconSp:
         assert utility.response_sent(message, "SBI")
         # verify no beacons sent
         assert utility.collect_timeout()
-        # discard messages
-        message = utility.collect_message()
-        message = utility.collect_message()
 
     ## error: no parameter
     #
@@ -154,6 +157,23 @@ class TestBeaconSp:
         message = utility.collect_message()
         assert utility.negative_acknowledged_message(message)
 
+    ## error: parameter outside range
+    #
+    def test_beacon_sp_param_range(self):
+
+        utility.issue("BeaconSp 10")
+        # check log
+        log = utility.collect_log()
+        assert utility.not_signed(log)
+        assert utility.acknowledged_log(log)
+        assert not utility.no_logged_errors(log)
+        assert not utility.executed(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.acknowledged_message(message)
+        message = utility.collect_message()
+        assert utility.error_response(message)
+
     ## 60 second spacing signed
     #
     def test_beacon_sp_60_signed(self):
@@ -175,9 +195,11 @@ class TestBeaconSp:
         # verify beacon interval
         log = utility.collect_two_beacons(interval)
         assert utility.beacon_interval(interval, log)
-        # discard messages
+        # verify beacon messages
         message = utility.collect_message()
+        utility.local_beacon_message_sent(message)
         message = utility.collect_message()
+        utility.local_beacon_message_sent(message)
 
     ## 120 second spacing signed
     #
@@ -200,9 +222,11 @@ class TestBeaconSp:
         # verify beacon interval
         log = utility.collect_two_beacons(interval)
         assert utility.beacon_interval(interval, log)
-        # discard messages
+        # verify beacon messages
         message = utility.collect_message()
+        utility.local_beacon_message_sent(message)
         message = utility.collect_message()
+        utility.local_beacon_message_sent(message)
 
     ## 90 second spacing signed
     #
@@ -225,9 +249,11 @@ class TestBeaconSp:
         # verify beacon interval
         log = utility.collect_two_beacons(interval)
         assert utility.beacon_interval(interval, log)
-        # discard messages
+        # verify beacon messages
         message = utility.collect_message()
+        utility.local_beacon_message_sent(message)
         message = utility.collect_message()
+        utility.local_beacon_message_sent(message)
 
     ## no beacon signed
     #
@@ -249,9 +275,6 @@ class TestBeaconSp:
         assert utility.response_sent(message, "SBI")
         # verify no beacons sent
         assert utility.collect_timeout()
-        # discard messages
-        message = utility.collect_message()
-        message = utility.collect_message()
 
     ## error: no parameter signed
     #
@@ -299,3 +322,20 @@ class TestBeaconSp:
         # check messages
         message = utility.collect_message()
         assert utility.negative_acknowledged_message(message)
+
+    ## error: parameter outside range signed
+    #
+    def test_beacon_sp_param_range_signed(self):
+
+        utility.issue(utility.generate_signed("BeaconSp 10"))
+        log = utility.collect_log()
+        assert utility.signed(log)
+        assert utility.signature_valid(log)
+        assert utility.acknowledged_log(log)
+        assert not utility.no_logged_errors(log)
+        assert not utility.executed(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.acknowledged_message(message)
+        message = utility.collect_message()
+        assert utility.error_response(message)

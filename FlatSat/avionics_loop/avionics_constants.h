@@ -100,6 +100,7 @@ constexpr byte QUERY_REGISTER{'\x1C'};     /**< query radio register */
  */
 
 constexpr size_t frequency_length{9};   /**< frequency */
+constexpr size_t mode_length{1};        /**< mode */
 constexpr size_t duration_length{2};    /**< duration */
 const static size_t steps_length{3};    /**< steps */
 const static size_t dwell_length{3};    /**< dwell */

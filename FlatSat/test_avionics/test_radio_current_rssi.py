@@ -16,23 +16,124 @@ import utility
 class TestCurrentRSSI:
     """Test CurrentRSSI command"""
 
-    ## report current RSSI
+      ## current RSSI
     #
-    def test_current_rssi(self):
+    def test_current_RSSI(self):
 
         utility.issue("CurrentRSSI")
-         # check log
+        # check log
         log = utility.collect_log()
         assert utility.not_signed(log)
         assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
+        assert utility.log_local_current_RSSI_sent(log)
         assert utility.executed(log)
         # check messages
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.local_current_rssi_message_sent(message)
+        assert utility.message_local_current_RSSI_sent(message)
         utility.respond(utility.ACK.encode("utf-8") + utility.CURRENT_RSSI)
-        utility.respond(utility.RES.encode("utf-8") + utility.CURRENT_RSSI + "123".encode("utf-8"))
+        utility.respond(
+            utility.RES.encode("utf-8") + utility.CURRENT_RSSI
+        )
+        # check log
+        log = utility.collect_log_radio_response()
+        assert utility.log_remote_current_RSSI_sent(log)
+        # check messages
         message = utility.collect_message()
-        assert utility.response_sent(message, "RCR")
+        assert utility.message_remote_current_RSSI_sent(message)
+
+    ## error: incorrect number of parameters
+    #
+    def test_current_RSSI_param(self):
+
+        utility.issue("CurrentRSSI 1")
+        # check log
+        log = utility.collect_log()
+        assert utility.not_signed(log)
+        assert utility.negative_acknowledged_log(log)
+        assert not utility.no_logged_errors(log)
+        assert not utility.executed(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.negative_acknowledged_message(message)
+
+    ## error: invalid parameter
+    #
+    def test_current_RSSI_invalid_param(self):
+
+        utility.issue("CurrentRSSI test")
+        # check log
+        log = utility.collect_log()
+        assert utility.not_signed(log)
+        assert utility.negative_acknowledged_log(log)
+        assert not utility.no_logged_errors(log)
+        assert not utility.executed(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.negative_acknowledged_message(message)
+
+
+    ## current RSSI signed
+    #
+    def test_current_RSSI_signed(self):
+
+        utility.issue(utility.generate_signed("CurrentRSSI"))
+        # check log
+        log = utility.collect_log()
+        assert utility.signed(log)
+        assert utility.signature_valid(log)
+        assert utility.acknowledged_log(log)
+        assert utility.no_logged_errors(log)
+        assert utility.log_local_current_RSSI_sent(log)
+        assert utility.executed(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.acknowledged_message(message)
+        message = utility.collect_message()
+        assert utility.message_local_current_RSSI_sent(message)
+        utility.respond(utility.ACK.encode("utf-8") + utility.CURRENT_RSSI)
+        utility.respond(
+            utility.RES.encode("utf-8") + utility.CURRENT_RSSI
+        )
+        # check log
+        log = utility.collect_log_radio_response()
+        assert utility.log_remote_current_RSSI_sent(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.message_remote_current_RSSI_sent(message)
+
+    ## error: incorrect number of parameters signed
+    #
+    def test_current_RSSI_signed_two_param(self):
+
+        utility.issue(utility.generate_signed("CurrentRSSI 1"))
+        # check log
+        log = utility.collect_log()
+        assert utility.signed(log)
+        assert utility.signature_valid(log)
+        assert utility.negative_acknowledged_log(log)
+        assert not utility.no_logged_errors(log)
+        assert not utility.executed(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.negative_acknowledged_message(message)
+
+    ## error: invalid parameter signed
+    #
+    def test_current_RSSI_signed_invalid_param(self):
+
+        utility.issue(utility.generate_signed("CurrentRSSI test"))
+        # check log
+        log = utility.collect_log()
+        assert utility.signed(log)
+        assert utility.signature_valid(log)
+        assert utility.negative_acknowledged_log(log)
+        assert not utility.no_logged_errors(log)
+        assert not utility.executed(log)
+        # check messages
+        message = utility.collect_message()
+        assert utility.negative_acknowledged_message(message)
+
+    

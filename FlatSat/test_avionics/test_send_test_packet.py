@@ -2,7 +2,7 @@
 # @file test_send_test_packet.py
 # @brief FlatSat test Avionics Board SendTestPacket command
 # @author Lee A. Congdon (lee@silversat.org)
-# @version 2.0.0
+# @version 2.0.1
 # @date 22 August 2022
 
 """FlatSat test Avionics Board SendTestPacket command"""
@@ -24,13 +24,13 @@ class TestSendTestPacket:
         assert utility.not_signed(log)
         assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
-        assert utility.test_packet_sent(log)
+        assert utility.log_test_packet_sent(log)
         assert utility.executed(log)
         # check messages
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "STPTEST")
+        assert utility.message_test_packet_sent(message)
 
     ## error: invalid parameter
     #
@@ -58,13 +58,13 @@ class TestSendTestPacket:
         assert utility.signature_valid(log)
         assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
-        assert utility.test_packet_sent(log)
+        assert utility.log_test_packet_sent(log)
         assert utility.executed(log)
         # check messages
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "STPTEST")
+        assert utility.message_test_packet_sent(message)
 
     ## error: invalid parameter signed
     #

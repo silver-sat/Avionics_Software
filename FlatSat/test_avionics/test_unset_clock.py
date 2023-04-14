@@ -1,42 +1,40 @@
 ##
-# @file test_get_realtime_clock.py
-# @brief FlatSat test Avionics Board ReportT command
+# @file test_unset_clock.py
+# @brief FlatSat test Avionics Board UnsetClock command
 # @author Lee A. Congdon (lee@silversat.org)
-# @version 2.0.0
-# @date 21 August 2022
+# @version 1.0.1
+# @date 2 February 2023
 
-"""FlatSat test Avionics Board ReportT command"""
+"""FlatSat test Avionics Board UnsetClock command"""
 
 import utility
 
-## Test ReportT command
+## Test UnsetClock command
 #
-class TestReportT:
-    """Test ReportT command"""
+class TestUnsetClock:
+    """Test UnsetClock command"""
 
-    ## report realtime clock time
+    ## unset realtime clock
     #
-    def test_report_t(self):
+    def test_unset_clock(self):
 
-        utility.issue("ReportT")
+        utility.issue("UnsetClock")
         # check log
         log = utility.collect_log()
         assert utility.not_signed(log)
         assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
-        assert utility.timestamp_sent(log)
         assert utility.executed(log)
         # check messages
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "GRC")
+        assert utility.response_sent(message, "URC")
 
-    ## error: invalid parameter
+    ## error: incorrect parameter
     #
-    def test_report_t_param(self):
-
-        utility.issue("ReportT test")
+    def test_unset_clock_param(self):
+        utility.issue("UnsetClock clear")
         # check log
         log = utility.collect_log()
         assert utility.not_signed(log)
@@ -47,30 +45,28 @@ class TestReportT:
         message = utility.collect_message()
         assert utility.negative_acknowledged_message(message)
 
-    ## report realtime clock time signed
+    ## unset realtime clock signed
     #
-    def test_report_t_signed(self):
+    def test_unset_clock_signed(self):
 
-        utility.issue(utility.generate_signed("ReportT"))
+        utility.issue(utility.generate_signed("UnsetClock"))
         # check log
         log = utility.collect_log()
         assert utility.signed(log)
         assert utility.signature_valid(log)
         assert utility.acknowledged_log(log)
         assert utility.no_logged_errors(log)
-        assert utility.timestamp_sent(log)
         assert utility.executed(log)
         # check messages
         message = utility.collect_message()
         assert utility.acknowledged_message(message)
         message = utility.collect_message()
-        assert utility.response_sent(message, "GRC")
+        assert utility.response_sent(message, "URC")
 
-    ## error: invalid parameter signed
+    ## error: incorrect parameter signed
     #
-    def test_report_t_param_signed(self):
-
-        log = utility.issue(utility.generate_signed("ReportT test"))
+    def test_unset_clock_param_signed(self):
+        utility.issue(utility.generate_signed("UnsetClock clear"))
         # check log
         log = utility.collect_log()
         assert utility.signed(log)

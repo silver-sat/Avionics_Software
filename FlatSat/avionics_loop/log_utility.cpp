@@ -11,7 +11,6 @@
 
 #include "log_utility.h"
 
-// todo: consider replacing "%x" log entries with "%X"
 // todo: consider making custom classes printable and using "%p"
 
 /**
