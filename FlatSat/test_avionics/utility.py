@@ -87,6 +87,16 @@ modify_mode_pattern = re.compile(r"RMM\d$")
 adjust_frequency_pattern = re.compile(r"RAF\d{9}$")
 ## transmit CW pattern
 transmit_CW_pattern = re.compile(r"RTC\d{2}$")
+## background RSSI pattern
+background_RSSI_pattern = re.compile(r"RBR\d{2}$")
+## current RSSI pattern
+current_RSSI_pattern = re.compile(r"RCR$")
+## sweep transmitter pattern
+sweep_transmitter_pattern = re.compile(r"RSTsweep done$")
+## sweep receiver pattern
+sweep_receiver_pattern = re.compile(r"RSR\d{3}\d{9}\d{3}$")
+## query register pattern
+query_register_pattern = re.compile(r"RQR\d{3}$")
 
 ## Initialization services
 
@@ -700,40 +710,164 @@ def message_remote_transmit_CW_sent(message):
     return transmit_CW_pattern.search(message[2:-1].decode("utf-8"))
 
 
-## Verify local background RSSI message sent
+## Verify log local background RSSI message sent
 #
 # Local command for BackgroundRSSI command
 #
-def local_background_rssi_message_sent(message):
+def log_local_background_RSSI_sent(log):
+    return any([item.detail == "Requesting background RSSI" for item in log])
 
+
+## Verify message local background RSSI message sent
+#
+# Local command for BackgroundRSSI command
+#
+def message_local_background_RSSI_sent(message):
     return message.startswith(FEND + BACKGROUND_RSSI)
 
 
-## Verify local current RSSI message sent
+## Verify log remote background RSSI message sent
+#
+# Local command for BackgroundRSSI command
+#
+def log_remote_background_RSSI_sent(log):
+    return any([background_RSSI_pattern.search(item.detail) for item in log])
+
+
+## Verify message remote background RSSI message sent
+#
+# Local command for BackgroundRSSI command
+#
+def message_remote_background_RSSI_sent(message):
+    return background_RSSI_pattern.search(message[2:-1].decode("utf-8"))
+
+
+## Verify log local current RSSI message sent
 #
 # Local command for CurrentRSSI command
 #
-def local_current_rssi_message_sent(message):
+def log_local_current_RSSI_sent(log):
+    return any([item.detail == "Requesting current RSSI" for item in log])
 
+
+## Verify message local current RSSI message sent
+#
+# Local command for CurrentRSSI command
+#
+def message_local_current_RSSI_sent(message):
     return message.startswith(FEND + CURRENT_RSSI)
 
 
-## Verify local sweep transmitter message sent
+## Verify log remote current RSSI message sent
+#
+# Local command for CurrentRSSI command
+#
+def log_remote_current_RSSI_sent(log):
+    return any([current_RSSI_pattern.search(item.detail) for item in log])
+
+
+## Verify message remote current RSSI message sent
+#
+# Local command for CurrentRSSI command
+#
+def message_remote_current_RSSI_sent(message):
+    return current_RSSI_pattern.search(message[2:-1].decode("utf-8"))
+
+
+## Verify log local sweep transmitter message sent
 #
 # Local command for SweepTransmitter command
 #
-def local_sweep_transmitter_message_sent(message):
+def log_local_sweep_transmitter_sent(log):
+    return any([item.detail == "Requesting transmitter sweep" for item in log])
 
+
+## Verify message local sweep transmitter message sent
+#
+# Local command for SweepTransmitter command
+#
+def message_local_sweep_transmitter_sent(message):
     return message.startswith(FEND + SWEEP_TRANSMITTER)
 
 
-## Verify local sweep receiver message sent
+## Verify log remote sweep transmitter message sent
+#
+# Local command for SweepTransmitter command
+#
+def log_remote_sweep_transmitter_sent(log):
+    return any([sweep_transmitter_pattern.search(item.detail) for item in log])
+
+
+## Verify message remote sweep transmitter message sent
+#
+# Local command for SweepTransmitter command
+#
+def message_remote_sweep_transmitter_sent(message):
+    return sweep_transmitter_pattern.search(message[2:-1].decode("utf-8"))
+
+
+## Verify log local sweep receiver message sent
 #
 # Local command for SweepReceiver command
 #
-def local_sweep_receiver_message_sent(message):
+def log_local_sweep_receiver_sent(log):
+    return any([item.detail == "Requesting receiver sweep" for item in log])
 
+
+## Verify message local sweep receiver message sent
+#
+# Local command for SweepReceiver command
+#
+def message_local_sweep_receiver_sent(message):
     return message.startswith(FEND + SWEEP_RECEIVER)
+
+
+## Verify log remote sweep receiver message sent
+#
+# Local command for SweepReceiver command
+#
+def log_remote_sweep_receiver_sent(log):
+    return any([sweep_receiver_pattern.search(item.detail) for item in log])
+
+
+## Verify message remote sweep receiver message sent
+#
+# Local command for SweepReceiver command
+#
+def message_remote_sweep_receiver_sent(message):
+    return sweep_receiver_pattern.search(message[2:-1].decode("utf-8"))
+
+
+## Verify log local query register message sent
+#
+# Local command for QueryRegister command
+#
+def log_local_query_register_sent(log):
+    return any([item.detail == "Requesting radio register" for item in log])
+
+
+## Verify message local query register message sent
+#
+# Local command for QueryRegister command
+#
+def message_local_query_register_sent(message):
+    return message.startswith(FEND + QUERY_REGISTER)
+
+
+## Verify log remote query register message sent
+#
+# Local command for QueryRegister command
+#
+def log_remote_query_register_sent(log):
+    return any([query_register_pattern.search(item.detail) for item in log])
+
+
+## Verify message remote query register message sent
+#
+# Local command for QueryRegister command
+#
+def message_remote_query_register_sent(message):
+    return query_register_pattern.search(message[2:-1].decode("utf-8"))
 
 
 ## Verify local query register message sent

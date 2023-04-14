@@ -187,8 +187,12 @@ Command *CommandFactory::BuildCommand(const String tokens[], const size_t token_
         else
             return new CommandInvalid(); // Wrong number of parameters
     else if (tokens[0] == "BackgroundRSSI")
-        if (argument_count == 0)
-            return new CommandBackgroundRSSI();
+        if ((argument_count == 1) && tokens[1].length() == duration_length)
+        {
+            char duration[duration_length]{};
+            memcpy(duration, tokens[1].c_str(), duration_length);
+            return new CommandBackgroundRSSI(duration);
+        }
         else
             return new CommandInvalid(); // Wrong number of parameters
     else if (tokens[0] == "CurrentRSSI")
@@ -197,7 +201,7 @@ Command *CommandFactory::BuildCommand(const String tokens[], const size_t token_
         else
             return new CommandInvalid(); // Wrong number of parameters
     else if (tokens[0] == "SweepTransmitter")
-        if (argument_count == 4)
+        if ((argument_count == 4) && (tokens[1].length() == frequency_length) && (tokens[2].length() == frequency_length) && (tokens[3].length() == steps_length) && (tokens[4].length() == dwell_length))
         {
             // todo: assess other copying options
             char start_frequency[frequency_length]{};
@@ -213,8 +217,9 @@ Command *CommandFactory::BuildCommand(const String tokens[], const size_t token_
         else
             return new CommandInvalid(); // Wrong number of parameters
     else if (tokens[0] == "SweepReceiver")
-        if (argument_count == 4)
+        if ((argument_count == 4) && (tokens[1].length() == frequency_length) && (tokens[2].length() == frequency_length) && (tokens[3].length() == steps_length) && (tokens[4].length() == dwell_length))
         {
+            // todo: assess other copying options
             char start_frequency[frequency_length]{};
             char stop_frequency[frequency_length]{};
             char number_of_steps[steps_length]{};
@@ -229,8 +234,9 @@ Command *CommandFactory::BuildCommand(const String tokens[], const size_t token_
         else
             return new CommandInvalid(); // Wrong number of parameters
     else if (tokens[0] == "QueryRegister")
-        if (argument_count == 1)
+        if ((argument_count == 1) && (tokens[1].length() == register_length))
         {
+            // todo: assess other copying options
             char radio_register[register_length]{};
             memcpy(radio_register, tokens[1].c_str(), register_length);
             return new CommandQueryRegister(radio_register);

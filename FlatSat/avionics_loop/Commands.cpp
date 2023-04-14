@@ -767,7 +767,7 @@ bool CommandBackgroundRSSI::execute_command()
 {
     auto status{Command::execute_command()};
     Log.verboseln("BackgroundRSSI");
-    Message message{Message::background_rssi, ""};
+    Message message{Message::background_rssi, String{m_duration}};
     Log.verboseln("Requesting background RSSI");
     return message.send() && status;
 }
