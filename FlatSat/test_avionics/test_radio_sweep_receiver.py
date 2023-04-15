@@ -37,9 +37,9 @@ class TestSweepReceiver:
         utility.respond(
             utility.RES.encode("utf-8")
             + utility.SWEEP_RECEIVER
-            + "123".encode("utf-8")
-            + "123455789".encode("utf-8")
-            + "123".encode("utf-8")
+            + " 123".encode("utf-8")
+            + " 123456789".encode("utf-8")
+            + " 123".encode("utf-8")
         )
         # check log
         log = utility.collect_log_radio_response()
@@ -50,36 +50,36 @@ class TestSweepReceiver:
         utility.respond(
             utility.RES.encode("utf-8")
             + utility.SWEEP_RECEIVER
-            + "123".encode("utf-8")
-            + "123455789".encode("utf-8")
-            + "123".encode("utf-8")
+            + " 123".encode("utf-8")
+            + " 123456789".encode("utf-8")
+            + " 123".encode("utf-8")
         )
         message = utility.collect_message()
         assert utility.message_remote_sweep_receiver_sent(message)
         utility.respond(
             utility.RES.encode("utf-8")
             + utility.SWEEP_RECEIVER
-            + "123".encode("utf-8")
-            + "123455789".encode("utf-8")
-            + "123".encode("utf-8")
+            + " 123".encode("utf-8")
+            + " 123456789".encode("utf-8")
+            + " 123".encode("utf-8")
         )
         message = utility.collect_message()
         assert utility.message_remote_sweep_receiver_sent(message)
         utility.respond(
             utility.RES.encode("utf-8")
             + utility.SWEEP_RECEIVER
-            + "123".encode("utf-8")
-            + "123455789".encode("utf-8")
-            + "123".encode("utf-8")
+            + " 123".encode("utf-8")
+            + " 123456789".encode("utf-8")
+            + " 123".encode("utf-8")
         )
         message = utility.collect_message()
         assert utility.message_remote_sweep_receiver_sent(message)
         utility.respond(
             utility.RES.encode("utf-8")
             + utility.SWEEP_RECEIVER
-            + "123".encode("utf-8")
-            + "123455789".encode("utf-8")
-            + "123".encode("utf-8")
+            + " 123".encode("utf-8")
+            + " 123456789".encode("utf-8")
+            + " 123".encode("utf-8")
         )
         message = utility.collect_message()
         assert utility.message_remote_sweep_receiver_sent(message)
@@ -213,9 +213,9 @@ class TestSweepReceiver:
         utility.respond(
             utility.RES.encode("utf-8")
             + utility.SWEEP_RECEIVER
-            + "123".encode("utf-8")
-            + "123455789".encode("utf-8")
-            + "123".encode("utf-8")
+            + " 123".encode("utf-8")
+            + " 123456789".encode("utf-8")
+            + " 123".encode("utf-8")
         )
         # check log
         log = utility.collect_log_radio_response()
@@ -226,36 +226,36 @@ class TestSweepReceiver:
         utility.respond(
             utility.RES.encode("utf-8")
             + utility.SWEEP_RECEIVER
-            + "123".encode("utf-8")
-            + "123455789".encode("utf-8")
-            + "123".encode("utf-8")
+            + " 123".encode("utf-8")
+            + " 123456789".encode("utf-8")
+            + " 123".encode("utf-8")
         )
         message = utility.collect_message()
         assert utility.message_remote_sweep_receiver_sent(message)
         utility.respond(
             utility.RES.encode("utf-8")
             + utility.SWEEP_RECEIVER
-            + "123".encode("utf-8")
-            + "123455789".encode("utf-8")
-            + "123".encode("utf-8")
+            + " 123".encode("utf-8")
+            + " 123456789".encode("utf-8")
+            + " 123".encode("utf-8")
         )
         message = utility.collect_message()
         assert utility.message_remote_sweep_receiver_sent(message)
         utility.respond(
             utility.RES.encode("utf-8")
             + utility.SWEEP_RECEIVER
-            + "123".encode("utf-8")
-            + "123455789".encode("utf-8")
-            + "123".encode("utf-8")
+            + " 123".encode("utf-8")
+            + " 123456789".encode("utf-8")
+            + " 123".encode("utf-8")
         )
         message = utility.collect_message()
         assert utility.message_remote_sweep_receiver_sent(message)
         utility.respond(
             utility.RES.encode("utf-8")
             + utility.SWEEP_RECEIVER
-            + "123".encode("utf-8")
-            + "123455789".encode("utf-8")
-            + "123".encode("utf-8")
+            + " 123".encode("utf-8")
+            + " 123456789".encode("utf-8")
+            + " 123".encode("utf-8")
         )
         message = utility.collect_message()
         assert utility.message_remote_sweep_receiver_sent(message)

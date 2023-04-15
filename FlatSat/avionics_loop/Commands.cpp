@@ -258,7 +258,7 @@ bool CommandReportT::execute_command()
     auto timestamp{avionics.get_timestamp()};
     if (timestamp == "ERROR")
         status = false;
-    auto response{Response{status ? ("GRC" + timestamp) : "ERR"}};
+    auto response{Response{status ? ("GRC " + timestamp) : "ERR"}};
     return response.send() && status;
 }
 
@@ -289,7 +289,7 @@ bool CommandGetPicTimes::execute_command()
     Log.verboseln("GetPicTimes");
     // todo: consider refactoring return
     extern AvionicsBoard avionics;
-    auto response{Response{status ? ("GPT" + avionics.get_pic_times()) : "ERR"}};
+    auto response{Response{status ? ("GPT " + avionics.get_pic_times()) : "ERR"}};
     return response.send() && status;
 }
 
@@ -412,7 +412,7 @@ bool CommandGetBeaconInterval::execute_command()
     Log.verboseln("GetBeaconInterval");
     // todo: consider refactoring return
     extern AvionicsBoard avionics;
-    auto response{Response{status ? ("GBI" + avionics.get_beacon_interval()) : "ERR"}};
+    auto response{Response{status ? ("GBI " + avionics.get_beacon_interval()) : "ERR"}};
     return response.send() && status;
 }
 
@@ -470,7 +470,7 @@ bool CommandSendTestPacket::execute_command()
 {
     auto status{Command::execute_command()};
     Log.verboseln("SendTestPacket");
-    auto response{Response{status ? "STPTEST" : "ERR"}};
+    auto response{Response{status ? "STP test packet" : "ERR"}};
     return response.send() && status;
 }
 
@@ -827,15 +827,18 @@ bool CommandSweepTransmitter::execute_command()
 {
     auto status{Command::execute_command()};
     Log.verboseln("SweepTransmitter");
-    char arguments[frequency_length + frequency_length + steps_length + dwell_length + 1]{};
+    char arguments[frequency_length + frequency_length + steps_length + dwell_length + 4]{};
     char *arg_ptr{};
     arg_ptr = &arguments[0];
     memcpy(arg_ptr, m_start_frequency, frequency_length);
     arg_ptr += frequency_length;
+    *arg_ptr++ = ' ';
     memcpy(arg_ptr, m_stop_frequency, frequency_length);
     arg_ptr += frequency_length;
+    *arg_ptr++ = ' ';
     memcpy(arg_ptr, m_number_of_steps, steps_length);
     arg_ptr += steps_length;
+    *arg_ptr++ = ' ';
     memcpy(arg_ptr, m_dwell_time, dwell_length);
     arg_ptr += steps_length;
     *arg_ptr = '\0';
@@ -869,15 +872,18 @@ bool CommandSweepReceiver::execute_command()
 {
     auto status{Command::execute_command()};
     Log.verboseln("SweepReceiver");
-    char arguments[frequency_length + frequency_length + steps_length + dwell_length + 1]{};
+    char arguments[frequency_length + frequency_length + steps_length + dwell_length + 4]{};
     char *arg_ptr{};
     arg_ptr = &arguments[0];
     memcpy(arg_ptr, m_start_frequency, frequency_length);
     arg_ptr += frequency_length;
+    *arg_ptr++ = ' ';
     memcpy(arg_ptr, m_stop_frequency, frequency_length);
     arg_ptr += frequency_length;
+    *arg_ptr++ = ' ';
     memcpy(arg_ptr, m_number_of_steps, steps_length);
     arg_ptr += steps_length;
+    *arg_ptr++ = ' ';
     memcpy(arg_ptr, m_dwell_time, dwell_length);
     arg_ptr += steps_length;
     *arg_ptr = '\0';

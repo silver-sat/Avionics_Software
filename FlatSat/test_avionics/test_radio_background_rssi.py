@@ -35,7 +35,7 @@ class TestBackgroundRSSI:
         assert utility.message_local_background_RSSI_sent(message)
         utility.respond(utility.ACK.encode("utf-8") + utility.BACKGROUND_RSSI)
         utility.respond(
-            utility.RES.encode("utf-8") + utility.BACKGROUND_RSSI + "12".encode("utf-8")
+            utility.RES.encode("utf-8") + utility.BACKGROUND_RSSI + " 12".encode("utf-8")
         )
         # check log
         log = utility.collect_log_radio_response()
@@ -139,7 +139,7 @@ class TestBackgroundRSSI:
         assert utility.message_local_background_RSSI_sent(message)
         utility.respond(utility.ACK.encode("utf-8") + utility.BACKGROUND_RSSI)
         utility.respond(
-            utility.RES.encode("utf-8") + utility.BACKGROUND_RSSI + "12".encode("utf-8")
+            utility.RES.encode("utf-8") + utility.BACKGROUND_RSSI + " 12".encode("utf-8")
         )
         # check log
         log = utility.collect_log_radio_response()

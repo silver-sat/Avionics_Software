@@ -110,11 +110,11 @@ String IMU::get_acceleration()
     refresh_data();
     Log.verboseln("Acceleration X: %F, Y: %F, Z: %F m/s^2",
                   m_a.acceleration.x, m_a.acceleration.y, m_a.acceleration.z);
-    String data = String("AX") +
+    String data = String(" AX") +
                   String(m_a.acceleration.x, 3) +
-                  String("AY") +
+                  String(" AY") +
                   String(m_a.acceleration.y, 3) +
-                  String("AZ") +
+                  String(" AZ") +
                   String(m_a.acceleration.z, 3);
 
     return data;
@@ -130,11 +130,11 @@ String IMU::get_rotation()
 {
     refresh_data();
     Log.verboseln("Rotation X: %F, Y: %F, Z: %F rad/s", m_g.gyro.x, m_g.gyro.y, m_g.gyro.z);
-    String data = String("RX") +
+    String data = String(" RX") +
                   String(m_g.gyro.x, 3) +
-                  String("RY") +
+                  String(" RY") +
                   String(m_g.gyro.y, 3) +
-                  String("RZ") +
+                  String(" RZ") +
                   String(m_g.gyro.z, 3);
 
     return data;
@@ -150,7 +150,7 @@ String IMU::get_temperature()
 {
     refresh_data();
     Log.verboseln("Temperature: %F degC", m_temp.temperature);
-    String data = String("T") +
+    String data = String(" T") +
                   String(m_temp.temperature, 3);
 
     return data;

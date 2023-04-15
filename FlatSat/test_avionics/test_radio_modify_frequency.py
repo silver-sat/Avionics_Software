@@ -35,7 +35,7 @@ class TestModifyFrequency:
         utility.respond(
             utility.RES.encode("utf-8")
             + utility.MODIFY_FREQ
-            + "123456789".encode("utf-8")
+            + " 123456789".encode("utf-8")
         )
         # check log
         log = utility.collect_log_radio_response()
@@ -141,7 +141,7 @@ class TestModifyFrequency:
         utility.respond(
             utility.RES.encode("utf-8")
             + utility.MODIFY_FREQ
-            + "123456789".encode("utf-8")
+            + " 123456789".encode("utf-8")
         )
         # check log
         log = utility.collect_log_radio_response()

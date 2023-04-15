@@ -35,7 +35,7 @@ class TestTransmitCW:
         assert utility.message_local_transmit_CW_sent(message)
         utility.respond(utility.ACK.encode("utf-8") + utility.TRANSMIT_CARRIER)
         utility.respond(
-            utility.RES.encode("utf-8") + utility.TRANSMIT_CARRIER + "12".encode("utf-8")
+            utility.RES.encode("utf-8") + utility.TRANSMIT_CARRIER + " 12".encode("utf-8")
         )
         # check log
         log = utility.collect_log_radio_response()
@@ -139,7 +139,7 @@ class TestTransmitCW:
         assert utility.message_local_transmit_CW_sent(message)
         utility.respond(utility.ACK.encode("utf-8") + utility.TRANSMIT_CARRIER)
         utility.respond(
-            utility.RES.encode("utf-8") + utility.TRANSMIT_CARRIER + "12".encode("utf-8")
+            utility.RES.encode("utf-8") + utility.TRANSMIT_CARRIER + " 12".encode("utf-8")
         )
         # check log
         log = utility.collect_log_radio_response()

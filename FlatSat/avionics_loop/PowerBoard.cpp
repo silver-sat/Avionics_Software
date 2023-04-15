@@ -64,13 +64,13 @@ Beacon::Status PowerBoard::get_status()
 
 String PowerBoard::get_detail()
 {
-    return "BBV" + String(eps_i.getBatteryVoltage()) +
-        "BBC" + String(eps_i.getBatteryCurrent()) +
-        "TS1" + String(eps_i.getTemperatureSensor1()) +
-        "TS2" + String(eps_i.getTemperatureSensor2()) +
-        "TS3" + String(eps_i.getTemperatureSensor3()) +
-        "5VC" + String(eps_i.get5VCurrent()) +
-        "H1S" + String(eps_i.getHeater1State()) +
-        "H2S" + String(eps_i.getHeater2State()) +
-        "H3S" + String(eps_i.getHeater3State());
+    return " BBV" + String(eps_i.getBatteryVoltage()) +
+        " BBC" + String(eps_i.getBatteryCurrent()) +
+        " TS1" + String(eps_i.getTemperatureSensor1()) +
+        " TS2" + String(eps_i.getTemperatureSensor2()) +
+        " TS3" + String(eps_i.getTemperatureSensor3()) +
+        " 5VC" + String(eps_i.get5VCurrent()) +
+        " H1S" + String(eps_i.getHeater1State()) +
+        " H2S" + String(eps_i.getHeater2State()) +
+        " H3S" + String(eps_i.getHeater3State());
 }

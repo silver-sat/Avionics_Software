@@ -34,7 +34,7 @@ class TestQueryRegister:
         assert utility.message_local_query_register_sent(message)
         utility.respond(utility.ACK.encode("utf-8") + utility.QUERY_REGISTER)
         utility.respond(
-            utility.RES.encode("utf-8") + utility.QUERY_REGISTER + "123".encode("utf-8")
+            utility.RES.encode("utf-8") + utility.QUERY_REGISTER + " 123".encode("utf-8")
         )
         # check log
         log = utility.collect_log_radio_response()
@@ -138,7 +138,7 @@ class TestQueryRegister:
         assert utility.message_local_query_register_sent(message)
         utility.respond(utility.ACK.encode("utf-8") + utility.QUERY_REGISTER)
         utility.respond(
-            utility.RES.encode("utf-8") + utility.QUERY_REGISTER + "123".encode("utf-8")
+            utility.RES.encode("utf-8") + utility.QUERY_REGISTER + " 123".encode("utf-8")
         )
         # check log
         log = utility.collect_log_radio_response()

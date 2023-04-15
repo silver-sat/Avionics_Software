@@ -113,7 +113,7 @@ class TestSetClock:
         message = utility.collect_message()
         assert utility.error_response(message)
 
-    ## error: time to early
+    ## error: time too early
     #
     def test_set_clock_time_too_early(self):
 
@@ -255,7 +255,7 @@ class TestSetClock:
         message = utility.collect_message()
         assert utility.error_response(message)
 
-    ## error: time to early signed
+    ## error: time too early signed
     #
     def test_set_clock_time_too_early_signed(self):
 
