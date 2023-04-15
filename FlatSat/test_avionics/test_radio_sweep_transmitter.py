@@ -38,7 +38,7 @@ class TestSweepTransmitter:
         utility.respond(
             utility.RES.encode("utf-8")
             + utility.SWEEP_TRANSMITTER
-            + "sweep done".encode("utf-8")
+            + " sweep done".encode("utf-8")
         )
         # check log
         log = utility.collect_log_radio_response()
@@ -174,7 +174,7 @@ class TestSweepTransmitter:
         utility.respond(
             utility.RES.encode("utf-8")
             + utility.SWEEP_TRANSMITTER
-            + "sweep done".encode("utf-8")
+            + " sweep done".encode("utf-8")
         )
         # check log
         log = utility.collect_log_radio_response()

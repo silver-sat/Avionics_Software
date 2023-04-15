@@ -33,7 +33,7 @@ class TestModifyMode:
         assert utility.message_local_modify_mode_sent(message)
         utility.respond(utility.ACK.encode("utf-8") + utility.MODIFY_MODE)
         utility.respond(
-            utility.RES.encode("utf-8") + utility.MODIFY_MODE + "1".encode("utf-8")
+            utility.RES.encode("utf-8") + utility.MODIFY_MODE + " 1".encode("utf-8")
         )
         # check log
         log = utility.collect_log_radio_response()
@@ -122,7 +122,7 @@ class TestModifyMode:
         assert utility.message_local_modify_mode_sent(message)
         utility.respond(utility.ACK.encode("utf-8") + utility.MODIFY_MODE)
         utility.respond(
-            utility.RES.encode("utf-8") + utility.MODIFY_MODE + "1".encode("utf-8")
+            utility.RES.encode("utf-8") + utility.MODIFY_MODE + " 1".encode("utf-8")
         )
         # check log
         log = utility.collect_log_radio_response()

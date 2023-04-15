@@ -35,7 +35,7 @@ class TestCurrentRSSI:
         assert utility.message_local_current_RSSI_sent(message)
         utility.respond(utility.ACK.encode("utf-8") + utility.CURRENT_RSSI)
         utility.respond(
-            utility.RES.encode("utf-8") + utility.CURRENT_RSSI
+            utility.RES.encode("utf-8") + utility.CURRENT_RSSI + " 123".encode("utf-8")
         )
         # check log
         log = utility.collect_log_radio_response()
@@ -95,7 +95,7 @@ class TestCurrentRSSI:
         assert utility.message_local_current_RSSI_sent(message)
         utility.respond(utility.ACK.encode("utf-8") + utility.CURRENT_RSSI)
         utility.respond(
-            utility.RES.encode("utf-8") + utility.CURRENT_RSSI
+            utility.RES.encode("utf-8") + utility.CURRENT_RSSI + " 123".encode("utf-8")
         )
         # check log
         log = utility.collect_log_radio_response()

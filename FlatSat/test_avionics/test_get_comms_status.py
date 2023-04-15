@@ -33,7 +33,7 @@ class TestGetComms:
         assert utility.message_local_status_request(message)
         # todo: radio will send these messages 
         utility.respond(utility.ACK.encode("utf-8") + utility.STATUS)
-        utility.respond(utility.RES.encode("utf-8") + utility.STATUS + "Radio Status".encode("utf-8"))
+        utility.respond(utility.RES.encode("utf-8") + utility.STATUS + " radio status".encode("utf-8"))
         message = utility.collect_message()
         assert utility.response_sent(message, "GRS")
         # todo: add check for radio status sent
@@ -73,7 +73,7 @@ class TestGetComms:
         assert utility.message_local_status_request(message)
         # todo: radio will send these messages 
         utility.respond(utility.ACK.encode("utf-8") + utility.STATUS)
-        utility.respond(utility.RES.encode("utf-8") + utility.STATUS + "Radio Status".encode("utf-8"))
+        utility.respond(utility.RES.encode("utf-8") + utility.STATUS + " radio status".encode("utf-8"))
         message = utility.collect_message()
         assert utility.response_sent(message, "GRS")
         # todo: add check for radio status sent

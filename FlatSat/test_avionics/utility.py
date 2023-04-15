@@ -61,42 +61,42 @@ read_length = 256
 call_sign = "KC3VVW"
 ## timestamp pattern
 timestamp_pattern = re.compile(
-    r"RESGRC20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)$"
+    r"RESGRC 20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)$"
 )
 ## pictimes pattern
 pictimes_pattern = re.compile(
-    r"RESGPT[0-5](20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)){0,5}$"
+    r"RESGPT [0-5]( 20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)){0,5}$"
 )
 ## telemetry pattern
 telemetry_pattern = re.compile(
-    r"(RESGTYAX-?\d+\.\d+)(AY-?\d+\.\d+)(AZ-?\d+\.\d+)(RX-?\d+\.\d+)(RY-?\d+\.\d+)(RZ-?\d+\.\d+)(T-?\d+\.\d+)$"
+    r"(RESGTY AX-?\d+\.\d+)( AY-?\d+\.\d+)( AZ-?\d+\.\d+)( RX-?\d+\.\d+)( RY-?\d+\.\d+)( RZ-?\d+\.\d+)( T-?\d+\.\d+)$"
 )
 ## power pattern
 power_pattern = re.compile(
-    r"(RESGPW)(BBV\d+\.\d+)(BBC\d+\.\d+)(TS1-*\d+\.\d+)(TS2-*\d+\.\d+)(TS3-*\d+\.\d+)(5VC\d+\.\d+)(H1S\d)(H2S\d)(H3S\d)$"
+    r"(RESGPW)( BBV\d+\.\d+)( BBC\d+\.\d+)( TS1-*\d+\.\d+)( TS2-*\d+\.\d+)( TS3-*\d+\.\d+)( 5VC\d+\.\d+)( H1S\d)( H2S\d)( H3S\d)$"
 )
 ## beacon interval pattern
-beacon_interval_pattern = re.compile(r"(RESGBI)(\d+)$")
+beacon_interval_pattern = re.compile(r"(RESGBI )(\d+)$")
 ## test packet pattern
-test_packet_pattern = re.compile(r"STPTEST$")
+test_packet_pattern = re.compile(r"RESSTP test packet$")
 ## modify frequency pattern
-modify_frequency_pattern = re.compile(r"RMF\d{9}$")
+modify_frequency_pattern = re.compile(r"RESRMF \d{9}$")
 ## modify mode pattern
-modify_mode_pattern = re.compile(r"RMM\d$")
+modify_mode_pattern = re.compile(r"RESRMM \d$")
 ## adjust frequency pattern
-adjust_frequency_pattern = re.compile(r"RAF\d{9}$")
+adjust_frequency_pattern = re.compile(r"RESRAF \d{9}$")
 ## transmit CW pattern
-transmit_CW_pattern = re.compile(r"RTC\d{2}$")
+transmit_CW_pattern = re.compile(r"RESRTC \d{2}$")
 ## background RSSI pattern
-background_RSSI_pattern = re.compile(r"RBR\d{2}$")
+background_RSSI_pattern = re.compile(r"RESRBR \d{2}$")
 ## current RSSI pattern
-current_RSSI_pattern = re.compile(r"RCR$")
+current_RSSI_pattern = re.compile(r"RESRCR \d{3}$")
 ## sweep transmitter pattern
-sweep_transmitter_pattern = re.compile(r"RSTsweep done$")
+sweep_transmitter_pattern = re.compile(r"RESRST sweep done$")
 ## sweep receiver pattern
-sweep_receiver_pattern = re.compile(r"RSR\d{3}\d{9}\d{3}$")
+sweep_receiver_pattern = re.compile(r"RESRSR \d{3} \d{9} \d{3}$")
 ## query register pattern
-query_register_pattern = re.compile(r"RQR\d{3}$")
+query_register_pattern = re.compile(r"RESRQR \d{3}$")
 
 ## Initialization services
 
@@ -468,7 +468,7 @@ def message_pictimes_sent(message):
 #
 def pictimes_zero_sent(log):
 
-    return any([item.detail.endswith("content: RESGPT0") for item in log])
+    return any([item.detail.endswith("content: RESGPT 0") for item in log])
 
 
 ## Verify log telemetry sent

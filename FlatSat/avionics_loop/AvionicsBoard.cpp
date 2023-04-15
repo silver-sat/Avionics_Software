@@ -277,7 +277,7 @@ String AvionicsBoard::get_pic_times()
 {
   String response{m_picture_count};
   for (size_t index = 0; index < m_picture_count; ++index)
-    response += m_picture_times[index].timestamp();
+    response += (' ' + m_picture_times[index].timestamp());
   return response;
 }
 
