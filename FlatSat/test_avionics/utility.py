@@ -17,7 +17,7 @@ import hmac
 import time
 
 ## port for log output
-LOG_PORT = "/dev/tty.usbmodem11301"
+LOG_PORT = "/dev/tty.usbmodem11101"
 ## port for command input and output
 COMMAND_PORT = "/dev/tty.usbserial-A10MHKWZ"
 ## serial transmission speed
@@ -73,7 +73,7 @@ telemetry_pattern = re.compile(
 )
 ## power pattern
 power_pattern = re.compile(
-    r"(RESGPW)( BBV\d+\.\d+)( BBC\d+\.\d+)( TS1-*\d+\.\d+)( TS2-*\d+\.\d+)( TS3-*\d+\.\d+)( 5VC\d+\.\d+)( H1S\d)( H2S\d)( H3S\d)$"
+    r"(RESGPW)( BBV\d+\.\d+)( BBC\d+\.\d+)( TS1-*\d+\.\d+)( TS2-*\d+\.\d+)( 5VC\d+\.\d+)( H1S\d)( H2S\d)( H3S\d)$"
 )
 ## beacon interval pattern
 beacon_interval_pattern = re.compile(r"(RESGBI )(\d+)$")
