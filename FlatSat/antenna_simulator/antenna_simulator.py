@@ -17,7 +17,7 @@ index = 0
 print("Starting antenna and eps simulator")
 
 while True:
-    with I2CTarget(board.SCL, board.SDA, [0x18,0x33]) as device:
+    with I2CTarget(board.SCL, board.SDA, [0x33]) as device:
         while True:
             r = device.request()
 

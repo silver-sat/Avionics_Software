@@ -79,7 +79,8 @@ float EPS_I::getBatteryCurrent(void)
 float EPS_I::getTemperatureSensor1(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETTEMPERATURESINFO_TEMPERATURES_BATTERY0)};
-  if (value < 0x8000)
+  Log.verboseln("Temperature Sensor 1 raw value is: %X", value);
+  if (value < 0x8000U)
     return static_cast<float>(value) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE;
   else
     return (((value >> 4) - 1) ^ 0xFFFF) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE;
@@ -95,7 +96,8 @@ float EPS_I::getTemperatureSensor1(void)
 float EPS_I::getTemperatureSensor2(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETTEMPERATURESINFO_TEMPERATURES_BATTERY1)};
-  if (value < 0x8000)
+  Log.verboseln("Temperature Sensor 2 raw value is: %X", value);
+  if (value < 0x8000U)
     return static_cast<float>(value) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE;
   else
     return (((value >> 4) - 1) ^ 0xFFFF) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE;
@@ -111,7 +113,8 @@ float EPS_I::getTemperatureSensor2(void)
 float EPS_I::getTemperatureSensor3(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETTEMPERATURESINFO_TEMPERATURES_BATTERY2)};
-  if (value < 0x8000)
+  Log.verboseln("Temperature Sensor 3 raw value is: %X", value);
+  if (value < 0x8000U)
     return static_cast<float>(value) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE;
   else
     return (((value >> 4) - 1) ^ 0xFFFF) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE;

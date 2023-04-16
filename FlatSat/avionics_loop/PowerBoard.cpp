@@ -25,7 +25,6 @@ PowerBoard::PowerBoard(){};
 bool PowerBoard::begin()
 {
     Log.traceln("Power Board initializing");
-    // todo: consider getting initial values
     Log.traceln("Initializing EPS-I");
     if (eps_i.begin())
     {
@@ -68,7 +67,6 @@ String PowerBoard::get_detail()
         " BBC" + String(eps_i.getBatteryCurrent()) +
         " TS1" + String(eps_i.getTemperatureSensor1()) +
         " TS2" + String(eps_i.getTemperatureSensor2()) +
-        " TS3" + String(eps_i.getTemperatureSensor3()) +
         " 5VC" + String(eps_i.get5VCurrent()) +
         " H1S" + String(eps_i.getHeater1State()) +
         " H2S" + String(eps_i.getHeater2State()) +
