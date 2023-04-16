@@ -57,8 +57,6 @@ command_port = serial.Serial(COMMAND_PORT, BAUDRATE, timeout=TIMEOUT)
 log_port = serial.Serial(LOG_PORT, BAUDRATE, timeout=TIMEOUT)
 ## maximum read length
 read_length = 256
-## call sign
-call_sign = "KC3VVW"
 ## timestamp pattern
 timestamp_pattern = re.compile(
     r"RESGRC 20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)$"
@@ -69,11 +67,11 @@ pictimes_pattern = re.compile(
 )
 ## telemetry pattern
 telemetry_pattern = re.compile(
-    r"(RESGTY AX-?\d+\.\d+)( AY-?\d+\.\d+)( AZ-?\d+\.\d+)( RX-?\d+\.\d+)( RY-?\d+\.\d+)( RZ-?\d+\.\d+)( T-?\d+\.\d+)$"
+    r"(RESGTY AX -?\d+\.\d+)( AY -?\d+\.\d+)( AZ -?\d+\.\d+)( RX -?\d+\.\d+)( RY -?\d+\.\d+)( RZ -?\d+\.\d+)( T -?\d+\.\d+)$"
 )
 ## power pattern
 power_pattern = re.compile(
-    r"(RESGPW)( BBV\d+\.\d+)( BBC\d+\.\d+)( TS1-*\d+\.\d+)( TS2-*\d+\.\d+)( 5VC\d+\.\d+)( H1S\d)( H2S\d)( H3S\d)$"
+    r"(RESGPW)( BBV \d+\.\d+)( BBC \d+\.\d+)( TS1 -*\d+\.\d+)( TS2 -*\d+\.\d+)( 5VC \d+\.\d+)( H1S \d)( H2S \d)( H3S \d)$"
 )
 ## beacon interval pattern
 beacon_interval_pattern = re.compile(r"(RESGBI )(\d+)$")
@@ -352,7 +350,7 @@ def generate_signed(command):
 #
 def local_beacon_message_sent(message):
 
-    return message.startswith(FEND + BEACON + call_sign.encode("utf-8"))
+    return message.startswith(FEND + BEACON)
 
 
 ## Collect through two beacon tranmissions
