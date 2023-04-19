@@ -12,7 +12,7 @@ constexpr int max_tokens{10};
 
 void setup()
 {
-    Serial.begin(19200);
+    Serial.begin(115200);
     while (!Serial) {}
     Serial.println("Starting array example");
     
@@ -37,4 +37,6 @@ void setup()
 
 void loop()
 {
+    Serial.println("In loop()");
+    delay(5 * 1000);
 }
