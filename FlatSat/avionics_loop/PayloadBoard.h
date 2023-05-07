@@ -12,6 +12,7 @@
 #pragma once
 
 #include "avionics_constants.h"
+#include "Beacon.h"
 
 /**
  * @brief SilverSat Payload Board
@@ -60,6 +61,13 @@ public:
      */
     bool power_down();
 
+    /**
+     * @brief Get status for beacon
+     * 
+     */
+
+    Beacon::PayloadStatus get_status();
+
 private:
     /**
      * @brief Power up Payload Board
@@ -90,4 +98,5 @@ private:
     long unsigned int m_startup_timer{};
     bool m_in_shutdown_delay{false};
     long unsigned int m_shutdown_timer{};
+    Beacon::PayloadStatus m_payload_status{Beacon::PayloadStatus::unknown};
 };

@@ -24,22 +24,49 @@
  * @brief Beacon message
  *
  */
+
 class Beacon final : public Message
 {
 public:
     /**
-     * @brief board status for beacon
+     * @brief Power Board Status
      *
      */
-    enum class Status
+
+    enum class PowerStatus
     {
         excellent,
-        good,
         fair,
-        poor,
-        critical,
-        on,
-        off,
+        unknown,
+    };
+
+    /**
+     * @brief Avionics Board Status
+     *
+     */
+
+    enum class AvionicsStatus
+    {
+        everything_ok,
+        unknown_time,
+        initialization_error_FRAM,
+        antenna_not_deployed,
+        initialization_error_imu,
+        radio_connection_error,
+        unstable,
+        rtc_initialization_error,
+        power_board_initialization_error,
+        watchdog_reset,
+        unknown,
+    };
+
+    /**
+     * @brief Payload Board Status
+     *
+     */
+
+    enum class PayloadStatus
+    {
         unknown,
     };
 
@@ -52,40 +79,76 @@ public:
      */
 
     Beacon(
-        const Status power,
-        const Status avionics,
-        const Status payload)
+        const PowerStatus powerStatus,
+        const AvionicsStatus avionicsStatus,
+        const PayloadStatus payloadStatus)
     {
 
         m_command = beacon;
         m_content = " " +
-                    getStatus(power) +
-                    getStatus(avionics) +
-                    getStatus(payload);
+                    convertPowerStatus(powerStatus) +
+                    convertAvionicsStatus(avionicsStatus) +
+                    convertPayloadStatus(payloadStatus);
     }
 
-    const String getStatus(const Status status)
+private:
+
+    const String convertPowerStatus(PowerStatus powerStatus)
     {
-        switch (status)
+        switch (powerStatus)
         {
-        case Status::excellent:
+        // todo: update to reflect power team selections
+        case PowerStatus::excellent:
             return "E";
-        case Status::good:
-            return "G";
-        case Status::fair:
+        case PowerStatus::fair:
             return "F";
-        case Status::poor:
-            return "P";
-        case Status::critical:
-            return "C";
-        case Status::on:
-            return "N";
-        case Status::off:
-            return "F";
-        case Status::unknown:
+        case PowerStatus::unknown:
             return "U";
         default:
+            return "U";
+        }
+    }
+
+    const String convertAvionicsStatus(const AvionicsStatus avionicsStatus)
+    {
+        switch (avionicsStatus)
+        {
+        case AvionicsStatus::everything_ok:
+            return "A";
+        case AvionicsStatus::unknown_time:
+            return "B";
+        case AvionicsStatus::initialization_error_FRAM:
+            return "C";
+        case AvionicsStatus::antenna_not_deployed:
+            return "D";
+        case AvionicsStatus::initialization_error_imu:
+            return "E";
+        case AvionicsStatus::radio_connection_error:
+            return "F";
+        case AvionicsStatus::unstable:
+            return "G";
+        case AvionicsStatus::rtc_initialization_error:
+            return "H";
+        case AvionicsStatus::power_board_initialization_error:
             return "I";
+        case AvionicsStatus::watchdog_reset:
+            return "J";
+        case AvionicsStatus::unknown:
+            return "U";
+        default:
+            return "U";
+        }
+    }
+
+    const String convertPayloadStatus(PayloadStatus payloadStatus)
+    {
+        switch (payloadStatus)
+        {
+        // todo: update to reflect payload team selections
+        case PayloadStatus::unknown:
+            return "U";
+        default:
+            return "U";
         }
     }
 };

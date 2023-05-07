@@ -14,6 +14,16 @@
 #include "log_utility.h"
 #include "avionics_constants.h"
 
+// MPU 6050 gyro calibration
+
+float x_calibration{-0.02};
+float y_calibration{-0.01};
+float z_calibration{-0.01};
+
+// Stability margin
+
+float stable_radians_sec_margin{0.01};
+
 /**
  * @brief Initialize inertial management unit
  *
@@ -167,4 +177,23 @@ bool IMU::refresh_data()
 {
     m_mpu.getEvent(&m_a, &m_g, &m_temp);
     return true;
+}
+
+/**
+ * @brief Determine satellite stability
+ *
+ */
+
+bool IMU::is_stable()
+{
+    refresh_data();
+    // todo: smooth data
+    // todo: assess stable limit
+    // todo: consider temperature impact on calibration
+    if (((m_g.gyro.x - x_calibration) <= stable_radians_sec_margin) &&
+        ((m_g.gyro.y - y_calibration) <= stable_radians_sec_margin) &&
+        ((m_g.gyro.z - z_calibration) <= stable_radians_sec_margin))
+        return true;
+    else
+        return false;
 }

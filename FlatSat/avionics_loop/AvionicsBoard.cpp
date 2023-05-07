@@ -11,10 +11,11 @@
 
 #include "AvionicsBoard.h"
 #include "log_utility.h"
+#include "Beacon.h"
 #include "PowerBoard.h"
 #include "RadioBoard.h"
-#include <Adafruit_SleepyDog.h>
 #include "PayloadBoard.h"
+#include <Adafruit_SleepyDog.h>
 
 constexpr int internal_watchdog_interval{2 * seconds_to_milliseconds}; /**< internal watchdog interval **/
 
@@ -50,7 +51,10 @@ bool AvionicsBoard::begin()
   if (m_external_rtc.begin(&Wire))
     Log.traceln("External realtime clock initialization completed");
   else
+  {
     Log.errorln("External realtime clock not initialized");
+    m_avionics_status = Beacon::AvionicsStatus::rtc_initialization_error;
+  }
 
   // Non-Critical I2C
 
@@ -66,7 +70,10 @@ bool AvionicsBoard::begin()
   if (status)
     Log.traceln("Inertial measurement unit initialization completed");
   else
+  {
     Log.errorln("Inertial management unit not initialized");
+    m_avionics_status = Beacon::AvionicsStatus::initialization_error_imu;
+  }
 
   // FRAM
 
@@ -75,7 +82,10 @@ bool AvionicsBoard::begin()
   if (status)
     Log.traceln("FRAM initialization completed");
   else
+  {
     Log.errorln("FRAM not initialized");
+    m_avionics_status = Beacon::AvionicsStatus::initialization_error_FRAM;
+  }
 
   return true;
 }
@@ -109,8 +119,12 @@ bool AvionicsBoard::set_external_rtc(const DateTime time)
     Log.errorln("Time must be between %d and %d, inclusive", minimum_valid_year, maximum_valid_year);
     return false;
   }
-
-  return m_external_rtc.set_time(time);
+  auto status{m_external_rtc.set_time(time)};
+  if (status)
+    m_avionics_status = Beacon::AvionicsStatus::everything_ok;
+  else
+    m_avionics_status = Beacon::AvionicsStatus::unknown_time;
+  return status;
 }
 
 /**
@@ -156,22 +170,30 @@ bool AvionicsBoard::set_beacon_interval(const int seconds)
 
 bool AvionicsBoard::check_beacon()
 {
+  // todo: insure stability assessment prior to beacon
+  // todo: insure time is set assessment prior to beacon
   if ((millis() - m_last_beacon_time > m_beacon_interval) && (m_beacon_interval > 0))
   {
     extern PowerBoard power;
-    m_power_status = power.get_status();
-    m_avionics_status = Beacon::Status::excellent;
-    // todo: determine whether to send beacon during communications session
     extern PayloadBoard payload;
-    if (payload.get_payload_active())
-      m_payload_status = Beacon::Status::on;
-    else
-      m_payload_status = Beacon::Status::off;
-    Beacon beacon{m_power_status, m_avionics_status, m_payload_status};
-    beacon.send();
+    if (!payload.get_payload_active()) // only send beacon when Payload is not active
+    {
+      Beacon beacon{power.get_status(), get_status(), payload.get_status()};
+      beacon.send();
+    }
     m_last_beacon_time = millis();
   }
   return true;
+}
+
+/**
+ * @brief Get Avionics status for beacon
+ *
+ */
+
+Beacon::AvionicsStatus AvionicsBoard::get_status()
+{
+  return m_avionics_status;
 }
 
 /**
@@ -249,6 +271,7 @@ bool AvionicsBoard::check_photo()
     clear_pic_times();
     return false;
   }
+  // todo: check for sufficient power
   if ((m_picture_count > 0) && (time >= m_picture_times[0]))
   {
     Log.traceln("Photo time reached %s", get_timestamp().c_str());
@@ -366,5 +389,35 @@ bool AvionicsBoard::unset_clock()
 {
   Log.verboseln("Unsetting the realtime clock");
   clear_pic_times();
+  m_avionics_status = Beacon::AvionicsStatus::unknown_time;
   return m_external_rtc.unset_clock();
+}
+
+/**
+ * @brief Deploy antenna
+ *
+ */
+
+bool AvionicsBoard::deploy_antenna()
+{
+  bool status{m_antenna.deploy()};
+  if (!status)
+    m_avionics_status = Beacon::AvionicsStatus::antenna_not_deployed;
+  return status;
+}
+
+/**
+ * @brief Determine stability
+ *
+ */
+
+bool AvionicsBoard::determine_stability()
+{
+  if (!m_imu.is_stable())
+  {
+    m_avionics_status = Beacon::AvionicsStatus::unstable;
+    return false;
+  }
+  else
+    return true;
 }
