@@ -51,7 +51,7 @@ public:
      *
      */
 
-    Beacon::Status get_status();
+    Beacon::PowerStatus get_status();
 
     /**
      * @brief Get the power detail
@@ -60,5 +60,6 @@ public:
     String get_detail();
 
 private:
-    EPS_I eps_i{};
+    EPS_I m_eps_i{};
+    Beacon::PowerStatus m_power_status{Beacon::PowerStatus::unknown};
 };

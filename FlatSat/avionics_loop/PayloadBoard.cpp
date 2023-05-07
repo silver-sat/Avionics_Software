@@ -56,7 +56,7 @@ bool PayloadBoard::begin()
 
 bool PayloadBoard::photo()
 {
-
+    // todo: check for sufficient power
     if (!m_payload_active)
     {
         Log.noticeln("Starting photo session");
@@ -82,6 +82,7 @@ bool PayloadBoard::photo()
 
 bool PayloadBoard::communicate()
 {
+    // todo: check for sufficient power
     if (!m_payload_active)
     {
         Log.noticeln("Starting Communication session");
@@ -225,4 +226,14 @@ bool PayloadBoard::shutdown_signal_is_set() const
 bool PayloadBoard::get_payload_active() const
 {
     return m_payload_active;
+}
+
+/**
+ * @brief Get status for beacon
+ *
+ */
+
+Beacon::PayloadStatus PayloadBoard::get_status()
+{
+    return m_payload_status;
 }

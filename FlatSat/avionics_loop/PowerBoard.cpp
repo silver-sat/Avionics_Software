@@ -26,13 +26,14 @@ bool PowerBoard::begin()
 {
     Log.traceln("Power Board initializing");
     Log.traceln("Initializing EPS-I");
-    if (eps_i.begin())
+    if (m_eps_i.begin())
     {
         Log.traceln("EPS-I initialization completed");
         return true;
     }
     else
     {
+        // todo: show power initialization error in Power Board status
         Log.errorln("EPS-I not initialized");
         return false;
     }
@@ -44,13 +45,13 @@ bool PowerBoard::begin()
  * @return String letter grade for beacon
  */
 
-Beacon::Status PowerBoard::get_status()
+Beacon::PowerStatus PowerBoard::get_status()
 {
     // todo: develop and implement battery status beacon character
-    if(eps_i.getBatteryVoltage() >= 3.5) {
-        return Beacon::Status::excellent;
+    if(m_eps_i.getBatteryVoltage() >= 3.5) {
+        return Beacon::PowerStatus::excellent;
     } else {
-        return Beacon::Status::fair;
+        return Beacon::PowerStatus::fair;
     }
 }
 
@@ -63,12 +64,12 @@ Beacon::Status PowerBoard::get_status()
 
 String PowerBoard::get_detail()
 {
-    return " BBV " + String(eps_i.getBatteryVoltage()) +
-        " BBC " + String(eps_i.getBatteryCurrent()) +
-        " TS1 " + String(eps_i.getTemperatureSensor1()) +
-        " TS2 " + String(eps_i.getTemperatureSensor2()) +
-        " 5VC " + String(eps_i.get5VCurrent()) +
-        " H1S " + String(eps_i.getHeater1State()) +
-        " H2S " + String(eps_i.getHeater2State()) +
-        " H3S " + String(eps_i.getHeater3State());
+    return " BBV " + String(m_eps_i.getBatteryVoltage()) +
+        " BBC " + String(m_eps_i.getBatteryCurrent()) +
+        " TS1 " + String(m_eps_i.getTemperatureSensor1()) +
+        " TS2 " + String(m_eps_i.getTemperatureSensor2()) +
+        " 5VC " + String(m_eps_i.get5VCurrent()) +
+        " H1S " + String(m_eps_i.getHeater1State()) +
+        " H2S " + String(m_eps_i.getHeater2State()) +
+        " H3S " + String(m_eps_i.getHeater3State());
 }

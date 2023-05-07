@@ -32,7 +32,6 @@
 #include "AvionicsBoard.h"
 #include "RadioBoard.h"
 #include "PayloadBoard.h"
-#include "Antenna.h"
 #include "CommandProcessor.h"
 
 /**
@@ -52,7 +51,6 @@ AvionicsBoard avionics{};
 PowerBoard power{};
 RadioBoard radio{};
 PayloadBoard payload{};
-Antenna antenna{};
 CommandProcessor command_processor{};
 
 #ifdef INSTRUMENTATION
@@ -153,7 +151,7 @@ void setup()
   // Deploy antenna
 
   Log.noticeln("Beginning antenna deployment");
-  antenna.deploy();
+  avionics.deploy_antenna();
   Log.noticeln("Antenna deployment completed");
 
   // Initialization complete
@@ -195,6 +193,10 @@ void loop()
   previous_time = micros();
 #endif // INSTRUMENTATION
 
+  // Determine stability
+
+  avionics.determine_stability();
+  
   // Send beacon
 
   avionics.check_beacon();

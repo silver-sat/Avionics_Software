@@ -56,6 +56,13 @@ public:
 
     String get_temperature();
 
+    /**
+     * @brief Determine satellite stability
+     * 
+     */
+    
+    bool is_stable();
+
 private:
     /**
      * @brief Update the data from the IMU

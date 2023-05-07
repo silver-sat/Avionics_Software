@@ -17,6 +17,7 @@
 #include "IMU.h"
 #include "Beacon.h"
 #include "CY15B256J.h"
+#include "Antenna.h"
 #include <Wire.h>
 #include <wiring_private.h>
 
@@ -80,6 +81,13 @@ public:
     */
 
    bool check_beacon();
+
+   /**
+    * @brief Get Avionics status for beacon
+    *
+    */
+
+   Beacon::AvionicsStatus get_status();
 
    /**
     * @brief Set the time for the next payload photo
@@ -150,6 +158,20 @@ public:
 
    bool busswitch_enable();
 
+   /**
+    * @brief Deploy antenna
+    *
+    */
+
+   bool deploy_antenna();
+
+   /**
+    * @brief Determine stability
+    * 
+    */
+
+   bool determine_stability();
+   
 private:
    /**
     * @brief Avionics Board member variables
@@ -159,12 +181,12 @@ private:
    ExternalWatchdog m_external_watchdog{};                                            /**< Watchdog */
    unsigned long m_beacon_interval{2 * minutes_to_seconds * seconds_to_milliseconds}; /**< Beacon interval */
    unsigned long m_last_beacon_time{0};                                               /**< Last beacon time */
-   Beacon::Status m_power_status{Beacon::Status::unknown};                            /**< Power Board status */
-   Beacon::Status m_avionics_status{Beacon::Status::excellent};                       /**< Avionics Board status */
-   Beacon::Status m_payload_status{Beacon::Status::unknown};                          /**< Payload Board status */
+   Beacon::AvionicsStatus m_avionics_status{Beacon::AvionicsStatus::unknown};         /**< Avionics Board status */
    size_t m_picture_count{0};                                                         /**< Maximum picture count */
    DateTime m_picture_times[maximum_scheduled_pictures]{};                            /**< Scheduled picture times */
    ExternalRTC m_external_rtc{};                                                      /**< External Real Time Clock */
    IMU m_imu{};                                                                       /**< Inertial Measurement Unit */
    CY15B256J m_fram{};                                                                /**< FRAM */
+   Antenna m_antenna{};                                                               /**< Antenna */
+   bool m_antenna_deployed{false};                                                    /**< Antenna status */
 };
