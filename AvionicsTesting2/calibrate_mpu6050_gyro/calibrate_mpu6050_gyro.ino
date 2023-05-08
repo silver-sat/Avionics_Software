@@ -10,14 +10,21 @@
 
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
+#include <CircularBuffer.h>
 #include <Wire.h>
 #include "wiring_private.h"
 
 // MPU 6050 gyro calibration
 
-float x_calibration{-0.02};
-float y_calibration{-0.01};
-float z_calibration{-0.01};
+float x_calibration{-0.0232F};
+float y_calibration{-0.0086F};
+float z_calibration{-0.0058F};
+
+constexpr size_t buffer_size{10};
+CircularBuffer<sensors_event_t, buffer_size> data_buffer{};
+float x_total{0.0F};
+float y_total{0.0F};
+float z_total{0.0F};
 
 Adafruit_MPU6050 imu;
 
@@ -83,6 +90,15 @@ void setup()
     Serial.println("5 Hz");
     break;
   }
+
+  sensors_event_t g;
+  g.gyro.x = 0.0F;
+  g.gyro.y = 0.0F;
+  g.gyro.z = 0.0F;
+  for (auto index{0}; index < buffer_size; ++index)
+  {
+    data_buffer.push(g); // fill the buffer, totals initialized to zero
+  }
 }
 void loop()
 {
@@ -90,15 +106,25 @@ void loop()
   delay(100);
 
   /* Get new sensor events with the readings */
-  sensors_event_t a, g, t;
+  sensors_event_t a, g, t, oldest;
+  oldest = data_buffer.shift();
   imu.getEvent(&a, &g, &t);
-
-  Serial.print("Rotation X: ");
-  Serial.print(g.gyro.x - x_calibration);
+  x_total = x_total - oldest.gyro.x; 
+  x_total = x_total + g.gyro.x;      
+  y_total = y_total - oldest.gyro.y; 
+  y_total = y_total + g.gyro.y;      
+  z_total = z_total - oldest.gyro.z; 
+  z_total = z_total + g.gyro.z;      
+  data_buffer.push(g);        // store newest data in the buffer
+  float x_average{x_total / static_cast<float>(buffer_size)};
+  float y_average{y_total / static_cast<float>(buffer_size)};
+  float z_average{z_total / static_cast<float>(buffer_size)};
+  Serial.print("Smoothed rotation X: ");
+  Serial.print(x_average - x_calibration, 6);
   Serial.print(", Y: ");
-  Serial.print(g.gyro.y - y_calibration);
+  Serial.print(y_average - y_calibration, 6);
   Serial.print(", Z: ");
-  Serial.print(g.gyro.z - z_calibration);
+  Serial.print(z_average - z_calibration, 6);
   Serial.println(" rad/s");
 
   Serial.println("");
