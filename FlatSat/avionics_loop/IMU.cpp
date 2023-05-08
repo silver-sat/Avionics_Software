@@ -14,12 +14,6 @@
 #include "log_utility.h"
 #include "avionics_constants.h"
 
-// MPU 6050 gyro calibration
-
-float x_calibration{-0.02};
-float y_calibration{-0.01};
-float z_calibration{-0.01};
-
 // Stability margin
 
 float stable_radians_sec_margin{0.01};
@@ -105,7 +99,13 @@ bool IMU::begin(TwoWire *theWire)
         Log.verboseln((prefix + "5 Hz").c_str());
         break;
     }
-
+// load smoothing array with initial data
+sensors_event_t g;
+g.gyro.x = x_calibration;
+g.gyro.y = y_calibration;
+g.gyro.z = z_calibration;
+for (auto index{0}; index < buffer_size; ++index)
+m_data_buffer.push(g);
     return true;
 }
 
@@ -186,13 +186,21 @@ bool IMU::refresh_data()
 
 bool IMU::is_stable()
 {
+    sensors_event_t oldest{m_data_buffer.shift()};
     refresh_data();
-    // todo: smooth data
-    // todo: assess stable limit
-    // todo: consider temperature impact on calibration
-    if (((m_g.gyro.x - x_calibration) <= stable_radians_sec_margin) &&
-        ((m_g.gyro.y - y_calibration) <= stable_radians_sec_margin) &&
-        ((m_g.gyro.z - z_calibration) <= stable_radians_sec_margin))
+    m_x_total = m_x_total - oldest.gyro.x;
+    m_x_total = m_x_total + m_g.gyro.x;
+    m_y_total = m_y_total - oldest.gyro.y;
+    m_y_total = m_y_total + m_g.gyro.y;
+    m_z_total = m_z_total - oldest.gyro.z;
+    m_z_total = m_z_total + m_g.gyro.z;
+    m_data_buffer.push(m_g);
+    float x_average{m_x_total / static_cast<float>(buffer_size)};
+    float y_average{m_y_total / static_cast<float>(buffer_size)};
+    float z_average{m_z_total / static_cast<float>(buffer_size)};
+    if ((abs(x_average - x_calibration) <= stable_radians_sec_margin) &&
+        (abs(y_average - y_calibration) <= stable_radians_sec_margin) &&
+        (abs(z_average - z_calibration) <= stable_radians_sec_margin))
         return true;
     else
         return false;

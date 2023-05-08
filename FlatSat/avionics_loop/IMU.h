@@ -9,15 +9,22 @@
  * Management Unit
  *
  * RTC and IMU have the same I2C addresses but are located on different buses
- * 
+ *
  */
 
 #pragma once
 
 #include <Adafruit_MPU6050.h>
+#include <CircularBuffer.h>
 
-constexpr unsigned IMU_I2C_ADDRESS{0x68};   /**< inertial measurement unit I2C address @hideinitializer */
+constexpr unsigned IMU_I2C_ADDRESS{0x68}; /**< inertial measurement unit I2C address @hideinitializer */
+constexpr size_t buffer_size{10};         /**< for data smoothing */
 
+// MPU6050 gyro calibration
+
+constexpr float x_calibration{-0.0232F};
+constexpr float y_calibration{-0.0086F};
+constexpr float z_calibration{-0.0058F};
 
 /**
  * @brief Inertial Management Unit
@@ -27,7 +34,6 @@ constexpr unsigned IMU_I2C_ADDRESS{0x68};   /**< inertial measurement unit I2C a
 class IMU final
 {
 public:
-
     /**
      * @brief Initialize inertial management unit
      *
@@ -58,9 +64,9 @@ public:
 
     /**
      * @brief Determine satellite stability
-     * 
+     *
      */
-    
+
     bool is_stable();
 
 private:
@@ -75,4 +81,8 @@ private:
     sensors_event_t m_a;
     sensors_event_t m_g;
     sensors_event_t m_temp;
+    CircularBuffer<sensors_event_t, buffer_size> m_data_buffer{};
+    float m_x_total{x_calibration * static_cast<float>(buffer_size)}; // buffer initially filled with calibration constants
+    float m_y_total{y_calibration * static_cast<float>(buffer_size)};
+    float m_z_total{z_calibration * static_cast<float>(buffer_size)};
 };
