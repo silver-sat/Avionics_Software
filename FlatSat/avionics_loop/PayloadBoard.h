@@ -63,7 +63,7 @@ public:
 
     /**
      * @brief Get status for beacon
-     * 
+     *
      */
 
     Beacon::PayloadStatus get_status();
@@ -89,14 +89,14 @@ private:
 
     /**
      * @brief Evaluate power down signal
-     * 
+     *
      */
     bool shutdown_signal_is_set() const;
 
 private:
-    bool m_payload_active{false};
-    long unsigned int m_startup_timer{};
-    bool m_in_shutdown_delay{false};
-    long unsigned int m_shutdown_timer{};
-    Beacon::PayloadStatus m_payload_status{Beacon::PayloadStatus::unknown};
+    bool m_payload_active{false};                                           /**< payload in photo or communications mode */
+    long unsigned int m_start_time{};                                       /**< delay for payload to pull shutdown lines low */
+    bool m_in_shutdown_delay{false};                                        /**< payload in shutdown delay state after setting shutdown lines */
+    long unsigned int m_shutdown_start_time{};                              /**< delay for payload to complete shutdown */
+    Beacon::PayloadStatus m_payload_status{Beacon::PayloadStatus::unknown}; /**< Payload Board beacon status */
 };

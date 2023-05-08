@@ -18,8 +18,9 @@
  *
  */
 
-constexpr int payload_startup_delay{90 * seconds_to_milliseconds};
-constexpr int payload_shutdown_delay{15 * seconds_to_milliseconds};
+constexpr int startup_delay{90 * seconds_to_milliseconds};
+constexpr int shutdown_delay{15 * seconds_to_milliseconds};
+constexpr int maximum_cycle_time{10 * minutes_to_seconds * seconds_to_milliseconds};
 
 /**
  * @brief Initialize Payload Board
@@ -62,7 +63,7 @@ bool PayloadBoard::photo()
         Log.noticeln("Starting photo session");
         set_mode_photo();
         power_up();
-        m_startup_timer = millis() + payload_startup_delay;
+        m_start_time = millis();
         return true;
     }
     else
@@ -88,7 +89,7 @@ bool PayloadBoard::communicate()
         Log.noticeln("Starting Communication session");
         set_mode_comms();
         power_up();
-        m_startup_timer = millis() + payload_startup_delay;
+        m_start_time = millis();
         return true;
     }
     else
@@ -108,11 +109,11 @@ bool PayloadBoard::communicate()
 
 bool PayloadBoard::check_shutdown()
 {
-    if (m_payload_active && (millis() > m_startup_timer) && shutdown_signal_is_set())
+    if (m_payload_active && (millis() - m_start_time > startup_delay) && shutdown_signal_is_set())
     {
         if (m_in_shutdown_delay)
         {
-            if (millis() > m_shutdown_timer)
+            if (millis() - m_shutdown_start_time > shutdown_delay)
             {
                 Log.verboseln("Powering down payload");
                 power_down();
@@ -123,8 +124,13 @@ bool PayloadBoard::check_shutdown()
         {
             Log.verboseln("Starting payload shutdown delay");
             m_in_shutdown_delay = true;
-            m_shutdown_timer = millis() + payload_shutdown_delay;
+            m_shutdown_start_time = millis();
         }
+    }
+    if (m_payload_active && (millis() - m_start_time > maximum_cycle_time)) {
+        Log.errorln("Payload cycle too long");
+        power_down();
+        return false;
     }
     return true;
 }
