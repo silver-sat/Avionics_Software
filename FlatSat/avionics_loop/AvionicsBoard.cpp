@@ -325,6 +325,7 @@ bool AvionicsBoard::clear_pic_times()
 
 String AvionicsBoard::get_telemetry()
 {
+  // todo: calibrate device and adjust results
   return m_imu.get_acceleration() + m_imu.get_rotation() + m_imu.get_temperature();
 }
 
@@ -419,5 +420,6 @@ bool AvionicsBoard::determine_stability()
     return false;
   }
   else
+  m_avionics_status = Beacon::AvionicsStatus::everything_ok;
     return true;
 }
