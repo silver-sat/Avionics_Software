@@ -22,7 +22,7 @@
 
 bool EPS_I::begin()
 {
-  if (m_i2c_dev.begin())
+  if (m_i2c_dev.begin(false))
   {
     return _init();
   }
@@ -53,7 +53,9 @@ bool EPS_I::_init(void)
 float EPS_I::getBatteryVoltage(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETBATTERYINFO_BATTERY_BATT_VOLT)};
-  return static_cast<float>(value) * GETBATTERYINFO_BATTERY_BATT_VOLT_COEFFICIENT;
+  float voltage{static_cast<float>(value) * GETBATTERYINFO_BATTERY_BATT_VOLT_COEFFICIENT};
+  Log.verboseln("Battery voltage is %F V", voltage);
+  return voltage;
 }
 
 /**
@@ -66,7 +68,9 @@ float EPS_I::getBatteryVoltage(void)
 float EPS_I::getBatteryCurrent(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETBATTERYINFO_BATTERY_BATT_CURR)};
-  return static_cast<float>(value) * GETBATTERYINFO_BATTERY_BATT_CURR_COEFFICIENT;
+  float current{static_cast<float>(value) * GETBATTERYINFO_BATTERY_BATT_CURR_COEFFICIENT};
+  Log.verboseln("Battery current is %F A", current);
+  return current;
 }
 
 /**
@@ -79,11 +83,13 @@ float EPS_I::getBatteryCurrent(void)
 float EPS_I::getTemperatureSensor1(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETTEMPERATURESINFO_TEMPERATURES_BATTERY0)};
-  Log.verboseln("Temperature Sensor 1 raw value is: %X", value);
+  float temperature{};
   if (value < 0x8000U)
-    return static_cast<float>(value) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE;
+    temperature = static_cast<float>(value) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE;
   else
-    return (((value >> 4) - 1) ^ 0xFFFF) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE;
+    temperature = (((value >> 4) - 1) ^ 0xFFFF) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE;
+  Log.verboseln("Temperature Sensor 1 is %F deg C", temperature);
+  return temperature;
 }
 
 /**
@@ -96,11 +102,13 @@ float EPS_I::getTemperatureSensor1(void)
 float EPS_I::getTemperatureSensor2(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETTEMPERATURESINFO_TEMPERATURES_BATTERY1)};
-  Log.verboseln("Temperature Sensor 2 raw value is: %X", value);
+  float temperature{};
   if (value < 0x8000U)
-    return static_cast<float>(value) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE;
+    temperature = static_cast<float>(value) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE;
   else
-    return (((value >> 4) - 1) ^ 0xFFFF) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE;
+    temperature = (((value >> 4) - 1) ^ 0xFFFF) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE;
+  Log.verboseln("Temperature Sensor 2 is %F deg C", temperature);
+  return temperature;
 }
 
 /**
@@ -113,11 +121,13 @@ float EPS_I::getTemperatureSensor2(void)
 float EPS_I::getTemperatureSensor3(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETTEMPERATURESINFO_TEMPERATURES_BATTERY2)};
-  Log.verboseln("Temperature Sensor 3 raw value is: %X", value);
+  float temperature{};
   if (value < 0x8000U)
-    return static_cast<float>(value) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE;
+    temperature = static_cast<float>(value) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE;
   else
-    return (((value >> 4) - 1) ^ 0xFFFF) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE;
+    temperature = (((value >> 4) - 1) ^ 0xFFFF) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE;
+  Log.verboseln("Temperature Sensor 3 is %F deg C", temperature);
+  return temperature;
 }
 
 /**
@@ -130,7 +140,9 @@ float EPS_I::getTemperatureSensor3(void)
 float EPS_I::getZNegativeCurrent(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETSOLARPANELSINFO_SOLAR_Z_CURR_NEG)};
-  return static_cast<float>(value) * GETSOLARPANELSINFO_SOLAR_Z_CURR_NEG_COEFFICIENT;
+  float current{static_cast<float>(value) * GETSOLARPANELSINFO_SOLAR_Z_CURR_NEG_COEFFICIENT};
+  Log.verboseln("Z negative current is %F A", current);
+  return current;
 }
 
 /**
@@ -143,7 +155,9 @@ float EPS_I::getZNegativeCurrent(void)
 float EPS_I::get5VCurrent(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETBUSESINFO_BUSES_BUS_5V_CURR)};
-  return static_cast<float>(value) * GETBUSESINFO_BUSES_BUS_5V_CURR_COEFFICIENT;
+  float current{static_cast<float>(value) * GETBUSESINFO_BUSES_BUS_5V_CURR_COEFFICIENT};
+  Log.verboseln("5 volt current is %F V", current);
+  return current;
 }
 
 /**
@@ -157,7 +171,9 @@ float EPS_I::get5VCurrent(void)
 bool EPS_I::getHeater1State(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETCONFIGURATIONINFO_CONFIG_OUTPUTCONDITIONS1)};
-  return 0x0001 && (value >> static_cast<uint8_t>(EPS_I_Output_Condition_1::Heater_1));
+  bool state{static_cast<bool>(0x0001 & (value >> static_cast<uint8_t>(EPS_I_Output_Condition_1::Heater_1)))};
+  Log.verboseln("Heater 1 state is %T", state);
+  return state;
 }
 
 /**
@@ -171,7 +187,9 @@ bool EPS_I::getHeater1State(void)
 bool EPS_I::getHeater2State(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETCONFIGURATIONINFO_CONFIG_OUTPUTCONDITIONS1)};
-  return 0x0001 && (value >> static_cast<uint8_t>(EPS_I_Output_Condition_1::Heater_2));
+  bool state{static_cast<bool>(0x0001 & (value >> static_cast<uint8_t>(EPS_I_Output_Condition_1::Heater_2)))};
+  Log.verboseln("Heater 2 state is %T", state);
+  return state;
 }
 
 /**
@@ -185,7 +203,9 @@ bool EPS_I::getHeater2State(void)
 bool EPS_I::getHeater3State(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETCONFIGURATIONINFO_CONFIG_OUTPUTCONDITIONS1)};
-  return 0x0001 && (value >> static_cast<uint8_t>(EPS_I_Output_Condition_1::Heater_3));
+  bool state{static_cast<bool>(0x0001 & (value >> static_cast<uint8_t>(EPS_I_Output_Condition_1::Heater_3)))};
+  Log.verboseln("Heater 3 state is %T", state);
+  return state;
 }
 
 /**
@@ -202,7 +222,6 @@ uint16_t EPS_I::read_value(EPS_I_Read_Command command)
   uint8_t command_byte{static_cast<uint8_t>(command)};
   m_i2c_dev.write_then_read(&command_byte, 1, return_buffer, 2, false);
   value = return_buffer[1] | (return_buffer[0] << 8);
-  Log.verboseln("EPS-I reading from register %X is %X", command, value);
   return value;
 }
 

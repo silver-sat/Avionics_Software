@@ -47,19 +47,20 @@ public:
     bool begin();
 
     /**
-     * @brief Get power status
+     * @brief Get power status for beacon
      *
      */
 
     Beacon::PowerStatus get_status();
 
     /**
-     * @brief Get the power detail
+     * @brief Get the power detail for command response
      *
      */
     String get_detail();
 
 private:
-    EPS_I m_eps_i{};
-    Beacon::PowerStatus m_power_status{Beacon::PowerStatus::unknown};
+    EPS_I m_eps_i{}; /**< Power Board */
+    // beacon data
+    bool m_initialization_error{false};                               /**< Initialization error */
 };

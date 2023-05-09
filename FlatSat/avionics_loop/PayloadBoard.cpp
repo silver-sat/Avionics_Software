@@ -118,6 +118,7 @@ bool PayloadBoard::check_shutdown()
                 Log.verboseln("Powering down payload");
                 power_down();
                 m_in_shutdown_delay = false;
+                m_last_session_normal = true;
             }
         }
         else
@@ -127,9 +128,12 @@ bool PayloadBoard::check_shutdown()
             m_shutdown_start_time = millis();
         }
     }
-    if (m_payload_active && (millis() - m_start_time > maximum_cycle_time)) {
+    if (m_payload_active && (millis() - m_start_time > maximum_cycle_time))
+    {
         Log.errorln("Payload cycle too long");
         power_down();
+        m_last_session_normal = false;
+        m_timeout_occurred = true;
         return false;
     }
     return true;
@@ -241,5 +245,15 @@ bool PayloadBoard::get_payload_active() const
 
 Beacon::PayloadStatus PayloadBoard::get_status()
 {
-    return m_payload_status;
+    // todo: determine and implement payload beacon status
+    if (m_last_session_normal)
+    {
+        Log.verboseln("Last payload session ended normally");
+        return Beacon::PayloadStatus::good;
+    }
+    else
+    {
+        Log.verboseln("Payload session abnormal ending or no payload session completed");
+        return Beacon::PayloadStatus::error;
+    }
 }

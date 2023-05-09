@@ -46,7 +46,6 @@ public:
         sweep_tranmitter = SWEEP_TRANMSMITTER,
         sweep_receiver = SWEEP_RECEIVER,
         query_register = QUERY_REGISTER,
-        // ping = 0x33, // todo: validate source from radio documentation
     };
 
     /**

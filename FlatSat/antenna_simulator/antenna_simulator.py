@@ -14,7 +14,7 @@ from i2ctarget import I2CTarget
 regs = [0xaa] * 0x81 
 index = 0
 
-print("Starting antenna and eps simulator")
+print("Starting antenna simulator")
 
 while True:
     with I2CTarget(board.SCL, board.SDA, [0x33]) as device:

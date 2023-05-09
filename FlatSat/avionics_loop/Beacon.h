@@ -49,9 +49,9 @@ public:
     {
         everything_ok,
         unknown_time,
-        initialization_error_FRAM,
-        antenna_not_deployed,
-        initialization_error_imu,
+        FRAM_initialization_error,
+        antenna_deployment_error,
+        imu_initialization_error,
         radio_connection_error,
         unstable,
         rtc_initialization_error,
@@ -67,6 +67,8 @@ public:
 
     enum class PayloadStatus
     {
+        good,
+        error,
         unknown,
     };
 
@@ -92,7 +94,6 @@ public:
     }
 
 private:
-
     const String convertPowerStatus(PowerStatus powerStatus)
     {
         switch (powerStatus)
@@ -117,11 +118,11 @@ private:
             return "A";
         case AvionicsStatus::unknown_time:
             return "B";
-        case AvionicsStatus::initialization_error_FRAM:
+        case AvionicsStatus::FRAM_initialization_error:
             return "C";
-        case AvionicsStatus::antenna_not_deployed:
+        case AvionicsStatus::antenna_deployment_error:
             return "D";
-        case AvionicsStatus::initialization_error_imu:
+        case AvionicsStatus::imu_initialization_error:
             return "E";
         case AvionicsStatus::radio_connection_error:
             return "F";
@@ -145,6 +146,10 @@ private:
         switch (payloadStatus)
         {
         // todo: update to reflect payload team selections
+        case PayloadStatus::good:
+            return "G";
+        case PayloadStatus::error:
+            return "E";
         case PayloadStatus::unknown:
             return "U";
         default:

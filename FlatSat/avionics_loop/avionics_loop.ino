@@ -27,7 +27,6 @@
 #define INSTRUMENTATION // Instrumentation for processor and memory usage
 
 #include "log_utility.h"
-#include "Beacon.h"
 #include "PowerBoard.h"
 #include "AvionicsBoard.h"
 #include "RadioBoard.h"
@@ -60,13 +59,14 @@ CommandProcessor command_processor{};
  */
 
 unsigned long previous_time{};
-unsigned long current_time{};
 unsigned long duration{};
 unsigned long loop_start_time{};
 unsigned long loop_maximum{0};
 unsigned long loop_maximum_timestamp{};
 unsigned long watchdog_maximum{0};
 unsigned long watchdog_maximum_timestamp{};
+unsigned long stability_maximum{0};
+unsigned long stability_maximum_timestamp{};
 unsigned long beacon_maximum{0};
 unsigned long beacon_maximum_timestamp{};
 unsigned long command_maximum{0};
@@ -176,7 +176,9 @@ void loop()
 
 #ifdef INSTRUMENTATION
   previous_time = micros();
-  // todo: turn GPIOA on and off to enable loop timing
+  // pinMode(GPIO_A, OUTPUT);
+  // digitalWrite(GPIO_A, HIGH);
+  // digitalWrite(GPIO_A, LOW);
 #endif // INSTRUMENTATION
 
   // Trigger the watchdog
@@ -195,8 +197,18 @@ void loop()
 
   // Determine stability
 
-  avionics.determine_stability();
-  
+  avionics.get_stability();
+
+#ifdef INSTRUMENTATION
+  duration = micros() - previous_time;
+  if (duration > stability_maximum)
+  {
+    stability_maximum = duration;
+    stability_maximum_timestamp = millis();
+  }
+  previous_time = micros();
+#endif // INSTRUMENTATION
+
   // Send beacon
 
   avionics.check_beacon();
@@ -267,6 +279,8 @@ void loop()
     Log.verboseln("Maximum loop time %l microseconds at %s", loop_maximum, timestamp);
     formatTimestamp(timestamp, watchdog_maximum_timestamp);
     Log.verboseln("Maximum watchdog processing duration %l microseconds at %s", watchdog_maximum, timestamp);
+    formatTimestamp(timestamp, stability_maximum_timestamp);
+    Log.verboseln("Maximum stability processing duration %l microseconds at %s", stability_maximum, timestamp);
     formatTimestamp(timestamp, beacon_maximum_timestamp);
     Log.verboseln("Maximum beacon processing time %l microseconds at %s", beacon_maximum, timestamp);
     formatTimestamp(timestamp, command_maximum_timestamp);
