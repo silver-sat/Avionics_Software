@@ -34,13 +34,14 @@ bool PowerBoard::begin()
     else
     {
         // todo: show power initialization error in Power Board status
+        m_initialization_error = true;
         Log.errorln("EPS-I not initialized");
         return false;
     }
 }
 
 /**
- * @brief Get power status
+ * @brief Get power status for beacon
  *
  * @return String letter grade for beacon
  */
@@ -56,7 +57,7 @@ Beacon::PowerStatus PowerBoard::get_status()
 }
 
 /**
- * @brief Get the power detail
+ * @brief Get the power detail for command response
  *
  * @return String power details
  *

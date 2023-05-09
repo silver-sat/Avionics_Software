@@ -27,7 +27,6 @@
 #define INSTRUMENTATION // Instrumentation for processor and memory usage
 
 #include "log_utility.h"
-#include "Beacon.h"
 #include "PowerBoard.h"
 #include "AvionicsBoard.h"
 #include "RadioBoard.h"

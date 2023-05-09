@@ -53,7 +53,7 @@ bool AvionicsBoard::begin()
   else
   {
     Log.errorln("External realtime clock not initialized");
-    m_avionics_status = Beacon::AvionicsStatus::rtc_initialization_error;
+    m_rtc_initialization_error = true;
   }
 
   // Non-Critical I2C
@@ -72,7 +72,7 @@ bool AvionicsBoard::begin()
   else
   {
     Log.errorln("Inertial management unit not initialized");
-    m_avionics_status = Beacon::AvionicsStatus::initialization_error_imu;
+    m_imu_initialization_error = true;
   }
 
   // FRAM
@@ -84,7 +84,7 @@ bool AvionicsBoard::begin()
   else
   {
     Log.errorln("FRAM not initialized");
-    m_avionics_status = Beacon::AvionicsStatus::initialization_error_FRAM;
+    m_FRAM_initialization_error = true;
   }
 
   return true;
@@ -119,12 +119,7 @@ bool AvionicsBoard::set_external_rtc(const DateTime time)
     Log.errorln("Time must be between %d and %d, inclusive", minimum_valid_year, maximum_valid_year);
     return false;
   }
-  auto status{m_external_rtc.set_time(time)};
-  if (status)
-    m_avionics_status = Beacon::AvionicsStatus::everything_ok;
-  else
-    m_avionics_status = Beacon::AvionicsStatus::unknown_time;
-  return status;
+  return m_external_rtc.set_time(time);
 }
 
 /**
@@ -193,7 +188,19 @@ bool AvionicsBoard::check_beacon()
 
 Beacon::AvionicsStatus AvionicsBoard::get_status()
 {
-  return m_avionics_status;
+  // todo: determine appropriate beacon character
+  // start with everything OK
+  // one time initialization events for FRAM, antenna, imu, radio, and rtc
+  // show most recent event if any
+  // stability: imu is_stable (dynamic)
+  // else show unstable
+  // unknown time: rtc is_set (dynamic if unset clock command available)
+  // when stable, show unknown time
+  // when time available, show everything OK
+  // watchdog reset:  watchdog reset_occurred (dynamic, consider keeping count)
+  // consider new reset clear command or use
+  // show reset until clear reset command is received
+  return Beacon::AvionicsStatus::everything_ok;
 }
 
 /**
@@ -228,12 +235,12 @@ bool AvionicsBoard::set_picture_time(const DateTime time)
     Log.errorln("Picture time is before current time");
     return false;
   }
-  if (m_picture_count + 1 > maximum_scheduled_pictures)
+  if (m_picture_time_count + 1 > maximum_scheduled_pictures)
   {
     Log.errorln("Too many picture times");
     return false;
   }
-  size_t index{m_picture_count++};
+  size_t index{m_picture_time_count++};
   for (; index > 0; --index)
   {
     if (time > m_picture_times[index - 1])
@@ -272,12 +279,12 @@ bool AvionicsBoard::check_photo()
     return false;
   }
   // todo: check for sufficient power
-  if ((m_picture_count > 0) && (time >= m_picture_times[0]))
+  if ((m_picture_time_count > 0) && (time >= m_picture_times[0]))
   {
     Log.traceln("Photo time reached %s", get_timestamp().c_str());
-    for (size_t index = 0; index < m_picture_count; ++index)
+    for (size_t index = 0; index < m_picture_time_count; ++index)
       m_picture_times[index] = m_picture_times[index + 1];
-    --m_picture_count;
+    --m_picture_time_count;
     extern PayloadBoard payload;
     if (payload.get_payload_active())
     {
@@ -298,8 +305,8 @@ bool AvionicsBoard::check_photo()
 
 String AvionicsBoard::get_pic_times()
 {
-  String response{m_picture_count};
-  for (size_t index = 0; index < m_picture_count; ++index)
+  String response{m_picture_time_count};
+  for (size_t index = 0; index < m_picture_time_count; ++index)
     response += (' ' + m_picture_times[index].timestamp());
   return response;
 }
@@ -313,7 +320,7 @@ String AvionicsBoard::get_pic_times()
 
 bool AvionicsBoard::clear_pic_times()
 {
-  m_picture_count = 0;
+  m_picture_time_count = 0;
   return true;
 }
 
@@ -390,7 +397,6 @@ bool AvionicsBoard::unset_clock()
 {
   Log.verboseln("Unsetting the realtime clock");
   clear_pic_times();
-  m_avionics_status = Beacon::AvionicsStatus::unknown_time;
   return m_external_rtc.unset_clock();
 }
 
@@ -401,10 +407,7 @@ bool AvionicsBoard::unset_clock()
 
 bool AvionicsBoard::deploy_antenna()
 {
-  bool status{m_antenna.deploy()};
-  if (!status)
-    m_avionics_status = Beacon::AvionicsStatus::antenna_not_deployed;
-  return status;
+  return m_antenna.deploy();
 }
 
 /**
@@ -414,12 +417,5 @@ bool AvionicsBoard::deploy_antenna()
 
 bool AvionicsBoard::determine_stability()
 {
-  if (!m_imu.is_stable())
-  {
-    m_avionics_status = Beacon::AvionicsStatus::unstable;
-    return false;
-  }
-  else
-  m_avionics_status = Beacon::AvionicsStatus::everything_ok;
-    return true;
+  return m_imu.is_stable();
 }
