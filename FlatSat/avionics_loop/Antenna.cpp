@@ -21,6 +21,13 @@
 // todo: extend to 80 seconds for full lifecycle test
 constexpr unsigned long antenna_delay{5 * seconds_to_milliseconds};
 
+/**
+ * @brief Deploy the antenna
+ *
+ * @return true successful
+ * @return false failure
+ */
+
 bool Antenna::deploy()
 {
     // Execute algorithm 1 for all 4 antenna rods
@@ -119,7 +126,7 @@ bool Antenna::deploy()
     }
 
     // Unable to open all doors, attempt to continue
- 
+
     Log.fatalln("Antenna door(s) not open, attempting to continue");
     return false;
 }

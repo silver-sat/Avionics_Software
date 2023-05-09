@@ -167,30 +167,37 @@ public:
 
    /**
     * @brief Determine stability
-    * 
+    *
     */
 
-   bool determine_stability();
-   
+   bool get_stability();
+
+   /**
+    * @brief Get watchdog event
+    *
+    */
+
+   bool get_watchdog_event();
+
 private:
    /**
     * @brief Avionics Board member variables
     *
     */
 
-   ExternalWatchdog m_external_watchdog{};                                            /**< Watchdog */
-   size_t m_picture_time_count{0};                                                         /**< Maximum picture count */
-   DateTime m_picture_times[maximum_scheduled_pictures]{};                            /**< Scheduled picture times */
-   ExternalRTC m_external_rtc{};                                                      /**< External Real Time Clock */
-   IMU m_imu{};                                                                       /**< Inertial Measurement Unit */
-   CY15B256J m_fram{};                                                                /**< FRAM */
-   Antenna m_antenna{};                                                               /**< Antenna */
+   ExternalWatchdog m_external_watchdog{};                 /**< Watchdog */
+   size_t m_picture_time_count{0};                         /**< Maximum picture count */
+   DateTime m_picture_times[maximum_scheduled_pictures]{}; /**< Scheduled picture times */
+   ExternalRTC m_external_rtc{};                           /**< External Real Time Clock */
+   IMU m_imu{};                                            /**< Inertial Measurement Unit */
+   CY15B256J m_fram{};                                     /**< FRAM */
+   Antenna m_antenna{};                                    /**< Antenna */
    // beacon data
    unsigned long m_last_beacon_time{0};                                               /**< Last beacon time */
    unsigned long m_beacon_interval{2 * minutes_to_seconds * seconds_to_milliseconds}; /**< Beacon interval */
-   bool m_FRAM_initialization_error{false};
-   bool m_antenna_deployment_error{false};                                                    /**< Antenna status */
-   bool m_imu_initialization_error{false};
-   bool m_radio_connection_error{false};
-   bool m_rtc_initialization_error{false};
+   bool m_rtc_initialization_error{false};                                            /**< RTC initialization */
+   bool m_imu_initialization_error{false};                                            /**< IMU initialization */
+   bool m_FRAM_initialization_error{false};                                           /**< FRAM initialization */
+   bool m_radio_connection_error{false};                                              /**< Reserved for radio connection initialization */
+   bool m_antenna_deployment_error{false};                                            /**< Antenna deployment */
 };

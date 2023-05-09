@@ -165,8 +165,6 @@ bool AvionicsBoard::set_beacon_interval(const int seconds)
 
 bool AvionicsBoard::check_beacon()
 {
-  // todo: insure stability assessment prior to beacon
-  // todo: insure time is set assessment prior to beacon
   if ((millis() - m_last_beacon_time > m_beacon_interval) && (m_beacon_interval > 0))
   {
     extern PowerBoard power;
@@ -188,19 +186,36 @@ bool AvionicsBoard::check_beacon()
 
 Beacon::AvionicsStatus AvionicsBoard::get_status()
 {
+
   // todo: determine appropriate beacon character
   // start with everything OK
-  // one time initialization events for FRAM, antenna, imu, radio, and rtc
+  Beacon::AvionicsStatus status{Beacon::AvionicsStatus::everything_ok};
+  // one time initialization events for RTC, IMU, FRAM, and antenna
   // show most recent event if any
+  // radio connection will continuously retry
+  if (m_rtc_initialization_error)
+    status = Beacon::AvionicsStatus::rtc_initialization_error;
+  if (m_imu_initialization_error)
+    status = Beacon::AvionicsStatus::imu_initialization_error;
+  if (m_FRAM_initialization_error)
+    status = Beacon::AvionicsStatus::FRAM_initialization_error;
+  if (m_antenna_deployment_error)
+    status = Beacon::AvionicsStatus::antenna_deployment_error;
+  // todo: how to clear initialization errors
   // stability: imu is_stable (dynamic)
   // else show unstable
+  if ((status == Beacon::AvionicsStatus::everything_ok) && (!get_stability()))
+    status = Beacon::AvionicsStatus::unstable;
   // unknown time: rtc is_set (dynamic if unset clock command available)
   // when stable, show unknown time
-  // when time available, show everything OK
+  if ((status == Beacon::AvionicsStatus::everything_ok) && (!m_external_rtc.is_set()))
+    status = Beacon::AvionicsStatus::unknown_time;
   // watchdog reset:  watchdog reset_occurred (dynamic, consider keeping count)
   // consider new reset clear command or use
   // show reset until clear reset command is received
-  return Beacon::AvionicsStatus::everything_ok;
+  if (get_watchdog_event())
+    status = Beacon::AvionicsStatus::watchdog_reset;
+  return status;
 }
 
 /**
@@ -403,19 +418,37 @@ bool AvionicsBoard::unset_clock()
 /**
  * @brief Deploy antenna
  *
+ * @return true successful
+ * @return false error
  */
 
 bool AvionicsBoard::deploy_antenna()
 {
-  return m_antenna.deploy();
+  m_antenna_deployment_error = !m_antenna.deploy();
+  return m_antenna_deployment_error;
 }
 
 /**
  * @brief Determine stability
  *
+ * @return true stable
+ * @return false unstable
  */
 
-bool AvionicsBoard::determine_stability()
+bool AvionicsBoard::get_stability()
 {
   return m_imu.is_stable();
+}
+
+/**
+ * @brief Get watchdog event
+ *
+ * @return true watchdog reset occurred
+ * @return false no watchdog reset
+ */
+
+bool AvionicsBoard::get_watchdog_event()
+{
+  // todo: implement watchdog capture
+  return false;
 }

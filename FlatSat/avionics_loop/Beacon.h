@@ -49,9 +49,9 @@ public:
     {
         everything_ok,
         unknown_time,
-        initialization_error_FRAM,
-        antenna_not_deployed,
-        initialization_error_imu,
+        FRAM_initialization_error,
+        antenna_deployment_error,
+        imu_initialization_error,
         radio_connection_error,
         unstable,
         rtc_initialization_error,
@@ -117,11 +117,11 @@ private:
             return "A";
         case AvionicsStatus::unknown_time:
             return "B";
-        case AvionicsStatus::initialization_error_FRAM:
+        case AvionicsStatus::FRAM_initialization_error:
             return "C";
-        case AvionicsStatus::antenna_not_deployed:
+        case AvionicsStatus::antenna_deployment_error:
             return "D";
-        case AvionicsStatus::initialization_error_imu:
+        case AvionicsStatus::imu_initialization_error:
             return "E";
         case AvionicsStatus::radio_connection_error:
             return "F";

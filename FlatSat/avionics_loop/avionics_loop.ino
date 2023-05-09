@@ -194,7 +194,7 @@ void loop()
 
   // Determine stability
 
-  avionics.determine_stability();
+  avionics.get_stability();
   
   // Send beacon
 
