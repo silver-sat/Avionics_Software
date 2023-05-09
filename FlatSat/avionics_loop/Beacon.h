@@ -67,6 +67,8 @@ public:
 
     enum class PayloadStatus
     {
+        good,
+        error,
         unknown,
     };
 
@@ -92,7 +94,6 @@ public:
     }
 
 private:
-
     const String convertPowerStatus(PowerStatus powerStatus)
     {
         switch (powerStatus)
@@ -145,6 +146,10 @@ private:
         switch (payloadStatus)
         {
         // todo: update to reflect payload team selections
+        case PayloadStatus::good:
+            return "G";
+        case PayloadStatus::error:
+            return "E";
         case PayloadStatus::unknown:
             return "U";
         default:

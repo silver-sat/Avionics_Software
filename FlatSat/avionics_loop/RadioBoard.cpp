@@ -41,7 +41,7 @@ bool RadioBoard::begin()
         extern AvionicsBoard avionics;
         avionics.trigger_watchdog();
     }
-    Log.traceln("Command port initialized");
+    Log.verboseln("Command port initialized");
     Serial1.write(FEND); // send initial sync to recover from incomplete message after board reset
     Serial1.write(FEND);
     return true;

@@ -54,7 +54,7 @@ float EPS_I::getBatteryVoltage(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETBATTERYINFO_BATTERY_BATT_VOLT)};
   float voltage{static_cast<float>(value) * GETBATTERYINFO_BATTERY_BATT_VOLT_COEFFICIENT};
-  Log.verboseln("Battery voltage is %F", voltage);
+  Log.verboseln("Battery voltage is %F V", voltage);
   return voltage;
 }
 
@@ -69,7 +69,7 @@ float EPS_I::getBatteryCurrent(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETBATTERYINFO_BATTERY_BATT_CURR)};
   float current{static_cast<float>(value) * GETBATTERYINFO_BATTERY_BATT_CURR_COEFFICIENT};
-  Log.verboseln("Battery current is %F", current);
+  Log.verboseln("Battery current is %F A", current);
   return current;
 }
 
@@ -88,7 +88,7 @@ float EPS_I::getTemperatureSensor1(void)
     temperature = static_cast<float>(value) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE;
   else
     temperature = (((value >> 4) - 1) ^ 0xFFFF) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE;
-  Log.verboseln("Temperature Sensor 1 is %F C", temperature);
+  Log.verboseln("Temperature Sensor 1 is %F deg C", temperature);
   return temperature;
 }
 
@@ -107,7 +107,7 @@ float EPS_I::getTemperatureSensor2(void)
     temperature = static_cast<float>(value) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE;
   else
     temperature = (((value >> 4) - 1) ^ 0xFFFF) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE;
-  Log.verboseln("Temperature Sensor 2 is %F C", temperature);
+  Log.verboseln("Temperature Sensor 2 is %F deg C", temperature);
   return temperature;
 }
 
@@ -126,7 +126,7 @@ float EPS_I::getTemperatureSensor3(void)
     temperature = static_cast<float>(value) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE;
   else
     temperature = (((value >> 4) - 1) ^ 0xFFFF) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE;
-  Log.verboseln("Temperature Sensor 3 is %F C", temperature);
+  Log.verboseln("Temperature Sensor 3 is %F deg C", temperature);
   return temperature;
 }
 
@@ -141,7 +141,7 @@ float EPS_I::getZNegativeCurrent(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETSOLARPANELSINFO_SOLAR_Z_CURR_NEG)};
   float current{static_cast<float>(value) * GETSOLARPANELSINFO_SOLAR_Z_CURR_NEG_COEFFICIENT};
-  Log.verboseln("Z negative current is %F", current);
+  Log.verboseln("Z negative current is %F A", current);
   return current;
 }
 
@@ -156,7 +156,7 @@ float EPS_I::get5VCurrent(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETBUSESINFO_BUSES_BUS_5V_CURR)};
   float current{static_cast<float>(value) * GETBUSESINFO_BUSES_BUS_5V_CURR_COEFFICIENT};
-  Log.verboseln("5 volt current is %F", current);
+  Log.verboseln("5 volt current is %F V", current);
   return current;
 }
 
@@ -171,7 +171,7 @@ float EPS_I::get5VCurrent(void)
 bool EPS_I::getHeater1State(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETCONFIGURATIONINFO_CONFIG_OUTPUTCONDITIONS1)};
-  bool state{0x0001 & (value >> static_cast<uint8_t>(EPS_I_Output_Condition_1::Heater_1))};
+  bool state{static_cast<bool>(0x0001 & (value >> static_cast<uint8_t>(EPS_I_Output_Condition_1::Heater_1)))};
   Log.verboseln("Heater 1 state is %T", state);
   return state;
 }
@@ -187,7 +187,7 @@ bool EPS_I::getHeater1State(void)
 bool EPS_I::getHeater2State(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETCONFIGURATIONINFO_CONFIG_OUTPUTCONDITIONS1)};
-  bool state{0x0001 & (value >> static_cast<uint8_t>(EPS_I_Output_Condition_1::Heater_2))};
+  bool state{static_cast<bool>(0x0001 & (value >> static_cast<uint8_t>(EPS_I_Output_Condition_1::Heater_2)))};
   Log.verboseln("Heater 2 state is %T", state);
   return state;
 }
@@ -203,7 +203,7 @@ bool EPS_I::getHeater2State(void)
 bool EPS_I::getHeater3State(void)
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETCONFIGURATIONINFO_CONFIG_OUTPUTCONDITIONS1)};
-  bool state{0x0001 & (value >> static_cast<uint8_t>(EPS_I_Output_Condition_1::Heater_3))};
+  bool state{static_cast<bool>(0x0001 & (value >> static_cast<uint8_t>(EPS_I_Output_Condition_1::Heater_3)))};
   Log.verboseln("Heater 3 state is %T", state);
   return state;
 }

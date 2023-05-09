@@ -55,6 +55,7 @@ constexpr unsigned SHUTDOWN_A{19u};        /**< payload shutdown A @hideinitiali
 constexpr unsigned SHUTDOWN_B{36u};        /**< payload shutdown B @hideinitializer */
 constexpr unsigned SHUTDOWN_C{37u};        /**< payload shutdown C @hideinitializer */
 constexpr unsigned PAYLOAD_OC{16u};        /**< payload over current @hideinitializer */
+constexpr unsigned GPIO_A{14U};            /**< GPIO pin on J1 */
 constexpr unsigned RESET{0u};              /**< reset the processor @hideinitializer */
 
 /**

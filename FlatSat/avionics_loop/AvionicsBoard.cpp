@@ -187,34 +187,49 @@ bool AvionicsBoard::check_beacon()
 Beacon::AvionicsStatus AvionicsBoard::get_status()
 {
 
-  // todo: determine appropriate beacon character
-  // start with everything OK
   Beacon::AvionicsStatus status{Beacon::AvionicsStatus::everything_ok};
-  // one time initialization events for RTC, IMU, FRAM, and antenna
-  // show most recent event if any
-  // radio connection will continuously retry
+  // show most recent initialization error if any
   if (m_rtc_initialization_error)
+  {
     status = Beacon::AvionicsStatus::rtc_initialization_error;
+    Log.verboseln("Realtime clock initialization error occurred");
+  }
   if (m_imu_initialization_error)
+  {
     status = Beacon::AvionicsStatus::imu_initialization_error;
+    Log.verboseln("Inertial Measurment Unit initialization error occurred");
+  }
   if (m_FRAM_initialization_error)
+  {
     status = Beacon::AvionicsStatus::FRAM_initialization_error;
+    Log.verboseln("FRAM initialization error occurred");
+  }
   if (m_antenna_deployment_error)
+  {
     status = Beacon::AvionicsStatus::antenna_deployment_error;
+    Log.verboseln("Antenna deployment error occurred");
+  }
   // todo: how to clear initialization errors
-  // stability: imu is_stable (dynamic)
-  // else show unstable
+  // show stability if unstable and no initialization errors
   if ((status == Beacon::AvionicsStatus::everything_ok) && (!get_stability()))
+  {
     status = Beacon::AvionicsStatus::unstable;
-  // unknown time: rtc is_set (dynamic if unset clock command available)
-  // when stable, show unknown time
+    Log.verboseln("Satellite is not stable");
+  }
+  // when stable, show unknown time until realtime clock set
   if ((status == Beacon::AvionicsStatus::everything_ok) && (!m_external_rtc.is_set()))
+  {
     status = Beacon::AvionicsStatus::unknown_time;
-  // watchdog reset:  watchdog reset_occurred (dynamic, consider keeping count)
-  // consider new reset clear command or use
-  // show reset until clear reset command is received
+    Log.verboseln("Time is not set");
+  }
+  // todo: watchdog reset:  watchdog reset_occurred (dynamic, consider keeping count)
+  // toto: consider new reset clear command or use
+  // show watchdog reset until clear reset command is received
   if (get_watchdog_event())
+  {
     status = Beacon::AvionicsStatus::watchdog_reset;
+    Log.verboseln("Watchdog reset occurred");
+  }
   return status;
 }
 
@@ -449,6 +464,6 @@ bool AvionicsBoard::get_stability()
 
 bool AvionicsBoard::get_watchdog_event()
 {
-  // todo: implement watchdog capture
+  // todo: implement watchdog reset capture
   return false;
 }

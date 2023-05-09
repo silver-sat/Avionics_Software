@@ -32,28 +32,25 @@ bool Antenna::deploy()
 {
     // Execute algorithm 1 for all 4 antenna rods
 
-    Log.verboseln("Executing algorithm 1 and starting antenna delay");
+    Log.traceln("Executing algorithm 1 and starting antenna delay");
     constexpr uint8_t algorithm1_all{0x1F};
     m_i2c_dev.write(&algorithm1_all, 1);
     unsigned long antenna_timer_start{millis()};
     extern AvionicsBoard avionics;
     while ((millis() - antenna_timer_start) < antenna_delay)
         avionics.trigger_watchdog();
-    Log.noticeln("Ending antenna delay");
+    Log.traceln("Ending antenna delay");
 
     // Validate successful deployment
 
-    // todo: refactor duplicate code
-    Log.noticeln("Reading antenna state");
+    Log.traceln("Reading antenna state");
     byte antenna_state[4]{};
     m_i2c_dev.read(antenna_state, 4);
-    Log.verboseln("Antenna byte 1: %X", antenna_state[0]);
-    Log.verboseln("Antenna byte 2: %X", antenna_state[1]);
-    Log.verboseln("Antenna byte 3: %X", antenna_state[2]);
-    Log.verboseln("Antenna byte 4: %X", antenna_state[3]);
+    for (size_t index{0}; index < 4; ++index)
+        Log.verboseln("Antenna byte %d: %X", index, antenna_state[index]);
     if (antenna_state[3] == 0xFF)
     {
-        Log.noticeln("All antenna doors open");
+        Log.traceln("All antenna doors open");
         return true;
     }
 
@@ -65,19 +62,17 @@ bool Antenna::deploy()
     antenna_timer_start = millis();
     while ((millis() - antenna_timer_start) < antenna_delay)
         avionics.trigger_watchdog();
-    Log.noticeln("Ending antenna delay");
+    Log.traceln("Ending antenna delay");
 
     // Validate successful deployment
 
-    Log.noticeln("Reading antenna state");
+    Log.traceln("Reading antenna state");
     m_i2c_dev.read(antenna_state, 4);
-    Log.verboseln("Antenna byte 1: %X", antenna_state[0]);
-    Log.verboseln("Antenna byte 2: %X", antenna_state[1]);
-    Log.verboseln("Antenna byte 3: %X", antenna_state[2]);
-    Log.verboseln("Antenna byte 4: %X", antenna_state[3]);
+    for (size_t index{0}; index < 4; ++index)
+        Log.verboseln("Antenna byte %d: %X", index, antenna_state[index]);
     if (antenna_state[3] == 0xFF)
     {
-        Log.noticeln("All antenna doors open");
+        Log.traceln("All antenna doors open");
         return true;
     }
 
@@ -91,15 +86,13 @@ bool Antenna::deploy()
 
     // Validate successful deployment
 
-    Log.noticeln("Reading antenna state");
+    Log.traceln("Reading antenna state");
     m_i2c_dev.read(antenna_state, 4);
-    Log.verboseln("Antenna byte 1: %X", antenna_state[0]);
-    Log.verboseln("Antenna byte 2: %X", antenna_state[1]);
-    Log.verboseln("Antenna byte 3: %X", antenna_state[2]);
-    Log.verboseln("Antenna byte 4: %X", antenna_state[3]);
+    for (size_t index{0}; index < 4; ++index)
+        Log.verboseln("Antenna byte %d: %X", index, antenna_state[index]);
     if (antenna_state[3] == 0xFF)
     {
-        Log.noticeln("All antenna doors open");
+        Log.traceln("All antenna doors open");
         return true;
     }
 
@@ -113,15 +106,13 @@ bool Antenna::deploy()
 
     // Validate successful deployment
 
-    Log.noticeln("Reading antenna state");
+    Log.traceln("Reading antenna state");
     m_i2c_dev.read(antenna_state, 4);
-    Log.verboseln("Antenna byte 1: %X", antenna_state[0]);
-    Log.verboseln("Antenna byte 2: %X", antenna_state[1]);
-    Log.verboseln("Antenna byte 3: %X", antenna_state[2]);
-    Log.verboseln("Antenna byte 4: %X", antenna_state[3]);
+    for (size_t index{0}; index < 4; ++index)
+        Log.verboseln("Antenna byte %d: %X", index, antenna_state[index]);
     if (antenna_state[3] == 0xFF)
     {
-        Log.noticeln("All antenna doors open");
+        Log.traceln("All antenna doors open");
         return true;
     }
 

@@ -42,7 +42,7 @@ bool CY15B256J::begin(uint8_t addr, TwoWire *theWire)
   // the CY15B256J has a secondary address too!
   i2c_dev2 = new Adafruit_I2CDevice(CY15B256J_SECONDARY_ADDRESS, theWire);
 
-  if (!i2c_dev2->begin())
+  if (!i2c_dev2->begin(false))
   {
     return false;
   }

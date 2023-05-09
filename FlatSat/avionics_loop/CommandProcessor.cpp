@@ -36,7 +36,7 @@ bool CommandProcessor::check_for_command()
         if (m_source == REMOTE_FRAME)
         {
             Command *command{make_command(command_string)};
-            Log.verboseln("Command object memory address: %X", command);
+            Log.verboseln("Command object memory address: %s", ("0x" + String(reinterpret_cast<uint32_t>(command), HEX)).c_str());
             command->acknowledge_command();
             Log.traceln("Command acknowledged");
 

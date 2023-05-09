@@ -321,7 +321,6 @@ def get_next_sequence():
 def generate_signed(command):
     secret = open("secret.txt", "rb").read()
     salt = secrets.token_bytes(16)
-    # todo: implement sequence number testing
     sequence = get_next_sequence().encode("utf-8")
     separator = "|".encode("utf-8")
     command = command.encode("utf-8")
