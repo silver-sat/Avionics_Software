@@ -2,7 +2,7 @@
  * @file PayloadBoard.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat Payload Board
- * @version 1.1.0
+ * @version 1.1.1
  * @date 2022-07-24
  *
  * This file declares the class which interfaces with the Payload Board
@@ -13,6 +13,19 @@
 
 #include "avionics_constants.h"
 #include "Beacon.h"
+
+/**
+ * @brief Last Payload Activity
+ *
+ */
+
+enum class LastPayloadActivity
+{
+    communicate,
+    photo,
+    overcurrent,
+    none,
+};
 
 /**
  * @brief SilverSat Payload Board
@@ -66,7 +79,7 @@ public:
      *
      */
 
-    Beacon::PayloadStatus get_status();
+    PayloadBeacon get_status();
 
 private:
     /**
@@ -94,11 +107,12 @@ private:
     bool shutdown_signal_is_set() const;
 
 private:
-    bool m_payload_active{false};              /**< payload in photo or communications mode */
-    long unsigned int m_start_time{};          /**< delay for payload to pull shutdown lines low */
-    bool m_in_shutdown_delay{false};           /**< payload in shutdown delay state after setting shutdown lines */
-    long unsigned int m_shutdown_start_time{}; /**< delay for payload to complete shutdown */
-    // beacon data
-    bool m_last_session_normal{false};                                      /**< last session completed normally */
-    bool m_timeout_occurred{false};                                         /**< set true if Payload Board times out */
+    LastPayloadActivity m_last_payload_activity{LastPayloadActivity::none}; /**< last payload activity */
+    long unsigned int m_last_payload_duration{};                            /**< duration of last payload activity */
+    bool m_payload_active{false};                                           /**< payload in startup, photo, communications or shutdown mode */
+    long unsigned int m_payload_start_time{};                               /**< beginning of last payload activity from millis() */
+    bool m_in_shutdown_delay{false};                                        /**< payload in shutdown delay state after setting shutdown lines */
+    long unsigned int m_shutdown_start_time{};                              /**< delay for payload to complete shutdown */
+    bool m_timeout_occurred{false};                                         /**< true if Payload Board timeout */
+    bool m_overcurrent_occurred{false};                                     /**< true if Payload Board overcurrent */
 };

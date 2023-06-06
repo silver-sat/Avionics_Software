@@ -87,7 +87,7 @@ public:
     *
     */
 
-   Beacon::AvionicsStatus get_status();
+   AvionicsBeacon get_status();
 
    /**
     * @brief Set the time for the next payload photo

@@ -2,7 +2,7 @@
  * @file PowerBoard.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat Power Board
- * @version 2.0.0
+ * @version 2.0.1
  * @date 2022-07-24
  *
  * This file declares the class that interfaces to the Power Board
@@ -51,7 +51,7 @@ public:
      *
      */
 
-    Beacon::PowerStatus get_status();
+    PowerBeacon get_status();
 
     /**
      * @brief Get the power detail for command response
