@@ -99,13 +99,13 @@ bool IMU::begin(TwoWire *theWire)
         Log.verboseln((prefix + "5 Hz").c_str());
         break;
     }
-// load smoothing array with initial data
-sensors_event_t g;
-g.gyro.x = x_calibration;
-g.gyro.y = y_calibration;
-g.gyro.z = z_calibration;
-for (auto index{0}; index < buffer_size; ++index)
-m_data_buffer.push(g);
+    // load smoothing array with initial data
+    sensors_event_t g;
+    g.gyro.x = x_calibration;
+    g.gyro.y = y_calibration;
+    g.gyro.z = z_calibration;
+    for (size_t index{0}; index < buffer_size; ++index)
+        m_data_buffer.push(g);
     return true;
 }
 

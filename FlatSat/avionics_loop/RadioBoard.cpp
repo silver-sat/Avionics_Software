@@ -110,6 +110,7 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
                 continue; // drop command type
             }
             else if (character == FEND)
+            {
                 if (m_buffer_index > 0)
                 {
                     buffer[m_buffer_index++] = '\0';
@@ -129,6 +130,7 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
                 }
                 else
                     Log.errorln("No command received");
+            }
             if (m_received_escape)
             {
                 m_received_escape = false;
