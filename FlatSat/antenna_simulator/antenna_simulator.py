@@ -26,7 +26,7 @@ while True:
                 continue
 
             with r:  # Closes the transfer if necessary by sending a NACK or feeding dummy bytes
-                if r.address == 0x18:
+                if r.address == 0x33:
                     if not r.is_read:  # Main write which is Selected read
                         print("Main write")
                         b = r.read(1)

@@ -2,7 +2,7 @@
  * @file PowerBoard.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat Power Board
- * @version 2.0.0
+ * @version 2.0.1
  * @date 2022-07-24
  *
  * This file implements the class that interfaces to the Power Board
@@ -46,13 +46,13 @@ bool PowerBoard::begin()
  * @return String letter grade for beacon
  */
 
-Beacon::PowerStatus PowerBoard::get_status()
+PowerBeacon PowerBoard::get_status()
 {
     // todo: develop and implement battery status beacon character
     if(m_eps_i.getBatteryVoltage() >= 3.5) {
-        return Beacon::PowerStatus::excellent;
+        return PowerBeacon::excellent;
     } else {
-        return Beacon::PowerStatus::fair;
+        return PowerBeacon::fair;
     }
 }
 

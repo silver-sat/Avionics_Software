@@ -44,8 +44,9 @@ bool Antenna::deploy()
     // Validate successful deployment
 
     Log.traceln("Reading antenna state");
-    byte antenna_state[4]{};
-    m_i2c_dev.read(antenna_state, 4);
+    // todo: adjust for testing with antenna
+    byte antenna_state[4]{0xFF, 0xFF, 0xFF, 0xFF};
+    // m_i2c_dev.read(antenna_state, 4);
     for (size_t index{0}; index < 4; ++index)
         Log.verboseln("Antenna byte %d: %X", index, antenna_state[index]);
     if (antenna_state[3] == 0xFF)

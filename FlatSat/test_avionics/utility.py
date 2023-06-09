@@ -20,6 +20,8 @@ import time
 LOG_PORT = "/dev/tty.usbmodem1301"
 ## port for command input and output
 COMMAND_PORT = "/dev/tty.usbserial-A10MHKWZ"
+## Payload Board port
+PAYLOAD_PORT = "/dev/tty.usbmodem11101"
 ## serial transmission speed
 BAUDRATE = 115200
 ## default timeout for readline
@@ -55,6 +57,8 @@ Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
 command_port = serial.Serial(COMMAND_PORT, BAUDRATE, timeout=TIMEOUT)
 ## serial port for logging
 log_port = serial.Serial(LOG_PORT, BAUDRATE, timeout=TIMEOUT)
+## serial port for payload simulator control
+payload_port = serial.Serial(PAYLOAD_PORT, BAUDRATE, timeout=TIMEOUT)
 ## maximum read length
 read_length = 256
 ## timestamp pattern
@@ -98,10 +102,10 @@ query_register_pattern = re.compile(r"RESRQR \d{3}$")
 
 ## Initialization services
 
+
 ## Collect initialization
 #
 def collect_initialization(interval=30):
-
     log = []
     log_data = ""
     log_port.timeout = interval
@@ -122,7 +126,6 @@ def antenna_deployed(log):
 ## Verify initialization complete
 #
 def initialization_complete(log):
-
     return any(
         [item.detail == "Avionics Process initialization completed" for item in log]
     )
@@ -136,12 +139,12 @@ def fends_received(message):
 
 ## Command services
 
+
 ## Issue command
 #
 # Commands must be framed with KISS encoding
 #
 def issue(command):
-
     command_port.write(FEND + REMOTE_FRAME + command.encode("utf-8") + FEND)
 
 
@@ -164,11 +167,30 @@ def collect_log():
 # Commands generate one or more messages, captured individually
 #
 def collect_message():
-
     message = command_port.read_until(expected=FEND)
     message = message + command_port.read_until(expected=FEND)
     print(f"Message: {message}")
     return message
+
+
+## Collect message response with delay
+#
+#
+def collect_message_wait():
+    command_port.timeout = EXTENDED_TIMEOUT
+    message = command_port.read_until(expected=FEND)
+    message = message + command_port.read_until(expected=FEND)
+    command_port.timeout = TIMEOUT
+    print(f"Message: {message}")
+    return message
+
+
+## Clear messages
+#
+# Empty the input buffer
+#
+def clear_messages():
+    command_port.reset_input_buffer()
 
 
 ## Collect log radio response
@@ -186,14 +208,12 @@ def collect_log_radio_response():
 ## Verify command acknowledged
 #
 def acknowledged_log(log):
-
     return any([item.detail == "Acknowledging command" for item in log])
 
 
 ## Verify command negative acknowledged
 #
 def negative_acknowledged_log(log):
-
     return any([item.detail == "Negative acknowledging command" for item in log])
 
 
@@ -202,7 +222,6 @@ def negative_acknowledged_log(log):
 # Each command is ACKed or NACKed in a message
 #
 def acknowledged_message(message):
-
     return bytes("ACK".encode("utf-8")) in message
 
 
@@ -211,7 +230,6 @@ def acknowledged_message(message):
 # Each command is ACKed or NACKed in a message
 #
 def negative_acknowledged_message(message):
-
     return bytes("NACK".encode("utf-8")) in message
 
 
@@ -220,7 +238,6 @@ def negative_acknowledged_message(message):
 # Local ACKs and NACKs generate multiple log entries
 #
 def collect_ack_or_nack():
-
     log = []
     log_data = ""
     while ("Received ACK" not in log_data) & ("Received NACK" not in log_data):
@@ -234,7 +251,6 @@ def collect_ack_or_nack():
 # Each command receives a RESponse message
 #
 def response_sent(message, type):
-
     return bytes(("RES" + type).encode("utf-8")) in message
 
 
@@ -243,42 +259,36 @@ def response_sent(message, type):
 # Some commands generate an error RESponse message
 #
 def error_response(message):
-
     return bytes(("RESERR").encode("utf-8")) in message
 
 
 ## Verify command not signed
 #
 def not_signed(log):
-
     return any([item.detail == "Command is not signed" for item in log])
 
 
 ## Verify command signed
 #
 def signed(log):
-
     return any([item.detail == "Command is signed" for item in log])
 
 
 ## Verify signature valid
 #
 def signature_valid(log):
-
     return any([item.detail == "Command signature valid" for item in log])
 
 
 ## Verify signature invalid
 #
 def signature_invalid(log):
-
     return any([item.detail == "Command signature invalid" for item in log])
 
 
 ## Verify no errors logged
 #
 def no_logged_errors(log):
-
     return not any(
         [
             (item.level == "FATAL")
@@ -292,7 +302,6 @@ def no_logged_errors(log):
 ## Verify command executed
 #
 def executed(log):
-
     return any([item.detail.startswith("Executed (") for item in log])
 
 
@@ -341,14 +350,79 @@ def generate_signed(command):
     )
 
 
+## Payload simulator services
+
+
+## Issue control
+#
+# Valid controls are defined in the payload simulator
+#
+def payload_control(control):
+    payload_port.write(control.encode("utf-8"))
+
+
+## Receive response
+#
+# Responses are a single line
+#
+def payload_log():
+    log = []
+    log_data = ""
+    while ("Setting" not in log_data) & ("Invalid" not in log_data):
+        log_data = payload_port.readline().decode("utf-8").strip()
+        print(log_data)
+        log.append(log_data)
+    return log
+
+
+## Is normal
+def is_normal(log):
+    return any([item == "Setting normal operation" for item in log])
+
+
+## Is one minute
+def is_1_minute(log):
+    return any([item == "Setting 1 minute activity" for item in log])
+
+
+## Is three minute
+def is_3_minute(log):
+    return any([item == "Setting 3 minute activity" for item in log])
+
+
+## Is five minute
+def is_5_minute(log):
+    return any([item == "Setting 5 minute activity" for item in log])
+
+
+## Is seven minute
+def is_7_minute(log):
+    return any([item == "Setting 7 minute activity" for item in log])
+
+
+## Is nine minute
+def is_9_minute(log):
+    return any([item == "Setting 9 minute activity" for item in log])
+
+
+## Is timeout
+def is_timeout(log):
+    return any([item == "Setting timeout activity" for item in log])
+
+
+## Is over current
+def is_timeout(log):
+    return any([item == "Setting overcurrent on" for item in log])
+
+
 ## Change satellite state services
+
 
 ## Verify beacon message sent
 #
 # Beacons are sent periodically at the beacon interval
 #
 def local_beacon_message_sent(message):
-
     return message.startswith(FEND + BEACON)
 
 
@@ -357,7 +431,6 @@ def local_beacon_message_sent(message):
 # Assumes beacon spacing is less than interval
 #
 def collect_two_beacons(interval):
-
     log = []
     time.sleep(interval)
     log_data = log_port.readline().decode("utf-8").strip()
@@ -371,7 +444,6 @@ def collect_two_beacons(interval):
 ## Verify beacon interval
 #
 def beacon_interval(length, log):
-
     hours1, minutes1, seconds1 = log[-1].timestamp.split(":")
     seconds1, milliseconds1 = seconds1.split(".")
     hours2, minutes2, seconds2 = log[-2].timestamp.split(":")
@@ -396,7 +468,6 @@ def beacon_interval(length, log):
 ## Collect beacons with timeout
 #
 def collect_timeout(interval=60):
-
     index = 0
     beacons_found = 0
     while index < 2:
@@ -407,14 +478,19 @@ def collect_timeout(interval=60):
     return beacons_found == 0
 
 
-## Payload services
+## Verify payload beacon character
+#
+def payload_beacon(message, character):
+    return message.startswith(FEND + BEACON) & message.endswith(
+        character.encode("utf-8") + FEND
+    )
+
 
 ## Collect through power off check
 #
 # Assumes Payload Board is active for less than "interval" seconds
 #
 def collect_through_power_off(interval=120):
-
     log = []
     log_data = ""
     log_port.timeout = interval
@@ -432,11 +508,11 @@ def collect_through_power_off(interval=120):
 ## Verify payload power off
 #
 def payload_power_off(log):
-
     return any([item.detail == "Payload power off" for item in log])
 
 
 ## Get satellite state services
+
 
 ## Verify log timestamp sent
 #
@@ -464,7 +540,6 @@ def message_pictimes_sent(message):
 ## Verify zero pictimes sent
 #
 def pictimes_zero_sent(log):
-
     return any([item.detail.endswith("content: RESGPT 0") for item in log])
 
 
@@ -495,18 +570,17 @@ def message_power_sent(message):
 ## Verify log local GetComms sent
 #
 def log_local_status_request(log):
-
     return any([item.detail == "Requesting radio status" for item in log])
 
 
 ## Verify message local GetComms sent
 #
 def message_local_status_request(message):
-
     return message.startswith(FEND + STATUS)
 
 
 # todo: verify remote log and message sent
+
 
 ## Verify log beacon interval sent
 #
@@ -523,7 +597,6 @@ def message_beacon_interval_sent(message):
 ## Verify time sent
 #
 def time_sent(log):
-
     return any([item.detail.contains("RESGRC") for item in log])
 
 
@@ -548,18 +621,17 @@ def message_test_packet_sent(message):
 ## Verify buffer overflow
 #
 def buffer_overflow(log):
-
     return any([("Buffer overflow" in item.detail) for item in log])
 
 
 ## Radio command services
+
 
 ## Verify local recover antenna message sent
 #
 # Recover antenna will be sent if standard deployment fails
 #
 def local_recover_antenna(message):
-
     return message.startswith(FEND + DIGITALIO_RELEASE)
 
 
@@ -872,7 +944,6 @@ def message_remote_query_register_sent(message):
 # Local command for QueryRegister command
 #
 def local_query_register_message_sent(message):
-
     return message.startswith(FEND + QUERY_REGISTER)
 
 
@@ -951,12 +1022,12 @@ def exercise_avionics():
 
 ## Radio simulator services
 
+
 ## Simulate response to local command
 #
 # Simulate Radio Board KISS-encoded local frame response to local command
 #
 def respond(command):
-
     command_port.write(FEND + LOCAL_FRAME + command + FEND)
 
 
@@ -965,7 +1036,6 @@ def respond(command):
 # Transmit a FEND on the command port
 #
 def send_FEND(count=1):
-
     index = 0
     while index < count:
         command_port.write(FEND)
