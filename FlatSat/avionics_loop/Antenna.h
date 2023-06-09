@@ -2,7 +2,7 @@
  * @file Antenna.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Device driver for SilverSat antenna
- * @version 1.0.0
+ * @version 1.1.0
  * @date 2023-04-01
  *
  *
@@ -21,10 +21,14 @@ class Antenna final
 {
 public:
     /**
+     * @brief Check antenna state
+     * 
+     */
+    bool check();
+    
+    /**
      * @brief Deploy the antenna
      *
-     * @return true successful
-     * @return false failure
      */
     bool deploy();
 
