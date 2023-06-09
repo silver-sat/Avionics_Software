@@ -2,7 +2,7 @@
  * @file Antenna.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Device driver for SilverSat antenna
- * @version 1.0.0
+ * @version 1.1.0
  * @date 2023-04-01
  *
  *
@@ -22,6 +22,29 @@
 constexpr unsigned long antenna_delay{5 * seconds_to_milliseconds};
 
 /**
+ * @brief Check antenna state
+ *
+ * @return true all doors deployed
+ * @return false some doors not deployee
+ *
+ */
+bool Antenna::check()
+{
+
+    Log.traceln("Reading antenna state");
+    byte antenna_state[4]{};
+    m_i2c_dev.read(antenna_state, 4);
+    for (size_t index{0}; index < 4; ++index)
+        Log.verboseln("Antenna byte %d: %X", index, antenna_state[index]);
+    if (antenna_state[3] == 0xFF)
+    {
+        Log.traceln("All antenna doors open");
+        return true;
+    }
+    return false;
+}
+
+/**
  * @brief Deploy the antenna
  *
  * @return true successful
@@ -30,6 +53,9 @@ constexpr unsigned long antenna_delay{5 * seconds_to_milliseconds};
 
 bool Antenna::deploy()
 {
+
+    m_i2c_dev.begin();
+
     // Execute algorithm 1 for all 4 antenna rods
 
     Log.traceln("Executing algorithm 1 and starting antenna delay");
@@ -40,20 +66,8 @@ bool Antenna::deploy()
     while ((millis() - antenna_timer_start) < antenna_delay)
         avionics.trigger_watchdog();
     Log.traceln("Ending antenna delay");
-
-    // Validate successful deployment
-
-    Log.traceln("Reading antenna state");
-    // todo: adjust for testing with antenna
-    byte antenna_state[4]{0xFF, 0xFF, 0xFF, 0xFF};
-    // m_i2c_dev.read(antenna_state, 4);
-    for (size_t index{0}; index < 4; ++index)
-        Log.verboseln("Antenna byte %d: %X", index, antenna_state[index]);
-    if (antenna_state[3] == 0xFF)
-    {
-        Log.traceln("All antenna doors open");
+    if (check())
         return true;
-    }
 
     // Execute algorithm 2 for all doors
 
@@ -64,18 +78,8 @@ bool Antenna::deploy()
     while ((millis() - antenna_timer_start) < antenna_delay)
         avionics.trigger_watchdog();
     Log.traceln("Ending antenna delay");
-
-    // Validate successful deployment
-
-    Log.traceln("Reading antenna state");
-    m_i2c_dev.read(antenna_state, 4);
-    for (size_t index{0}; index < 4; ++index)
-        Log.verboseln("Antenna byte %d: %X", index, antenna_state[index]);
-    if (antenna_state[3] == 0xFF)
-    {
-        Log.traceln("All antenna doors open");
+    if (check())
         return true;
-    }
 
     // Notify Radio Board to deploy antenna via DigitalIO mode A
 
@@ -84,18 +88,8 @@ bool Antenna::deploy()
     antenna_timer_start = millis();
     while ((millis() - antenna_timer_start) < antenna_delay)
         avionics.trigger_watchdog();
-
-    // Validate successful deployment
-
-    Log.traceln("Reading antenna state");
-    m_i2c_dev.read(antenna_state, 4);
-    for (size_t index{0}; index < 4; ++index)
-        Log.verboseln("Antenna byte %d: %X", index, antenna_state[index]);
-    if (antenna_state[3] == 0xFF)
-    {
-        Log.traceln("All antenna doors open");
+    if (check())
         return true;
-    }
 
     // Notify Radio Board to deploy antenna via DigitalIO mode B
 
@@ -104,18 +98,8 @@ bool Antenna::deploy()
     antenna_timer_start = millis();
     while ((millis() - antenna_timer_start) < antenna_delay)
         avionics.trigger_watchdog();
-
-    // Validate successful deployment
-
-    Log.traceln("Reading antenna state");
-    m_i2c_dev.read(antenna_state, 4);
-    for (size_t index{0}; index < 4; ++index)
-        Log.verboseln("Antenna byte %d: %X", index, antenna_state[index]);
-    if (antenna_state[3] == 0xFF)
-    {
-        Log.traceln("All antenna doors open");
+    if (check())
         return true;
-    }
 
     // Unable to open all doors, attempt to continue
 
