@@ -106,6 +106,7 @@ bool CommandParser::validate_signature(String &buffer, String &command_string, c
 
         for (unsigned int index = 0; index < buffer_parts[0].length(); ++index)
             if (!isDigit(buffer_parts[0].charAt(index)))
+            {
                 if (validation_required)
                 {
                     Log.errorln("Sequence character is not a digit");
@@ -116,6 +117,7 @@ bool CommandParser::validate_signature(String &buffer, String &command_string, c
                     Log.warningln("Sequence character is not a digit");
                     break;
                 }
+            }
 
         // Validate sequence number
 
