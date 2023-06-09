@@ -134,8 +134,8 @@ bool PayloadBoard::check_shutdown()
         m_timeout_occurred = true;
         return false;
     }
-    // check for Payload Board over current
-    if (m_payload_active && digitalRead(PAYLOAD_OC))
+    // check for Payload Board over current (active low)
+    if (m_payload_active && !digitalRead(PAYLOAD_OC))
     {
         Log.errorln("Payload over current");
         power_down();
@@ -332,24 +332,24 @@ PayloadBeacon PayloadBoard::get_status()
             Log.errorln("Timeout during last photo session");
             return PayloadBeacon::photo_timeout;
         }
-    }
-    else
-    {
-        Log.verboseln("Last photo session lasted %u milliseconds", m_last_payload_duration);
-        switch (get_bucket(m_last_payload_duration))
+        else
         {
-        case DurationBuckets::bucket_0_2:
-            return PayloadBeacon::photo_0_2;
-        case DurationBuckets::bucket_2_4:
-            return PayloadBeacon::photo_2_4;
-        case DurationBuckets::bucket_4_6:
-            return PayloadBeacon::photo_4_6;
-        case DurationBuckets::bucket_6_8:
-            return PayloadBeacon::photo_6_8;
-        case DurationBuckets::bucket_8_10:
-            return PayloadBeacon::photo_8_10;
-        default:
-            return PayloadBeacon::unknown;
+            Log.verboseln("Last photo session lasted %u milliseconds", m_last_payload_duration);
+            switch (get_bucket(m_last_payload_duration))
+            {
+            case DurationBuckets::bucket_0_2:
+                return PayloadBeacon::photo_0_2;
+            case DurationBuckets::bucket_2_4:
+                return PayloadBeacon::photo_2_4;
+            case DurationBuckets::bucket_4_6:
+                return PayloadBeacon::photo_4_6;
+            case DurationBuckets::bucket_6_8:
+                return PayloadBeacon::photo_6_8;
+            case DurationBuckets::bucket_8_10:
+                return PayloadBeacon::photo_8_10;
+            default:
+                return PayloadBeacon::unknown;
+            }
         }
     }
     // check for overcurrent
@@ -372,9 +372,7 @@ PayloadBeacon PayloadBoard::get_status()
             return PayloadBeacon::unknown;
         }
     }
-    else
-    {
-        Log.errorln("Payload session beacon status error");
-        return PayloadBeacon::unknown;
-    }
+    // error: unknown beacon status
+    Log.errorln("Payload session beacon status error");
+    return PayloadBeacon::unknown;
 }

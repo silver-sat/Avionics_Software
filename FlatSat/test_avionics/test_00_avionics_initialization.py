@@ -15,6 +15,7 @@
 import utility
 import time
 
+
 ## Validate Avionics Board initialization log entries
 #
 class TestAvionicsInitialization:
@@ -23,7 +24,6 @@ class TestAvionicsInitialization:
     ## Validate initization completion
     #
     def test_completion(self):
-
         log = utility.collect_initialization()
         assert utility.antenna_deployed(log)
         assert utility.initialization_complete(log)
@@ -31,12 +31,9 @@ class TestAvionicsInitialization:
         message = utility.collect_message()
         assert utility.fends_received(message)
 
-        """Set the realtime clock"""
-
     ## Turn off the beacon
     #
     def test_set_beacon_interval(self):
-
         utility.issue(f"BeaconSp 0")
         # check log
         log = utility.collect_log()
@@ -53,7 +50,6 @@ class TestAvionicsInitialization:
     ## Set the realtime clock
     #
     def test_set_realtime_clock(self):
-
         utc_time = time.strftime("%Y %m %d %H %M %S", time.gmtime())
         utility.issue(f"SetClock {utc_time}")
         # check log

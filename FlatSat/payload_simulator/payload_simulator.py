@@ -11,9 +11,11 @@ import board
 import digitalio
 import usb_cdc
 import time
-import random
 
 # digital i/o lines
+
+LOW = False
+HIGH = True
 
 states_a = digitalio.DigitalInOut(board.D0)
 states_a.direction = digitalio.Direction.INPUT
@@ -35,6 +37,7 @@ payload_on_c = digitalio.DigitalInOut(board.D5)
 payload_on_c.direction = digitalio.Direction.INPUT
 payload_on_c.pull = digitalio.Pull.UP
 
+# todo: initialize shutdown lines
 shutdown_a = digitalio.DigitalInOut(board.D6)
 shutdown_a.direction = digitalio.Direction.OUTPUT
 shutdown_b = digitalio.DigitalInOut(board.D7)
@@ -42,8 +45,10 @@ shutdown_b.direction = digitalio.Direction.OUTPUT
 shutdown_c = digitalio.DigitalInOut(board.D8)
 shutdown_c.direction = digitalio.Direction.OUTPUT
 
+# Overcurrent line is active low
 overcurrent_pin = digitalio.DigitalInOut(board.D9)
 overcurrent_pin.direction = digitalio.Direction.OUTPUT
+overcurrent_pin.value = HIGH
 
 # serial console
 
@@ -63,10 +68,6 @@ simulator_shutdown_requested = 2
 simulator_off = 3
 simulator_unknown = 4
 
-# overcurrent
-
-overcurrent = False
-
 # activity times
 
 startup_delay = 30.0
@@ -81,76 +82,77 @@ power_state = power_unknown
 simulator_state = simulator_unknown
 timer_end = 0
 control_signal = ""
+start_time = time.monotonic()
+stop_time = 0
 
 print("Starting Payload Board simulator")
-print("Enter n for normal operation; 1, 3, 5, 7, or 9 for cycle time; t for timeout, o for overcurrent")
+print(
+    "Press n for normal operation; 1, 3, 5, 7, or 9 for specific cycle time in minutes; t for timeout, o for overcurrent"
+)
 
 while True:
-
-#
-# Read console and process control signals
-#
+    #
+    # Read console and process control signals
+    #
 
     while serial.in_waiting:
         raw = serial.read()
         control_signal = raw.decode("utf-8")
-        if control_signal == "n" or control_signal == "N" :
-            print("setting Normal operation")
+        if control_signal == "n" or control_signal == "N":
+            print("Setting normal operation")
             photo_time = 30.0
             communications_time = 60.0
-            overcurrent = False
+            overcurrent_pin.value = HIGH
             break
-        if control_signal == "1 ":
-            print("setting 1 minute activity")
+        if control_signal == "1":
+            print("Setting 1 minute activity")
             photo_time = 1 * 60
             communications_time = 1 * 60
             break
         if control_signal == "3":
-            print("setting 3 minute activity")
+            print("Setting 3 minute activity")
             photo_time = 3 * 60
             communications_time = 3 * 60
             break
         if control_signal == "5":
-            print("setting 5 minute activity")
+            print("Setting 5 minute activity")
             photo_time = 5 * 60
             communications_time = 5 * 60
             break
         if control_signal == "7":
-            print("setting 7 minute activity")
+            print("Setting 7 minute activity")
             photo_time = 7 * 60
             communications_time = 7 * 60
             break
         if control_signal == "9":
-            print("setting 9 minute activity")
+            print("Setting 9 minute activity")
             photo_time = 9 * 60
             communications_time = 9 * 60
             break
         if control_signal == "t" or control_signal == "T":
-            print("setting timeout activity")
+            print("Setting timeout activity")
             photo_time = 11 * 60
             communications_time = 11 * 60
             break
         if control_signal == "o" or control_signal == "O":
-            print("setting overcurrent")
-            overcurrent = True
+            print("Setting overcurrent on")
+            overcurrent_pin.value = LOW
             break
-        print("invalid control signal")
-
+        print("Invalid control signal")
 
     if (payload_on_a.value + payload_on_b.value + payload_on_c.value) < 2:
         if power_state != power_on:
-            print("Power is on")
+            start_time = time.monotonic()
+            print(f"Power is on")
             power_state = power_on
             simulator_state = simulator_startup
             state_transition = True
-            if overcurrent:
-                overcurrent_pin.value = True
     else:
         if power_state != power_off:
-            print("Power is off")
+            stop_time = time.monotonic()
+            print(f"Power is off, duration {stop_time - start_time}")
             power_state = power_off
             simulator_state = simulator_off
-            overcurrent_pin = False
 
     if simulator_state == simulator_startup:
         if state_transition:
@@ -158,6 +160,7 @@ while True:
             timer_end = time.monotonic() + startup_delay
             state_transition = False
         if time.monotonic() >= timer_end:
+            # todo: verify direction
             shutdown_a.value = False
             shutdown_b.value = False
             shutdown_c.value = False
@@ -167,14 +170,13 @@ while True:
     if simulator_state == simulator_running:
         if state_transition:
             print("Running")
-            random_multiplier = random.randrange(8, 12) / 10.0
             if (states_a.value + states_b.value + states_c.value) < 2:
                 print("Photo mode")
-                timer_end = time.monotonic() + (photo_time * random_multiplier)
+                timer_end = time.monotonic() + max(0, photo_time - startup_delay)
             else:
                 print("Communications mode")
-                timer_end = time.monotonic() + (
-                    communications_time * random_multiplier
+                timer_end = time.monotonic() + max(
+                    0, communications_time - startup_delay
                 )
             state_transition = False
         if time.monotonic() >= timer_end:
