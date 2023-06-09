@@ -6,7 +6,7 @@
 # @date 7 June 2023
 #
 # This test case assumes no payload activity has yet occured
-# Variables below must be set to the relevant Payload Board timings
+# Payload timings must be set equal to the relevant Payload Board timings
 #
 
 """Test Payload Board beacon characters"""
@@ -16,9 +16,9 @@ import time
 
 ## Payload timings from PayloadBoard.cpp in seconds
 #
-payload_startup_delay = 90
-payload_shutdown_delay = 15
-payload_maximum_cycle = 10 * 60
+payload_startup_delay = 90.0
+payload_shutdown_delay = 15.0
+payload_maximum_cycle = 10.0 * 60.0
 
 
 ## Payload Board beacon testing
@@ -64,7 +64,7 @@ class TestPayloadBoardBeacon:
             message = utility.collect_message()
             assert utility.response_sent(message, "PYC")
             time.sleep(
-                max(control * 60, payload_startup_delay + payload_shutdown_delay)
+                max(control * 60.0, payload_startup_delay + payload_shutdown_delay)
             )
             utility.clear_messages()  # discard intervening beacons
             message = utility.collect_message_wait()
@@ -80,7 +80,7 @@ class TestPayloadBoardBeacon:
                 utility.payload_control("t")
             else:
                 utility.payload_control(str(control))
-            start_time = time.gmtime(time.time() + 5)
+            start_time = time.gmtime(time.time() + 5.0)
             start_time = time.strftime("%Y %m %d %H %M %S", start_time)
             utility.issue(f"PicTimes {start_time}")
             message = utility.collect_message()
@@ -88,7 +88,7 @@ class TestPayloadBoardBeacon:
             message = utility.collect_message()
             assert utility.response_sent(message, "SPT")
             time.sleep(
-                max(control * 60, payload_startup_delay + payload_shutdown_delay)
+                max(control * 60.0, payload_startup_delay + payload_shutdown_delay)
             )
             utility.clear_messages()  # discard intervening beacons
             message = utility.collect_message_wait()
@@ -108,7 +108,7 @@ class TestPayloadBoardBeacon:
             message = utility.collect_message()
             assert utility.response_sent(message, "PYC")
             time.sleep(
-                max(control * 60, payload_startup_delay + payload_shutdown_delay)
+                max(control * 60.0, payload_startup_delay + payload_shutdown_delay)
             )
             utility.clear_messages()  # discard intervening beacons
             utility.payload_control("o")

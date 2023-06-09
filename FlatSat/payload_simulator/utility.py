@@ -172,6 +172,7 @@ def collect_message():
     print(f"Message: {message}")
     return message
 
+
 ## Collect message response with delay
 #
 #
@@ -183,12 +184,14 @@ def collect_message_wait():
     print(f"Message: {message}")
     return message
 
+
 ## Clear messages
 #
 # Empty the input buffer
 #
 def clear_messages():
     command_port.reset_input_buffer()
+
 
 ## Collect log radio response
 #
@@ -474,10 +477,14 @@ def collect_timeout(interval=60):
         index += 1
     return beacons_found == 0
 
+
 ## Verify payload beacon character
 #
 def payload_beacon(message, character):
-    return (message.startswith(FEND + BEACON) & message.endswith(character.encode("utf-8") + FEND))
+    return message.startswith(FEND + BEACON) & message.endswith(
+        character.encode("utf-8") + FEND
+    )
+
 
 ## Collect through power off check
 #

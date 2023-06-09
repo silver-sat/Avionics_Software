@@ -2,7 +2,7 @@
 # @file payload_simulator.py
 # @brief FlatSat simulate Payload Board interface
 # @author Lee A. Congdon (lee@silversat.org)
-# @version 1.1.0
+# @version 1.2.0
 # @date 19 February 2023
 
 """FlatSat simulate Payload Board interface"""
@@ -12,11 +12,12 @@ import digitalio
 import usb_cdc
 import time
 
-# digital i/o lines
+# Digital i/o lines
 
 LOW = False
 HIGH = True
 
+# Photo is low, communications is high
 states_a = digitalio.DigitalInOut(board.D0)
 states_a.direction = digitalio.Direction.INPUT
 states_a.pull = digitalio.Pull.UP
@@ -27,6 +28,7 @@ states_c = digitalio.DigitalInOut(board.D2)
 states_c.direction = digitalio.Direction.INPUT
 states_c.pull = digitalio.Pull.UP
 
+# Payload on is active low
 payload_on_a = digitalio.DigitalInOut(board.D3)
 payload_on_a.direction = digitalio.Direction.INPUT
 payload_on_a.pull = digitalio.Pull.UP
@@ -37,7 +39,7 @@ payload_on_c = digitalio.DigitalInOut(board.D5)
 payload_on_c.direction = digitalio.Direction.INPUT
 payload_on_c.pull = digitalio.Pull.UP
 
-# todo: initialize shutdown lines
+# Shutdown is active high, indeterminate at startup
 shutdown_a = digitalio.DigitalInOut(board.D6)
 shutdown_a.direction = digitalio.Direction.OUTPUT
 shutdown_b = digitalio.DigitalInOut(board.D7)
@@ -45,22 +47,22 @@ shutdown_b.direction = digitalio.Direction.OUTPUT
 shutdown_c = digitalio.DigitalInOut(board.D8)
 shutdown_c.direction = digitalio.Direction.OUTPUT
 
-# Overcurrent line is active low
+# Overcurrent is active low
 overcurrent_pin = digitalio.DigitalInOut(board.D9)
 overcurrent_pin.direction = digitalio.Direction.OUTPUT
 overcurrent_pin.value = HIGH
 
-# serial console
+# Serial console for display and control
 
 serial = usb_cdc.console
 
-# power states
+# Power states
 
 power_off = 0
 power_on = 1
 power_unknown = 2
 
-# simulator states
+# Simulator states
 
 simulator_startup = 0
 simulator_running = 1
@@ -68,7 +70,8 @@ simulator_shutdown_requested = 2
 simulator_off = 3
 simulator_unknown = 4
 
-# activity times
+# Default activity times in seconds
+# Must be less than corresponding values in Avionics Board software
 
 startup_delay = 30.0
 photo_time = 30.0
@@ -76,14 +79,13 @@ communications_time = 60.0
 shutdown_delay = 10.0
 
 # Avionics Board will turn off Payload Board at startup
-# assume indeterminate state at simulator start
 
 power_state = power_unknown
 simulator_state = simulator_unknown
-timer_end = 0
+timer_end = 0.0
 control_signal = ""
 start_time = time.monotonic()
-stop_time = 0
+stop_time = 0.0
 
 print("Starting Payload Board simulator")
 print(
@@ -91,9 +93,7 @@ print(
 )
 
 while True:
-    #
-    # Read console and process control signals
-    #
+    #  Read console and process control signals
 
     while serial.in_waiting:
         raw = serial.read()
@@ -102,43 +102,45 @@ while True:
             print("Setting normal operation")
             photo_time = 30.0
             communications_time = 60.0
-            overcurrent_pin.value = HIGH
+            overcurrent_pin.value = HIGH  # Over current is active low
             break
         if control_signal == "1":
             print("Setting 1 minute activity")
-            photo_time = 1 * 60
-            communications_time = 1 * 60
+            photo_time = 1.0 * 60.0
+            communications_time = 1.0 * 60.0
             break
         if control_signal == "3":
             print("Setting 3 minute activity")
-            photo_time = 3 * 60
-            communications_time = 3 * 60
+            photo_time = 3.0 * 60.0
+            communications_time = 3.0 * 60.0
             break
         if control_signal == "5":
             print("Setting 5 minute activity")
-            photo_time = 5 * 60
-            communications_time = 5 * 60
+            photo_time = 5.0 * 60.0
+            communications_time = 5.0 * 60.0
             break
         if control_signal == "7":
             print("Setting 7 minute activity")
-            photo_time = 7 * 60
-            communications_time = 7 * 60
+            photo_time = 7.0 * 60.0
+            communications_time = 7.0 * 60.0
             break
         if control_signal == "9":
             print("Setting 9 minute activity")
-            photo_time = 9 * 60
-            communications_time = 9 * 60
+            photo_time = 9.0 * 60.0
+            communications_time = 9.0 * 60.0
             break
         if control_signal == "t" or control_signal == "T":
             print("Setting timeout activity")
-            photo_time = 11 * 60
-            communications_time = 11 * 60
+            photo_time = 11.0 * 60.0
+            communications_time = 11.0 * 60.0
             break
         if control_signal == "o" or control_signal == "O":
             print("Setting overcurrent on")
-            overcurrent_pin.value = LOW
+            overcurrent_pin.value = LOW  # Over current is active low
             break
         print("Invalid control signal")
+
+    # Check for power on transition
 
     if (payload_on_a.value + payload_on_b.value + payload_on_c.value) < 2:
         if power_state != power_on:
@@ -147,6 +149,9 @@ while True:
             power_state = power_on
             simulator_state = simulator_startup
             state_transition = True
+
+    # Check for power off transistion
+
     else:
         if power_state != power_off:
             stop_time = time.monotonic()
@@ -154,16 +159,17 @@ while True:
             power_state = power_off
             simulator_state = simulator_off
 
+    # Check for simulator startup transition
+
     if simulator_state == simulator_startup:
         if state_transition:
             print("Initialization")
             timer_end = time.monotonic() + startup_delay
             state_transition = False
         if time.monotonic() >= timer_end:
-            # todo: verify direction
-            shutdown_a.value = False
-            shutdown_b.value = False
-            shutdown_c.value = False
+            shutdown_a.value = LOW
+            shutdown_b.value = LOW
+            shutdown_c.value = LOW
             simulator_state = simulator_running
             state_transition = True
 
@@ -186,9 +192,9 @@ while True:
     if simulator_state == simulator_shutdown_requested:
         if state_transition:
             print("Requesting shutdown")
-            shutdown_a.value = True
-            shutdown_b.value = True
-            shutdown_c.value = True
+            shutdown_a.value = HIGH
+            shutdown_b.value = HIGH
+            shutdown_c.value = HIGH
             timer_end = time.monotonic() + shutdown_delay
             state_transition = False
         if time.monotonic() >= timer_end:
