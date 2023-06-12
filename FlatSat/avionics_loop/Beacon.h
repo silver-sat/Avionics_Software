@@ -17,24 +17,28 @@
 #pragma once
 
 #include "Message.h"
-#include "avionics_constants.h"
-#include <Arduino.h>
 
 /**
  * @brief Power Board Beacon
  *
+ * see https://docs.google.com/spreadsheets/d/19ibkPfePBUwRdCt-2vd_L55o1tiCnPxzvAepbnGq8PU/edit?usp=sharing
+ * 
  */
 
 enum class PowerBeacon
 {
     excellent,
+    good,
     fair,
+    poor,
     unknown,
 };
 
 /**
  * @brief Avionics Board Beacon
  *
+ * see: https://docs.google.com/document/d/1TTygPny-VP51_k1m2dgPnB5O26MzPzFeGfu8ND0MskU/edit?usp=sharing
+ * 
  */
 
 enum class AvionicsBeacon
@@ -104,25 +108,28 @@ public:
     }
 
 private:
-    const String convert_power_beacon(PowerBeacon powerStatus)
+    const String convert_power_beacon(const PowerBeacon power_beacon)
     {
-        switch (powerStatus)
+        switch (power_beacon)
         {
-        // todo: update to reflect power team selections
         case PowerBeacon::excellent:
+            return "S";
+        case PowerBeacon::good:
             return "E";
         case PowerBeacon::fair:
-            return "F";
+            return "I";
+        case PowerBeacon::poor:
+            return "T";
         case PowerBeacon::unknown:
-            return "U";
+            return "A";
         default:
-            return "U";
+            return "A";
         }
     }
 
-    const String convert_avionics_status(const AvionicsBeacon avionicsStatus)
+    const String convert_avionics_status(const AvionicsBeacon avionics_beacon)
     {
-        switch (avionicsStatus)
+        switch (avionics_beacon)
         {
         case AvionicsBeacon::everything_ok:
             return "A";
