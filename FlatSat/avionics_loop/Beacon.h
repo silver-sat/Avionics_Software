@@ -132,29 +132,29 @@ private:
         switch (avionics_beacon)
         {
         case AvionicsBeacon::everything_ok:
-            return "A";
-        case AvionicsBeacon::unknown_time:
-            return "B";
-        case AvionicsBeacon::FRAM_initialization_error:
-            return "C";
-        case AvionicsBeacon::antenna_deployment_error:
-            return "D";
-        case AvionicsBeacon::imu_initialization_error:
             return "E";
-        case AvionicsBeacon::radio_connection_error:
-            return "F";
-        case AvionicsBeacon::unstable:
-            return "G";
-        case AvionicsBeacon::rtc_initialization_error:
+        case AvionicsBeacon::unknown_time:
+            return "S";
+        case AvionicsBeacon::FRAM_initialization_error:
+            return "A";
+        case AvionicsBeacon::antenna_deployment_error:
             return "H";
-        case AvionicsBeacon::power_board_initialization_error:
+        case AvionicsBeacon::imu_initialization_error:
+            return "N";
+        case AvionicsBeacon::radio_connection_error:
+            return "U";
+        case AvionicsBeacon::unstable:
             return "I";
+        case AvionicsBeacon::rtc_initialization_error:
+            return "D";
+        case AvionicsBeacon::power_board_initialization_error:
+            return "R";
         case AvionicsBeacon::watchdog_reset:
-            return "J";
+            return "T";
         case AvionicsBeacon::unknown:
-            return "U";
+            return "5";
         default:
-            return "U";
+            return "5";
         }
     }
 
