@@ -10,6 +10,7 @@
  */
 
 #include "PayloadBoard.h"
+#include "PowerBoard.h"
 #include "log_utility.h"
 
 /**
@@ -58,19 +59,21 @@ bool PayloadBoard::begin()
 
 bool PayloadBoard::photo()
 {
-    // todo: check for sufficient power
-    if (!m_payload_active)
-    {
-        Log.noticeln("Starting photo session");
-        set_mode_photo();
-        power_up();
-        return true;
-    }
-    else
+    if (m_payload_active)
     {
         Log.errorln("Payload already active");
         return false;
     }
+    extern PowerBoard power;
+    if (!power.power_adequate())
+    {
+        Log.errorln("Inadequate power for photo session");
+        return false;
+    }
+    Log.noticeln("Starting photo session");
+    set_mode_photo();
+    power_up();
+    return true;
 }
 
 /**
@@ -83,19 +86,21 @@ bool PayloadBoard::photo()
 
 bool PayloadBoard::communicate()
 {
-    // todo: check for sufficient power
-    if (!m_payload_active)
-    {
-        Log.noticeln("Starting Communication session");
-        set_mode_comms();
-        power_up();
-        return true;
-    }
-    else
+    if (m_payload_active)
     {
         Log.errorln("Payload already active");
         return false;
     }
+    extern PowerBoard power;
+    if (!power.power_adequate())
+    {
+        Log.errorln("Inadequate power for communications session");
+        return false;
+    }
+    Log.noticeln("Starting Communication session");
+    set_mode_comms();
+    power_up();
+    return true;
 }
 
 /**

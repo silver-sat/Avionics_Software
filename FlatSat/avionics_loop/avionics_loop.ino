@@ -42,7 +42,7 @@ constexpr uint32_t serial_baud_rate{115200}; /**< speed of serial connection @hi
 constexpr unsigned long separation_delay{5 * seconds_to_milliseconds};
 
 /**
- * @brief Create the boards, antenna, and command processor
+ * @brief Create the boards and command processor
  *
  */
 

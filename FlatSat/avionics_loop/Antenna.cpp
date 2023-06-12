@@ -12,7 +12,6 @@
 #include "avionics_constants.h"
 #include "log_utility.h"
 #include "AvionicsBoard.h"
-// #include "RadioBoard.h"
 
 /**
  * @brief Antenna constants
