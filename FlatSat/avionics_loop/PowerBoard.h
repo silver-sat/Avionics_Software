@@ -36,6 +36,14 @@ public:
     const PowerBeacon get_status();
 
     /**
+     * @brief Check for adequate power for payload activity
+     *
+     * @return true adequate power
+     * @return false inadequate power
+     */
+    bool power_adequate();
+
+    /**
      * @brief Get the power detail for command response
      *
      */

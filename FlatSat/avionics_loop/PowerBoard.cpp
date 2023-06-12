@@ -12,6 +12,13 @@
 #include "PowerBoard.h"
 #include "log_utility.h"
 
+// Raw battery voltage cutoffs for beacon character and payload session power
+
+constexpr float battery_excellent{3.8};
+constexpr float battery_good{3.7};
+constexpr float battery_fair{3.6};
+constexpr float payload_session_minimum{3.65};
+
 /**
  * @brief Initialize the Power Board
  *
@@ -45,15 +52,15 @@ bool PowerBoard::begin()
 const PowerBeacon PowerBoard::get_status()
 {
     auto battery_voltage{m_eps_i.getBatteryVoltage()};
-    if (battery_voltage > 3.8)
+    if (battery_voltage > battery_excellent)
     {
         return PowerBeacon::excellent;
     }
-    else if (battery_voltage > 3.7)
+    else if (battery_voltage > battery_good)
     {
         return PowerBeacon::good;
     }
-    else if (battery_voltage > 3.6)
+    else if (battery_voltage > battery_fair)
     {
         return PowerBeacon::fair;
     }
@@ -61,6 +68,18 @@ const PowerBeacon PowerBoard::get_status()
     {
         return PowerBeacon::poor;
     }
+}
+
+/**
+ * @brief Check for adequate power for payload activity
+ *
+ * @return true adequate power
+ * @return false inadequate power
+ */
+
+bool PowerBoard::power_adequate()
+{
+    return m_eps_i.getBatteryVoltage() > payload_session_minimum;
 }
 
 /**

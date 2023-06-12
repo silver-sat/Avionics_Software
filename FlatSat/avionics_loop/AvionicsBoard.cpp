@@ -308,7 +308,6 @@ bool AvionicsBoard::check_photo()
     clear_pic_times();
     return false;
   }
-  // todo: check for sufficient power
   if ((m_picture_time_count > 0) && (time >= m_picture_times[0]))
   {
     Log.traceln("Photo time reached %s", get_timestamp().c_str());
