@@ -17,13 +17,13 @@ import hmac
 import time
 
 ## port for log output
-LOG_PORT = "/dev/tty.usbmodem1301"
+LOG_PORT = "/dev/tty.usbmodem11101"
 ## port for command input and output
 COMMAND_PORT = "/dev/tty.usbserial-A10MHKWZ"
 ## Payload Board port
 PAYLOAD_PORT = "/dev/tty.usbmodem11101"
 ## serial transmission speed
-BAUDRATE = 115200
+BAUDRATE = 57600
 ## default timeout for readline
 TIMEOUT = 5
 ## extended timeout for readline

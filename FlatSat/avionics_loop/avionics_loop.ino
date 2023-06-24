@@ -37,7 +37,7 @@
  * @brief Process loop constants
  *
  */
-constexpr uint32_t serial_baud_rate{115200}; /**< speed of serial connection @hideinitializer */
+constexpr uint32_t serial_baud_rate{57600}; /**< speed of serial connection @hideinitializer */
 // todo: adjust to 45 minutes for full test
 constexpr unsigned long separation_delay{5 * seconds_to_milliseconds};
 

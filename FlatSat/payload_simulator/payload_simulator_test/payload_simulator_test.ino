@@ -22,7 +22,7 @@ constexpr unsigned PAYLOAD_OC{16u};   /**< payload over current @hideinitializer
 void setup()
 {
 
-    Serial.begin(115200);
+    Serial.begin(57600);
     while (!Serial)
         ;
 
