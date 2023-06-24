@@ -14,11 +14,11 @@
 #include "log_utility.h"
 #include "AvionicsBoard.h"
 
-constexpr uint32_t serial1_baud_rate{115200}; /**< speed of serial1 connection @hideinitializer */
-constexpr byte FEND{'\xC0'};                  /**< frame end */
-constexpr byte FESC{'\xDB'};                  /**< frame escape */
-constexpr byte TFEND{'\xDC'};                 /**< transposed frame end */
-constexpr byte TFESC{'\xDD'};                 /**< transposed frame escape */
+constexpr uint32_t serial1_baud_rate{57600}; /**< speed of serial1 connection @hideinitializer */
+constexpr byte FEND{'\xC0'};                 /**< frame end */
+constexpr byte FESC{'\xDB'};                 /**< frame escape */
+constexpr byte TFEND{'\xDC'};                /**< transposed frame end */
+constexpr byte TFESC{'\xDD'};                /**< transposed frame escape */
 
 /**
  * @brief Initialize the Radio Board

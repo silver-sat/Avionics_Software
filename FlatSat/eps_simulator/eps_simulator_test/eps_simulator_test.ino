@@ -16,7 +16,7 @@ Adafruit_I2CDevice i2c_dev = Adafruit_I2CDevice(I2C_ADDRESS, &Wire1);
 
 void setup() {
   while (!Serial) { delay(10); }
-  Serial.begin(115200);
+  Serial.begin(57600);
   Serial.println("I2C device read and write test");
 
   if (!i2c_dev.begin()) {
