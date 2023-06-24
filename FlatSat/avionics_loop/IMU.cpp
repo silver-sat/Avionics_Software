@@ -16,7 +16,7 @@
 
 // Stability margin
 
-float stable_radians_sec_margin{0.01};
+float stable_radians_sec_margin{0.01f};
 
 /**
  * @brief Initialize inertial management unit

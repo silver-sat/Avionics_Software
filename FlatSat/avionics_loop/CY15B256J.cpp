@@ -21,7 +21,7 @@
  * @brief Construct a new CY15B256J::CY15B256J object
  *
  */
-CY15B256J::CY15B256J(void) { _framInitialized = false; }
+CY15B256J::CY15B256J():  _framInitialized{false} {}
 
 /**
  * @brief Sets up the hardware and initializes I2C
@@ -87,6 +87,6 @@ void CY15B256J::getDeviceID(uint16_t *manufacturerID,
   /* See p.11 of
    * https://www.infineon.com/dgdl/Infineon-CY15B256J_256_Kbit_%2832K_8%29_Automotive_Serial_%28I2C%29_F_RAM-DataSheet-v10_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0ecf69af49d8&utm_source=cypress&utm_medium=referral&utm_campaign=202110_globe_en_all_integration-datasheet
    */
-  *manufacturerID = (buff[0] << 4) + (buff[1] >> 4);
-  *productID = ((buff[1] & 0x0F) << 8) + buff[2];
+  *manufacturerID = static_cast<u_int16_t>((buff[0] << 4) | (buff[1] >> 4));
+  *productID = static_cast<u_int16_t>(((buff[1] & 0x0F) << 8) | buff[2]);
 }

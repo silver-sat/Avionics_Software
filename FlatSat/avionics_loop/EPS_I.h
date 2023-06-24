@@ -6,7 +6,7 @@
  * @date 2022-10-23
  *
  * This file declares the class that interfaces with the EPS-I
- * 
+ *
  * Values and notes are from Endurosat Electrical Power System EPS I and EPS I Plus User Manual Version 5.1 August 2022
  *
  */
@@ -20,13 +20,13 @@
  *
  */
 // todo: consider changing case of constants
-constexpr uint8_t EPS_I_I2C_ADDRESS{0x18};                                                 /**< I2C address of EPS-I */
-constexpr float GETBATTERYINFO_BATTERY_BATT_VOLT_COEFFICIENT{0.0023394775};                /**< Battery voltage coefficient */
-constexpr float GETBATTERYINFO_BATTERY_BATT_CURR_COEFFICIENT{0.0030517578};                /**< Battery current coefficient */
-constexpr float GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE{0.00390625}; /**< Battery temperature coefficient positive */
-constexpr float GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE{-0.0624};    /**< Battery temperature coefficient negative */
-constexpr float GETSOLARPANELSINFO_SOLAR_Z_CURR_NEG_COEFFICIENT{0.0006103516};             /**< Solar Z current coefficient negative */
-constexpr float GETBUSESINFO_BUSES_BUS_5V_CURR_COEFFICIENT{0.0020345052};                  /**< Bus 5 volt current coefficient */
+constexpr uint8_t EPS_I_I2C_ADDRESS{0x18};                                                  /**< I2C address of EPS-I */
+constexpr float GETBATTERYINFO_BATTERY_BATT_VOLT_COEFFICIENT{0.0023394775f};                /**< Battery voltage coefficient */
+constexpr float GETBATTERYINFO_BATTERY_BATT_CURR_COEFFICIENT{0.0030517578f};                /**< Battery current coefficient */
+constexpr float GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE{0.00390625f}; /**< Battery temperature coefficient positive */
+constexpr float GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE{-0.0624f};    /**< Battery temperature coefficient negative */
+constexpr float GETSOLARPANELSINFO_SOLAR_Z_CURR_NEG_COEFFICIENT{0.0006103516f};             /**< Solar Z current coefficient negative */
+constexpr float GETBUSESINFO_BUSES_BUS_5V_CURR_COEFFICIENT{0.0020345052f};                  /**< Bus 5 volt current coefficient */
 
 /**
  * @brief Read commands
@@ -951,7 +951,6 @@ class EPS_I final
 {
 
 public:
-
   /**
    * @brief Set up the hardware and initialize I2C
    *

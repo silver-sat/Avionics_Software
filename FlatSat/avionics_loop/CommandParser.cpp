@@ -48,7 +48,7 @@ void hex2bin(const char *src, byte *target)
 {
     while (*src && src[1])
     {
-        *(target++) = (char2int(*src) << 4) + char2int(src[1]);
+        *(target++) = static_cast<byte>((char2int(*src) << 4) | char2int(src[1]));
         src += 2;
     }
 }
@@ -95,7 +95,9 @@ bool CommandParser::validate_signature(String &buffer, String &command_string, c
         size_t part_start_index{0};
         for (size_t buffer_part_index = 0; buffer_part_index < buffer_part_limit; ++buffer_part_index)
         {
-            auto part_end_index = buffer.indexOf(command_message_separator, part_start_index);
+            // todo: handle incorrect number of command parts (wrong number of separators)
+            int part_end_index = buffer.indexOf(command_message_separator, part_start_index);
+            // todo: indexOf() could return -1
             buffer_parts[buffer_part_index] = buffer.substring(part_start_index, part_end_index);
             part_start_index = ++part_end_index;
         }

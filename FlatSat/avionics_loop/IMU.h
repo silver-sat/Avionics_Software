@@ -34,6 +34,7 @@ constexpr float z_calibration{-0.0058F};
 class IMU final
 {
 public:
+
     /**
      * @brief Initialize inertial management unit
      *
