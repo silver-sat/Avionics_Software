@@ -12,10 +12,15 @@ import digitalio
 import usb_cdc
 import time
 
-# Digital i/o lines
+# Convert digital i/o lines state to LOW/HIGH
 
 LOW = False
 HIGH = True
+
+def pin_state(value):
+    if value:
+        return "HIGH"
+    return "LOW"
 
 # Photo is low, communications is high
 states_a = digitalio.DigitalInOut(board.D0)
@@ -88,9 +93,9 @@ start_time = time.monotonic()
 stop_time = 0.0
 
 print("Starting Payload Board simulator")
-print(
-    "Press n for normal operation; 1, 3, 5, 7, or 9 for specific cycle time in minutes; t for timeout, o for overcurrent"
-)
+# print("Press n for normal operation")
+# print("Press 1, 3, 5, 7, or 9 for specific cycle time in minutes")
+# print("Press t for timeout, o for overcurrent")
 
 while True:
     #  Read console and process control signals
@@ -142,10 +147,16 @@ while True:
 
     # Check for power on transition
 
-    if (payload_on_a.value + payload_on_b.value + payload_on_c.value) < 2:
+    on_a = payload_on_a.value
+    on_b = payload_on_b.value
+    on_c = payload_on_c.value
+    if (on_a + on_b + on_c) < 2:
         if power_state != power_on:
+            print(f"payload_on_a: {pin_state(on_a)}")
+            print(f"payload_on_b: {pin_state(on_b)}")
+            print(f"payload_on_c: {pin_state(on_c)}")
             start_time = time.monotonic()
-            print(f"Power is on")
+            print(f"Power is on\n")
             power_state = power_on
             simulator_state = simulator_startup
             state_transition = True
@@ -154,8 +165,11 @@ while True:
 
     else:
         if power_state != power_off:
+            print(f"payload_on_a: {pin_state(on_a)}")
+            print(f"payload_on_b: {pin_state(on_b)}")
+            print(f"payload_on_c: {pin_state(on_c)}")
             stop_time = time.monotonic()
-            print(f"Power is off, duration {stop_time - start_time}")
+            print(f"Power is off, duration {stop_time - start_time}\n")
             power_state = power_off
             simulator_state = simulator_off
 
@@ -177,9 +191,15 @@ while True:
         if state_transition:
             print("Running")
             if (states_a.value + states_b.value + states_c.value) < 2:
+                print(f"states_a: {pin_state(states_a.value)}")
+                print(f"states_b: {pin_state(states_b.value)}")
+                print(f"states_c: {pin_state(states_c.value)}")
                 print("Photo mode")
                 timer_end = time.monotonic() + max(0, photo_time - startup_delay)
             else:
+                print(f"states_a: {pin_state(states_a.value)}")
+                print(f"states_b: {pin_state(states_b.value)}")
+                print(f"states_c: {pin_state(states_c.value)}")
                 print("Communications mode")
                 timer_end = time.monotonic() + max(
                     0, communications_time - startup_delay
