@@ -35,6 +35,8 @@ class IMU final
 {
 public:
 
+    IMU() = default;
+
     /**
      * @brief Initialize inertial management unit
      *
@@ -79,9 +81,9 @@ private:
     bool refresh_data();
 
     Adafruit_MPU6050 m_mpu{};
-    sensors_event_t m_a;
-    sensors_event_t m_g;
-    sensors_event_t m_temp;
+    sensors_event_t m_a{};
+    sensors_event_t m_g{};
+    sensors_event_t m_temp{};
     CircularBuffer<sensors_event_t, buffer_size> m_data_buffer{};
     float m_x_total{x_calibration * static_cast<float>(buffer_size)}; // buffer initially filled with calibration constants
     float m_y_total{y_calibration * static_cast<float>(buffer_size)};
