@@ -35,8 +35,6 @@ class IMU final
 {
 public:
 
-    IMU() = default;
-
     /**
      * @brief Initialize inertial management unit
      *
