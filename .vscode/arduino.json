@@ -1,0 +1,5 @@
+{
+    "configuration": "opt=small,usbstack=arduino,debug=off",
+    "board": "adafruit:samd:adafruit_metro_m0",
+    "sketch": "FlatSat\\avionics_loop\\avionics_loop.ino"
+}
