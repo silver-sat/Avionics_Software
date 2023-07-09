@@ -98,7 +98,7 @@ bool CommandProcessor::check_for_command()
                 case CURRENT_RSSI:
                     response = {Response{"RCR " + radio_data}};
                     break;
-                case SWEEP_TRANMSMITTER:
+                case SWEEP_TRANSMITTER:
                     response = {Response{"RST " + radio_data}};
                     break;
                 case SWEEP_RECEIVER:

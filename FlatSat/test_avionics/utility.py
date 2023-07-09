@@ -17,7 +17,7 @@ import hmac
 import time
 
 ## port for log output
-LOG_PORT = "/dev/tty.usbmodem1301"
+LOG_PORT = "/dev/tty.usbmodem11101"
 ## port for command input and output
 COMMAND_PORT = "/dev/tty.usbserial-A10MHKWZ"
 ## Payload Board port

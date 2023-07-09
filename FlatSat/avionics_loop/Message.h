@@ -43,7 +43,7 @@ public:
         transmit_cw = TRANSMIT_CW,
         background_rssi = BACKGROUND_RSSI,
         current_rssi = CURRENT_RSSI,
-        sweep_tranmitter = SWEEP_TRANMSMITTER,
+        sweep_tranmitter = SWEEP_TRANSMITTER,
         sweep_receiver = SWEEP_RECEIVER,
         query_register = QUERY_REGISTER,
     };
