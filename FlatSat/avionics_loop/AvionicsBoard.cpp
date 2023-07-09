@@ -151,7 +151,7 @@ bool AvionicsBoard::set_beacon_interval(const int seconds)
     return false;
   }
   m_last_beacon_time = millis(); // set beacon start to present time
-  m_beacon_interval = seconds * seconds_to_milliseconds;
+  m_beacon_interval = static_cast<unsigned long>(seconds) * seconds_to_milliseconds;
   return true;
 }
 
@@ -411,7 +411,7 @@ bool AvionicsBoard::busswitch_enable()
 
 String AvionicsBoard::read_fram(const size_t address)
 {
-  return String(m_fram.read(address));
+  return String(m_fram.read(static_cast<uint16_t>(address)));
 }
 
 /**

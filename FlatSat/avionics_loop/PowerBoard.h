@@ -33,7 +33,7 @@ public:
      *
      */
 
-    const PowerBeacon get_status();
+    PowerBeacon get_status();
 
     /**
      * @brief Check for adequate power for payload activity

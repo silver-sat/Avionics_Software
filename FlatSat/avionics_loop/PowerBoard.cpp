@@ -14,10 +14,10 @@
 
 // Raw battery voltage cutoffs for beacon character and payload session power
 
-constexpr float battery_excellent{3.8};
-constexpr float battery_good{3.7};
-constexpr float battery_fair{3.6};
-constexpr float payload_session_minimum{3.65};
+constexpr float battery_excellent{3.8f};
+constexpr float battery_good{3.7f};
+constexpr float battery_fair{3.6f};
+constexpr float payload_session_minimum{3.65f};
 
 /**
  * @brief Initialize the Power Board
@@ -49,7 +49,7 @@ bool PowerBoard::begin()
  * @return PowerBeacon Power Board status
  */
 
-const PowerBeacon PowerBoard::get_status()
+PowerBeacon PowerBoard::get_status()
 {
     auto battery_voltage{m_eps_i.getBatteryVoltage()};
     if (battery_voltage > battery_excellent)

@@ -11,7 +11,17 @@
 
 #pragma once
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wshadow"
+#pragma GCC diagnostic ignored "-Wunused"
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wdeprecated-copy"
 #include <Arduino.h>
+#pragma GCC diagnostic pop
 
 // todo: consider changing case of constants
 
@@ -91,7 +101,7 @@ constexpr byte ADJUST_FREQUENCY{'\x0D'};   /**< temporarily change radio frequen
 constexpr byte TRANSMIT_CW{'\x17'};        /**< transmit carrier wave */
 constexpr byte BACKGROUND_RSSI{'\x18'};    /**< get background RSSI */
 constexpr byte CURRENT_RSSI{'\x19'};       /**< get current RSSI */
-constexpr byte SWEEP_TRANMSMITTER{'\x1A'}; /**< sweep transmitter */
+constexpr byte SWEEP_TRANSMITTER{'\x1A'}; /**< sweep transmitter */
 constexpr byte SWEEP_RECEIVER{'\x1B'};     /**< sweep transmitter */
 constexpr byte QUERY_REGISTER{'\x1C'};     /**< query radio register */
 

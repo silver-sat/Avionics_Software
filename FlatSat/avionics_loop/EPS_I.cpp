@@ -87,7 +87,7 @@ float EPS_I::getTemperatureSensor1(void)
   if (value < 0x8000U)
     temperature = static_cast<float>(value) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE;
   else
-    temperature = (((value >> 4) - 1) ^ 0xFFFF) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE;
+    temperature = static_cast<float>((((value >> 4) - 1) ^ 0xFFFF)) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE;
   Log.verboseln("Temperature Sensor 1 is %F deg C", temperature);
   return temperature;
 }
@@ -106,7 +106,7 @@ float EPS_I::getTemperatureSensor2(void)
   if (value < 0x8000U)
     temperature = static_cast<float>(value) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE;
   else
-    temperature = (((value >> 4) - 1) ^ 0xFFFF) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE;
+    temperature = static_cast<float>((((value >> 4) - 1) ^ 0xFFFF)) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE;
   Log.verboseln("Temperature Sensor 2 is %F deg C", temperature);
   return temperature;
 }
@@ -125,7 +125,7 @@ float EPS_I::getTemperatureSensor3(void)
   if (value < 0x8000U)
     temperature = static_cast<float>(value) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE;
   else
-    temperature = (((value >> 4) - 1) ^ 0xFFFF) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE;
+    temperature = static_cast<float>((((value >> 4) - 1) ^ 0xFFFF)) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE;
   Log.verboseln("Temperature Sensor 3 is %F deg C", temperature);
   return temperature;
 }
@@ -221,7 +221,7 @@ uint16_t EPS_I::read_value(EPS_I_Read_Command command)
   uint16_t value;
   uint8_t command_byte{static_cast<uint8_t>(command)};
   m_i2c_dev.write_then_read(&command_byte, 1, return_buffer, 2, false);
-  value = return_buffer[1] | (return_buffer[0] << 8);
+  value = static_cast<u_int16_t>(return_buffer[1] | (return_buffer[0] << 8));
   return value;
 }
 

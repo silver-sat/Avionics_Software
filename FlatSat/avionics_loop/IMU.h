@@ -14,7 +14,17 @@
 
 #pragma once
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wshadow"
+#pragma GCC diagnostic ignored "-Wunused"
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wdeprecated-copy"
 #include <Adafruit_MPU6050.h>
+#pragma GCC diagnostic pop
 #include <CircularBuffer.h>
 
 constexpr unsigned IMU_I2C_ADDRESS{0x68}; /**< inertial measurement unit I2C address @hideinitializer */
@@ -34,6 +44,7 @@ constexpr float z_calibration{-0.0058F};
 class IMU final
 {
 public:
+
     /**
      * @brief Initialize inertial management unit
      *
@@ -78,9 +89,9 @@ private:
     bool refresh_data();
 
     Adafruit_MPU6050 m_mpu{};
-    sensors_event_t m_a;
-    sensors_event_t m_g;
-    sensors_event_t m_temp;
+    sensors_event_t m_a{};
+    sensors_event_t m_g{};
+    sensors_event_t m_temp{};
     CircularBuffer<sensors_event_t, buffer_size> m_data_buffer{};
     float m_x_total{x_calibration * static_cast<float>(buffer_size)}; // buffer initially filled with calibration constants
     float m_y_total{y_calibration * static_cast<float>(buffer_size)};
