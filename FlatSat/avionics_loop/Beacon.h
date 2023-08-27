@@ -103,7 +103,7 @@ public:
      */
 
     Beacon(const PowerBeacon power_beacon, const AvionicsBeacon avionics_beacon, const PayloadBeacon payload_beacon)
-        : Message{beacon, " " + convert_power_beacon(power_beacon) + convert_avionics_status(avionics_beacon) + convert_payload_status(payload_beacon)}
+        : Message{beacon, convert_power_beacon(power_beacon) + convert_avionics_status(avionics_beacon) + convert_payload_status(payload_beacon)}
     {
     }
 
