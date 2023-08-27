@@ -82,23 +82,27 @@ bool Antenna::deploy()
 
     // Notify Radio Board to deploy antenna via DigitalIO mode A
 
-    Log.errorln("Antenna door(s) not open; issuing Radio Board command to deploy via DigitalIO mode A");
-    Message message{Message::antenna_release, "A"};
-    antenna_timer_start = millis();
-    while ((millis() - antenna_timer_start) < antenna_delay)
-        avionics.trigger_watchdog();
-    if (check())
-        return true;
+    // todo: implement antenna recovery mode A
+
+    // Log.errorln("Antenna door(s) not open; issuing Radio Board command to deploy via DigitalIO mode A");
+    // Message message{Message::antenna_release, "A"};
+    // antenna_timer_start = millis();
+    // while ((millis() - antenna_timer_start) < antenna_delay)
+    //     avionics.trigger_watchdog();
+    // if (check())
+    //     return true;
 
     // Notify Radio Board to deploy antenna via DigitalIO mode B
 
-    Log.errorln("Antenna door(s) not open; issuing Radio Board command to deploy via DigitalIO mode B");
-    message = Message{Message::antenna_release, "B"};
-    antenna_timer_start = millis();
-    while ((millis() - antenna_timer_start) < antenna_delay)
-        avionics.trigger_watchdog();
-    if (check())
-        return true;
+    // todo: implement antenna recovery mode B
+
+    // Log.errorln("Antenna door(s) not open; issuing Radio Board command to deploy via DigitalIO mode B");
+    // message = Message{Message::antenna_release, "B"};
+    // antenna_timer_start = millis();
+    // while ((millis() - antenna_timer_start) < antenna_delay)
+    //     avionics.trigger_watchdog();
+    // if (check())
+    //     return true;
 
     // Unable to open all doors, attempt to continue
 

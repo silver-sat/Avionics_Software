@@ -44,22 +44,6 @@ bool RadioBoard::begin()
     Log.verboseln("Command port initialized");
     Serial1.write(FEND); // send initial sync to recover from incomplete message after board reset
     Serial1.write(FEND);
-    return true;
-}
-
-/**
- * @brief Local command to deploy antenna
- *
- * @return true successful
- * @return false error
- *
- */
-
-bool RadioBoard::deploy_antenna()
-{
-    Log.traceln("Sending local command: deploy antenna");
-    Serial1.write(FEND);
-    Serial1.write(DIGITALIO_RELEASE);
     Serial1.write(FEND);
     return true;
 }

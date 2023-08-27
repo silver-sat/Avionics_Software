@@ -39,13 +39,6 @@ public:
     bool begin();
 
     /**
-     * @brief Notify radio board to deploy antenna via DigitalIO
-     *
-     */
-
-    bool deploy_antenna();
-
-    /**
      * @brief Assemble command or response from Serial1 port
      *
      */

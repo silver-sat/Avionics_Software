@@ -17,11 +17,11 @@ import hmac
 import time
 
 ## port for log output
-LOG_PORT = "/dev/tty.usbmodem11101"
+# LOG_PORT = "/dev/tty.usbmodem11101"
 ## port for command input and output
-COMMAND_PORT = "/dev/tty.usbserial-A10MHKWZ"
+COMMAND_PORT = "/dev/tty.usbserial-ABSCDZPS"
 ## Payload Board port
-PAYLOAD_PORT = "/dev/tty.usbmodem11101"
+# PAYLOAD_PORT = "/dev/tty.usbmodem11101"
 ## serial transmission speed
 BAUDRATE = 57600
 ## default timeout for readline
@@ -56,9 +56,9 @@ Entry = namedtuple("Entry", ["timestamp", "level", "detail"])
 ## serial port for commands and responses
 command_port = serial.Serial(COMMAND_PORT, BAUDRATE, timeout=TIMEOUT)
 ## serial port for logging
-log_port = serial.Serial(LOG_PORT, BAUDRATE, timeout=TIMEOUT)
+# log_port = serial.Serial(LOG_PORT, BAUDRATE, timeout=TIMEOUT)
 ## serial port for payload simulator control
-payload_port = serial.Serial(PAYLOAD_PORT, BAUDRATE, timeout=TIMEOUT)
+# payload_port = serial.Serial(PAYLOAD_PORT, BAUDRATE, timeout=TIMEOUT)
 ## maximum read length
 read_length = 256
 ## timestamp pattern
