@@ -22,7 +22,7 @@
 
 bool EPS_I::begin()
 {
-  if (m_i2c_dev.begin(false))
+  if (m_i2c_dev.begin())
   {
     return _init();
   }
