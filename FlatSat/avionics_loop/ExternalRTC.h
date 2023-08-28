@@ -62,7 +62,7 @@ public:
      *
      */
 
-    // todo: consider removing from flight software bool unset_clock();
+    // todo: consider removing from flight software or adding hardware reset
 
     bool unset_clock();
 

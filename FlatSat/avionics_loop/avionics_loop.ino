@@ -197,6 +197,8 @@ void loop()
 
   // Determine stability
 
+  // todo: consider checking on longer interval
+
   avionics.get_stability();
 
 #ifdef INSTRUMENTATION
