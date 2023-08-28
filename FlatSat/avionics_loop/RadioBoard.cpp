@@ -42,9 +42,8 @@ bool RadioBoard::begin()
         avionics.trigger_watchdog();
     }
     Log.verboseln("Command port initialized");
-    Serial1.write(FEND); // send initial sync to recover from incomplete message after board reset
-    Serial1.write(FEND);
-    Serial1.write(FEND);
+    Serial1.write(FESC);
+    Serial1.write(FESC);
     return true;
 }
 
