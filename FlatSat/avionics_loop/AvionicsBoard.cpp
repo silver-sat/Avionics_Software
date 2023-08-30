@@ -15,9 +15,6 @@
 #include "PowerBoard.h"
 #include "RadioBoard.h"
 #include "PayloadBoard.h"
-#include <Adafruit_SleepyDog.h>
-
-constexpr int internal_watchdog_interval{2 * seconds_to_milliseconds}; /**< internal watchdog interval **/
 
 /**
  * @brief Initialize the Avionics Board
@@ -28,16 +25,6 @@ constexpr int internal_watchdog_interval{2 * seconds_to_milliseconds}; /**< inte
 
 bool AvionicsBoard::begin()
 {
-
-  // Internal watchdog timer
-  //
-  // Only required for internal watchdog
-  // todo: consider adding window if internal watchdog is required
-
-  Log.traceln("Initializing internal watchdog timer");
-  auto interval{Watchdog.enable(internal_watchdog_interval)};
-  Log.verboseln("Watchdog interval: %dms", interval);
-  Log.traceln("Internal watchdog timer initialized");
 
   // Critical I2C
 
@@ -99,8 +86,6 @@ void AvionicsBoard::watchdog_force_reset()
 {
   Log.fatalln("Forcing watchdog reset");
   m_external_watchdog.set_force_reset();
-  Watchdog.disable();
-  Watchdog.enable(0);
 }
 
 /**
@@ -379,13 +364,11 @@ String AvionicsBoard::get_beacon_interval()
 /**
  * @brief Trigger the watchdog
  *
- * todo: remove either external or internal watchdog, including .h and .cpp files and includes as required
  */
 
 void AvionicsBoard::trigger_watchdog()
 {
   m_external_watchdog.trigger();
-  Watchdog.reset();
 }
 
 /**

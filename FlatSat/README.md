@@ -19,7 +19,7 @@ The local messages which Avionics sends to the Radio Board, the ground commands 
 The Avionics Board connects to the Radio Board via the Serial1 interface. It connects to the realtime clock via the critical I2C connection. The Avionics Board connects to the IMU, the FRAM, the antenna, and the Power Board via a second I2C connection. Accessing the antenna and the Power Board require activation of an I2C switch. The Avionics Board connects to the Payload Board via digital IO lines.
 
 ### Libraries
-The "FlatSat" folder includes an interface to the Arduino log library, which can be used to log status information on the Radio Board Serial interface. Adafruit libaries are used to support the internal watchdog, I2C devices, the MPU6050, the FRAM, the real time clock,  The Arduino Crypto library is used to support command signing.
+The "FlatSat" folder includes an interface to the Arduino log library, which can be used to log status information on the Radio Board Serial interface. Adafruit libaries are used to support the I2C devices, the MPU6050, the FRAM, the real time clock,  The Arduino Crypto library is used to support command signing.
 
 ### Setup
 Signed commands require that the Avionics Board and the ground share a secret. This secret is defined as a sixteen-byte array. 

@@ -14,8 +14,7 @@
  * This is the setup and process loop for the SilverSat Avionics Board.
  *
  * The on-board devices are implemented as classes interfacing to real hardware and include an external watchdog timer, external realtime clock, inertial measurement
- * unit, and FRAM. The board also includes serial ports, I2C buses, and a SAMD21 processor. The SAMD21 internal watchdog timer is defined and activated as a backup
- * in the event hardware for the external timer is not available.
+ * unit, and FRAM. The board also includes serial ports, I2C buses, and a SAMD21 processor. The SAMD21 internal watchdog timer is not used.
  *
  * The other boards: Power, Radio, and Payload, are represented as classes which provide interfaces to encapsulate their functions.
  *
@@ -106,7 +105,7 @@ void setup()
 
   Serial.begin(serial_baud_rate);
   while (!Serial)
-    avionics.trigger_watchdog(); // OK to trigger the internal watchdog before initialization
+    avionics.trigger_watchdog(); // trigger the watchdog while waiting for the serial port
   Log.setPrefix(printPrefix);
   Log.setSuffix(printSuffix);
   Log.begin(LOG_LEVEL_VERBOSE, &Serial);
