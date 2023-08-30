@@ -258,126 +258,138 @@ bool PayloadBoard::get_payload_active() const
 }
 
 /**
- * @brief Duration buckets for Payload Board beacon
- *
- */
-
-enum class DurationBuckets
-{
-    bucket_0_2,   /**< 2 minutes or less */
-    bucket_2_4,   /**< 2 to 4 minutes*/
-    bucket_4_6,   /**< 4 to 6 minutes*/
-    bucket_6_8,   /**< 6 to 8 minutes */
-    bucket_8_10,  /** 8 to 10 minutes */
-    bucket_error, /** error condition */
-};
-
-DurationBuckets get_bucket(unsigned long duration)
-{
-    double minutes{static_cast<double>(duration) / static_cast<double>(seconds_to_milliseconds) / static_cast<double>(minutes_to_seconds)};
-    if (minutes <= 2.0)
-        return DurationBuckets::bucket_0_2;
-    if (minutes <= 4.0)
-        return DurationBuckets::bucket_2_4;
-    if (minutes <= 6.0)
-        return DurationBuckets::bucket_4_6;
-    if (minutes <= 8.0)
-        return DurationBuckets::bucket_6_8;
-    if (minutes <= 10.0)
-        return DurationBuckets::bucket_8_10;
-    return DurationBuckets::bucket_error;
-}
-
-/**
  * @brief Get status for beacon
  *
  */
 
 PayloadBeacon PayloadBoard::get_status()
 {
-    // check for no payload activity
-    if (m_last_payload_activity == LastPayloadActivity::none)
+    const int duration_bucket{static_cast<int>(m_last_payload_duration / seconds_to_milliseconds / minutes_to_seconds)};
+
+    switch (m_last_payload_activity)
+    {
+
+    // no payload activity
+    case LastPayloadActivity::none:
     {
         Log.verboseln("No payload activity has occurred");
         return PayloadBeacon::none;
     }
-    // check for communications session
-    if (m_last_payload_activity == LastPayloadActivity::communicate)
+
+    // communications session
+    case LastPayloadActivity::communicate:
     {
         if (m_timeout_occurred)
         {
-            Log.errorln("Timeout during last communications session");
+            Log.errorln("Timeout during previous activity (communications)");
             return PayloadBeacon::communicate_timeout;
         }
         else
         {
-            Log.verboseln("Last communications session lasted %u milliseconds", m_last_payload_duration);
-            switch (get_bucket(m_last_payload_duration))
+            Log.verboseln("Previous activity (communications) lasted %u milliseconds (duration bucket %d)", m_last_payload_duration, duration_bucket);
+            switch (duration_bucket)
             {
-            case DurationBuckets::bucket_0_2:
-                return PayloadBeacon::communicate_0_2;
-            case DurationBuckets::bucket_2_4:
-                return PayloadBeacon::communicate_2_4;
-            case DurationBuckets::bucket_4_6:
-                return PayloadBeacon::communicate_4_6;
-            case DurationBuckets::bucket_6_8:
-                return PayloadBeacon::communicate_6_8;
-            case DurationBuckets::bucket_8_10:
-                return PayloadBeacon::communicate_8_10;
+            case 0:
+                return PayloadBeacon::communicate_0_1;
+            case 1:
+                return PayloadBeacon::communicate_1_2;
+            case 2:
+                return PayloadBeacon::communicate_2_3;
+            case 3:
+                return PayloadBeacon::communicate_3_4;
+            case 4:
+                return PayloadBeacon::communicate_4_5;
+            case 5:
+                return PayloadBeacon::communicate_5_6;
+            case 6:
+                return PayloadBeacon::communicate_6_7;
+            case 7:
+                return PayloadBeacon::communicate_7_8;
+            case 8:
+                return PayloadBeacon::communicate_8_9;
+            case 9:
+                return PayloadBeacon::communicate_9_10;
             default:
                 return PayloadBeacon::unknown;
             }
         }
     }
-    // check for photo session
-    if (m_last_payload_activity == LastPayloadActivity::photo)
+
+    // photo session
+    case LastPayloadActivity::photo:
     {
         if (m_timeout_occurred)
         {
-            Log.errorln("Timeout during last photo session");
+            Log.errorln("Timeout during previous activity (photo)");
             return PayloadBeacon::photo_timeout;
         }
         else
         {
-            Log.verboseln("Last photo session lasted %u milliseconds", m_last_payload_duration);
-            switch (get_bucket(m_last_payload_duration))
+            Log.verboseln("Previous activity (photo) lasted %u milliseconds (duration bucket %d)", m_last_payload_duration, duration_bucket);
+            switch (duration_bucket)
             {
-            case DurationBuckets::bucket_0_2:
-                return PayloadBeacon::photo_0_2;
-            case DurationBuckets::bucket_2_4:
-                return PayloadBeacon::photo_2_4;
-            case DurationBuckets::bucket_4_6:
-                return PayloadBeacon::photo_4_6;
-            case DurationBuckets::bucket_6_8:
-                return PayloadBeacon::photo_6_8;
-            case DurationBuckets::bucket_8_10:
-                return PayloadBeacon::photo_8_10;
+            case 0:
+                return PayloadBeacon::photo_0_1;
+            case 1:
+                return PayloadBeacon::photo_1_2;
+            case 2:
+                return PayloadBeacon::photo_2_3;
+            case 3:
+                return PayloadBeacon::photo_3_4;
+            case 4:
+                return PayloadBeacon::photo_4_5;
+            case 5:
+                return PayloadBeacon::photo_5_6;
+            case 6:
+                return PayloadBeacon::photo_6_7;
+            case 7:
+                return PayloadBeacon::photo_7_8;
+            case 8:
+                return PayloadBeacon::photo_8_9;
+            case 9:
+                return PayloadBeacon::photo_9_10;
             default:
                 return PayloadBeacon::unknown;
             }
         }
     }
-    // check for overcurrent
-    if (m_last_payload_activity == LastPayloadActivity::overcurrent)
+
+    // overcurrent
+    case LastPayloadActivity::overcurrent:
     {
-        Log.errorln("Payload overcurrent, session lasted %u milliseconds", m_last_payload_duration);
-        switch (get_bucket(m_last_payload_duration))
+        Log.errorln("Payload overcurrent during previous activity, session lasted %u milliseconds (duration bucket %d)", m_last_payload_duration, duration_bucket);
+        switch (duration_bucket)
         {
-        case DurationBuckets::bucket_0_2:
-            return PayloadBeacon::overcurrent_0_2;
-        case DurationBuckets::bucket_2_4:
-            return PayloadBeacon::overcurrent_2_4;
-        case DurationBuckets::bucket_4_6:
-            return PayloadBeacon::overcurrent_4_6;
-        case DurationBuckets::bucket_6_8:
-            return PayloadBeacon::overcurrent_6_8;
-        case DurationBuckets::bucket_8_10:
-            return PayloadBeacon::overcurrent_8_10;
+        case 0:
+            return PayloadBeacon::overcurrent_0_1;
+        case 1:
+            return PayloadBeacon::overcurrent_1_2;
+        case 2:
+            return PayloadBeacon::overcurrent_2_3;
+        case 3:
+            return PayloadBeacon::overcurrent_3_4;
+        case 4:
+            return PayloadBeacon::overcurrent_4_5;
+        case 5:
+            return PayloadBeacon::overcurrent_5_6;
+        case 6:
+            return PayloadBeacon::overcurrent_6_7;
+        case 7:
+            return PayloadBeacon::overcurrent_7_8;
+        case 8:
+            return PayloadBeacon::overcurrent_8_9;
+        case 9:
+            return PayloadBeacon::overcurrent_9_10;
         default:
             return PayloadBeacon::unknown;
         }
     }
-    // error: unknown beacon status
-    Log.errorln("Payload session beacon status error");
-    return PayloadBeacon::unknown;
+
+    // unknown beacon status
+    default:
+    {
+        Log.errorln("Payload session beacon status error");
+        return PayloadBeacon::unknown;
+    }
+    }
 }

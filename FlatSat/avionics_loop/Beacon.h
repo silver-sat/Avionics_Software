@@ -22,7 +22,7 @@
  * @brief Power Board Beacon
  *
  * see https://docs.google.com/spreadsheets/d/19ibkPfePBUwRdCt-2vd_L55o1tiCnPxzvAepbnGq8PU/edit?usp=sharing
- * 
+ *
  */
 
 enum class PowerBeacon
@@ -38,7 +38,7 @@ enum class PowerBeacon
  * @brief Avionics Board Beacon
  *
  * see: https://docs.google.com/document/d/1TTygPny-VP51_k1m2dgPnB5O26MzPzFeGfu8ND0MskU/edit?usp=sharing
- * 
+ *
  */
 
 enum class AvionicsBeacon
@@ -65,24 +65,39 @@ enum class AvionicsBeacon
 
 enum class PayloadBeacon
 {
-    communicate_0_2,
-    communicate_2_4,
-    communicate_4_6,
-    communicate_6_8,
-    communicate_8_10,
-    communicate_timeout,
-    photo_0_2,
-    photo_2_4,
-    photo_4_6,
-    photo_6_8,
-    photo_8_10,
-    photo_timeout,
-    overcurrent_0_2,
-    overcurrent_2_4,
-    overcurrent_4_6,
-    overcurrent_6_8,
-    overcurrent_8_10,
     none,
+    communicate_0_1,
+    communicate_1_2,
+    communicate_2_3,
+    communicate_3_4,
+    communicate_4_5,
+    communicate_5_6,
+    communicate_6_7,
+    communicate_7_8,
+    communicate_8_9,
+    communicate_9_10,
+    communicate_timeout,
+    photo_0_1,
+    photo_1_2,
+    photo_2_3,
+    photo_3_4,
+    photo_4_5,
+    photo_5_6,
+    photo_6_7,
+    photo_7_8,
+    photo_8_9,
+    photo_9_10,
+    photo_timeout,
+    overcurrent_0_1,
+    overcurrent_1_2,
+    overcurrent_2_3,
+    overcurrent_3_4,
+    overcurrent_4_5,
+    overcurrent_5_6,
+    overcurrent_6_7,
+    overcurrent_7_8,
+    overcurrent_8_9,
+    overcurrent_9_10,
     unknown,
 };
 
@@ -162,46 +177,76 @@ private:
     {
         switch (payload_beacon)
         {
-        case PayloadBeacon::communicate_0_2:
-            return "S";
-        case PayloadBeacon::communicate_2_4:
-            return "U";
-        case PayloadBeacon::communicate_4_6:
-            return "A";
-        case PayloadBeacon::communicate_6_8:
-            return "H";
-        case PayloadBeacon::communicate_8_10:
-            return "5";
-        case PayloadBeacon::communicate_timeout:
-            return "B";
-        case PayloadBeacon::photo_0_2:
-            return "N";
-        case PayloadBeacon::photo_2_4:
-            return "T";
-        case PayloadBeacon::photo_4_6:
-            return "I";
-        case PayloadBeacon::photo_6_8:
-            return "D";
-        case PayloadBeacon::photo_8_10:
-            return "R";
-        case PayloadBeacon::photo_timeout:
-            return "F";
-        case PayloadBeacon::overcurrent_0_2:
-            return "L";
-        case PayloadBeacon::overcurrent_2_4:
-            return "M";
-        case PayloadBeacon::overcurrent_4_6:
-            return "V";
-        case PayloadBeacon::overcurrent_6_8:
-            return "G";
-        case PayloadBeacon::overcurrent_8_10:
-            return "K";
         case PayloadBeacon::none:
             return "E";
+        case PayloadBeacon::communicate_0_1:
+            return "I";
+        case PayloadBeacon::communicate_1_2:
+            return "V";
+        case PayloadBeacon::communicate_2_3:
+            return "W";
+        case PayloadBeacon::communicate_3_4:
+            return "L";
+        case PayloadBeacon::communicate_4_5:
+            return "5";
+        case PayloadBeacon::communicate_5_6:
+            return "A";
+        case PayloadBeacon::communicate_6_7:
+            return "H";
+        case PayloadBeacon::communicate_7_8:
+            return "M";
+        case PayloadBeacon::communicate_8_9:
+            return "4";
+        case PayloadBeacon::communicate_9_10:
+            return "6";
+        case PayloadBeacon::communicate_timeout:
+            return "C";
+        case PayloadBeacon::photo_0_1:
+            return "B";
+        case PayloadBeacon::photo_1_2:
+            return "S";
+        case PayloadBeacon::photo_2_3:
+            return "T";
+        case PayloadBeacon::photo_3_4:
+            return "N";
+        case PayloadBeacon::photo_4_5:
+            return "R";
+        case PayloadBeacon::photo_5_6:
+            return "U";
+        case PayloadBeacon::photo_6_7:
+            return "D";
+        case PayloadBeacon::photo_7_8:
+            return "F";
+        case PayloadBeacon::photo_8_9:
+            return "G";
+        case PayloadBeacon::photo_9_10:
+            return "K";
+        case PayloadBeacon::photo_timeout:
+            return "O";
+        case PayloadBeacon::overcurrent_0_1:
+            return "7";
+        case PayloadBeacon::overcurrent_1_2:
+            return "X";
+        case PayloadBeacon::overcurrent_2_3:
+            return "Z";
+        case PayloadBeacon::overcurrent_3_4:
+            return "P";
+        case PayloadBeacon::overcurrent_4_5:
+            return "3";
+        case PayloadBeacon::overcurrent_5_6:
+            return "3";
+        case PayloadBeacon::overcurrent_6_7:
+            return "J";
+        case PayloadBeacon::overcurrent_7_8:
+            return "J";
+        case PayloadBeacon::overcurrent_8_9:
+            return "Q";
+        case PayloadBeacon::overcurrent_9_10:
+            return "Q";
         case PayloadBeacon::unknown:
-            return "X";
+            return "9";
         default:
-            return "X";
+            return "0";
         }
     }
 };

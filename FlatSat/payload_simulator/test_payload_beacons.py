@@ -43,6 +43,8 @@ class TestPayloadBoardBeacon:
 
     ## validate no activity beacon
     #
+    # must power cycle Avionics to clear prior Payload activity
+    #
     def test_no_activity_beacon(self):
         message = utility.collect_message_wait()
         assert utility.payload_beacon(message, "E")
@@ -51,35 +53,39 @@ class TestPayloadBoardBeacon:
     #
     def test_paycomms(self):
         # Paycomms
-        controls = {1: "S", 3: "U", 5: "A", 7: "H", 9: "5", 11: "B"}
-        for control in controls:
+        # beacon for interval less than one minute cannot occur due to startup delay, so "V", not "I" will occur first
+        #
+        letters = "VVWL5AHM46C"
+        for index, letter in enumerate(letters):
             utility.payload_control("n")
-            if control > 9:
+            if index > 9:
                 utility.payload_control("t")
             else:
-                utility.payload_control(str(control))
+                utility.payload_control(str(index))
             utility.issue(f"PayComms")
             message = utility.collect_message()
             assert utility.acknowledged_message(message)
             message = utility.collect_message()
             assert utility.response_sent(message, "PYC")
             time.sleep(
-                max(control * 60.0, payload_startup_delay + payload_shutdown_delay)
+                max(index * 60.0, payload_startup_delay + payload_shutdown_delay)
             )
             utility.clear_messages()  # discard intervening beacons
             message = utility.collect_message_wait()
-            assert utility.payload_beacon(message, controls[control])
+            assert utility.payload_beacon(message, letter)
 
     ## validate beacons for photo intervals
     def test_pictimes(self):
         # PicTimes
-        controls = {1: "N", 3: "T", 5: "I", 7: "D", 9: "R", 11: "F"}
-        for control in controls:
+        # beacon for interval less than one minute cannot occur due to startup delay, so "S", not "B" will occur first
+        #
+        letters = "SSTNRUDFGKO"
+        for index, letter in enumerate(letters):
             utility.payload_control("n")
-            if control > 9:
+            if index > 9:
                 utility.payload_control("t")
             else:
-                utility.payload_control(str(control))
+                utility.payload_control(str(index))
             start_time = time.gmtime(time.time() + 5.0)
             start_time = time.strftime("%Y %m %d %H %M %S", start_time)
             utility.issue(f"PicTimes {start_time}")
@@ -88,18 +94,21 @@ class TestPayloadBoardBeacon:
             message = utility.collect_message()
             assert utility.response_sent(message, "SPT")
             time.sleep(
-                max(control * 60.0, payload_startup_delay + payload_shutdown_delay)
+                max(index * 60.0, payload_startup_delay + payload_shutdown_delay)
             )
             utility.clear_messages()  # discard intervening beacons
             message = utility.collect_message_wait()
-            assert utility.payload_beacon(message, controls[control])
+            assert utility.payload_beacon(message, letter)
 
     ## validate beacons for overcurrent
     #
     def test_overcurrent(self):
         # Over current
-        controls = {1: "L", 3: "M", 5: "V", 7: "G", 9: "K"}
-        for control in controls:
+        # beacon for interval less than one minute cannot occur due to startup delay, so "X", not "7" will occur first
+        # duplicate letters for last three intervals, pending updated table
+        #
+        letters = "XXZP33JJQQ"
+        for index, letter in enumerate(letters):
             utility.payload_control("n")
             utility.payload_control("t")
             utility.issue(f"PayComms")
@@ -108,9 +117,9 @@ class TestPayloadBoardBeacon:
             message = utility.collect_message()
             assert utility.response_sent(message, "PYC")
             time.sleep(
-                max(control * 60.0, payload_startup_delay + payload_shutdown_delay)
+                max(index * 60.0, payload_startup_delay + payload_shutdown_delay)
             )
             utility.clear_messages()  # discard intervening beacons
             utility.payload_control("o")
             message = utility.collect_message_wait()
-            assert utility.payload_beacon(message, controls[control])
+            assert utility.payload_beacon(message, letter)

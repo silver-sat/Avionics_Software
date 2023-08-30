@@ -17,10 +17,12 @@ import time
 LOW = False
 HIGH = True
 
+
 def pin_state(value):
     if value:
         return "HIGH"
     return "LOW"
+
 
 # Photo is low, communications is high
 states_a = digitalio.DigitalInOut(board.D0)
@@ -76,12 +78,13 @@ simulator_off = 3
 simulator_unknown = 4
 
 # Default activity times in seconds
-# Must be less than corresponding values in Avionics Board software
+# Must correspond to values in PayloadBoard.cpp
 
 startup_delay = 30.0
 photo_time = 30.0
 communications_time = 60.0
 shutdown_delay = 10.0
+timeout_activity = 11.0 * 60.0
 
 # Avionics Board will turn off Payload Board at startup
 
@@ -93,9 +96,10 @@ start_time = time.monotonic()
 stop_time = 0.0
 
 print("Starting Payload Board simulator")
-# print("Press n for normal operation")
-# print("Press 1, 3, 5, 7, or 9 for specific cycle time in minutes")
-# print("Press t for timeout, o for overcurrent")
+print("Press n for normal operation")
+print("Press a digit for specific cycle time in minutes")
+print("Press t for timeout operation")
+print("Press o for overcurrent")
 
 while True:
     #  Read console and process control signals
@@ -109,38 +113,19 @@ while True:
             communications_time = 60.0
             overcurrent_pin.value = HIGH  # Over current is active low
             break
-        if control_signal == "1":
-            print("Setting 1 minute activity")
-            photo_time = 1.0 * 60.0
-            communications_time = 1.0 * 60.0
-            break
-        if control_signal == "3":
-            print("Setting 3 minute activity")
-            photo_time = 3.0 * 60.0
-            communications_time = 3.0 * 60.0
-            break
-        if control_signal == "5":
-            print("Setting 5 minute activity")
-            photo_time = 5.0 * 60.0
-            communications_time = 5.0 * 60.0
-            break
-        if control_signal == "7":
-            print("Setting 7 minute activity")
-            photo_time = 7.0 * 60.0
-            communications_time = 7.0 * 60.0
-            break
-        if control_signal == "9":
-            print("Setting 9 minute activity")
-            photo_time = 9.0 * 60.0
-            communications_time = 9.0 * 60.0
+        if control_signal in "123456789":
+            interval = int(control_signal)
+            print(f"Activity duration {interval} minute(s)")
+            photo_time = int(control_signal) * 60.0
+            communications_time = int(control_signal) * 60.0
             break
         if control_signal == "t" or control_signal == "T":
-            print("Setting timeout activity")
-            photo_time = 11.0 * 60.0
-            communications_time = 11.0 * 60.0
+            print("Setting overtime activity duration")
+            photo_time = timeout_activity
+            communications_time = timeout_activity
             break
         if control_signal == "o" or control_signal == "O":
-            print("Setting overcurrent on")
+            print("Setting overcurrent signal")
             overcurrent_pin.value = LOW  # Over current is active low
             break
         print("Invalid control signal")
