@@ -58,7 +58,7 @@ command_port = serial.Serial(COMMAND_PORT, BAUDRATE, timeout=TIMEOUT)
 ## serial port for logging
 log_port = serial.Serial(LOG_PORT, BAUDRATE, timeout=TIMEOUT)
 ## serial port for payload simulator control
-payload_port = serial.Serial(PAYLOAD_PORT, BAUDRATE, timeout=TIMEOUT)
+# payload_port = serial.Serial(PAYLOAD_PORT, BAUDRATE, timeout=TIMEOUT)
 ## maximum read length
 read_length = 256
 ## timestamp pattern
