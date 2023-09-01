@@ -27,6 +27,7 @@ constexpr float GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE{0.
 constexpr float GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE{-0.0624f};    /**< Battery temperature coefficient negative */
 constexpr float GETSOLARPANELSINFO_SOLAR_Z_CURR_NEG_COEFFICIENT{0.0006103516f};             /**< Solar Z current coefficient negative */
 constexpr float GETBUSESINFO_BUSES_BUS_5V_CURR_COEFFICIENT{0.0020345052f};                  /**< Bus 5 volt current coefficient */
+constexpr float GETBUSESINFO_BUSES_LUP_5V_VOLT_COEFFICIENT{0.0023394775f};                  /**<Bus LUP 5 volt voltage coefficient */
 
 /**
  * @brief Read commands
@@ -963,70 +964,78 @@ public:
    *
    */
 
-  float getBatteryVoltage(void);
+  float getBatteryVoltage();
 
   /**
    * @brief Get the battery current
    *
    */
 
-  float getBatteryCurrent(void);
+  float getBatteryCurrent();
 
   /**
    * @brief Get the temperature at sensor 1
    *
    */
 
-  float getTemperatureSensor1(void);
+  float getTemperatureSensor1();
 
   /**
    * @brief Get the temperature at sensor 2
    *
    */
 
-  float getTemperatureSensor2(void);
+  float getTemperatureSensor2();
 
   /**
    * @brief Get the temperature at sensor 3
    *
    */
 
-  float getTemperatureSensor3(void);
+  float getTemperatureSensor3();
 
   /**
    * @brief Get the Z negative panel current
    *
    */
 
-  float getZNegativeCurrent(void);
+  float getZNegativeCurrent();
 
   /**
    * @brief Get the 5 volt current
    *
    */
 
-  float get5VCurrent(void);
+  float get5VCurrent();
+
+  /**
+   * @brief Get the LUP 5V voltage
+   *
+   * @return float voltage
+   */
+
+  float getLUP_5VVoltage();
 
   /**
    * @brief Get the heater 1 state
    *
    */
 
-  bool getHeater1State(void);
+  bool getHeater1State();
 
   /**
    * @brief Get the heater 2 state
    *
    */
 
-  bool getHeater2State(void);
+  bool getHeater2State();
 
   /**
    * @brief Get the heater 3 state
    *
    */
 
-  bool getHeater3State(void);
+  bool getHeater3State();
 
 private:
   /**
@@ -1034,7 +1043,7 @@ private:
    *
    */
 
-  bool _init(void);
+  bool _init();
 
   /**
    * @brief Read 16 bits of data from the EPS I

@@ -75,7 +75,7 @@ class RTC_DS1337 final : RTC_I2C
 public:
     bool begin(TwoWire *wireInstance = &Wire);
     void adjust(const DateTime &dt);
-    bool lostPower(void);
+    bool lostPower();
     DateTime now();
     Ds1337SqwPinMode readSqwPinMode();
     void writeSqwPinMode(Ds1337SqwPinMode mode);
