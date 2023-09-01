@@ -85,7 +85,7 @@ bool AvionicsBoard::begin()
 void AvionicsBoard::watchdog_force_reset()
 {
   Log.fatalln("Forcing watchdog reset");
-  m_external_watchdog.set_force_reset();
+  m_external_watchdog.force_reset();
 }
 
 /**

@@ -32,7 +32,7 @@ ExternalWatchdog::ExternalWatchdog()
 
 void ExternalWatchdog::trigger()
 {
-  if (!m_force_reset && (millis() - m_last_action_time > watchdog_lower_boundary))
+  if (millis() - m_last_action_time > watchdog_lower_boundary)
   {
     digitalWrite(WDTICK, HIGH);
     digitalWrite(WDTICK, LOW);
@@ -45,7 +45,7 @@ void ExternalWatchdog::trigger()
  *
  */
 
-void ExternalWatchdog::set_force_reset()
+void ExternalWatchdog::force_reset()
 {
-  m_force_reset = true;
+  while(true); // enter spin loop
 };
