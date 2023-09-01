@@ -31,7 +31,7 @@ constexpr unsigned FRAM_I2C_ADDRESS{0x50};  /**< FRAM I2C address @hideinitializ
 class CY15B256J final : public Adafruit_EEPROM_I2C
 {
 public:
-    CY15B256J(void);
+    CY15B256J();
 
     bool begin(uint8_t addr = CY15B256J_DEFAULT_ADDRESS, TwoWire *theWire = &Wire);
     void getDeviceID(uint16_t *manufacturerID, uint16_t *productID);

@@ -37,9 +37,8 @@ bool EPS_I::begin()
  *
  */
 
-bool EPS_I::_init(void)
+bool EPS_I::_init()
 {
-  // todo: initialize EPS I here if required
   return true;
 }
 
@@ -50,7 +49,7 @@ bool EPS_I::_init(void)
  *
  */
 
-float EPS_I::getBatteryVoltage(void)
+float EPS_I::getBatteryVoltage()
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETBATTERYINFO_BATTERY_BATT_VOLT)};
   float voltage{static_cast<float>(value) * GETBATTERYINFO_BATTERY_BATT_VOLT_COEFFICIENT};
@@ -65,7 +64,7 @@ float EPS_I::getBatteryVoltage(void)
  *
  */
 
-float EPS_I::getBatteryCurrent(void)
+float EPS_I::getBatteryCurrent()
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETBATTERYINFO_BATTERY_BATT_CURR)};
   float current{static_cast<float>(value) * GETBATTERYINFO_BATTERY_BATT_CURR_COEFFICIENT};
@@ -80,7 +79,7 @@ float EPS_I::getBatteryCurrent(void)
  *
  */
 
-float EPS_I::getTemperatureSensor1(void)
+float EPS_I::getTemperatureSensor1()
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETTEMPERATURESINFO_TEMPERATURES_BATTERY0)};
   float temperature{};
@@ -99,7 +98,7 @@ float EPS_I::getTemperatureSensor1(void)
  *
  */
 
-float EPS_I::getTemperatureSensor2(void)
+float EPS_I::getTemperatureSensor2()
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETTEMPERATURESINFO_TEMPERATURES_BATTERY1)};
   float temperature{};
@@ -118,7 +117,7 @@ float EPS_I::getTemperatureSensor2(void)
  *
  */
 
-float EPS_I::getTemperatureSensor3(void)
+float EPS_I::getTemperatureSensor3()
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETTEMPERATURESINFO_TEMPERATURES_BATTERY2)};
   float temperature{};
@@ -137,7 +136,7 @@ float EPS_I::getTemperatureSensor3(void)
  *
  */
 
-float EPS_I::getZNegativeCurrent(void)
+float EPS_I::getZNegativeCurrent()
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETSOLARPANELSINFO_SOLAR_Z_CURR_NEG)};
   float current{static_cast<float>(value) * GETSOLARPANELSINFO_SOLAR_Z_CURR_NEG_COEFFICIENT};
@@ -152,12 +151,26 @@ float EPS_I::getZNegativeCurrent(void)
  *
  */
 
-float EPS_I::get5VCurrent(void)
+float EPS_I::get5VCurrent()
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETBUSESINFO_BUSES_BUS_5V_CURR)};
-  float current{static_cast<float>(value) * GETBUSESINFO_BUSES_BUS_5V_CURR_COEFFICIENT};
-  Log.verboseln("5 volt current is %F V", current);
+  float current{static_cast<float>(value) * GETBUSESINFO_BUSES_BUS_5V_CURR_COEFFICIENT * 1000.0f};
+  Log.verboseln("5 volt current is %F mA", current);
   return current;
+}
+
+/**
+ * @brief Get the LUP 5V voltage
+ * 
+ * @return float voltage
+ */
+
+float EPS_I::getLUP_5VVoltage()
+{
+  uint16_t value{read_value(EPS_I_Read_Command::GETBUSESINFO_BUSES_LUP_5V_VOLT_VOLT)};
+  float voltage{static_cast<float>(value) * GETBUSESINFO_BUSES_LUP_5V_VOLT_COEFFICIENT};
+  Log.verboseln("LUP 5 volt voltage is %F V", voltage);
+  return voltage;
 }
 
 /**
@@ -168,7 +181,7 @@ float EPS_I::get5VCurrent(void)
  *
  */
 
-bool EPS_I::getHeater1State(void)
+bool EPS_I::getHeater1State()
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETCONFIGURATIONINFO_CONFIG_OUTPUTCONDITIONS1)};
   bool state{static_cast<bool>(0x0001 & (value >> static_cast<uint8_t>(EPS_I_Output_Condition_1::Heater_1)))};
@@ -184,7 +197,7 @@ bool EPS_I::getHeater1State(void)
  *
  */
 
-bool EPS_I::getHeater2State(void)
+bool EPS_I::getHeater2State()
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETCONFIGURATIONINFO_CONFIG_OUTPUTCONDITIONS1)};
   bool state{static_cast<bool>(0x0001 & (value >> static_cast<uint8_t>(EPS_I_Output_Condition_1::Heater_2)))};
@@ -200,7 +213,7 @@ bool EPS_I::getHeater2State(void)
  *
  */
 
-bool EPS_I::getHeater3State(void)
+bool EPS_I::getHeater3State()
 {
   uint16_t value{read_value(EPS_I_Read_Command::GETCONFIGURATIONINFO_CONFIG_OUTPUTCONDITIONS1)};
   bool state{static_cast<bool>(0x0001 & (value >> static_cast<uint8_t>(EPS_I_Output_Condition_1::Heater_3)))};

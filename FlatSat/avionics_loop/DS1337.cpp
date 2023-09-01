@@ -45,7 +45,7 @@ bool RTC_DS1337::begin(TwoWire *wireInstance)
  * running
  *
  */
-bool RTC_DS1337::lostPower(void)
+bool RTC_DS1337::lostPower()
 {
   return read_register(DS1337_STATUSREG) >> 7;
 }

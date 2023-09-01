@@ -98,6 +98,7 @@ const String PowerBoard::get_detail()
            " TS1 " + String(m_eps_i.getTemperatureSensor1()) +
            " TS2 " + String(m_eps_i.getTemperatureSensor2()) +
            " 5VC " + String(m_eps_i.get5VCurrent()) +
+           " L5V " + String(m_eps_i.getLUP_5VVoltage()) +
            " H1S " + String(m_eps_i.getHeater1State()) +
            " H2S " + String(m_eps_i.getHeater2State()) +
            " H3S " + String(m_eps_i.getHeater3State());
