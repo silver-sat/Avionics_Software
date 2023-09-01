@@ -45,9 +45,8 @@ public:
    *
    */
 
-  void set_force_reset();
+  void force_reset();
 
 private:
   unsigned long m_last_action_time{0};
-  bool m_force_reset{false};
 };
