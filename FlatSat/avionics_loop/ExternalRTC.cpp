@@ -69,7 +69,7 @@ bool ExternalRTC::set_time(const DateTime &time)
     }
     else
     {
-        Log.errorln("Invalid time");
+        Log.errorln("Invalid time in set_time");
         m_rtc_is_set = false;
         return false;
     }
@@ -96,7 +96,7 @@ bool ExternalRTC::get_time(DateTime &time)
         return true;
     else
     {
-        Log.errorln("Invalid time");
+        Log.errorln("Invalid time in get_time");
         m_rtc_is_set = false;
         return false;
     }
@@ -121,7 +121,7 @@ String ExternalRTC::get_timestamp()
         return m_rtc.now().timestamp();
     else
     {
-        Log.errorln("Invalid time");
+        Log.errorln("Invalid time in get_timestamp");
         m_rtc_is_set = false;
         return "ERROR";
     }
