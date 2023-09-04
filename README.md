@@ -30,3 +30,7 @@ The "AvionicsTesting3" folder "README.md" describes the board testing capabilite
 
 ## FlatSat Testing
 The "FlatSat" folder "README.md" describes the flat sat testing capabilities of the "avionics_loop.ino" software and provides test setup instructions. The "avionics_loop.ino" sketch implements the software functions of the Avionics Board. Test routines are provided to test the ground commands received by the satellite and to test the local command interface to the Radio Board.
+
+## Flight
+
+The "Flight" folder "README.md" describes the flight software.
