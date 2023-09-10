@@ -11,6 +11,7 @@
 
 #include "AvionicsBoard.h"
 #include "log_utility.h"
+#include "I2C_ClearBus.h"
 #include "Beacon.h"
 #include "PowerBoard.h"
 #include "RadioBoard.h"
@@ -29,6 +30,25 @@ bool AvionicsBoard::begin()
   // Critical I2C
 
   Log.traceln("Initializing critical I2C bus");
+  int critical_bus_status{I2C_ClearBus(SDA_CRIT, SCL_CRIT)};
+  switch (critical_bus_status)
+  {
+  case bus_clear:
+    Log.verboseln("Critical I2C bus is clear");
+    break;
+  case SCL_low:
+    Log.verboseln("Critical I2C bus SCL line held low");
+    break;
+  case SCL_low_stretch:
+    Log.verboseln("Critical I2C bus SCL line held low by clock stretch");
+    break;
+  case SDA_low:
+    Log.verboseln("Critical I2C bus SDA line held low");
+    break;
+  default:
+    Log.verboseln("Unknown error on critical I2C bus");
+    break;
+  }
   Wire.begin();
   Log.traceln("Critical I2C bus initialization completed");
 
@@ -47,6 +67,25 @@ bool AvionicsBoard::begin()
 
   Log.traceln("Initializing non-critical I2C bus");
   busswitch_enable();
+  int non_critical_bus_status{I2C_ClearBus(SDA_NON_CRIT, SCL_NON_CRIT)};
+  switch (non_critical_bus_status)
+  {
+  case bus_clear:
+    Log.verboseln("Non-critical I2C bus is clear");
+    break;
+  case SCL_low:
+    Log.verboseln("Non-critical I2C bus SCL line held low");
+    break;
+  case SCL_low_stretch:
+    Log.verboseln("Non-critical I2C bus SCL line held low by clock stretch");
+    break;
+  case SDA_low:
+    Log.verboseln("Non-critical I2C bus SDA line held low");
+    break;
+  default:
+    Log.verboseln("Unknown error on non-critical I2C bus");
+    break;
+  }
   Wire1.begin();
   Log.traceln("Non-critical I2C bus initialization completed");
 
