@@ -420,6 +420,7 @@ void AvionicsBoard::trigger_watchdog()
 bool AvionicsBoard::busswitch_enable()
 {
   Log.verboseln("Enabling I2C bus switch");
+  pinMode(EN_EXT_I2C, OUTPUT);
   digitalWrite(EN_EXT_I2C, LOW);
   return true;
 }

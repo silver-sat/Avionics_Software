@@ -79,9 +79,16 @@ PowerBeacon PowerBoard::get_status()
 
 bool PowerBoard::power_adequate()
 {
-    // todo: restore test
-    // return m_eps_i.getBatteryVoltage() > payload_session_minimum;
-    return true;
+    if (m_eps_i.getBatteryVoltage() > payload_session_minimum)
+    {
+        return true;
+    }
+    else
+    {
+        Log.warningln("EPS-I voltage below payload session minimum");
+        // todo: restore battery voltage test
+        return true;
+    }
 }
 
 /**
