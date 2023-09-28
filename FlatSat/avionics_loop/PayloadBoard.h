@@ -100,12 +100,6 @@ private:
      */
     bool set_mode_photo();
 
-    /**
-     * @brief Evaluate power down signal
-     *
-     */
-    bool shutdown_signal_is_set() const;
-
 private:
     LastPayloadActivity m_last_payload_activity{LastPayloadActivity::none}; /**< last payload activity */
     long unsigned int m_last_payload_duration{};                            /**< duration of last payload activity */
@@ -113,6 +107,7 @@ private:
     long unsigned int m_payload_start_time{};                               /**< beginning of last payload activity from millis() */
     bool m_in_shutdown_delay{false};                                        /**< payload in shutdown delay state after setting shutdown lines */
     long unsigned int m_shutdown_start_time{};                              /**< delay for payload to complete shutdown */
+    bool m_shutdown_signal_was_set{false};                                  /**< shutdown signal was set after startup */
     bool m_timeout_occurred{false};                                         /**< true if Payload Board timeout */
     bool m_overcurrent_occurred{false};                                     /**< true if Payload Board overcurrent */
 };
