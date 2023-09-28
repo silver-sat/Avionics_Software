@@ -57,6 +57,7 @@ CommandProcessor command_processor{};
  *
  */
 
+constexpr unsigned long serial_delay{2 * seconds_to_milliseconds};
 unsigned long previous_time{};
 unsigned long duration{};
 unsigned long loop_start_time{};
@@ -104,8 +105,12 @@ void setup()
   // Initialize serial connection and log utility
 
   Serial.begin(serial_baud_rate);
-  while (!Serial)
-    avionics.trigger_watchdog(); // trigger the watchdog while waiting for the serial port
+  // trigger the watchdog while waiting for the serial port
+  unsigned long serial_delay_start{millis()};
+  while ((millis() - serial_delay_start) < serial_delay)
+  {
+    avionics.trigger_watchdog();
+  }
   Log.setPrefix(printPrefix);
   Log.setSuffix(printSuffix);
   Log.begin(LOG_LEVEL_VERBOSE, &Serial);
