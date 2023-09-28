@@ -80,10 +80,10 @@ simulator_unknown = 4
 # Default activity times in seconds
 # Must correspond to values in PayloadBoard.cpp
 
-startup_delay = 30.0
+startup_delay = 90.0
 photo_time = 30.0
 communications_time = 60.0
-shutdown_delay = 10.0
+shutdown_delay = 15.0
 timeout_activity = 11.0 * 60.0
 
 # Avionics Board will turn off Payload Board at startup
@@ -204,4 +204,7 @@ while True:
             state_transition = False
         if time.monotonic() >= timer_end:
             print("Shutdown complete")
+            shutdown_a.value = LOW
+            shutdown_b.value = LOW
+            shutdown_c.value = LOW
             simulator_state = simulator_off

@@ -113,8 +113,16 @@ bool PayloadBoard::communicate()
 
 bool PayloadBoard::check_shutdown()
 {
-    // wait for startup delay, then check shutdown signal
-    if (m_payload_active && (millis() - m_payload_start_time > startup_delay) && shutdown_signal_is_set())
+    // check shutdown signal after startup delay
+    if (m_payload_active && (millis() - m_payload_start_time > startup_delay))
+    {
+        auto shutdown_a{digitalRead(SHUTDOWN_A)};
+        auto shutdown_b{digitalRead(SHUTDOWN_B)};
+        auto shutdown_c{digitalRead(SHUTDOWN_C)};
+        m_shutdown_signal_was_set = m_shutdown_signal_was_set || (shutdown_a + shutdown_b + shutdown_c >= 2);
+    }
+    // if shutdown signal received, shutdown payload after shutdown delay
+    if (m_shutdown_signal_was_set)
     {
         if (m_in_shutdown_delay)
         {
@@ -165,6 +173,7 @@ bool PayloadBoard::power_down()
     digitalWrite(PLD_ON_B_INT, HIGH);
     digitalWrite(PLD_ON_C_INT, HIGH);
     m_payload_active = false;
+    m_shutdown_signal_was_set = false;
     m_in_shutdown_delay = false;
     m_last_payload_duration = millis() - m_payload_start_time;
     Log.verboseln("Payload power off");
@@ -226,22 +235,6 @@ bool PayloadBoard::set_mode_photo()
     m_last_payload_activity = LastPayloadActivity::photo;
     Log.verboseln("Payload mode set to photo");
     return true;
-}
-
-/**
- * @brief Check Payload Board shutdown signal
- *
- * @return true successful
- * @return false error
- *
- */
-
-bool PayloadBoard::shutdown_signal_is_set() const
-{
-    auto shutdown_a = digitalRead(SHUTDOWN_A);
-    auto shutdown_b = digitalRead(SHUTDOWN_B);
-    auto shutdown_c = digitalRead(SHUTDOWN_C);
-    return (shutdown_a + shutdown_b + shutdown_c) >= 2;
 }
 
 /**
