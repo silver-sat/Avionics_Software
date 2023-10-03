@@ -104,11 +104,11 @@ while True:
 
     time.sleep(10)
 
-    print("Setting photo mode")
+    print("Setting communications mode")
 
-    states_a.value = LOW
-    states_b.value = LOW
-    states_c.value = LOW
+    states_a.value = HIGH
+    states_b.value = HIGH
+    states_c.value = HIGH
 
     print("Powering up payload simulator")
 
