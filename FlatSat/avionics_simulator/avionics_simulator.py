@@ -13,64 +13,64 @@ import usb_cdc
 
 ## KISS special characters
 
-FEND = b"\xC0"  # frame end
-FESC = b"\xDB"  # frame escape
-TFEND = b"\xDC"  # transposed frame end
-TFESC = b"\xDD"  # transposed frame escape
+FEND = b'\xC0'  # frame end
+FESC = b'\xDB'  # frame escape
+TFEND = b'\xDC'  # transposed frame end
+TFESC = b'\xDD'  # transposed frame escape
 
 ## KISS frame types
 
-LOCAL_FRAME = b"\x00"
-REMOTE_FRAME = b"\xAA"
-BEACON = b"\x07"
-DIGITALIO_RELEASE = b"\x08"
-STATUS = b"\x09"
-HALT = b"\x0a"
-MODIFY_FREQ = b"\x0B"
-MODIFY_MODE = b"\x0C"
-ADJUST_FREQ = b"\x0D"
-TRANSMIT_CARRIER = b"\x17"
-BACKGROUND_RSSI = b"\x18"
-CURRENT_RSSI = b"\x19"
-SWEEP_TRANSMITTER = b"\x1A"
-SWEEP_RECEIVER = b"\x1B"
-QUERY_REGISTER = b"\x1C"
-RADIO_PING = b"\x33"
+LOCAL_FRAME = b'\x00'
+REMOTE_FRAME = b'\xAA'
+BEACON = b'\x07'
+DIGITALIO_RELEASE = b'\x08'
+STATUS = b'\x09'
+HALT = b'\x0a'
+MODIFY_FREQ = b'\x0B'
+MODIFY_MODE = b'\x0C'
+ADJUST_FREQ = b'\x0D'
+TRANSMIT_CARRIER = b'\x17'
+BACKGROUND_RSSI = b'\x18'
+CURRENT_RSSI = b'\x19'
+SWEEP_TRANSMITTER = b'\x1A'
+SWEEP_RECEIVER = b'\x1B'
+QUERY_REGISTER = b'\x1C'
+RADIO_PING = b'\x33'
 
 ## Command acknowledgements
 
-ACK = "ACK"
-NACK = "NACK"
-RES = "RES"
+ACK = 'ACK'
+NACK = 'NACK'
+RES = 'RES'
 
 ## Command responses
 
 responses = {
-    "SetClock": "SRC",
-    "BeaconSP": "SBI",
-    "PicTimes": "SPT",
-    "ClearPicTimes": "CPT",
-    "UnsetClock": "URC",
-    "ReportT": "GRC 2020-01-01T01:01:01",
-    "GetPicTimes": "GPT 2020-01-01T01:01:01",
-    "GetTelemetry": "GTY AX 1.000 AY 1.000 AZ 1.000 RX 1.000 RY 1.000 RZ 1.000 T 1.000",
-    "GetPower": "GPW BBV 1.000 BBC 1.000 TS1 1.000 TS2 1.000 5VC 1.000 L5V 1.000 H1S 1 H2S 1 H3S 1",
-    "GetComms": "GRS radio status",
-    "GetBeaconInterval": "GBI 180",
-    "NoOperate": "NOP",
-    "SendTestPacket": "STP test packet",
-    "PayComms": "PYC",
-    "TweeSlee": "TSL",
-    "ExternalWatchdog": "WDG",
-    "ModifyFrequency": "RMF 123456789",
-    "ModifyMode": "RMM 1",
-    "AdjustFrequency": "RAF 123456",
-    "TransmitCW": "RTC CW mode complete",
-    "BackgroundRSSI": "RBR 123",
-    "CurrentRSSI": "RCR 123",
-    "SweepTransmitter": "RST sweep done",
-    "SweepReceiver": "RSR 123 123456789 123",
-    "QueryRegister": "RQR 123",
+    'SetClock': 'SRC',
+    'BeaconSP': 'SBI',
+    'PicTimes': 'SPT',
+    'ClearPicTimes': 'CPT',
+    'UnsetClock': 'URC',
+    'ReportT': 'GRC 2020-01-01T01:01:01',
+    'GetPicTimes': 'GPT 2 2020-01-01T01:01:01 2020-01-01T01:01:01',
+    'GetTelemetry': 'GTY AX 1.000 AY 1.000 AZ 1.000 RX 1.000 RY 1.000 RZ 1.000 T 1.000',
+    'GetPower': 'GPW BBV 1.000 BBC 1.000 TS1 1.000 TS2 1.000 5VC 1.000 L5V 1.000 H1S 1 H2S 1 H3S 1',
+    'GetComms': 'GRS radio status',
+    'GetBeaconInterval': 'GBI 180',
+    'NoOperate': 'NOP',
+    'SendTestPacket': 'STP test packet',
+    'PayComms': 'PYC',
+    'TweeSlee': 'TSL',
+    'ExternalWatchdog': 'WDG',
+    'ModifyFrequency': 'RMF 123456789',
+    'ModifyMode': 'RMM 1',
+    'AdjustFrequency': 'RAF 123456',
+    'TransmitCW': 'RTC CW mode complete',
+    'BackgroundRSSI': 'RBR 123',
+    'CurrentRSSI': 'RCR 123',
+    'SweepTransmitter': 'RST sweep done',
+    'SweepReceiver': 'RSR 123 123456789 123',
+    'QueryRegister': 'RQR 123',
 }
 
 ## Serial data link
@@ -115,10 +115,10 @@ class StateMachine(object):
 
     def go_to_state(self, state_name):
         if self.state:
-            print(f"Exiting {self.state.name}")
+            # print(f"Exiting {self.state.name}")
             self.state.exit(self)
         self.state = self.states[state_name]
-        print(f"Entering {self.state.name}")
+        # print(f"Entering {self.state.name}")
         self.state.enter(self)
 
     def update(self):
@@ -153,7 +153,7 @@ class State(object):
     def update(self, machine):
         if serial_data.in_waiting:
             State.data_byte = serial_data.read(1)
-            print(f"data_byte: {State.data_byte}")
+            # print(f"data_byte: {State.data_byte}")
             return True
         return False
 
