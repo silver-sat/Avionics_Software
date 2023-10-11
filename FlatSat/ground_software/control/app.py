@@ -6,7 +6,6 @@
     
 """
 
-import os
 from flask import Flask, render_template, request
 import serial
 import datetime
@@ -33,7 +32,7 @@ def now1m():
     ).strftime("%Y %m %d %H %M %S")
 
 
-# issue command
+# Issue command
 
 
 def issue(command):
@@ -75,6 +74,8 @@ def index():
                 issue("BeaconSP 180")
             case "GTY":
                 issue("GetTelemetry")
+            case "GPW":
+                issue("GetPower")
             case _:
                 pass
     ack = b"No data"
@@ -88,7 +89,8 @@ def index():
     if ack == b"ACK":
         try:
             res = (
-                data_link.read_until(expected=FEND) + data_link.read_until(expected=FEND)
+                data_link.read_until(expected=FEND)
+                + data_link.read_until(expected=FEND)
             )[2:-1]
         except:
             pass
