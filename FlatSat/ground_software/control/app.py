@@ -54,9 +54,7 @@ def index():
     button = request.form.get("clicked_button")
     if button == None:
         command = request.form.get("command")
-        command = "NoOperate"
-        if command:
-            issue(command)
+        issue(command)
     else:
         match button:
             case "NOP":
@@ -79,16 +77,20 @@ def index():
                 issue("GetTelemetry")
             case _:
                 pass
+    ack = b"No data"
+    res = b"No data"
     try:
         ack = (
             data_link.read_until(expected=FEND) + data_link.read_until(expected=FEND)
         )[2:-1]
-        res = (
-            data_link.read_until(expected=FEND) + data_link.read_until(expected=FEND)
-        )[2:-1]
     except:
-        ack = b"No data"
-        res = b"No data"
+        pass
+    if ack == b"ACK":
+        try:
+            res = (
+                data_link.read_until(expected=FEND) + data_link.read_until(expected=FEND)
+            )[2:-1]
+        except:
+            pass
     messages = [ack.decode("utf-8"), res.decode("utf-8")]
-    # messages = ["No data", "No data"]
     return render_template("control.html", messages=messages)
