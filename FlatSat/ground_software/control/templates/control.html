@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<h1>{% block title %}SilverSat Control Panel{% endblock %}</h1>
+<h1>{% block title %}Control Panel{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -10,16 +10,16 @@
     <input name="command" id="command">
     <input type="submit" value="Transmit">
     <h2>Quick Actions</h2>
-    <button type="submit" name="clicked_button" value="NOP">No operation</button>
-    <button type="submit" name="clicked_button" value="STP">Send test packet</button>
-    <button type="submit" name="clicked_button" value="SRC">Set clock to GMT</button>
-    <button type="submit" name="clicked_button" value="GRC">Get clock time</button>
-    <button type="submit" name="clicked_button" value="PYC">Payload communications</button>
-    <button type="submit" name="clicked_button" value="SPT1">Take photo in one minute</button>
-    <button type="submit" name="clicked_button" value="SBI1">Set beacon interval to one minute</button>
-    <button type="submit" name="clicked_button" value="SBI3">Set beacon interval to three minutes</button>
-    <button type="submit" name="clicked_button" value="GTY">Get telemetry</button>
-    <h2>SilverSat Response</h2>
+            <button type="submit" name="clicked_button" value="NOP">No operation</button><br>
+            <button type="submit" name="clicked_button" value="STP">Send test packet</button><br>
+            <button type="submit" name="clicked_button" value="SRC">Set clock to GMT</button><br>
+            <button type="submit" name="clicked_button" value="GRC">Get clock time</button><br>
+            <button type="submit" name="clicked_button" value="PYC">Payload communications</button><br>
+            <button type="submit" name="clicked_button" value="SPT1">Take photo in one minute</button><br>
+            <button type="submit" name="clicked_button" value="SBI1">Set beacon interval to one minute</button><br>
+            <button type="submit" name="clicked_button" value="SBI3">Set beacon interval to three minutes</button><br>
+            <button type="submit" name="clicked_button" value="GTY">Get telemetry</button>
+    <h2>Satellite Response</h2>
     {% for message in messages %}
     <p>{{message}}</p>
     {% endfor %}
