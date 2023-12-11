@@ -23,7 +23,7 @@ class TestCommands:
         assert common.verify_message(message, common.set_clock_pattern)
 
     def test_set_beacon_interval(self):
-        common.issue('BeaconSP 60')
+        common.issue('BeaconSp 60')
         message = common.collect_message()
         assert common.verify_message(message, common.acknowledgment_pattern)
         message = common.collect_message()

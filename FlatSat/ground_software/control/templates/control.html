@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
+<meta http-equiv="refresh" content="30">
+
 {% block header %}
-<h1>{% block title %}Control Panel{% endblock %}</h1>
+<h1>{% block title %}Ground Control{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -33,11 +35,15 @@
                 <td><button type="submit" name="clicked_button" value="GTY">Get telemetry</button></td>
                 <td><button type="submit" name="clicked_button" value="GPW">Get power</button></td>
             </tr>
+            <tr>
+                <td><button type="submit" name="clicked_button" value="CallSign">Transmit call sign</button></td>
+                <td><button type="submit" name="clicked_button" value="Refresh">Refresh data</button></td>
+            </tr>
         </tbody>
     </table>
-    <h2>Satellite Response</h2>
-    {% for message in messages %}
-    <p>{{message}}</p>
+    <h2>Received from Satellite</h2>
+    {% for transmission in transmissions %}
+    <p>{{transmission}}</p>
     {% endfor %}
 </form>
 {% endblock %}

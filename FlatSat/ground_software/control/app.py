@@ -10,7 +10,6 @@ from flask import Flask, render_template, request
 import serial
 import datetime
 
-
 ## KISS special characters
 
 FEND = b"\xC0"  # frame end
@@ -37,7 +36,7 @@ def now1m():
 
 def issue(command):
     try:
-        data_link.write(FEND + REMOTE_FRAME + command.encode("utf-8") + FEND)
+        command_link.write(FEND + REMOTE_FRAME + command.encode("utf-8") + FEND)
     except:
         pass
 
@@ -45,7 +44,10 @@ def issue(command):
 # Application
 
 app = Flask(__name__)
-data_link = serial.Serial("/dev/cu.usbmodem11103")
+
+
+command_link = serial.Serial("/dev/tty.usbserial-A10MHKWZ", 57600, timeout=0.5)
+transmissions = []
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -69,30 +71,33 @@ def index():
             case "SPT1":
                 issue(f"PicTimes {now1m()}")
             case "SBI1":
-                issue("BeaconSP 60")
+                issue("BeaconSp 60")
             case "SBI3":
-                issue("BeaconSP 180")
+                issue("BeaconSp 180")
             case "GTY":
                 issue("GetTelemetry")
             case "GPW":
                 issue("GetPower")
+            case "CallSign":
+                command_link.write("Call Sign".encode("utf-8"))
+            case "Refresh":
+                pass
             case _:
                 pass
-    ack = b"No data"
-    res = b"No data"
-    try:
-        ack = (
-            data_link.read_until(expected=FEND) + data_link.read_until(expected=FEND)
-        )[2:-1]
-    except:
-        pass
-    if ack == b"ACK":
-        try:
-            res = (
-                data_link.read_until(expected=FEND)
-                + data_link.read_until(expected=FEND)
-            )[2:-1]
-        except:
-            pass
-    messages = [ack.decode("utf-8"), res.decode("utf-8")]
-    return render_template("control.html", messages=messages)
+
+    transmission = (
+        command_link.read_until(expected=FEND) + command_link.read_until(expected=FEND)
+    )[1:-1]
+    while transmission:
+        timestamp = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
+        if transmission[0] == 0x07:
+            transmissions.append(
+                f"{timestamp} Beacon: {transmission[1:].decode('utf-8')}"
+            )
+        else:
+            transmissions.append(f"{timestamp} {transmission[1:].decode('utf-8')}")
+        transmission = (
+            command_link.read_until(expected=FEND)
+            + command_link.read_until(expected=FEND)
+        )[1:-1]
+    return render_template("control.html", transmissions=transmissions[-7:])
