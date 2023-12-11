@@ -17,8 +17,7 @@
  * @brief Antenna constants
  *
  */
-// todo: extend to 80 seconds for full lifecycle test
-constexpr unsigned long antenna_delay{5 * seconds_to_milliseconds};
+constexpr unsigned long antenna_delay{80 * seconds_to_milliseconds};
 
 /**
  * @brief Check antenna state
@@ -55,6 +54,11 @@ bool Antenna::deploy()
 
     m_i2c_dev.begin();
 
+    // Check initial state
+
+    Log.traceln("Checking initial antenna state");
+    check();
+
     // Execute algorithm 1 for all 4 antenna rods
 
     Log.traceln("Executing algorithm 1 and starting antenna delay");
@@ -68,7 +72,7 @@ bool Antenna::deploy()
     if (check())
         return true;
 
-    // Execute algorithm 2 for all doors
+    // Execute algorithm 2 for all 4 antenna rods
 
     Log.warningln("Antenna door(s) not open, executing algorithm 2 and starting delay");
     constexpr u_int8_t algorithm2_all{0x2F};
