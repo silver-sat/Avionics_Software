@@ -9,7 +9,7 @@
 from flask import Flask, render_template, request
 import serial
 import datetime
-
+import time
 
 ## KISS special characters
 
@@ -45,8 +45,7 @@ def issue(command):
 # Application
 
 app = Flask(__name__)
-data_link = serial.Serial("/dev/cu.usbmodem11103")
-
+data_link = serial.Serial("/dev/tty.usbserial-A10MHKWZ", 57600)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -69,9 +68,9 @@ def index():
             case "SPT1":
                 issue(f"PicTimes {now1m()}")
             case "SBI1":
-                issue("BeaconSP 60")
+                issue("BeaconSp 60")
             case "SBI3":
-                issue("BeaconSP 180")
+                issue("BeaconSp 180")
             case "GTY":
                 issue("GetTelemetry")
             case "GPW":
@@ -80,6 +79,7 @@ def index():
                 pass
     ack = b"No data"
     res = b"No data"
+    time.sleep()
     try:
         ack = (
             data_link.read_until(expected=FEND) + data_link.read_until(expected=FEND)

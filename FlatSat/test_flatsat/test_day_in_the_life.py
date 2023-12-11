@@ -23,7 +23,7 @@ class TestDayInTheLife:
         assert common.verify_message(message, common.no_operation_pattern)
 
     def test_set_beacon_interval_1(self):
-        common.issue("BeaconSP 60")
+        common.issue("BeaconSp 60")
         message = common.collect_message()
         assert common.verify_message(message, common.acknowledgment_pattern)
         message = common.collect_message()
@@ -72,7 +72,7 @@ class TestDayInTheLife:
         assert common.verify_message(message, common.pay_comms_pattern)
 
     def test_set_beacon_interval_2(self):
-        common.issue("BeaconSP 180")
+        common.issue("BeaconSp 180")
         message = common.collect_message()
         assert common.verify_message(message, common.acknowledgment_pattern)
         message = common.collect_message()

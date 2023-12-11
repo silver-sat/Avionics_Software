@@ -13,7 +13,7 @@
  * Change satellite state:
  *
  * SRC: SetClock: subsumes SetTime: set realtime clock
- * SBI: BeaconSP: set beacon spacing
+ * SBI: BeaconSp: set beacon spacing
  * SPT: PicTimes: set times for photos
  * CPT: ClearPicTimes: empty PicTimes queue
  * URC: UnsetClock: change the realtime clock status to unset for testing

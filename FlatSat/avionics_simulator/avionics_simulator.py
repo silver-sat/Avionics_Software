@@ -47,7 +47,7 @@ RES = 'RES'
 
 responses = {
     'SetClock': 'SRC',
-    'BeaconSP': 'SBI',
+    'BeaconSp': 'SBI',
     'PicTimes': 'SPT',
     'ClearPicTimes': 'CPT',
     'UnsetClock': 'URC',
