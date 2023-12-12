@@ -89,13 +89,13 @@ def index():
         command_link.read_until(expected=FEND) + command_link.read_until(expected=FEND)
     )[1:-1]
     while transmission:
-        timestamp = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
+        # timestamp = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
         if transmission[0] == 0x07:
             transmissions.append(
-                f"{timestamp} Beacon: {transmission[1:].decode('utf-8')}"
+                f"Beacon: {transmission[1:].decode('utf-8')}"
             )
         else:
-            transmissions.append(f"{timestamp} {transmission[1:].decode('utf-8')}")
+            transmissions.append(f"{transmission[1:].decode('utf-8')}")
         transmission = (
             command_link.read_until(expected=FEND)
             + command_link.read_until(expected=FEND)
