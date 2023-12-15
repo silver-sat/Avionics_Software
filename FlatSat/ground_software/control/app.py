@@ -1,9 +1,12 @@
 """
-
-    Initialization for SilverSat ground control software
-    Lee A. Congdon
-    10 October 2023
-    
+ @file app.py
+ @author Lee A. Congdon (lee@silversat.org)
+ @brief SilverSat User and radio Doppler interface
+ @version 1.0.0
+ @date 2023-12-15
+ 
+ This program provides the user interface and the interface to the ground station for radio Doppler data
+ 
 """
 
 from flask import Flask, render_template, request
@@ -16,8 +19,9 @@ import threading
 FEND = b"\xC0"  # frame end
 REMOTE_FRAME = b"\xAA"
 
-# Lock for serial link
+# Serial link and lock
 
+command_link = serial.Serial("/dev/tty.usbserial-A10MHKWZ", 57600, timeout=0.5)
 serial_link = threading.Lock()
 
 # GMT time formatted for command
@@ -27,7 +31,7 @@ def now():
     return datetime.datetime.now(datetime.timezone.utc).strftime("%Y %m %d %H %M %S")
 
 
-# GMT time in one minute
+# GMT time in one minute formatted for command
 
 
 def now1m():
@@ -81,14 +85,14 @@ def get_responses():
 
 app = Flask(__name__)
 
-command_link = serial.Serial("/dev/tty.usbserial-A10MHKWZ", 57600, timeout=0.5)
+
+# User interface
 
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     button = request.form.get("clicked_button")
     serial_link.acquire()
-
     if button == None:
         command = request.form.get("command")
         issue(command)
@@ -123,6 +127,9 @@ def index():
     transmissions = get_responses()
     serial_link.release()
     return render_template("control.html", transmissions=transmissions)
+
+
+# Radio doppler interface
 
 
 @app.post("/radio")
