@@ -9,11 +9,16 @@
 from flask import Flask, render_template, request
 import serial
 import datetime
+import threading
 
 ## KISS special characters
 
 FEND = b"\xC0"  # frame end
 REMOTE_FRAME = b"\xAA"
+
+# Lock for serial link
+
+serial_link = threading.Lock()
 
 # GMT time formatted for command
 
@@ -41,18 +46,49 @@ def issue(command):
         pass
 
 
+# Get command responses
+
+
+def get_responses():
+    transmissions = []
+    try:
+        transmission = (
+            command_link.read_until(expected=FEND)
+            + command_link.read_until(expected=FEND)
+        )[1:-1]
+    except:
+        pass
+    while transmission:
+        if transmission[0] == 0x07:
+            transmissions.append(
+                f"Beacon: {transmission[1:].decode('utf-8', errors='replace')}"
+            )
+        else:
+            transmissions.append(
+                f"{transmission[1:].decode('utf-8', errors='replace')}"
+            )
+        try:
+            transmission = (
+                command_link.read_until(expected=FEND)
+                + command_link.read_until(expected=FEND)
+            )[1:-1]
+        except:
+            pass
+    return transmissions
+
+
 # Application
 
 app = Flask(__name__)
 
-
 command_link = serial.Serial("/dev/tty.usbserial-A10MHKWZ", 57600, timeout=0.5)
-transmissions = []
 
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     button = request.form.get("clicked_button")
+    serial_link.acquire()
+
     if button == None:
         command = request.form.get("command")
         issue(command)
@@ -84,20 +120,16 @@ def index():
                 pass
             case _:
                 pass
+    transmissions = get_responses()
+    serial_link.release()
+    return render_template("control.html", transmissions=transmissions)
 
-    transmission = (
-        command_link.read_until(expected=FEND) + command_link.read_until(expected=FEND)
-    )[1:-1]
-    while transmission:
-        # timestamp = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
-        if transmission[0] == 0x07:
-            transmissions.append(
-                f"Beacon: {transmission[1:].decode('utf-8')}"
-            )
-        else:
-            transmissions.append(f"{transmission[1:].decode('utf-8')}")
-        transmission = (
-            command_link.read_until(expected=FEND)
-            + command_link.read_until(expected=FEND)
-        )[1:-1]
-    return render_template("control.html", transmissions=transmissions[-7:])
+
+@app.post("/radio")
+def adjust_frequency():
+    frequency = request.form.get("frequency")
+    serial_link.acquire()
+    issue(f"ModifyFrequency {frequency}")
+    get_responses()
+    serial_link.release()
+    return {}
