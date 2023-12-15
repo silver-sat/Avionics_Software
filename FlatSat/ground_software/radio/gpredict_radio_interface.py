@@ -30,18 +30,15 @@ while True:
         data = socket.recv(1024)
         if not data:
             break
-
         if data.startswith(b'F'):
             frequency = data[1:].strip()
             if current_frequency != frequency:
                 print(f'New frequency: {int(frequency)}')
                 payload = {'frequency':frequency}
-                # response = requests.get(url, frequency.decode("utf-8"))
                 response = requests.post(url, payload)
                 current_frequency = frequency
             socket.sendall(b'RPRT 0\n')
         elif data.startswith(b'f'):
-            # todo: use f string
-            socket.sendall(b'f: %d\n' % int(current_frequency))
+            socket.sendall(bytes(f'f: {int(current_frequency)}\n'.encode("utf-8")))
     socket.close()
     print(f'Disconnected from: {address[0], address[1]}')
