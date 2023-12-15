@@ -55,7 +55,7 @@ float EPS_I::getBatteryVoltage()
   float voltage{static_cast<float>(value) * GETBATTERYINFO_BATTERY_BATT_VOLT_COEFFICIENT};
   Log.verboseln("Battery voltage is %F V", voltage);
   return voltage;
-}
+} 
 
 /**
  * @brief Get the battery current
