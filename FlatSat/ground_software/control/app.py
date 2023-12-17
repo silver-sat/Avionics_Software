@@ -22,6 +22,7 @@ REMOTE_FRAME = b"\xAA"
 # Serial link and lock
 
 command_link = serial.Serial("/dev/tty.usbserial-A10MHKWZ", 57600, timeout=0.5)
+#command_link = serial.Serial("/dev/tty.usbserial-A50285BI", 57600, timeout=0.5)
 serial_link = threading.Lock()
 
 # GMT time formatted for command

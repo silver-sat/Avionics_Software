@@ -29,7 +29,7 @@
  * @return Command* command object to be executed
  *
  */
-
+// todo: consider static allocation of command objects
 Command *CommandFactory::BuildCommand(const String tokens[], const size_t token_count)
 {
     auto argument_count{token_count - 1};
@@ -168,6 +168,7 @@ Command *CommandFactory::BuildCommand(const String tokens[], const size_t token_
         }
         else
             return new CommandInvalid(); // Wrong number of parameters
+    // todo: remove radio commands
     else if (tokens[0] == "AdjustFrequency")
         if ((argument_count == 1) && tokens[1].length() == frequency_length)
         {

@@ -23,6 +23,7 @@
  *
  */
 
+// todo: turn off instrumentation
 #define INSTRUMENTATION // Instrumentation for processor and memory usage
 
 #include "log_utility.h"
@@ -111,6 +112,7 @@ void setup()
   {
     avionics.trigger_watchdog();
   }
+  // todo: turn off log facility
   Log.setPrefix(printPrefix);
   Log.setSuffix(printSuffix);
   Log.begin(LOG_LEVEL_VERBOSE, &Serial);
@@ -155,6 +157,7 @@ void setup()
   // Deploy antenna
 
   Log.noticeln("Beginning antenna deployment");
+  // todo: consider moving antenna to avionics loop
   avionics.deploy_antenna();
   Log.noticeln("Antenna deployment completed");
 
@@ -180,9 +183,6 @@ void loop()
 
 #ifdef INSTRUMENTATION
   previous_time = micros();
-  // pinMode(GPIO_A, OUTPUT);
-  // digitalWrite(GPIO_A, HIGH);
-  // digitalWrite(GPIO_A, LOW);
 #endif // INSTRUMENTATION
 
   // Trigger the watchdog

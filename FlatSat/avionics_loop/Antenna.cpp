@@ -17,6 +17,7 @@
  * @brief Antenna constants
  *
  */
+// todo: consider reducing interval for testing, set to 80 seconds for flight
 constexpr unsigned long antenna_delay{80 * seconds_to_milliseconds};
 
 /**
