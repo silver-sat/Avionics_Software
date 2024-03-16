@@ -37,15 +37,7 @@ public:
         antenna_release = DIGITALIO_RELEASE,
         get_status = GET_RADIO_STATUS,
         halt = HALT,
-        modify_frequency = MODIFY_FREQUENCY,
         modify_mode = MODIFY_MODE,
-        adjust_frequency = ADJUST_FREQUENCY,
-        transmit_cw = TRANSMIT_CW,
-        background_rssi = BACKGROUND_RSSI,
-        current_rssi = CURRENT_RSSI,
-        sweep_tranmitter = SWEEP_TRANSMITTER,
-        sweep_receiver = SWEEP_RECEIVER,
-        query_register = QUERY_REGISTER,
     };
 
     /**

@@ -127,65 +127,9 @@ class TestCommands:
         message = common.collect_message()
         assert common.verify_message(message, common.watchdog_pattern)
 
-    def test_modify_frequency(self):
-        common.issue('ModifyFrequency 123456789')
-        message = common.collect_message()
-        assert common.verify_message(message, common.acknowledgment_pattern)
-        message = common.collect_message()
-        assert common.verify_message(message, common.modify_frequency_pattern)
-
     def test_modify_mode(self):
         common.issue('ModifyMode 1')
         message = common.collect_message()
         assert common.verify_message(message, common.acknowledgment_pattern)
         message = common.collect_message()
         assert common.verify_message(message, common.modify_mode_pattern)
-
-    def test_adjust_frequency(self):
-        common.issue('AdjustFrequency 123456789')
-        message = common.collect_message()
-        assert common.verify_message(message, common.acknowledgment_pattern)
-        message = common.collect_message()
-        assert common.verify_message(message, common.adjust_frequency_pattern)
-
-    def test_transmit_cw(self):
-        common.issue('TransmitCW 12')
-        message = common.collect_message()
-        assert common.verify_message(message, common.acknowledgment_pattern)
-        message = common.collect_message()
-        assert common.verify_message(message, common.transmit_CW_pattern)
-
-    def test_background_rssi(self):
-        common.issue('BackgroundRSSI 12')
-        message = common.collect_message()
-        assert common.verify_message(message, common.acknowledgment_pattern)
-        message = common.collect_message()
-        assert common.verify_message(message, common.background_RSSI_pattern)
-
-    def test_current_rssi(self):
-        common.issue('CurrentRSSI')
-        message = common.collect_message()
-        assert common.verify_message(message, common.acknowledgment_pattern)
-        message = common.collect_message()
-        assert common.verify_message(message, common.current_RSSI_pattern)
-
-    def test_sweep_transmitter(self):
-        common.issue('SweepTransmitter 123456789 123456789 123 123')
-        message = common.collect_message()
-        assert common.verify_message(message, common.acknowledgment_pattern)
-        message = common.collect_message()
-        assert common.verify_message(message, common.sweep_transmitter_pattern)
-
-    def test_sweep_receiver(self):
-        common.issue('SweepReceiver 123456789 123456789 123 123')
-        message = common.collect_message()
-        assert common.verify_message(message, common.acknowledgment_pattern)
-        message = common.collect_message()
-        assert common.verify_message(message, common.sweep_receiver_pattern)
-
-    def test_query_register(self):
-        common.issue('QueryRegister 12345')
-        message = common.collect_message()
-        assert common.verify_message(message, common.acknowledgment_pattern)
-        message = common.collect_message()
-        assert common.verify_message(message, common.query_register_pattern)

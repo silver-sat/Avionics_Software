@@ -101,12 +101,7 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
                         Log.infoln("Command received (count %l): %s", ++m_commands_received, buffer);
                     else
                     {
-                        char reply[RES.length() + 1]; // allow space for reply plus null
-                        memcpy(reply, buffer, RES.length());
-                        reply[RES.length()] = '\0';
-                        byte command{buffer[RES.length()]};
-                        // todo: consider logging additional data if it exists
-                        Log.infoln("Local message received: %s %X", reply, command);
+                        Log.infoln("Local message received: %s", buffer);
                     }
                     m_received_start = false;
                     return true; // command or response received

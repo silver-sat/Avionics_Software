@@ -19,7 +19,7 @@
  *
  */
 
-constexpr int startup_delay{90 * seconds_to_milliseconds};
+constexpr int startup_delay{30 * seconds_to_milliseconds};
 constexpr int shutdown_delay{15 * seconds_to_milliseconds};
 constexpr int maximum_cycle_time{10 * minutes_to_seconds * seconds_to_milliseconds};
 

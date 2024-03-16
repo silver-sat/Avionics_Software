@@ -17,7 +17,7 @@ import time
 
 ## port for command input and output
 
-COMMAND_PORT = '/dev/cu.usbmodem11103'
+COMMAND_PORT = '/dev/tty.usbserial-A10MHKWZ'
 
 ## serial transmission speed
 
@@ -46,16 +46,7 @@ BEACON = b'\x07'
 DIGITALIO_RELEASE = b'\x08'
 STATUS = b'\x09'
 HALT = b'\x0a'
-MODIFY_FREQ = b'\x0B'
 MODIFY_MODE = b'\x0C'
-ADJUST_FREQ = b'\x0D'
-TRANSMIT_CARRIER = b'\x17'
-BACKGROUND_RSSI = b'\x18'
-CURRENT_RSSI = b'\x19'
-SWEEP_TRANSMITTER = b'\x1A'
-SWEEP_RECEIVER = b'\x1B'
-QUERY_REGISTER = b'\x1C'
-RADIO_PING = b'\x33'
 
 ## serial port for commands and responses
 
@@ -93,15 +84,7 @@ test_packet_pattern = re.compile(rb'RES STP test packet$')
 pay_comms_pattern = re.compile(rb'RES PYC$')
 twee_slee_pattern = re.compile(rb'RES TSL$')
 watchdog_pattern = re.compile(rb'RES WDG$')
-modify_frequency_pattern = re.compile(rb'RES RMF \d{9}$')
 modify_mode_pattern = re.compile(rb'RES RMM \d$')
-adjust_frequency_pattern = re.compile(rb'RES RAF -*\d{6}$')
-transmit_CW_pattern = re.compile(rb'RES RTC CW mode complete$')
-background_RSSI_pattern = re.compile(rb'RES RBR \d{3}$')
-current_RSSI_pattern = re.compile(rb'RES RCR \d{3}$')
-sweep_transmitter_pattern = re.compile(rb'RES RST sweep done$')
-sweep_receiver_pattern = re.compile(rb'RES RSR \d{3} \d{9} \d{3}$')
-query_register_pattern = re.compile(rb'RES RQR \d{3}$')
 error_pattern = re.compile(rb'ERR$')
 
 
@@ -111,6 +94,13 @@ error_pattern = re.compile(rb'ERR$')
 #
 def issue(command):
     command_port.write(FEND + REMOTE_FRAME + command.encode('utf-8') + FEND)
+
+## Local command
+#
+# Local commands must be framed with KISS encoding
+#
+def local(command):
+    command_port.write(FEND + LOCAL_FRAME + command.encode('utf-8') + FEND)
 
 
 ## Collect message response
@@ -241,22 +231,6 @@ def message_local_halt_message_sent(message):
     return message.startswith(FEND + HALT)
 
 
-## Verify message local modify frequency message sent
-#
-# Local command for ModifyFrequency command
-#
-def message_local_modify_frequency_sent(message):
-    return message.startswith(FEND + MODIFY_FREQ)
-
-
-## Verify message remote modify frequency message sent
-#
-# Response for ModifyFrequency command
-#
-def message_remote_modify_frequency_sent(message):
-    return modify_frequency_pattern.search(message[2:-1].decode('utf-8'))
-
-
 ## Verify message local modify mode message sent
 #
 # Local command for ModifyMode command
@@ -271,126 +245,6 @@ def message_local_modify_mode_sent(message):
 #
 def message_remote_modify_mode_sent(message):
     return modify_mode_pattern.search(message[2:-1].decode('utf-8'))
-
-
-## Verify message local adjust frequency message sent
-#
-# Local command for AdjustFrequency command
-#
-def message_local_adjust_frequency_sent(message):
-    return message.startswith(FEND + ADJUST_FREQ)
-
-
-## Verify message remote adjust frequency message sent
-#
-# Response for AdjustFrequency command
-#
-def message_remote_adjust_frequency_sent(message):
-    return adjust_frequency_pattern.search(message[2:-1].decode('utf-8'))
-
-
-## Verify message local transmit CW message sent
-#
-# Local command for TransmitCW command
-#
-def message_local_transmit_CW_sent(message):
-    return message.startswith(FEND + TRANSMIT_CARRIER)
-
-
-## Verify message remote transmit CW message sent
-#
-# Local command for TransmitCW command
-#
-def message_remote_transmit_CW_sent(message):
-    return transmit_CW_pattern.search(message[2:-1].decode('utf-8'))
-
-
-## Verify message local background RSSI message sent
-#
-# Local command for BackgroundRSSI command
-#
-def message_local_background_RSSI_sent(message):
-    return message.startswith(FEND + BACKGROUND_RSSI)
-
-
-## Verify message remote background RSSI message sent
-#
-# Local command for BackgroundRSSI command
-#
-def message_remote_background_RSSI_sent(message):
-    return background_RSSI_pattern.search(message[2:-1].decode('utf-8'))
-
-
-## Verify message local current RSSI message sent
-#
-# Local command for CurrentRSSI command
-#
-def message_local_current_RSSI_sent(message):
-    return message.startswith(FEND + CURRENT_RSSI)
-
-
-## Verify message remote current RSSI message sent
-#
-# Local command for CurrentRSSI command
-#
-def message_remote_current_RSSI_sent(message):
-    return current_RSSI_pattern.search(message[2:-1].decode('utf-8'))
-
-
-## Verify message local sweep transmitter message sent
-#
-# Local command for SweepTransmitter command
-#
-def message_local_sweep_transmitter_sent(message):
-    return message.startswith(FEND + SWEEP_TRANSMITTER)
-
-
-## Verify message remote sweep transmitter message sent
-#
-# Local command for SweepTransmitter command
-#
-def message_remote_sweep_transmitter_sent(message):
-    return sweep_transmitter_pattern.search(message[2:-1].decode('utf-8'))
-
-
-## Verify message local sweep receiver message sent
-#
-# Local command for SweepReceiver command
-#
-def message_local_sweep_receiver_sent(message):
-    return message.startswith(FEND + SWEEP_RECEIVER)
-
-
-## Verify message remote sweep receiver message sent
-#
-# Local command for SweepReceiver command
-#
-def message_remote_sweep_receiver_sent(message):
-    return sweep_receiver_pattern.search(message[2:-1].decode('utf-8'))
-
-
-## Verify message local query register message sent
-#
-# Local command for QueryRegister command
-#
-def message_local_query_register_sent(message):
-    return message.startswith(FEND + QUERY_REGISTER)
-
-
-## Verify message remote query register message sent
-#
-# Local command for QueryRegister command
-#
-def message_remote_query_register_sent(message):
-    return query_register_pattern.search(message[2:-1].decode('utf-8'))
-
-
-## Verify local query register message sent
-#
-# Local command for QueryRegister command
-#
-def local_query_register_message_sent(message):
-    return message.startswith(FEND + QUERY_REGISTER)
 
 
 def now():

@@ -55,74 +55,25 @@ bool CommandProcessor::check_for_command()
         }
         else
         {
-            // todo: consider refactoring
-            Response response{"INV"};
-            switch (command_string[0])
+            if (command_string.length() > RES.length() && command_string.startsWith(RES))
             {
-            case 'A': // ACK
-                Log.verboseln("Received ACK, ignored");
-                break;
-            case 'N': // NACK
-                Log.verboseln("Received NACK, ignored");
-                break;
-            case 'R': // RESponse
-            {
-                auto type{command_string[RES.length()]};
-                size_t command_start{RES.length() + 1};
-                for (; command_string[command_start] == ' '; ++command_start)
-                {
-                    Log.verboseln("Skipping leading blank");
-                }
-                auto radio_data{command_string.substring(command_start)};
-                Log.verboseln("Received type: %X, %s", type, radio_data.c_str());
-                switch (type)
+                auto command_type{command_string[RES.length()]};
+                auto radio_data{command_string.substring(RES.length() + 1)};
+                Log.verboseln("Received type: %X, %s", command_type, radio_data.c_str());
+                switch (command_type)
                 {
                 case GET_RADIO_STATUS:
-                    response = {Response{"GRS " + radio_data}};
-                    break;
-                case MODIFY_FREQUENCY:
-                    response = {Response{"RMF " + radio_data}};
+                    Response{"GRS " + radio_data}.send();
                     break;
                 case MODIFY_MODE:
-                    response = {Response{"RMM " + radio_data}};
-                    break;
-                case ADJUST_FREQUENCY:
-                    response = {Response{"RAF " + radio_data}};
-                    break;
-                case TRANSMIT_CW:
-                    response = {Response{"RTC " + radio_data}};
-                    break;
-                case BACKGROUND_RSSI:
-                    response = {Response{"RBR " + radio_data}};
-                    break;
-                case CURRENT_RSSI:
-                    response = {Response{"RCR " + radio_data}};
-                    break;
-                case SWEEP_TRANSMITTER:
-                    response = {Response{"RST " + radio_data}};
-                    break;
-                case SWEEP_RECEIVER:
-                    response = {Response{"RSR " + radio_data}};
-                    break;
-                case QUERY_REGISTER:
-                    response = {Response{"RQR " + radio_data}};
+                    Response{"RMM " + radio_data}.send();
                     break;
                 default:
-                    Log.errorln("Unknown local command type");
-                    response = {Response{"UNK " + radio_data}};
                     break;
                 }
-                response.send();
-                break;
-            }
-            default:
-                Log.errorln("Unknown local response type");
-                response = (Response{"UNK"});
-                response.send();
-                break;
             }
         }
-    };
+    }
     return true;
 }
 
