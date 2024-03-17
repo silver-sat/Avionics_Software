@@ -59,7 +59,7 @@ bool CommandProcessor::check_for_command()
             {
                 auto command_type{command_string[RES.length()]};
                 auto radio_data{command_string.substring(RES.length() + 1)};
-                Log.verboseln("Received type: %X, %s", command_type, radio_data.c_str());
+                Log.verboseln("Response type: %X, content: %s", command_type, radio_data.c_str());
                 switch (command_type)
                 {
                 case GET_RADIO_STATUS:

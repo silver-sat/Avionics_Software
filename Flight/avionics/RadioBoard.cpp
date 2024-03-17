@@ -64,8 +64,7 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
     while (Serial1.available())
     {
         char character{static_cast<char>(Serial1.read())};
-        // Caution: enabling character logging will cause non-printable characters to interfere with automated tests
-        // Log.verboseln("Character received: 0x%x", character);
+        // Log.verboseln("Character received: %X", character);
         if (m_received_start)
         {
             if (!m_received_type)

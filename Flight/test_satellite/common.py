@@ -77,7 +77,8 @@ telemetry_pattern = re.compile(
 power_pattern = re.compile(
     rb'(RES GPW)( BBV \d+\.\d+)( BBC \d+\.\d+)( TS1 -*\d+\.\d+)( TS2 -*\d+\.\d+)( 5VC \d+\.\d+)( L5V \d+\.\d+)( H1S \d)( H2S \d)( H3S \d)$'
 )
-comms_pattern = re.compile(rb'RES GRS radio status$')
+# todo: update radio status pattern
+comms_pattern = re.compile(rb'RES GRS$')
 beacon_interval_pattern = re.compile(rb'(RES GBI )(\d+)$')
 no_operation_pattern = re.compile(rb'RES NOP$')
 test_packet_pattern = re.compile(rb'RES STP test packet$')

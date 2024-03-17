@@ -32,6 +32,6 @@ public:
     explicit Response(const String content)
     {
         m_command = response;
-        m_content = RES + content;
+        m_content = RES + " " + content;
     }
 };
