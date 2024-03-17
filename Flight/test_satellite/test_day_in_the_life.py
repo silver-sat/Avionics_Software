@@ -57,6 +57,7 @@ class TestDayInTheLife:
         message = common.collect_message()
         assert common.verify_message(message, common.pay_comms_pattern)
 
+# increase delay to allow prior payload activity to complete
     def test_pictimes(self):
         common.issue(f"PicTimes {common.now1m()}")
         message = common.collect_message()
@@ -64,6 +65,7 @@ class TestDayInTheLife:
         message = common.collect_message()
         assert common.verify_message(message, common.pic_times_pattern)
 
+# add delay to allow prior payload activity to complete
     def test_paycomms_2(self):
         common.issue("PayComms")
         message = common.collect_message()

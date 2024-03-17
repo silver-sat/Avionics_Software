@@ -115,7 +115,7 @@ void setup()
   // todo: turn off log facility
   Log.setPrefix(printPrefix);
   Log.setSuffix(printSuffix);
-  Log.begin(LOG_LEVEL_INFO, &Serial);
+  Log.begin(LOG_LEVEL_VERBOSE, &Serial);
   Log.setShowLevel(false);
 
   Log.noticeln("Initializing Avionics Process");

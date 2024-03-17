@@ -64,8 +64,7 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
     while (Serial1.available())
     {
         char character{static_cast<char>(Serial1.read())};
-        // Caution: enabling character logging will cause non-printable characters to interfere with automated tests
-        // Log.verboseln("Character received: 0x%x", character);
+        // Log.verboseln("Character received: %X", character);
         if (m_received_start)
         {
             if (!m_received_type)
@@ -101,12 +100,7 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
                         Log.infoln("Command received (count %l): %s", ++m_commands_received, buffer);
                     else
                     {
-                        char reply[RES.length() + 1]; // allow space for reply plus null
-                        memcpy(reply, buffer, RES.length());
-                        reply[RES.length()] = '\0';
-                        byte command{buffer[RES.length()]};
-                        // todo: consider logging additional data if it exists
-                        Log.infoln("Local message received: %s %X", reply, command);
+                        Log.infoln("Local message received: %s", buffer);
                     }
                     m_received_start = false;
                     return true; // command or response received

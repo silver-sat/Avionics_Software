@@ -85,24 +85,11 @@ constexpr byte BEACON{'\x07'};             /**< beacon */
 constexpr byte DIGITALIO_RELEASE{'\x08'};  /**< deploy antenna in recovery mode */
 constexpr byte GET_RADIO_STATUS{'\x09'};   /**< request radio status */
 constexpr byte HALT{'\x0A'};               /**< stop transmission */
-constexpr byte MODIFY_FREQUENCY{'\x0B'};   /**< change radio frequency */
 constexpr byte MODIFY_MODE{'\x0C'};        /**< change radio mode */
-constexpr byte ADJUST_FREQUENCY{'\x0D'};   /**< temporarily change radio frequency */
-constexpr byte TRANSMIT_CW{'\x17'};        /**< transmit carrier wave */
-constexpr byte BACKGROUND_RSSI{'\x18'};    /**< get background RSSI */
-constexpr byte CURRENT_RSSI{'\x19'};       /**< get current RSSI */
-constexpr byte SWEEP_TRANSMITTER{'\x1A'}; /**< sweep transmitter */
-constexpr byte SWEEP_RECEIVER{'\x1B'};     /**< sweep transmitter */
-constexpr byte QUERY_REGISTER{'\x1C'};     /**< query radio register */
 
 /**
  * @brief Radio command parameter lengths
  *
  */
 
-constexpr size_t frequency_length{9};   /**< frequency */
 constexpr size_t mode_length{1};        /**< mode */
-constexpr size_t duration_length{2};    /**< duration */
-const static size_t steps_length{3};    /**< steps */
-const static size_t dwell_length{3};    /**< dwell */
-const static size_t register_length{5}; /**< register */

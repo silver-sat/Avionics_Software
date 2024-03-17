@@ -33,7 +33,7 @@
  * STP: SendTestPacket: reply with test message
  * PYC: PayComms: subsumes Begin tweet : start payload in communications mode
  * TSL: TweeSlee: subsumes Halt: stop communicating
- * WDG: ExternalWatchdog: force watchdog timeout (reset SAMD21)
+ * WDG: Watchdog: force watchdog timeout (reset SAMD21)
  *
  * Invalid and unknown commands
  *
@@ -42,15 +42,7 @@
  *
  * Radio commands:
  *
- * RMF: ModifyFrequency: modify radio frequency
  * RMM: ModifyMode: modify radio mode
- * RAF: AdjustFrequency: adjust radio frequency temporarily
- * RTC: TransmitCW: transmit carrier wave
- * RBR: BackgroundRSSI: radio background rssi
- * RCR: CurrentRSSI: radio current rssi
- * RST: SweepTransmitter: radio sweep transmitter
- * RSR: SweepReceiver: radio sweep receiver
- * RQR: QueryRegister: radio query register
  *
  * Deprecated commands:
  *
@@ -58,6 +50,14 @@
  * s_call_sig deprecated
  * g_call_sig, deprecated
  * GPC: GetPhotos: reply with number of photos (Avionics Board does not have an accurate count)
+ * RMF: ModifyFrequency: modify radio frequency
+ * RAF: AdjustFrequency: adjust radio frequency temporarily
+ * RTC: TransmitCW: transmit carrier wave
+ * RBR: BackgroundRSSI: radio background rssi
+ * RCR: CurrentRSSI: radio current rssi
+ * RST: SweepTransmitter: radio sweep transmitter
+ * RSR: SweepReceiver: radio sweep receiver
+ * RQR: QueryRegister: radio query register
  *
  */
 
@@ -362,25 +362,6 @@ public:
     bool execute_command() override;
 };
 
-/**
- * @brief modify frequency command
- *
- */
-
-class CommandModifyFrequency final : public Command
-{
-public:
-    explicit CommandModifyFrequency(const char frequency[frequency_length])
-    {
-        memcpy(m_frequency, frequency, frequency_length);
-        m_frequency[frequency_length] = '\0';
-    }
-    bool acknowledge_command() override;
-    bool execute_command() override;
-
-private:
-    char m_frequency[frequency_length + 1]{};
-};
 
 /**
  * @brief modify mode command
@@ -400,156 +381,4 @@ public:
 
 private:
     char m_mode[2]{};
-};
-
-/**
- * @brief adjust frequency command
- *
- */
-
-class CommandAdjustFrequency final : public Command
-{
-public:
-    explicit CommandAdjustFrequency(const char *frequency)
-    {
-        memcpy(m_frequency, frequency, frequency_length);
-        m_frequency[frequency_length] = '\0';
-    }
-    bool acknowledge_command() override;
-    bool execute_command() override;
-
-private:
-    char m_frequency[frequency_length + 1]{};
-};
-
-/**
- * @brief transmit carrier wave command
- *
- */
-
-class CommandTransmitCW final : public Command
-{
-public:
-    explicit CommandTransmitCW(const char *duration)
-    {
-        m_duration[0] = duration[0];
-        m_duration[1] = duration[1];
-        m_duration[2] = '\0';
-    }
-    bool acknowledge_command() override;
-    bool execute_command() override;
-
-private:
-    char m_duration[duration_length + 1]{};
-};
-
-/**
- * @brief background rssi command
- *
- */
-
-class CommandBackgroundRSSI final : public Command
-{
-public:
-    explicit CommandBackgroundRSSI(const char *duration)
-    {
-        m_duration[0] = duration[0];
-        m_duration[1] = duration[1];
-        m_duration[2] = '\0';
-    }
-    bool acknowledge_command() override;
-    bool execute_command() override;
-private:
-    char m_duration[duration_length + 1]{};
-};
-
-/**
- * @brief current rssi command
- *
- */
-
-class CommandCurrentRSSI final : public Command
-{
-public:
-    CommandCurrentRSSI() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
-};
-
-/**
- * @brief sweep transmitter command
- *
- */
-
-class CommandSweepTransmitter final : public Command
-{
-public:
-    CommandSweepTransmitter(const char *start_frequency, const char *stop_frequency, const char *number_of_steps, const char *dwell_time)
-    {
-        memcpy(m_start_frequency, start_frequency, frequency_length);
-        m_start_frequency[frequency_length] = '\0';
-        memcpy(m_stop_frequency, stop_frequency, frequency_length);
-        m_stop_frequency[frequency_length] = '\0';
-        memcpy(m_number_of_steps, number_of_steps, steps_length);
-        m_number_of_steps[steps_length] = '\0';
-        memcpy(m_dwell_time, dwell_time, dwell_length);
-        m_dwell_time[dwell_length] = '\0';
-    }
-    bool acknowledge_command() override;
-    bool execute_command() override;
-
-private:
-    char m_start_frequency[frequency_length + 1]{};
-    char m_stop_frequency[frequency_length + 1]{};
-    char m_number_of_steps[steps_length + 1]{};
-    char m_dwell_time[dwell_length + 1]{};
-};
-
-/**
- * @brief sweep receiver command
- *
- */
-
-class CommandSweepReceiver final : public Command
-{
-public:
-    CommandSweepReceiver(const char *start_frequency, const char *stop_frequency, const char *number_of_steps, const char *dwell_time)
-    {
-        memcpy(m_start_frequency, start_frequency, frequency_length);
-        m_start_frequency[frequency_length] = '\0';
-        memcpy(m_stop_frequency, stop_frequency, frequency_length);
-        m_stop_frequency[frequency_length] = '\0';
-        memcpy(m_number_of_steps, number_of_steps, steps_length);
-        m_number_of_steps[steps_length] = '\0';
-        memcpy(m_dwell_time, dwell_time, dwell_length);
-        m_dwell_time[dwell_length] = '\0';
-    }
-    bool acknowledge_command() override;
-    bool execute_command() override;
-
-private:
-    char m_start_frequency[frequency_length + 1]{};
-    char m_stop_frequency[frequency_length + 1]{};
-    char m_number_of_steps[steps_length + 1]{};
-    char m_dwell_time[dwell_length + 1]{};
-};
-
-/**
- * @brief query register command
- *
- */
-
-class CommandQueryRegister final : public Command
-{
-public:
-    explicit CommandQueryRegister(const char *radio_register)
-    {
-        memcpy(m_radio_register, radio_register, register_length);
-        m_radio_register[register_length] = '\0';
-    }
-    bool acknowledge_command() override;
-    bool execute_command() override;
-
-private:
-    char m_radio_register[register_length + 1]{};
 };
