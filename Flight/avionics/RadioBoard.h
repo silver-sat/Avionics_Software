@@ -42,6 +42,13 @@ public:
 
     bool send_message(const Message message) const;
 
+    /**
+     * @brief Check for recent ground contact
+     * 
+     */
+
+    bool recent_ground_contact() const;
+
 private:
     size_t m_buffer_index{0};
     bool m_received_start{false};
@@ -49,4 +56,6 @@ private:
     bool m_received_escape{false};
     bool m_remote_data{};
     long m_commands_received{0};
+    unsigned long m_milliseconds_since_last_ground_contact_day{0};
+    long m_days_since_last_ground_contact{0};
 };

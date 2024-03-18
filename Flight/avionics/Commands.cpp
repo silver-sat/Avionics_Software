@@ -253,7 +253,6 @@ bool CommandReportT::execute_command()
 {
     auto status{Command::execute_command()};
     Log.verboseln("ReportT");
-    // todo: consider refactoring return
     extern AvionicsBoard avionics;
     auto timestamp{avionics.get_timestamp()};
     if (timestamp == "ERROR")
@@ -287,7 +286,6 @@ bool CommandGetPicTimes::execute_command()
 {
     auto status{Command::execute_command()};
     Log.verboseln("GetPicTimes");
-    // todo: consider refactoring return
     extern AvionicsBoard avionics;
     auto response{Response{status ? ("GPT " + avionics.get_pic_times()) : "ERR"}};
     return response.send() && status;
@@ -318,7 +316,6 @@ bool CommandGetTelemetry::execute_command()
 {
     auto status{Command::execute_command()};
     Log.verboseln("GetTelemetry");
-    // todo: consider refactoring return
     extern AvionicsBoard avionics;
     auto response{Response{status ? ("GTY" + avionics.get_telemetry()) : "ERR"}};
     return response.send() && status;
@@ -349,7 +346,6 @@ bool CommandGetPower::execute_command()
 {
     auto status{Command::execute_command()};
     Log.verboseln("GetPower");
-    // todo: consider refactoring return
     extern PowerBoard power;
     auto response{Response{status ? ("GPW" + power.get_detail()) : "ERR"}};
     return response.send() && status;
@@ -410,7 +406,6 @@ bool CommandGetBeaconInterval::execute_command()
 {
     auto status{Command::execute_command()};
     Log.verboseln("GetBeaconInterval");
-    // todo: consider refactoring return
     extern AvionicsBoard avionics;
     auto response{Response{status ? ("GBI " + avionics.get_beacon_interval()) : "ERR"}};
     return response.send() && status;
@@ -567,7 +562,6 @@ bool CommandWatchdog::execute_command()
     auto response{Response{status ? "WDG" : "ERR"}};
     status = response.send() && status;
     extern AvionicsBoard avionics;
-    // todo: consider returning bool
     avionics.watchdog_force_reset();
     return status;
 }

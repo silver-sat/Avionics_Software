@@ -185,19 +185,18 @@ private:
     *
     */
 
-   ExternalWatchdog m_external_watchdog{};                 /**< Watchdog */
-   size_t m_picture_time_count{0};                         /**< Maximum picture count */
-   DateTime m_picture_times[maximum_scheduled_pictures]{}; /**< Scheduled picture times */
-   ExternalRTC m_external_rtc{};                           /**< External Real Time Clock */
-   IMU m_imu{};                                            /**< Inertial Measurement Unit */
-   CY15B256J m_fram{};                                     /**< FRAM */
-   Antenna m_antenna{};                                    /**< Antenna */
-   // beacon data
-   unsigned long m_last_beacon_time{0};                                               /**< Last beacon time */
-   unsigned long m_beacon_interval{2 * minutes_to_seconds * seconds_to_milliseconds}; /**< Beacon interval */
-   bool m_rtc_initialization_error{false};                                            /**< RTC initialization */
-   bool m_imu_initialization_error{false};                                            /**< IMU initialization */
-   bool m_FRAM_initialization_error{false};                                           /**< FRAM initialization */
+   ExternalWatchdog m_external_watchdog{};                                            /**< Watchdog */
+   size_t m_picture_time_count{0};                                                    /**< Maximum picture count */
+   DateTime m_picture_times[maximum_scheduled_pictures]{};                            /**< Scheduled picture times */
+   ExternalRTC m_external_rtc{};                                                      /**< External Real Time Clock */
+   IMU m_imu{};                                                                       /**< Inertial Measurement Unit */
+   CY15B256J m_fram{};                                                                /**< FRAM */
+   Antenna m_antenna{};                                                               /**< Antenna */
+   unsigned long m_last_beacon_time{0};                                               /**< Last beacon time from millis() */
+   unsigned long m_beacon_interval{2 * minutes_to_seconds * seconds_to_milliseconds}; /**< Initial beacon interval */
+   bool m_rtc_initialization_error{false};                                            /**< Realtime clock initialization error */
+   bool m_imu_initialization_error{false};                                            /**< IMU initialization error */
+   bool m_FRAM_initialization_error{false};                                           /**< FRAM initialization error */
    bool m_radio_connection_error{false};                                              /**< Reserved for radio connection initialization */
-   bool m_antenna_deployment_error{false};                                            /**< Antenna deployment */
+   bool m_antenna_deployment_error{false};                                            /**< Antenna deployment error */
 };

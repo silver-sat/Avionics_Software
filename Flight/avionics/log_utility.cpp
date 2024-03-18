@@ -11,8 +11,6 @@
 
 #include "log_utility.h"
 
-// todo: consider making custom classes printable and using "%p"
-
 /**
  * @brief Print log prefix
  *
