@@ -128,7 +128,7 @@ bool PayloadBoard::check_shutdown()
         {
             if (millis() - m_shutdown_start_time > shutdown_delay)
             {
-                Log.verboseln("Powering down payload");
+                Log.infoln("Powering down payload");
                 power_down();
             }
         }

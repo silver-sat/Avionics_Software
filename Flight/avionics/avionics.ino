@@ -23,8 +23,7 @@
  *
  */
 
-// todo: turn off instrumentation
-#define INSTRUMENTATION // Instrumentation for processor and memory usage
+// #define INSTRUMENTATION // Instrumentation for processor and memory usage
 
 #include "log_utility.h"
 #include "PowerBoard.h"
@@ -38,7 +37,8 @@
  *
  */
 constexpr uint32_t serial_baud_rate{57600}; /**< speed of serial connection @hideinitializer */
-// todo: adjust to 45 minutes for full test
+constexpr unsigned long serial_delay{2 * seconds_to_milliseconds};
+// todo: adjust to 45 minutes for flight
 constexpr unsigned long separation_delay{5 * seconds_to_milliseconds};
 
 /**
@@ -52,13 +52,13 @@ RadioBoard radio{};
 PayloadBoard payload{};
 CommandProcessor command_processor{};
 
+
 #ifdef INSTRUMENTATION
 /**
  * @brief Test instrumentation values
  *
  */
 
-constexpr unsigned long serial_delay{2 * seconds_to_milliseconds};
 unsigned long previous_time{};
 unsigned long duration{};
 unsigned long loop_start_time{};
@@ -115,7 +115,7 @@ void setup()
   // todo: turn off log facility
   Log.setPrefix(printPrefix);
   Log.setSuffix(printSuffix);
-  Log.begin(LOG_LEVEL_VERBOSE, &Serial);
+  Log.begin(LOG_LEVEL_INFO, &Serial);
   Log.setShowLevel(false);
 
   Log.noticeln("Initializing Avionics Process");
