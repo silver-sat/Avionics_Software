@@ -189,7 +189,8 @@ bool AvionicsBoard::set_beacon_interval(const int seconds)
 
 bool AvionicsBoard::check_beacon()
 {
-  if ((millis() - m_last_beacon_time > m_beacon_interval) && (m_beacon_interval > 0))
+  extern RadioBoard radio;
+  if ((millis() - m_last_beacon_time > m_beacon_interval) && (m_beacon_interval > 0) && radio.recent_ground_contact())
   {
     extern PowerBoard power;
     extern PayloadBoard payload;
@@ -445,7 +446,6 @@ String AvionicsBoard::read_fram(const size_t address)
  */
 
 bool AvionicsBoard::unset_clock()
-// todo: consider eliminating command
 {
   Log.verboseln("Unsetting the realtime clock");
   clear_pic_times();

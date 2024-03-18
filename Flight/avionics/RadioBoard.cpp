@@ -15,10 +15,8 @@
 #include "AvionicsBoard.h"
 
 constexpr uint32_t serial1_baud_rate{57600}; /**< speed of serial1 connection @hideinitializer */
-constexpr byte FEND{'\xC0'};                 /**< frame end */
-constexpr byte FESC{'\xDB'};                 /**< frame escape */
-constexpr byte TFEND{'\xDC'};                /**< transposed frame end */
-constexpr byte TFESC{'\xDD'};                /**< transposed frame escape */
+
+constexpr long ground_contact_interval {7}; /**< maximum days without ground contact for beacon @hideinitializer */
 
 /**
  * @brief Initialize the Radio Board
@@ -61,6 +59,14 @@ bool RadioBoard::begin()
 
 bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
 {
+    // Increment days since last ground contact if a day has passed
+    if (millis() - m_milliseconds_since_last_ground_contact_day > days_to_hours * hours_to_minutes * minutes_to_seconds * seconds_to_milliseconds)
+    {
+        ++m_days_since_last_ground_contact;
+        m_milliseconds_since_last_ground_contact_day = millis();
+    }
+
+    // if data available, process it
     while (Serial1.available())
     {
         char character{static_cast<char>(Serial1.read())};
@@ -93,6 +99,8 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
             }
             else if (character == FEND)
             {
+                m_milliseconds_since_last_ground_contact_day = millis();
+                m_days_since_last_ground_contact = 0;
                 if (m_buffer_index > 0)
                 {
                     buffer[m_buffer_index++] = '\0';
@@ -173,4 +181,13 @@ bool RadioBoard::send_message(Message message) const
     Serial1.write(content.c_str());
     Serial1.write(FEND);
     return true;
+}
+
+/**
+ * @brief Check for recent ground contact
+ *
+ */
+
+bool RadioBoard::recent_ground_contact() const {
+    return m_days_since_last_ground_contact <= ground_contact_interval;
 }

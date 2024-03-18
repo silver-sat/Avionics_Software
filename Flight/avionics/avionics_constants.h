@@ -22,6 +22,9 @@
 
 constexpr unsigned long seconds_to_milliseconds{1000}; /**< conversion factor for time in seconds @hideinitializer */
 constexpr unsigned long minutes_to_seconds{60};        /**< conversion factor for time in minutes @hideinitializer */
+constexpr unsigned long hours_to_minutes{60};          /**< conversion factor for time in hours @hideinitializer */
+constexpr unsigned long days_to_hours{24};             /**< conversion factor for time in days @hideinitializer */
+constexpr unsigned long weeks_to_days{7};             /**< conversion factor for time in weeks @hideinitializer */
 
 /**
  * @brief SAMD21 pin definitions
@@ -66,6 +69,16 @@ constexpr unsigned RESET{0u};              /**< reset the processor @hideinitial
 constexpr unsigned wait_for_i2c_device{20}; /**< wait for I2C device to become available */
 
 /**
+ * @brief KISS protocol constants
+ * 
+ */
+
+constexpr byte FEND{'\xC0'};                 /**< frame end */
+constexpr byte FESC{'\xDB'};                 /**< frame escape */
+constexpr byte TFEND{'\xDC'};                /**< transposed frame end */
+constexpr byte TFESC{'\xDD'};                /**< transposed frame escape */
+
+/**
  * @brief Local message content
  *
  */
@@ -79,17 +92,17 @@ const String RES{"RES"};   /**< response */
  *
  */
 
-constexpr byte LOCAL_FRAME{'\x00'};        /**< local data frame */
-constexpr byte REMOTE_FRAME{'\xAA'};       /**< remote data frame */
-constexpr byte BEACON{'\x07'};             /**< beacon */
-constexpr byte DIGITALIO_RELEASE{'\x08'};  /**< deploy antenna in recovery mode */
-constexpr byte GET_RADIO_STATUS{'\x09'};   /**< request radio status */
-constexpr byte HALT{'\x0A'};               /**< stop transmission */
-constexpr byte MODIFY_MODE{'\x0C'};        /**< change radio mode */
+constexpr byte LOCAL_FRAME{'\x00'};       /**< local data frame */
+constexpr byte REMOTE_FRAME{'\xAA'};      /**< remote data frame */
+constexpr byte BEACON{'\x07'};            /**< beacon */
+constexpr byte DIGITALIO_RELEASE{'\x08'}; /**< deploy antenna in recovery mode */
+constexpr byte GET_RADIO_STATUS{'\x09'};  /**< request radio status */
+constexpr byte HALT{'\x0A'};              /**< stop transmission */
+constexpr byte MODIFY_MODE{'\x0C'};       /**< change radio mode */
 
 /**
  * @brief Radio command parameter lengths
  *
  */
 
-constexpr size_t mode_length{1};        /**< mode */
+constexpr size_t mode_length{1}; /**< mode */

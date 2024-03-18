@@ -157,7 +157,6 @@ void setup()
   // Deploy antenna
 
   Log.noticeln("Beginning antenna deployment");
-  // todo: consider moving antenna to avionics loop
   avionics.deploy_antenna();
   Log.noticeln("Antenna deployment completed");
 
@@ -200,8 +199,6 @@ void loop()
 #endif // INSTRUMENTATION
 
   // Determine stability
-
-  // todo: consider checking on longer interval
 
   avionics.get_stability();
 

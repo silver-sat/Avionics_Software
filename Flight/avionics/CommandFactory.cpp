@@ -19,8 +19,6 @@
  *
  */
 
-// todo: consider additional log messages for invalid commands
-
 /**
  * @brief Construct a new command object
  *
