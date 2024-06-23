@@ -52,7 +52,7 @@ void hex2bin(const char *src, byte *target)
         src += 2;
     }
 }
-
+//todo: disable signed commands
 /**
  * @brief Validate the commmand signature
  *
