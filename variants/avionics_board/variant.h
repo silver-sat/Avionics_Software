@@ -89,7 +89,8 @@ extern "C"
 // LEDs
 #define PIN_LED_13           (13u)
 #define PIN_LED_RXL          (31u)
-#define PIN_LED_TXL          (32u)
+// Do not define PIN_LED_TXL for avonics board to avoid continuous lit state
+// #define PIN_LED_TXL          (32u)
 #define PIN_LED              PIN_LED_13
 // #define PIN_LED2             PIN_LED_RXL
 #define PIN_LED3             PIN_LED_TXL
@@ -212,8 +213,8 @@ static const uint8_t SCL = PIN_WIRE_SCL;
 #define PERIPH_WIRE1         sercom2
 #define WIRE1_IT_HANDLER     SERCOM2_Handler
 
-// static const uint8_t SDA1 = PIN_WIRE1_SDA;
-// static const uint8_t SCL1 = PIN_WIRE1_SCL;
+static const uint8_t SDA1 = PIN_WIRE1_SDA;
+static const uint8_t SCL1 = PIN_WIRE1_SCL;
 
 /*
  * USB
