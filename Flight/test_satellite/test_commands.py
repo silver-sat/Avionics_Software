@@ -120,13 +120,12 @@ class TestCommands:
         message = common.collect_message()
         assert common.verify_message(message, common.twee_slee_pattern)
 
-# todo: close watchdog jumper
-    # def test_watchdog(self):
-    #     common.issue("Watchdog")
-    #     message = common.collect_message()
-    #     assert common.verify_message(message, common.acknowledgment_pattern)
-    #     message = common.collect_message()
-    #     assert common.verify_message(message, common.watchdog_pattern)
+    def test_watchdog(self):
+        common.issue("Watchdog")
+        message = common.collect_message()
+        assert common.verify_message(message, common.acknowledgment_pattern)
+        message = common.collect_message()
+        assert common.verify_message(message, common.watchdog_pattern)
 
     def test_modify_mode(self):
         common.issue("ModifyMode 1")
