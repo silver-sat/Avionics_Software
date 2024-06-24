@@ -113,7 +113,7 @@ class TestCommands:
         message = common.collect_message()
         assert common.verify_message(message, common.pay_comms_pattern)
 
-    def test_twee_sell(self):
+    def test_twee_slee(self):
         common.issue("TweeSlee")
         message = common.collect_message()
         assert common.verify_message(message, common.acknowledgment_pattern)
