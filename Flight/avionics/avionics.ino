@@ -38,7 +38,8 @@
  */
 constexpr uint32_t serial_baud_rate{57600}; /**< speed of serial connection @hideinitializer */
 constexpr unsigned long serial_delay{2 * seconds_to_milliseconds};
-constexpr unsigned long separation_delay{45 * minutes_to_seconds * seconds_to_milliseconds};
+// todo: set to 45 minutes for flight
+constexpr unsigned long separation_delay{0.05 * minutes_to_seconds * seconds_to_milliseconds};
 
 /**
  * @brief Create the boards and command processor

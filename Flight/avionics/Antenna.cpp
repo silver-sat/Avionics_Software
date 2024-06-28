@@ -17,7 +17,8 @@
  * @brief Antenna constants
  *
  */
-constexpr unsigned long antenna_delay{80 * seconds_to_milliseconds};
+// todo: set to 80 seconds for flight
+constexpr unsigned long antenna_delay{3 * seconds_to_milliseconds};
 
 /**
  * @brief Check antenna state
