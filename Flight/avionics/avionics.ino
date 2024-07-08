@@ -118,6 +118,7 @@ void setup()
   Log.begin(LOG_LEVEL_INFO, &Serial);
   Log.setShowLevel(false);
 
+  Log.noticeln("Avionics software compiled %s at %s local time", __DATE__, __TIME__);
   Log.noticeln("Initializing Avionics Process");
 
   // Initialize Avionics Board
