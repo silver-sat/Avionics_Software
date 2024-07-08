@@ -42,13 +42,13 @@ bool CommandProcessor::check_for_command()
 
             if (command->execute_command())
             {
-                Log.traceln("Executed (%l executed, %l failed, next sequence %l)", ++m_successful_commands, m_failed_commands, m_command_sequence);
+                Log.traceln("Executed (%l executed, %l failed)", ++m_successful_commands, m_failed_commands);
                 delete command;
                 return true;
             }
             else
             {
-                Log.errorln("Failed (%l executed, %l failed, next sequence %l)", m_successful_commands, ++m_failed_commands, m_command_sequence);
+                Log.errorln("Failed (%l executed, %l failed)", m_successful_commands, ++m_failed_commands);
                 delete command;
                 return false;
             }
@@ -83,23 +83,19 @@ bool CommandProcessor::check_for_command()
  * @param buffer
  * @return next command to process
  *
- * For ground commands, validate signature, parse parameters, and construct
- * Command object
+ * For ground commands parse parameters and construct Command object
  *
  */
 
 Command *CommandProcessor::make_command(String buffer)
 {
 
-    // validate signature
-
-    String command_string;
-    command_parser.validate_signature(buffer, command_string, m_validation_required, m_command_sequence);
-
     // tokenize the command string and create the command object
 
+    String command_string{buffer};
     size_t token_count{0};
     String command_tokens[command_parameter_limit]{};
+    command_string.trim();
     if (command_parser.parse_parameters(command_string, command_tokens, token_count))
     {
         Log.traceln("Constructing command object");
