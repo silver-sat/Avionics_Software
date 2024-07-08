@@ -73,7 +73,6 @@ bool CommandParser::parse_parameters(const String &command_string, String comman
             return false;
         }
         command.trim();
-        // todo: indexOf can return -1
         int next_blank{command.indexOf(' ')};
         if (next_blank == -1)
         {

@@ -13,8 +13,6 @@
 
 #include <Arduino.h>
 
-// todo: consider changing case of constants
-
 /**
  * @brief Global time constants
  *

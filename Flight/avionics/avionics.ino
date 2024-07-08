@@ -112,7 +112,7 @@ void setup()
   {
     avionics.trigger_watchdog();
   }
-  // todo: turn off log facility
+  // todo: turn off log facility for flight
   Log.setPrefix(printPrefix);
   Log.setSuffix(printSuffix);
   Log.begin(LOG_LEVEL_INFO, &Serial);
