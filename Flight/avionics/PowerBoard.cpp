@@ -86,7 +86,7 @@ bool PowerBoard::power_adequate()
     else
     {
         Log.warningln("EPS-I voltage below payload session minimum");
-        // todo: restore battery voltage test
+        // todo: restore battery voltage test for flight
         return true;
     }
 }
