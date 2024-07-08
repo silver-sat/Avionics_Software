@@ -3,7 +3,7 @@ The "avionics" folder contains the Avionics Board software for operating the sat
 This includes the process loop, hardware drivers, command processor, and interface software for the antenna, power, radio, and payload boards.
 
 ### Test Drivers
-The "test_satellite" folder contains drivers for testing the commands supported by the satellite and a Day in the Life test.
+The "test_satellite" folder contains drivers for testing the commands supported by the satellite and a "Day in the Life" test.
 
 ### Software
 The "avionics.ino" sketch is the main process loop for operating the Avionics Board. In avionics.ino, the hardware devices on the Avionics Board are implemented as classes interfacing to real hardware. The other SilverSat boards: Antenna, Power, Radio, and Payload, are implemented as classes which interface with those boards. 
@@ -13,24 +13,24 @@ The local messages which Avionics sends to the Radio Board, the ground commands 
 The Avionics Board connects to the Radio Board via the Serial1 interface. It connects to the realtime clock via the critical I2C connection. The Avionics Board connects to the IMU, the FRAM, the antenna, and the Power Board via a second I2C connection. Accessing the antenna and the Power Board require activation of an I2C switch. The Avionics Board connects to the Payload Board via digital IO lines.
 
 ### Libraries
-The "avionics" folder includes an interface to the Arduino log library, which can be used to log status information. Adafruit libaries are used to support the I2C devices, the MPU6050, the FRAM, the real time clock. The Arduino Crypto library is used to support command signing, which is deprecated in the flight software.
+The "avionics" folder includes an interface to the Arduino log library, which can be used to log status information. Adafruit libaries are used to support the I2C devices, the MPU6050, the FRAM, the real time clock.
 
 ### Setup
-To setup a build environment, clone this repository to your computer or download a .zip file and extract the folders. Install the Adafruit MPU6050 and FRAM libraries with dependencies using the Arduino Library Manager. Install the ArduinoLog and Arduino Crypto libraries by downloading and copying them into your library folder. Compile and upload the "avionics.ino" sketch to the Avionics Board microcontroller using the standard Arduino tools or alternative deployment tools.
+To setup a build environment, clone this repository to your computer or download a .zip file and extract the folders. Install the Adafruit MPU6050 and FRAM libraries with dependencies using the Arduino Library Manager. Install the ArduinoLog library by downloading it into your library folder. Compile and upload the "avionics.ino" sketch to the Avionics Board microcontroller using a J-Link programmer. There is no bootloader on the Avionics Board.
+
+Review the other READMEs in this repository and ensure your environment is configured correctly. In particular, you will need variant files for the Avionics Board. You will need to define the Avionics Board as crystalless. You will need to modify the linker script to place the executable at location 0 and not leave space for a bootloader. You do not need to set up support for command signing as it has been deprecated.
 
 The "avionics.ino" log level can be changed by modifying the "log.begin" method call in the "avionics_loop.ino" file. The "avionics.ino" file has instrumentation for tracking processing time and memory usage that is enabled by ```#define INSTRUMENTATION```. The log utility is used to display the instrumentation data.
 
-The "avionics.ino" sketch receives commands and sends messages and local commands to and from the Radion Board via the "Serial1" port. It sends log data to the "Serial" port. After uploading your sketch, verify that the Avionics Board has initialized properly by opening a terminal connection to the "Serial" port and reviewing the log entries. Terminal emulators known to work include the Arduino IDE Serial Monitor, the VS Code Arduino extension Serial Monitor, and the tio terminal emulator. (```tio -m INLCRNL [portname]```). 
-
-The software requires the use of a programmer to load the software. A bootloader is not supported.
+The "avionics.ino" sketch receives commands and sends messages and local commands to and from the Radio Board via the "Serial1" port. It sends log data to the "Serial" port. After uploading your sketch, verify that the Avionics Board has initialized properly by opening a terminal connection to the "Serial" port and reviewing the log entries. Terminal emulators known to work include the Arduino IDE Serial Monitor, the VS Code Arduino extension Serial Monitor, and the tio terminal emulator. (```tio -b 57600 -m INLCRNL,ONLCRNL [portname]```). 
 
 ### Testing
 
-You can use the "Serial1" port to send commands to the Avionics Board and observe the responses. The commands must be KISS formatted. Since commands use utf-8 single-byte printable characters, commands can typically be generated by adding FEND [0xC0] at the front and end of the command. The first FEND must be following by the appropriate command byte as defined in https://docs.google.com/document/d/1Vwpk0ab0HoC62mU7A1fQwpmhmtmZO0VwPtXjQipe0v0/edit?usp=sharing. Be aware that the FENDs and command bytes are not printable characters. The Avionics Board implements the KISS escape processing protocol, although it is not currently in use.
+You can use the "Serial1" port to send commands to the Avionics Board and observe the responses. The commands must be KISS formatted. Commands use utf-8 single-byte printable characters and can typically be generated by adding FEND [0xC0] at the beginning and end of the command. The first FEND must be following by the appropriate command byte as defined in https://docs.google.com/document/d/1Vwpk0ab0HoC62mU7A1fQwpmhmtmZO0VwPtXjQipe0v0/edit?usp=sharing. Be aware that the FENDs and command bytes are not printable characters. The Avionics Board implements the KISS escape processing protocol, although it is not currently in use.
 
 The "test_satellite" folder includes Python programs for unit testing each of the Avionics Board commands and for a Day in the Life test. These programs are designed to be managed and executed using pytest. After resetting the microcontroller you may run the entire suite of tests by entering ```pytest``` on the command line while in the "test_satellite" directory. (Depending on your configuration, ```python3 -m pytest``` may be required.) pytest also allows selective execution of tests. See https://docs.pytest.org/ for additional information. 
 
-You can observe traffic on the Serial1 port using a USB adaptor device and tio. Configure tio to display the traffic as hex bytes. 
+In addition to using pytest, you can send and receive traffic on the Serial1 port using a USB adaptor device and tio. Configure tio to display the traffic as hex bytes. 
 
 ### Documentation
 
