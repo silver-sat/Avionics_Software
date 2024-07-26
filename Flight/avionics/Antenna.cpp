@@ -18,7 +18,7 @@
  *
  */
 // todo: set to 80 seconds for flight
-constexpr unsigned long antenna_delay{3 * seconds_to_milliseconds};
+constexpr unsigned long antenna_delay{80 * seconds_to_milliseconds};
 
 /**
  * @brief Check antenna state
@@ -57,6 +57,7 @@ bool Antenna::deploy()
 
     // Check initial state
 
+    Log.noticeln("Antenna delay is %d seconds for each cycle required", antenna_delay/seconds_to_milliseconds);
     Log.traceln("Checking initial antenna state");
     check();
 

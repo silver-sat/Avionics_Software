@@ -148,6 +148,7 @@ void setup()
   // Wait for separation delay
 
   Log.noticeln("Beginning separation delay");
+  Log.noticeln("Separation delay is %d seconds", separation_delay/seconds_to_milliseconds);
   unsigned long separation_timer_start{millis()};
   while ((millis() - separation_timer_start) < separation_delay)
   {
