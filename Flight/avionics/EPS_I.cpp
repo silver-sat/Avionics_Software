@@ -1,6 +1,7 @@
 /**
  * @file EPS_I.cpp
  * @author Lee A. Congdon (lee@silversat.org)
+ * @author Benjamin S. Cohen (ben@silversat.org)
  * @brief SilverSat device driver for Endurosat EPS I
  * @version 1.0.0
  * @date 2022-10-23
@@ -55,7 +56,7 @@ float EPS_I::getBatteryVoltage()
   float voltage{static_cast<float>(value) * GETBATTERYINFO_BATTERY_BATT_VOLT_COEFFICIENT};
   Log.verboseln("Battery voltage is %F V", voltage);
   return voltage;
-} 
+}
 
 /**
  * @brief Get the battery current
@@ -161,7 +162,7 @@ float EPS_I::get5VCurrent()
 
 /**
  * @brief Get the LUP 5V voltage
- * 
+ *
  * @return float voltage
  */
 
@@ -222,6 +223,20 @@ bool EPS_I::getHeater3State()
 }
 
 /**
+ * @brief method in EPS class that sends cycle for 5v
+ *
+ * default cycle time is two seconds
+ *
+ */
+
+bool EPS_I::cycle_5v_bus()
+{
+  auto state{static_cast<uint8_t>(EPS_I_Write_State::TOGGLE)};
+  Log.verboseln("Sending toggle command to EPS_I");
+  return write_command(EPS_I_Write_Command::QUERYCONTROLS_AND_TOGGLEOUTPUT04, state);
+}
+
+/**
  * @brief Read 16 bits of data from the EPS I
  *
  * @return raw 16 bits in correct endian format
@@ -246,8 +261,8 @@ uint16_t EPS_I::read_value(EPS_I_Read_Command command)
  *
  */
 
-void EPS_I::write_command(const EPS_I_Write_Command command, const uint8_t state)
+bool EPS_I::write_command(const EPS_I_Write_Command command, const uint8_t state)
 {
   uint8_t command_byte{static_cast<uint8_t>(command)};
-  m_i2c_dev.write(&state, 1, true, &command_byte, 1);
+  return m_i2c_dev.write(&state, 1, true, &command_byte, 1);
 }

@@ -1,6 +1,7 @@
 /**
  * @file CommandProcessor.cpp
  * @author Lee A. Congdon (lee@silversat.org)
+ * @author Benjamin S. Cohen (ben@silversat.org)
  * @brief Manage command processing
  * @version 1.0.0
  * @date 2022-12-07
@@ -14,6 +15,7 @@
 #include "log_utility.h"
 #include "Response.h"
 #include "RadioBoard.h"
+#include "PowerBoard.h"
 
 /**
  * @brief Check for command from Radio Board
@@ -71,6 +73,11 @@ bool CommandProcessor::check_for_command()
                 default:
                     break;
                 }
+            }
+            else if (command_string.length() == 1 && command_string[0] == TOGGLE_RADIO_5V){
+                Log.verboseln("Received reset 5v from radio");
+                extern PowerBoard power;
+                power.cycle_radio_5v();
             }
         }
     }

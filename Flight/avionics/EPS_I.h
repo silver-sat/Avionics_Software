@@ -1,6 +1,7 @@
 /**
  * @file EPS_I.h
  * @author Lee A. Congdon (lee@silversat.org)
+ * @author Benjamin S. Cohen (ben@silversat.org)
  * @brief SilverSat device driver for Endurosat EPS I
  * @version 1.1.0
  * @date 2022-10-23
@@ -1037,6 +1038,13 @@ public:
 
   bool getHeater3State();
 
+  /**
+   * @brief method in EPS class that sends cycle for 5v
+   *
+   */
+
+  bool cycle_5v_bus();
+
 private:
   /**
    * @brief Initialization code for EPS I
@@ -1057,7 +1065,7 @@ private:
    *
    */
 
-  void write_command(const EPS_I_Write_Command command, const uint8_t state);
+  bool write_command(const EPS_I_Write_Command command, const uint8_t state);
 
   Adafruit_I2CDevice m_i2c_dev{Adafruit_I2CDevice(EPS_I_I2C_ADDRESS, &Wire1)};
 };

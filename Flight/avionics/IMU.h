@@ -1,6 +1,7 @@
 /**
  * @file IMU.h
  * @author Lee A. Congdon (lee@silversat.org)
+ * @author Benjamin S. Cohen (ben@silversat.org)
  * @brief SilverSat Inertial Management Unit
  * @version 1.0.0
  * @date 2022-08-02
@@ -15,7 +16,7 @@
 #pragma once
 
 #include <Adafruit_MPU6050.h>
-#include <CircularBuffer.hpp>
+#include <CircularBuffer.h>
 
 constexpr unsigned IMU_I2C_ADDRESS{0x68}; /**< inertial measurement unit I2C address @hideinitializer */
 constexpr size_t buffer_size{10};         /**< for data smoothing */

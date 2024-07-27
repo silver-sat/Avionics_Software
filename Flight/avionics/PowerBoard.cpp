@@ -1,6 +1,7 @@
 /**
  * @file PowerBoard.cpp
  * @author Lee A. Congdon (lee@silversat.org)
+ * @author Benjamin S. Cohen (ben@silversat.org)
  * @brief SilverSat Power Board
  * @version 2.0.2
  * @date 2022-07-24
@@ -109,4 +110,15 @@ const String PowerBoard::get_detail()
            " H1S " + String(m_eps_i.getHeater1State()) +
            " H2S " + String(m_eps_i.getHeater2State()) +
            " H3S " + String(m_eps_i.getHeater3State());
+}
+
+/**
+ * @brief cycles the radio 5v power
+ *
+ */
+
+bool PowerBoard::cycle_radio_5v()
+{
+    Log.warningln("Cycling radio 5v");
+    return m_eps_i.cycle_5v_bus();
 }
