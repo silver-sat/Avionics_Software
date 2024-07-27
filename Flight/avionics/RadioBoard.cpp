@@ -1,6 +1,7 @@
 /**
  * @file RadioBoard.cpp
  * @author Lee A. Congdon (lee@silversat.org)
+ * @author Benjamin S. Cohen (ben@silversat.org)
  * @brief SilverSat Radio
  * @version 1.3.0
  * @date 2022-07-24
@@ -90,6 +91,10 @@ bool RadioBoard::receive_frame(char *buffer, const size_t length, char &source)
                     break;
                 case FEND:
                     break; // drop additional FENDs
+                case TOGGLE_RADIO_5V:
+                    m_remote_data=false;
+                    Log.verboseln("Receiving reset 5v");
+                    break;
                 default:
                     Log.errorln("Invalid type");
                     m_received_start = false;
