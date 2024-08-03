@@ -34,17 +34,20 @@ bool CommandProcessor::check_for_command()
     {
         auto frame{radio.get_frame()};
         Log.verboseln("Frame length: %l", frame.length);
-        for (size_t i {0}; i < frame.length; i++)
+        for (size_t i{0}; i < frame.length; i++)
         {
             m_command_buffer[i] = frame.data[i];
             Log.verboseln("Frame data: %X", m_command_buffer[i]);
         }
         m_command_buffer[frame.length] = '\0';
         String command_string{m_command_buffer};
+        command_string.remove(0, 1);
         Log.verboseln("Command string: %s", command_string.c_str());
-        // Ground command
-        if (m_command_buffer[0] == REMOTE_FRAME)
+        auto command{m_command_buffer[0]};
+        switch (command)
         {
+        // Ground command
+        case REMOTE_FRAME:
             Command *command{make_command(command_string)};
             Log.verboseln("Command object memory address: %s", ("0x" + String(reinterpret_cast<uint32_t>(command), HEX)).c_str());
             command->acknowledge_command();
@@ -62,9 +65,9 @@ bool CommandProcessor::check_for_command()
                 delete command;
                 return false;
             }
-        }
-        else
-        {
+            break;
+        // local response
+        case LOCAL_FRAME:
             if (command_string.length() > RES.length() && command_string.startsWith(RES))
             {
                 auto command_type{command_string[RES.length()]};
@@ -82,11 +85,17 @@ bool CommandProcessor::check_for_command()
                     break;
                 }
             }
-            else if (command_string.length() == 1 && command_string[0] == TOGGLE_RADIO_5V){
+            else if (command_string.length() == 1 && command_string[0] == TOGGLE_RADIO_5V)
+            {
                 Log.verboseln("Received reset 5v from radio");
                 extern PowerBoard power;
                 power.cycle_radio_5v();
             }
+            break;
+        case TOGGLE_RADIO_5V:
+            break;
+        default:
+            break;
         }
     }
     return true;
