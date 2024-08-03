@@ -14,7 +14,7 @@ import re
 
 ## port for command input and output
 
-COMMAND_PORT = "/dev/ttyUSB0"
+COMMAND_PORT = "/dev/tty.usbserial-A10MHKWZ"
 
 ## serial transmission speed
 

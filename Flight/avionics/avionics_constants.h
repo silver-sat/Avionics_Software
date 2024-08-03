@@ -68,6 +68,14 @@ constexpr unsigned RESET{0u};              /**< reset the processor @hideinitial
 constexpr unsigned wait_for_i2c_device{20}; /**< wait for I2C device to become available */
 
 /**
+ * @brief Maximum size of command from Radio Board
+ * 
+ */
+
+constexpr size_t maximum_command_length{256};  /**< maximum characters in command */
+
+
+/**
  * @brief KISS protocol constants
  * 
  */

@@ -27,15 +27,23 @@
  * validate, acknowledge and execute ground command or process local message
  *
  */
-
 bool CommandProcessor::check_for_command()
 {
     extern RadioBoard radio;
-    if (radio.receive_frame(m_command_buffer, maximum_command_length, m_source))
+    if (radio.receive_frame())
     {
+        auto frame{radio.get_frame()};
+        Log.verboseln("Frame length: %l", frame.length);
+        for (size_t i {0}; i < frame.length; i++)
+        {
+            m_command_buffer[i] = frame.data[i];
+            Log.verboseln("Frame data: %X", m_command_buffer[i]);
+        }
+        m_command_buffer[frame.length] = '\0';
         String command_string{m_command_buffer};
-        Log.verboseln("Command source: %X", m_source);
-        if (m_source == REMOTE_FRAME)
+        Log.verboseln("Command string: %s", command_string.c_str());
+        // Ground command
+        if (m_command_buffer[0] == REMOTE_FRAME)
         {
             Command *command{make_command(command_string)};
             Log.verboseln("Command object memory address: %s", ("0x" + String(reinterpret_cast<uint32_t>(command), HEX)).c_str());

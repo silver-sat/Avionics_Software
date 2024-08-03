@@ -15,6 +15,16 @@
 #include "Message.h"
 
 /**
+ * @brief Frame data and length
+ *
+ */
+
+struct Frame {
+    char *data{};
+    size_t length{};
+};
+
+/**
  * @brief SilverSat Radio Board
  *
  */
@@ -29,11 +39,18 @@ public:
     bool begin();
 
     /**
-     * @brief Assemble command or response from Serial1 port
+     * @brief Start new frame
      *
      */
 
-    bool receive_frame(char *buffer, const size_t length, char &source);
+    bool receive_frame();
+
+    /**
+     * @brief Get frame
+     *
+     */
+
+    Frame get_frame();
 
     /**
      * @brief Send message
@@ -44,18 +61,51 @@ public:
 
     /**
      * @brief Check for recent ground contact
-     * 
+     *
      */
 
     bool recent_ground_contact() const;
 
 private:
+    void start_frame();
+
+    /**
+     * @brief End frame
+     *
+     */
+
+    void end_frame();
+
+    /**
+     * @brief Enter escape mode
+     *
+     */
+
+    void enter_escape_mode();
+
+    /**
+     * @brief Exit escape mode
+     *
+     */
+
+    void exit_escape_mode();
+
+    /**
+     * @brief Add character to buffer
+     *
+     */
+
+    bool add_character_to_buffer(char character);
+
+    /**
+     * @brief Gather frame from Serial1 port
+     *
+     */
+
     size_t m_buffer_index{0};
-    bool m_received_start{false};
-    bool m_received_type{false};
+    char m_buffer[maximum_command_length]{""};
+    bool m_in_frame{false};
     bool m_received_escape{false};
-    bool m_remote_data{};
-    long m_commands_received{0};
     unsigned long m_milliseconds_since_last_ground_contact_day{0};
     long m_days_since_last_ground_contact{0};
 };
