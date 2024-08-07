@@ -43,11 +43,12 @@ bool CommandProcessor::check_for_command()
         String command_string{m_command_buffer};
         command_string.remove(0, 1);
         Log.verboseln("Command string: %s", command_string.c_str());
-        auto command{m_command_buffer[0]};
-        switch (command)
+        auto command_byte{m_command_buffer[0]};
+        switch (command_byte)
         {
         // Ground command
         case REMOTE_FRAME:
+        {
             Command *command{make_command(command_string)};
             Log.verboseln("Command object memory address: %s", ("0x" + String(reinterpret_cast<uint32_t>(command), HEX)).c_str());
             command->acknowledge_command();
@@ -65,7 +66,8 @@ bool CommandProcessor::check_for_command()
                 delete command;
                 return false;
             }
-            break;
+        }
+        break;
         // local response
         case LOCAL_FRAME:
             if (command_string.length() > RES.length() && command_string.startsWith(RES))

@@ -146,7 +146,7 @@ bool RadioBoard::receive_frame()
             // if not in escape mode, add to buffer
             if (!m_received_escape)
             {
-                if (add_character_to_buffer(FESC))
+                if (!add_character_to_buffer(TFESC))
                 {
                     Log.errorln("Frame ignored, overflow character: %X", character);
                     start_frame();

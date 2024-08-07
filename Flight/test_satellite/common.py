@@ -14,7 +14,7 @@ import re
 
 ## port for command input and output
 
-COMMAND_PORT = "/dev/ttyUSB0"
+COMMAND_PORT = "/dev/tty.usbserial-A10MHKWZ"
 
 ## serial transmission speed
 
@@ -57,6 +57,8 @@ read_length = 256
 
 acknowledgment_pattern = re.compile(rb"^ACK$")
 negative_acknowledgment_pattern = re.compile(rb"^NACK$")
+no_response_pattern = re.compile(rb"")
+invalid_command_pattern = re.compile(rb"^ERR INV$")
 set_clock_pattern = re.compile(rb"^RES SRC$")
 beacon_sp_pattern = re.compile(rb"^RES SBI$")
 pic_times_pattern = re.compile(rb"^RES SPT$")
