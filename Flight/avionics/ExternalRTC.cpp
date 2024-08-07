@@ -135,7 +135,6 @@ String ExternalRTC::get_timestamp()
  *
  */
 
-// todo: consider removing from flight software or including hardware reset
 
 bool ExternalRTC::unset_clock()
 {

@@ -17,12 +17,7 @@
  *
  */
 
-constexpr size_t maximum_sequence_length{10};  /**< maximum digits in sequence number */
-constexpr size_t maximum_command_length{256};  /**< maximum characters in command */
 constexpr size_t command_parameter_limit{10};  /**< maximum command parameters */
-constexpr size_t salt_size{16};                /**< salt size for HMAC */
-constexpr size_t secret_size{16};              /**< secret size for HMAC */
-constexpr size_t HMAC_size{32};                /**< HMAC size */
 
 /**
  * @brief Collect command and parse parameters

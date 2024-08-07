@@ -2,6 +2,7 @@
 # @file common.py
 # @brief FlatSat test Avionics Board common functions
 # @author Lee A. Congdon (lee@silversat.org)
+# @author Benjamin S. Cohen (ben@silversat.org)
 # @version 1.0.0
 # @date 9 October 2022
 
@@ -43,6 +44,7 @@ DIGITALIO_RELEASE = b"\x08"
 STATUS = b"\x09"
 HALT = b"\x0A"
 MODIFY_MODE = b"\x0C"
+TOGGLE_RADIO_5V = b"\x0F"
 
 ## serial port for commands and responses
 
@@ -56,6 +58,8 @@ read_length = 256
 
 acknowledgment_pattern = re.compile(rb"^ACK$")
 negative_acknowledgment_pattern = re.compile(rb"^NACK$")
+no_response_pattern = re.compile(rb"")
+invalid_command_pattern = re.compile(rb"^ERR INV$")
 set_clock_pattern = re.compile(rb"^RES SRC$")
 beacon_sp_pattern = re.compile(rb"^RES SBI$")
 pic_times_pattern = re.compile(rb"^RES SPT$")

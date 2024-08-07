@@ -1,11 +1,11 @@
 ##
 # @file test_commands.py
-# @brief FlatSat test Avionics Board commands
+# @brief Test Avionics Board commands
 # @author Lee A. Congdon (lee@silversat.org)
 # @version 1.0.0
 # @date 9 October 2022
 
-"""FlatSat test Avionics Board commands"""
+"""Test Avionics Board commands"""
 
 import common
 

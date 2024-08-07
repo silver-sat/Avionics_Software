@@ -1,6 +1,7 @@
 /**
  * @file avionics_constants.h
  * @author Lee A. Congdon (lee@silversat.org)
+ * @author Benjamin S. Cohen (ben@silversat.org)
  * @brief Hardware definitions for Avionics Board
  * @version 1.1.0
  * @date 2022-08-11
@@ -67,6 +68,14 @@ constexpr unsigned RESET{0u};              /**< reset the processor @hideinitial
 constexpr unsigned wait_for_i2c_device{20}; /**< wait for I2C device to become available */
 
 /**
+ * @brief Maximum size of command from Radio Board
+ * 
+ */
+
+constexpr size_t maximum_command_length{256};  /**< maximum characters in command */
+
+
+/**
  * @brief KISS protocol constants
  * 
  */
@@ -97,6 +106,7 @@ constexpr byte DIGITALIO_RELEASE{'\x08'}; /**< deploy antenna in recovery mode *
 constexpr byte GET_RADIO_STATUS{'\x09'};  /**< request radio status */
 constexpr byte HALT{'\x0A'};              /**< stop transmission */
 constexpr byte MODIFY_MODE{'\x0C'};       /**< change radio mode */
+constexpr byte TOGGLE_RADIO_5V{'\x0F'};   /**< Toggle radio 5v */
 
 /**
  * @brief Radio command parameter lengths

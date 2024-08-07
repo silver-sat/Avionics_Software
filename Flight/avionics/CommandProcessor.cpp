@@ -1,6 +1,7 @@
 /**
  * @file CommandProcessor.cpp
  * @author Lee A. Congdon (lee@silversat.org)
+ * @author Benjamin S. Cohen (ben@silversat.org)
  * @brief Manage command processing
  * @version 1.0.0
  * @date 2022-12-07
@@ -14,6 +15,7 @@
 #include "log_utility.h"
 #include "Response.h"
 #include "RadioBoard.h"
+#include "PowerBoard.h"
 
 /**
  * @brief Check for command from Radio Board
@@ -25,15 +27,26 @@
  * validate, acknowledge and execute ground command or process local message
  *
  */
-
 bool CommandProcessor::check_for_command()
 {
     extern RadioBoard radio;
-    if (radio.receive_frame(m_command_buffer, maximum_command_length, m_source))
+    if (radio.receive_frame())
     {
-        String command_string{m_command_buffer};
-        Log.verboseln("Command source: %X", m_source);
-        if (m_source == REMOTE_FRAME)
+        auto frame{radio.get_frame()};
+        Log.verboseln("Frame length: %l", frame.length);
+        for (size_t i{0}; i < frame.length; i++)
+        {
+            m_command_buffer[i] = frame.data[i];
+            Log.verboseln("Frame data: %X", m_command_buffer[i]);
+        }
+        auto command_byte{m_command_buffer[0]};
+        m_command_buffer[frame.length] = '\0';
+        String command_string{m_command_buffer + 1}; // create command string from frame data after the command byte
+        Log.verboseln("Command string: %s", command_string.c_str());
+        switch (command_byte)
+        {
+        // Ground command
+        case REMOTE_FRAME:
         {
             Command *command{make_command(command_string)};
             Log.verboseln("Command object memory address: %s", ("0x" + String(reinterpret_cast<uint32_t>(command), HEX)).c_str());
@@ -53,14 +66,16 @@ bool CommandProcessor::check_for_command()
                 return false;
             }
         }
-        else
-        {
+        break;
+        // Local response
+        case LOCAL_FRAME:
+            Log.verboseln("Local frame: %s", command_string.c_str());
             if (command_string.length() > RES.length() && command_string.startsWith(RES))
             {
-                auto command_type{command_string[RES.length()]};
+                auto response_type{command_string[RES.length()]};
                 auto radio_data{command_string.substring(RES.length() + 1)};
-                Log.verboseln("Response type: %X, content: %s", command_type, radio_data.c_str());
-                switch (command_type)
+                Log.verboseln("Response type: %X, content: %s", response_type, radio_data.c_str());
+                switch (response_type)
                 {
                 case GET_RADIO_STATUS:
                     Response{"GRS " + radio_data}.send();
@@ -72,6 +87,18 @@ bool CommandProcessor::check_for_command()
                     break;
                 }
             }
+            break;
+        // Cycle radio 5v
+        case TOGGLE_RADIO_5V:
+            if (command_string.length() == 0 && command_byte == TOGGLE_RADIO_5V)
+            {
+                Log.verboseln("Received reset 5v from radio");
+                extern PowerBoard power;
+                power.cycle_radio_5v();
+            }
+            break;
+        default:
+            break;
         }
     }
     return true;

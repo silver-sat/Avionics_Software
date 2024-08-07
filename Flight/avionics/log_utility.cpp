@@ -84,16 +84,16 @@ void printLogLevel(Print *_logOutput, int logLevel)
     _logOutput->print("SILENT  ");
     break;
   case 1:
-    _logOutput->print("FATAL   ");
+    _logOutput->print("\033[1;31mFATAL\033[0m   ");
     break;
   case 2:
-    _logOutput->print("ERROR   ");
+    _logOutput->print("\033[1;31mERROR\033[0m   ");
     break;
   case 3:
-    _logOutput->print("WARNING ");
+    _logOutput->print("\033[1;31mWARNING\033[0m ");
     break;
   case 4:
-    _logOutput->print("INFO    ");
+    _logOutput->print("\033[1;32mINFO\033[0m    ");
     break;
   case 5:
     _logOutput->print("TRACE   ");
