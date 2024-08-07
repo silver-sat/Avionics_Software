@@ -23,7 +23,7 @@
  *
  */
 
-// #define INSTRUMENTATION // Instrumentation for processor and memory usage
+#define INSTRUMENTATION // Instrumentation for processor and memory usage
 
 #include "log_utility.h"
 #include "PowerBoard.h"

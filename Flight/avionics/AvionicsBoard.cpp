@@ -222,7 +222,7 @@ AvionicsBeacon AvionicsBoard::get_status()
   if (m_imu_initialization_error)
   {
     status = AvionicsBeacon::imu_initialization_error;
-    Log.verboseln("Inertial Measurment Unit initialization error occurred");
+    Log.verboseln("Inertial Measurement Unit initialization error occurred");
   }
   if (m_FRAM_initialization_error)
   {
