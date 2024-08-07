@@ -23,6 +23,8 @@
  *
  */
 
+
+// todo: turn off instrumentation for flight
 #define INSTRUMENTATION // Instrumentation for processor and memory usage
 
 #include "log_utility.h"
@@ -115,10 +117,17 @@ void setup()
   // todo: turn off log facility for flight
   Log.setPrefix(printPrefix);
   Log.setSuffix(printSuffix);
-  Log.begin(LOG_LEVEL_VERBOSE, &Serial);
+  Log.begin(LOG_LEVEL_NOTICE, &Serial);
   Log.setShowLevel(false);
 
   Log.noticeln("Avionics software compiled %s at %s local time", __DATE__, __TIME__);
+  Log.warningln("Not for flight use.");
+  Log.warningln("Required change: increase antenna delay to 80 seconds");
+  Log.warningln("Required change: increase separation delay to 45 minutes");
+  Log.warningln("Required change: turn off instrumentation");
+  Log.warningln("Required change: turn off log facility");
+  Log.warningln("Required change: calibrate the IMU");
+  Log.warningln("Required change: establish and enable the minimum battery voltage for Payload Board activity");
   Log.noticeln("Initializing Avionics Process");
 
   // Initialize Avionics Board

@@ -44,6 +44,7 @@ DIGITALIO_RELEASE = b"\x08"
 STATUS = b"\x09"
 HALT = b"\x0A"
 MODIFY_MODE = b"\x0C"
+TOGGLE_RADIO_5V = b"\x0F"
 
 ## serial port for commands and responses
 

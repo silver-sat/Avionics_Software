@@ -45,15 +45,19 @@ bool RadioBoard::begin()
     // Send abort transaction to Radio Board to clear buffer
     Serial1.write(FESC);
     Serial1.write(FESC);
+
     // Send invalid command to Radio Board to determine if it is responding
-    Serial1.write(FEND + "Invalid" + FEND);
+    Serial1.write(FEND);
+    Serial1.write(LOCAL_FRAME);
+    Serial1.write("Invalid");
+    Serial1.write(FEND);
     auto reply{Serial1.readString()};
     if (reply == "NACK")
     {
         Log.verboseln("Command port initialized");
         return true;
     };
-    Log.errorln("Radio Board not responding");
+    Log.errorln("Radio Board did not respond");
     return false;
 }
 

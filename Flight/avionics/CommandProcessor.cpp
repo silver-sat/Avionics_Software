@@ -39,11 +39,10 @@ bool CommandProcessor::check_for_command()
             m_command_buffer[i] = frame.data[i];
             Log.verboseln("Frame data: %X", m_command_buffer[i]);
         }
-        m_command_buffer[frame.length] = '\0';
-        String command_string{m_command_buffer};
-        command_string.remove(0, 1);
-        Log.verboseln("Command string: %s", command_string.c_str());
         auto command_byte{m_command_buffer[0]};
+        m_command_buffer[frame.length] = '\0';
+        String command_string{m_command_buffer + 1}; // create command string from frame data after the command byte
+        Log.verboseln("Command string: %s", command_string.c_str());
         switch (command_byte)
         {
         // Ground command
@@ -68,14 +67,15 @@ bool CommandProcessor::check_for_command()
             }
         }
         break;
-        // local response
+        // Local response
         case LOCAL_FRAME:
+            Log.verboseln("Local frame: %s", command_string.c_str());
             if (command_string.length() > RES.length() && command_string.startsWith(RES))
             {
-                auto command_type{command_string[RES.length()]};
+                auto response_type{command_string[RES.length()]};
                 auto radio_data{command_string.substring(RES.length() + 1)};
-                Log.verboseln("Response type: %X, content: %s", command_type, radio_data.c_str());
-                switch (command_type)
+                Log.verboseln("Response type: %X, content: %s", response_type, radio_data.c_str());
+                switch (response_type)
                 {
                 case GET_RADIO_STATUS:
                     Response{"GRS " + radio_data}.send();
@@ -87,14 +87,15 @@ bool CommandProcessor::check_for_command()
                     break;
                 }
             }
-            else if (command_string.length() == 1 && command_string[0] == TOGGLE_RADIO_5V)
+            break;
+        // Cycle radio 5v
+        case TOGGLE_RADIO_5V:
+            if (command_string.length() == 0 && command_byte == TOGGLE_RADIO_5V)
             {
                 Log.verboseln("Received reset 5v from radio");
                 extern PowerBoard power;
                 power.cycle_radio_5v();
             }
-            break;
-        case TOGGLE_RADIO_5V:
             break;
         default:
             break;
