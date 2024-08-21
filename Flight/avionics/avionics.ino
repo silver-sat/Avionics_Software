@@ -122,7 +122,6 @@ void setup()
 
   Log.noticeln("Avionics software compiled %s at %s local time", __DATE__, __TIME__);
   Log.warningln("Not for flight use.");
-  Log.warningln("Required change: increase antenna delay to 80 seconds");
   Log.warningln("Required change: increase separation delay to 45 minutes");
   Log.warningln("Required change: turn off instrumentation");
   Log.warningln("Required change: turn off log facility");

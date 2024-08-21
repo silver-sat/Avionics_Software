@@ -30,7 +30,7 @@
      *
      */
 
-    Message::message_type Message::get_command() const { return m_command; }
+    Message::Type Message::get_command() const { return m_command; }
 
     /**
      * @brief Get the content

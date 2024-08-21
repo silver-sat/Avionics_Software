@@ -26,8 +26,7 @@ public:
      * @brief message types
      *
      */
-
-    enum message_type
+    enum Type
     {
         acknowledgement = REMOTE_FRAME,
         negative_acknowledgement = REMOTE_FRAME,
@@ -46,7 +45,7 @@ public:
      */
 
     Message() = default;
-    Message(message_type command, String content) : m_command{command}, m_content{content} {}
+    Message(Type command, String content) : m_command{command}, m_content{content} {}
 
     /**
      * @brief Send message via the Radio Board
@@ -63,7 +62,7 @@ public:
      *
      */
 
-    message_type get_command() const;
+    Type get_command() const;
 
     /**
      * @brief Get the content
@@ -73,6 +72,6 @@ public:
     String get_content() const;
 
 protected:
-    message_type m_command{};
+    Type m_command{};
     String m_content{};
 };

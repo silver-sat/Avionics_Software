@@ -17,14 +17,13 @@
  * @brief Antenna constants
  *
  */
-// todo: set to 80 seconds for flight
 constexpr unsigned long antenna_delay{80 * seconds_to_milliseconds};
 
 /**
  * @brief Check antenna state
  *
  * @return true all doors deployed
- * @return false some doors not deployee
+ * @return false some doors not deployed
  *
  */
 bool Antenna::check()
