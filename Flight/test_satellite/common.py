@@ -18,7 +18,7 @@ COMMAND_PORT = "/dev/tty.usbserial-A10MHKWZ"
 
 ## serial transmission speed
 
-BAUDRATE = 57600
+BAUDRATE = 19200
 
 ## default timeout for readline
 

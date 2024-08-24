@@ -15,7 +15,7 @@
 #include "log_utility.h"
 #include "AvionicsBoard.h"
 
-constexpr uint32_t serial1_baud_rate{57600}; /**< speed of serial1 connection @hideinitializer */
+constexpr uint32_t serial1_baud_rate{19200}; /**< speed of serial1 connection @hideinitializer */
 
 constexpr long ground_contact_interval{7}; /**< maximum days without ground contact for beacon @hideinitializer */
 
