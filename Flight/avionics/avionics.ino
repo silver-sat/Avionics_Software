@@ -38,7 +38,7 @@
  * @brief Process loop constants
  *
  */
-constexpr uint32_t serial_baud_rate{57600}; /**< speed of serial connection @hideinitializer */
+constexpr uint32_t serial_baud_rate{19200}; /**< speed of serial connection @hideinitializer */
 constexpr unsigned long serial_delay{2 * seconds_to_milliseconds};
 // todo: set to 45 minutes for flight
 constexpr unsigned long separation_delay{3 * seconds_to_milliseconds};
