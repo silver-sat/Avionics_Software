@@ -51,7 +51,6 @@ bool Antenna::check()
 
 bool Antenna::deploy()
 {
-
     m_i2c_dev.begin();
 
     // Check initial state

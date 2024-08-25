@@ -1,6 +1,7 @@
 /**
  * @file avionics_loop.ino
  * @author Lee A. Congdon (lee@silversat.org)
+ * @author Benjamin S. Cohen (ben@silversat.org)
  * @brief Avionics Board Setup and Process Loop
  * @version 1.3.0
  * @date 2022-07-24
@@ -117,7 +118,7 @@ void setup()
   // todo: turn off log facility for flight
   Log.setPrefix(printPrefix);
   Log.setSuffix(printSuffix);
-  Log.begin(LOG_LEVEL_NOTICE, &Serial);
+  Log.begin(LOG_LEVEL_VERBOSE, &Serial);
   Log.setShowLevel(false);
 
   Log.noticeln("Avionics software compiled %s at %s local time", __DATE__, __TIME__);
