@@ -461,10 +461,7 @@ bool AvionicsBoard::unset_clock()
 
 bool AvionicsBoard::deploy_antenna()
 {
-  Log.verboseln("starting antenna deployment");
-  m_antenna_deployment_error = !m_antenna.deploy();
-  Log.verboseln("ending antenna deployment");
-  return m_antenna_deployment_error;
+  return m_antenna.deploy();
 }
 
 /**
