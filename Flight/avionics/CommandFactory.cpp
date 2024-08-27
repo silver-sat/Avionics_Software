@@ -85,72 +85,98 @@ Command *CommandFactory::BuildCommand(const String tokens[], const size_t token_
         return new CommandInvalid(); // Wrong number of parameters or bad parameter
     }
     else if (tokens[0] == "ClearPicTimes")
+    {
         if (argument_count == 0)
             return new CommandClearPicTimes();
         else
             return new CommandInvalid(); // Wrong number of parameters
+    }
     else if (tokens[0] == "UnsetClock")
+    {
         if (argument_count == 0)
             return new CommandUnsetClock();
         else
             return new CommandInvalid(); // Wrong number of parameters
+    }
     else if (tokens[0] == "ReportT")
+    {
         if (argument_count == 0)
             return new CommandReportT();
         else
             return new CommandInvalid(); // Wrong number of parameters
+    }
     else if (tokens[0] == "GetPicTimes")
+    {
         if (argument_count == 0)
             return new CommandGetPicTimes();
         else
             return new CommandInvalid(); // Wrong number of parameters
+    }
     else if (tokens[0] == "GetTelemetry")
+    {
         if (argument_count == 0)
             return new CommandGetTelemetry();
         else
             return new CommandInvalid(); // Wrong number of parameters
+    }
     else if (tokens[0] == "GetPower")
+    {
         if (argument_count == 0)
             return new CommandGetPower();
         else
             return new CommandInvalid(); // Wrong number of parameters
+    }
     else if (tokens[0] == "GetComms")
+    {
         if (argument_count == 0)
             return new CommandGetComms();
         else
             return new CommandInvalid(); // Wrong number of parameters
+    }
     else if (tokens[0] == "GetBeaconInterval")
+    {
         if (argument_count == 0)
             return new CommandGetBeaconInterval();
         else
             return new CommandInvalid(); // Wrong number of parameters
+    }
     else if (tokens[0] == "NoOperate")
+    {
         if (argument_count == 0)
             return new CommandNoOperate();
         else
             return new CommandInvalid(); // Wrong number of parameters
+    }
     else if (tokens[0] == "SendTestPacket")
+    {
         if (argument_count == 0)
             return new CommandSendTestPacket();
         else
             return new CommandInvalid(); // Wrong number of parameters
+    }
     else if (tokens[0] == "PayComms")
+    {
         if (argument_count == 0)
             return new CommandPayComms();
         else
             return new CommandInvalid(); // Wrong number of parameters
+    }
     else if (tokens[0] == "TweeSlee")
+    {
         if (argument_count == 0)
             return new CommandTweeSlee();
         else
             return new CommandInvalid(); // Wrong number of parameters
+    }
     else if (tokens[0] == "Watchdog")
+    {
         if (argument_count == 0)
             return new CommandWatchdog();
         else
             return new CommandInvalid(); // Wrong number of parameters
-            // todo: compiler warning: warning: suggest explicit braces to avoid ambiguous 'else' [-Wdangling-else]
+    }
     else if (tokens[0] == "ModifyMode")
+    {
         if ((argument_count == 1) && (tokens[1].length() == mode_length))
         {
             char mode{tokens[1][0]};
@@ -158,5 +184,6 @@ Command *CommandFactory::BuildCommand(const String tokens[], const size_t token_
         }
         else
             return new CommandInvalid(); // Wrong number of parameters
+    }
     return new CommandUnknown();
 }
