@@ -19,7 +19,8 @@
  *
  */
 
-struct Frame {
+struct Frame
+{
     char *data{};
     size_t length{};
 };
@@ -96,6 +97,13 @@ private:
      */
 
     bool add_character_to_buffer(char character);
+
+    /**
+     * @brief Record ground contact
+     *
+     */
+
+    void ground_contact();
 
     /**
      * @brief Gather frame from Serial1 port

@@ -376,7 +376,7 @@ bool CommandGetComms::execute_command()
 {
     auto status{Command::execute_command()};
     Log.verboseln("GetComms");
-    Log.verboseln("Requesting radio status");
+    Log.traceln("Requesting radio status");
     Message message(Message::get_status, "");
     return message.send() && status;
 }
@@ -642,6 +642,6 @@ bool CommandModifyMode::execute_command()
     auto status{Command::execute_command()};
     Log.verboseln("ModifyMode");
     Message message(Message::modify_mode, String(m_mode));
-    Log.verboseln("Requesting mode modification");
+    Log.traceln("Requesting mode modification");
     return message.send() && status;
 }

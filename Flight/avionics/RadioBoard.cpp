@@ -52,6 +52,7 @@ bool RadioBoard::begin()
     Serial1.write("Invalid");
     Serial1.write(FEND);
     auto reply{Serial1.readString()};
+    Log.verboseln("Radio Board response: %s", reply.c_str());
     if (reply == "NACK")
     {
         Log.verboseln("Command port initialized");
@@ -82,23 +83,24 @@ bool RadioBoard::receive_frame()
     while (Serial1.available())
     {
         auto character{static_cast<char>(Serial1.read())};
-        // Log.verboseln("Character received on Serial1 port: %X", character);
+        Log.verboseln("Character received on Serial1 port: %X", character);
         switch (character)
         {
         // case FEND
         case FEND:
-            // if not in frame, start frame
+            // Not in frame, start frame
             if (!m_in_frame)
             {
                 start_frame();
             }
-            // if in frame and data captured, process end of frame
+            // In frame and data captured, process end of frame
             else if (m_buffer_index > 0)
             {
                 end_frame();
+                ground_contact();
                 return true;
             }
-            // if in frame and no data captured, ignore subsequent FENDs
+            // In frame and no data captured, ignore subsequent FEND
             else
             {
                 Log.noticeln("Additional FEND received, ignored");
@@ -106,18 +108,18 @@ bool RadioBoard::receive_frame()
             break;
         // case FESC
         case FESC:
-            // if not in frame, error
+            // Not in frame, error
             if (!m_in_frame)
             {
                 Log.warningln("FESC received outside of frame, ignored");
             }
-            // if two sequential FESCs, abort frame
+            // Two sequential FESCs, abort frame
             else if (m_received_escape)
             {
                 Log.errorln("Two FESCs in sequence, frame ignored");
-                start_frame();
+                end_frame();
             }
-            // if in frame, process escape character
+            // Process escape character
             else
             {
                 enter_escape_mode();
@@ -125,71 +127,59 @@ bool RadioBoard::receive_frame()
             break;
         // case TFEND
         case TFEND:
-            // if not in escape mode, add to buffer
-            if (!m_received_escape)
+            // Not in frame, error
+            if (!m_in_frame)
             {
-                if (!add_character_to_buffer(TFEND))
-                {
-                    Log.errorln("Frame ignored, overflow character: %X", character);
-                    start_frame();
-                }
+                Log.warningln("TFEND received outside of frame, ignored");
             }
-            // if in escape mode, add escaped character to buffer
+            // Not in escape mode, add to buffer
+            else if (!m_received_escape)
+            {
+                add_character_to_buffer(TFEND);
+            }
+            // In escape mode, add escaped character to buffer
             else
             {
-                if (!add_character_to_buffer(FEND))
-                {
-                    Log.errorln("Frame ignored, overflow character: %X", character);
-                    start_frame();
-                }
+                add_character_to_buffer(FEND);
                 exit_escape_mode();
             }
             break;
         // case TFESC
         case TFESC:
-            // if not in escape mode, add to buffer
-            if (!m_received_escape)
+            // Not in frame, error
+            if (!m_in_frame)
             {
-                if (!add_character_to_buffer(TFESC))
-                {
-                    Log.errorln("Frame ignored, overflow character: %X", character);
-                    start_frame();
-                }
+                Log.warningln("TFESC received outside of frame, ignored");
             }
-            // if in escape mode, process escape character
+            // Not in escape mode, add to buffer
+            else if (!m_received_escape)
+            {
+                add_character_to_buffer(TFESC);
+            }
+            // In escape mode, process escape character
             else
             {
-                if (!add_character_to_buffer(FESC))
-                {
-                    Log.errorln("Frame ignored, overflow character: %X", character);
-                    start_frame();
-                }
+                add_character_to_buffer(FESC);
                 exit_escape_mode();
             }
             break;
             // case other
         default:
-            // if not in frame, error
+            // Not in frame, error
             if (!m_in_frame)
             {
                 Log.errorln("Data received outside of frame, ignored: %X", character);
-                start_frame();
             }
-            // if escape received, must be TFEND or TFESC case, else error
+            // Escape received, must be TFEND or TFESC case, else error
             else if (m_received_escape)
             {
-                Log.errorln("Invalid escaped character, frame ignored: %X", character);
-                start_frame();
+                Log.errorln("Invalid escaped character, character ignored: %X", character);
                 exit_escape_mode();
             }
             // if in frame, add character to buffer and increment index
             else
             {
-                if (!add_character_to_buffer(character))
-                {
-                    Log.errorln("Frame ignored: %X", character);
-                    start_frame();
-                }
+                add_character_to_buffer(character);
             }
             break;
         }
@@ -271,9 +261,6 @@ void RadioBoard::start_frame()
 void RadioBoard::end_frame()
 {
     m_in_frame = false;
-    m_milliseconds_since_last_ground_contact_day = millis();
-    m_days_since_last_ground_contact = 0;
-    // Log.verboseln("Frame received, length: %l", m_buffer_index);
 }
 
 /**
@@ -314,7 +301,18 @@ bool RadioBoard::add_character_to_buffer(char character)
     }
     else
     {
-        Log.errorln("Buffer overflow in radio frame");
+        Log.errorln("Overflow character in radio frame: %X, ignored", character);
         return false;
     }
+}
+
+/**
+ * @brief Record ground contact
+ *
+ */
+
+void RadioBoard::ground_contact()
+{
+    m_milliseconds_since_last_ground_contact_day = millis();
+    m_days_since_last_ground_contact = 0;
 }
