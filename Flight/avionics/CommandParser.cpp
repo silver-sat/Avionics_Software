@@ -81,7 +81,9 @@ bool CommandParser::parse_parameters(const String &command_string, String comman
         }
         else
         {
+            // todo: complier warning: conversion to 'unsigned int' from 'int' may change the sign of the result (next_blank)
             command_tokens[token_index++] = command.substring(0, next_blank);
+            // todo: complier warning: conversion to 'unsigned int' from 'int' may change the sign of the result (next_blank)
             command = command.substring(next_blank);
         }
     }

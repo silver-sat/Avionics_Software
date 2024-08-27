@@ -149,6 +149,7 @@ Command *CommandFactory::BuildCommand(const String tokens[], const size_t token_
             return new CommandWatchdog();
         else
             return new CommandInvalid(); // Wrong number of parameters
+            // todo: compiler warning: warning: suggest explicit braces to avoid ambiguous 'else' [-Wdangling-else]
     else if (tokens[0] == "ModifyMode")
         if ((argument_count == 1) && (tokens[1].length() == mode_length))
         {
