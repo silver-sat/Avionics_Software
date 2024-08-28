@@ -6,17 +6,17 @@
  * @date 2022-12-07
  *
  * This file declares the class that checks for ground commands, validates
- * and creates them and checks for local responses and processes them
+ * and retrieves them and checks for local responses and commands and processes them
  *
  */
 
 #pragma once
 
 #include "CommandParser.h"
-#include "CommandFactory.h"
+#include "CommandWarehouse.h"
 
 /**
- * @brief Check for command from Radio Board, make a Command object
+ * @brief Check for command from Radio Board, retrieve a Command object
  *
  */
 
@@ -35,11 +35,11 @@ public:
      *
      */
 
-    Command *make_command(String buffer);
+    Command *get_command(String buffer);
 
 private:
     CommandParser command_parser{};
-    CommandFactory command_factory{};
+    CommandWarehouse command_warehouse{};
     char m_source{};
     char m_command_buffer[maximum_command_length + 1]{""};
     long m_successful_commands{0};
