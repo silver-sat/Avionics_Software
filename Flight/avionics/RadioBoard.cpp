@@ -16,7 +16,7 @@
 #include "AvionicsBoard.h"
 
 constexpr uint32_t serial1_baud_rate{19200}; /**< speed of serial1 connection @hideinitializer */
-
+constexpr unsigned long radio_delay{2 * seconds_to_milliseconds};
 constexpr long ground_contact_interval{7}; /**< maximum days without ground contact for beacon @hideinitializer */
 
 /**
@@ -37,29 +37,44 @@ bool RadioBoard::begin()
     // Initialize command port
     Log.verboseln("Initializing command port");
     Serial1.begin(serial1_baud_rate);
+    extern AvionicsBoard avionics;
     while (!Serial1)
     {
-        extern AvionicsBoard avionics;
         avionics.trigger_watchdog();
     }
     // Send abort transaction to Radio Board to clear buffer
+    Log.verboseln("Sending abort transaction to Radio Board");
     Serial1.write(FESC);
     Serial1.write(FESC);
-
+    // Wait for Radio Board to initialize
+    Log.verboseln("Waiting for Radio Board to initialize");
+    unsigned long serial_delay_start{millis()};
+    while ((millis() - serial_delay_start) < radio_delay)
+    {
+        avionics.trigger_watchdog();
+    }
     // Send invalid command to Radio Board to determine if it is responding
+    Log.verboseln("Sending invalid command to Radio Board");
     Serial1.write(FEND);
     Serial1.write(LOCAL_FRAME);
     Serial1.write("Invalid");
     Serial1.write(FEND);
-    auto reply{Serial1.readString()};
-    Log.verboseln("Radio Board response: %s", reply.c_str());
-    if (reply == "NACK")
+    // Read radio response
+    auto response_length{Serial1.readBytes(m_buffer, maximum_command_length)};
+    for (auto i{0}; i < response_length; ++i)
+    {
+        Log.verboseln("Radio response: %X", m_buffer[i]);
+    }
+    if (response_length > 0)
     {
         Log.verboseln("Command port initialized");
         return true;
-    };
-    Log.errorln("Radio Board did not respond");
-    return false;
+    }
+    else
+    {
+        Log.errorln("Radio Board did not respond");
+        return false;
+    }
 }
 
 /**
