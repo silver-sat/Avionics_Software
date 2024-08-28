@@ -15,8 +15,6 @@
 
 #include <Adafruit_EEPROM_I2C.h>
 
-// todo: resolve object creation location and use standard address
-
 constexpr unsigned FRAM_I2C_ADDRESS{0x50};  /**< FRAM I2C address @hideinitializer */
 #define CY15B256J_DEFAULT_ADDRESS \
     (0x50) ///<* 1010 + A2 + A1 + A0 = 0x50 default */
