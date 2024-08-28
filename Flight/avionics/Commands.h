@@ -5,7 +5,7 @@
  * @version 1.2.0
  * @date 2022-07-25
  *
- * This file declares and constructs all Command objects. Each ground command is derived
+ * This file declares all Command objects. Each ground command is derived
  * from the Command class. Abbreviations listed are used in command responses.
  *
  * Commands
@@ -115,7 +115,8 @@ public:
     explicit CommandSetClock(const DateTime time) : m_time{time} {};
     bool acknowledge_command() override;
     bool execute_command() override;
-
+    void time(const DateTime time) { m_time = time; }
+    
 private:
     DateTime m_time;
 };
@@ -132,6 +133,8 @@ public:
     explicit CommandBeaconSp(const int seconds) : m_seconds{seconds} {};
     bool acknowledge_command() override;
     bool execute_command() override;
+    void seconds(const int seconds) { m_seconds = seconds; }
+
 
 private:
     int m_seconds;
@@ -149,6 +152,7 @@ public:
     explicit CommandPicTimes(const DateTime time) : m_time{time} {};
     bool acknowledge_command() override;
     bool execute_command() override;
+    void time(const DateTime time) { m_time = time; }
 
 private:
     DateTime m_time;
@@ -378,6 +382,7 @@ public:
     };
     bool acknowledge_command() override;
     bool execute_command() override;
+    void mode(const char mode) { m_mode[0] = mode; }
 
 private:
     char m_mode[2]{};

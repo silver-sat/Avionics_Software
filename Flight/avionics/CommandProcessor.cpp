@@ -7,7 +7,7 @@
  * @date 2022-12-07
  *
  * This file implements the class that checks for ground commands, validates
- * and creates them and checks for local responses and processes them
+ * and retrieves them and checks for local responses and commands and processes them
  *
  */
 
@@ -48,21 +48,18 @@ bool CommandProcessor::check_for_command()
         // Ground command
         case REMOTE_FRAME:
         {
-            Command *command{make_command(command_string)};
-            Log.verboseln("Command object memory address: %s", ("0x" + String(reinterpret_cast<uint32_t>(command), HEX)).c_str());
+            Command *command{get_command(command_string)};
             command->acknowledge_command();
             Log.traceln("Command acknowledged");
 
             if (command->execute_command())
             {
                 Log.traceln("Executed (%l executed, %l failed)", ++m_successful_commands, m_failed_commands);
-                delete command;
                 return true;
             }
             else
             {
                 Log.errorln("Failed (%l executed, %l failed)", m_successful_commands, ++m_failed_commands);
-                delete command;
                 return false;
             }
         }
@@ -105,19 +102,19 @@ bool CommandProcessor::check_for_command()
 }
 
 /**
- * @brief Make command object
+ * @brief Retrieve command object
  *
  * @param buffer
  * @return next command to process
  *
- * For ground commands parse parameters and construct Command object
+ * For ground commands parse parameters and retrieve Command object
  *
  */
 
-Command *CommandProcessor::make_command(String buffer)
+Command *CommandProcessor::get_command(String buffer)
 {
 
-    // tokenize the command string and create the command object
+    // tokenize the command string and retrieve the command object
 
     String command_string{buffer};
     size_t token_count{0};
@@ -125,13 +122,13 @@ Command *CommandProcessor::make_command(String buffer)
     command_string.trim();
     if (command_parser.parse_parameters(command_string, command_tokens, token_count))
     {
-        Log.traceln("Constructing command object");
-        return command_factory.BuildCommand(command_tokens, token_count);
+        Log.traceln("Retrieving command object");
+        return command_warehouse.RetrieveCommand(command_tokens, token_count);
     }
     else
     {
         Log.errorln("Invalid command");
         String invalid[]{"Invalid"};
-        return command_factory.BuildCommand(invalid, 1);
+        return command_warehouse.RetrieveCommand(invalid, 1);
     }
 }

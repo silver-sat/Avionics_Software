@@ -118,7 +118,7 @@ void setup()
   // todo: turn off log facility for flight
   Log.setPrefix(printPrefix);
   Log.setSuffix(printSuffix);
-  Log.begin(LOG_LEVEL_VERBOSE, &Serial);
+  Log.begin(LOG_LEVEL_TRACE, &Serial);
   Log.setShowLevel(false);
 
   Log.noticeln("Avionics software compiled %s at %s local time", __DATE__, __TIME__);
