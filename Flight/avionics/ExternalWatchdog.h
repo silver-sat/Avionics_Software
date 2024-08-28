@@ -38,7 +38,7 @@ public:
    *
    */
 
-  void trigger();
+  void service();
 
   /**
    * @brief Set force reset

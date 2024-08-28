@@ -67,7 +67,7 @@ bool Antenna::deploy()
     unsigned long antenna_timer_start{millis()};
     extern AvionicsBoard avionics;
     while ((millis() - antenna_timer_start) < antenna_delay)
-        avionics.trigger_watchdog();
+        avionics.service_watchdog();
     Log.traceln("Ending antenna delay");
     if (check())
         return true;
@@ -79,7 +79,7 @@ bool Antenna::deploy()
     m_i2c_dev.write(&algorithm2_all, 1);
     antenna_timer_start = millis();
     while ((millis() - antenna_timer_start) < antenna_delay)
-        avionics.trigger_watchdog();
+        avionics.service_watchdog();
     Log.traceln("Ending antenna delay");
     if (check())
         return true;
@@ -91,7 +91,7 @@ bool Antenna::deploy()
     message.send();
     antenna_timer_start = millis();
     while ((millis() - antenna_timer_start) < antenna_delay)
-        avionics.trigger_watchdog();
+        avionics.service_watchdog();
     if (check())
         return true;
 
@@ -102,7 +102,7 @@ bool Antenna::deploy()
     message.send();
     antenna_timer_start = millis();
     while ((millis() - antenna_timer_start) < antenna_delay)
-        avionics.trigger_watchdog();
+        avionics.service_watchdog();
     if (check())
         return true;
 

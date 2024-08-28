@@ -34,7 +34,7 @@ constexpr unsigned SDA_NON_CRIT{4u};       /**< SDA for non-critical I2C @hidein
 constexpr unsigned SCL_NON_CRIT{3u};       /**< SCL for non-critical I2C @hideinitializer */
 constexpr unsigned SDA_CRIT{26u};          /**< SDA for critical I2C @hideinitializer */
 constexpr unsigned SCL_CRIT{27u};          /**< SCL for non-critical I2C @hideinitializer */
-constexpr unsigned WDTICK{38u};            /**< trigger for Watchdog @hideinitializer */
+constexpr unsigned WDTICK{38u};            /**< Watchdog service @hideinitializer */
 constexpr unsigned uC_MOSI{29u};           /**< MOSI @hideinitializer */
 constexpr unsigned uC_MISO{28u};           /**< MISO @hideinitializer */
 constexpr unsigned uC_SCK{30u};            /**< SCK @hideinitializer */

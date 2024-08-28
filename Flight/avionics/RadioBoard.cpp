@@ -40,7 +40,7 @@ bool RadioBoard::begin()
     extern AvionicsBoard avionics;
     while (!Serial1)
     {
-        avionics.trigger_watchdog();
+        avionics.service_watchdog();
     }
     // Send abort transaction to Radio Board to clear buffer
     Log.verboseln("Sending abort transaction to Radio Board");
@@ -51,7 +51,7 @@ bool RadioBoard::begin()
     unsigned long serial_delay_start{millis()};
     while ((millis() - serial_delay_start) < radio_delay)
     {
-        avionics.trigger_watchdog();
+        avionics.service_watchdog();
     }
     // Send invalid command to Radio Board to determine if it is responding
     Log.verboseln("Sending invalid command to Radio Board");

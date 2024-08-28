@@ -135,7 +135,7 @@ public:
     * @brief Trigger the watchdog
     *
     */
-   void trigger_watchdog();
+   void service_watchdog();
 
    /**
     * @brief Read a byte from the FRAM
@@ -171,13 +171,6 @@ public:
     */
 
    bool get_stability();
-
-   /**
-    * @brief Get watchdog event
-    *
-    */
-
-   bool get_watchdog_event();
 
 private:
    /**

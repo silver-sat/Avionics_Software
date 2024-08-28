@@ -109,11 +109,11 @@ void setup()
   // Initialize serial connection and log utility
 
   Serial.begin(serial_baud_rate);
-  // trigger the watchdog while waiting for the serial port
+  // service the watchdog while waiting for the serial port
   unsigned long serial_delay_start{millis()};
   while ((millis() - serial_delay_start) < serial_delay)
   {
-    avionics.trigger_watchdog();
+    avionics.service_watchdog();
   }
   // todo: turn off log facility for flight
   Log.setPrefix(printPrefix);
@@ -161,7 +161,7 @@ void setup()
   unsigned long separation_timer_start{millis()};
   while ((millis() - separation_timer_start) < separation_delay)
   {
-    avionics.trigger_watchdog();
+    avionics.service_watchdog();
   };
   Log.noticeln("Ending separation delay");
 
@@ -197,7 +197,7 @@ void loop()
 
   // Trigger the watchdog
 
-  avionics.trigger_watchdog();
+  avionics.service_watchdog();
 
 #ifdef INSTRUMENTATION
   duration = micros() - previous_time;

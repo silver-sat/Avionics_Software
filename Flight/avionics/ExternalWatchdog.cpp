@@ -30,7 +30,7 @@ ExternalWatchdog::ExternalWatchdog()
  *
  */
 
-void ExternalWatchdog::trigger()
+void ExternalWatchdog::service()
 {
   if (millis() - m_last_action_time > watchdog_lower_boundary)
   {
