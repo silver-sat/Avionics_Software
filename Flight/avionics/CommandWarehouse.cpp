@@ -86,7 +86,7 @@ Command *CommandWarehouse::RetrieveCommand(const String tokens[], const size_t t
     else if (tokens[0] == "ClearPicTimes")
     {
         if (argument_count == 0)
-            return &m_set_clock;
+            return &m_clear_pic_times;
         else
             return &m_command_invalid; // Wrong number of parameters
     }
