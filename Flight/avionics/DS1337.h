@@ -17,7 +17,6 @@
 
 #include <RTClib.h>
 
-// todo: resolve object creation location and use address constant
 constexpr unsigned RTC_I2C_ADDRESS{0x68};   /**< realtime clock I2C address @hideinitializer */
 
 /**
