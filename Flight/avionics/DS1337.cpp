@@ -31,7 +31,6 @@ bool RTC_DS1337::begin(TwoWire *wireInstance)
 {
   if (i2c_dev)
     delete i2c_dev;
-  // todo: verify I2C device not already present
   i2c_dev = new Adafruit_I2CDevice(DS1337_ADDRESS, wireInstance);
   if (!i2c_dev->begin())
     return false;

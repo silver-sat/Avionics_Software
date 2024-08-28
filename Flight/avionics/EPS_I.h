@@ -20,7 +20,6 @@
  * @brief EPS_I Constants
  *
  */
-// todo: consider changing case of constants
 constexpr uint8_t EPS_I_I2C_ADDRESS{0x18};                                                  /**< I2C address of EPS-I */
 constexpr float GETBATTERYINFO_BATTERY_BATT_VOLT_COEFFICIENT{0.0023394775f};                /**< Battery voltage coefficient */
 constexpr float GETBATTERYINFO_BATTERY_BATT_CURR_COEFFICIENT{0.0030517578f};                /**< Battery current coefficient */
