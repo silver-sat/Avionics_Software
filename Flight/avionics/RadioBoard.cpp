@@ -31,7 +31,7 @@ bool RadioBoard::begin()
 {
     // Enable serial driver to Radio Board
     Log.traceln("Radio Board initializing");
-    Log.verboseln("Enabling serial driver to Radio Board");
+    Log.verboseln("Enabling serial driver to Radio Board at %d baud", serial1_baud_rate);
     pinMode(EN_RADIO_SERIAL, OUTPUT);
     digitalWrite(EN_RADIO_SERIAL, HIGH);
     // Initialize command port
