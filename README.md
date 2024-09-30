@@ -33,4 +33,4 @@ The "FlatSat" folder "README.md" describes the flat sat testing capabilities of 
 
 ## Flight
 
-The "Flight" folder "README.md" describes the flight software.
+The "Flight" folder "README.md" describes the flight software. This folder contains all of the software used by the flight Avionics Board as well as tests for the Day in the Life scenario and each of the commands recognized by the Avionics Board. The tests are designed for use with pytest and can be repeated automatically using the pytest-repeat plugin.
