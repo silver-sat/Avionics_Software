@@ -8,6 +8,7 @@
 """FlatSat test Avionics Board day in the life scenario"""
 
 import common
+from time import sleep
 
 
 ## Test day in the life
@@ -36,6 +37,13 @@ class TestDayInTheLife:
         message = common.collect_message()
         assert common.verify_message(message, common.beacon_interval_pattern)
 
+    def test_set_beacon_interval_2(self):
+        common.issue("BeaconSp 0")
+        message = common.collect_message()
+        assert common.verify_message(message, common.acknowledgment_pattern)
+        message = common.collect_message()
+        assert common.verify_message(message, common.beacon_sp_pattern)
+
     def test_set_realtime_clock(self):
         common.issue(f"SetClock {common.now()}")
         message = common.collect_message()
@@ -56,26 +64,27 @@ class TestDayInTheLife:
         assert common.verify_message(message, common.acknowledgment_pattern)
         message = common.collect_message()
         assert common.verify_message(message, common.pay_comms_pattern)
+        sleep(205 + 30) # predicted time plus buffer
 
-# increase delay to allow prior payload activity to complete
     def test_pictimes(self):
         common.issue(f"PicTimes {common.now1m()}")
         message = common.collect_message()
         assert common.verify_message(message, common.acknowledgment_pattern)
         message = common.collect_message()
         assert common.verify_message(message, common.pic_times_pattern)
+        sleep(162 + 60 + 30) # predicted time plus delay for picture time start plus buffer
 
-# add delay to allow prior payload activity to complete
     def test_paycomms_2(self):
         common.issue("PayComms")
         message = common.collect_message()
         assert common.verify_message(message, common.acknowledgment_pattern)
         message = common.collect_message()
         assert common.verify_message(message, common.pay_comms_pattern)
+        sleep(205 + 30) # predicted time plus buffer
 
-    def test_set_beacon_interval_2(self):
-        common.issue("BeaconSp 180")
-        message = common.collect_message()
-        assert common.verify_message(message, common.acknowledgment_pattern)
-        message = common.collect_message()
-        assert common.verify_message(message, common.beacon_sp_pattern)
+    # def test_set_beacon_interval_3(self):
+    #     common.issue("BeaconSp 180")
+    #     message = common.collect_message()
+    #     assert common.verify_message(message, common.acknowledgment_pattern)
+    #     message = common.collect_message()
+    #     assert common.verify_message(message, common.beacon_sp_pattern)
