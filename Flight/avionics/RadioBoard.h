@@ -21,8 +21,8 @@
 
 struct Frame
 {
-    char *data{};
-    size_t length{};
+    byte type{};
+    String command{};
 };
 
 /**
@@ -111,7 +111,7 @@ private:
      */
 
     size_t m_buffer_index{0};
-    char m_buffer[maximum_command_length]{""};
+    char m_buffer[maximum_command_length+1]{""};
     bool m_in_frame{false};
     bool m_received_escape{false};
     unsigned long m_milliseconds_since_last_ground_contact_day{0};

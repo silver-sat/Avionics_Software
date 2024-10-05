@@ -13,45 +13,6 @@
 #include "RadioBoard.h"
 
 /**
- * @brief Helper function for hexadecimal text to binary conversion
- *
- * @param input a character in one of the ranges 0-9, a-f, or A-F
- * @return int value of the hexadecimal representation (e.g. "A" == 0x0A, decimal 10)
- *
- */
-
-int char2int(const char input)
-{
-    if (input >= '0' && input <= '9')
-        return input - '0';
-    if (input >= 'A' && input <= 'F')
-        return input - 'A' + 10;
-    if (input >= 'a' && input <= 'f')
-        return input - 'a' + 10;
-    return 0; // invalid data
-}
-
-/**
- * @brief Convert hexadecimal text representation to binary values
- *
- * @param src hexadecimal representation
- * @param target binary values
- *
- * This function assumes src to be a zero terminated sanitized string with
- * an even number of [0-9a-f] characters and target to be sufficiently large
- *
- */
-
-void hex2bin(const char *src, byte *target)
-{
-    while (*src && src[1])
-    {
-        *(target++) = static_cast<byte>((char2int(*src) << 4) | char2int(src[1]));
-        src += 2;
-    }
-}
-
-/**
  * @brief Parse command parameters
  *
  * @param[in] command_string command string

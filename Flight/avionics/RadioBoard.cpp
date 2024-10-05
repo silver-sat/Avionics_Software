@@ -98,7 +98,7 @@ bool RadioBoard::receive_frame()
     while (Serial1.available())
     {
         auto character{static_cast<char>(Serial1.read())};
-        Log.verboseln("Character received on Serial1 port: %X", character);
+        // Log.verboseln("Character received on Serial1 port: %C", character);
         switch (character)
         {
         // case FEND
@@ -212,12 +212,10 @@ bool RadioBoard::receive_frame()
 
 Frame RadioBoard::get_frame()
 {
-    // Log.verboseln("Received frame has length: %l", m_buffer_index);
-    Frame frame;
-    frame.data = m_buffer;
-    frame.length = m_buffer_index;
-    // Log.verboseln("Frame data[0]: %X", frame.data[0]);
-    // Log.verboseln("Returning frame with length: %l", frame.length);
+    m_buffer[m_buffer_index] = '\0';
+    Frame frame{};
+    frame.type = m_buffer[0];
+    frame.command = String{m_buffer + 1};
     return frame;
 }
 

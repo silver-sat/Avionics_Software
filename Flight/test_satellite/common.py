@@ -11,6 +11,9 @@
 import serial
 import datetime
 import re
+import secrets
+import hashlib
+import hmac
 
 ## port for command input and output
 
@@ -88,13 +91,28 @@ watchdog_pattern = re.compile(rb"^RES WDG$")
 modify_mode_pattern = re.compile(rb"^RES RMM \d$")
 error_pattern = re.compile(rb"^ERR$")
 
+# Sequence counter for commands
+
+command_count = 0
 
 ## Issue command
 #
 # Commands must be framed with KISS encoding
 #
 def issue(command):
-    command_port.write(FEND + REMOTE_FRAME + command.encode("utf-8") + FEND)
+
+    secret = open("secret.txt", "rb").read()
+    salt = (secrets.token_bytes(8))
+    global command_count
+    command_count = command_count + 1
+    sequence = str(command_count).zfill(8).encode("utf-8")
+    command = command.encode("utf-8")
+    computed_hmac = hmac.new(secret, digestmod=hashlib.blake2s)
+    computed_hmac.update(salt)
+    computed_hmac.update(sequence)
+    computed_hmac.update(command)
+    signature = computed_hmac.hexdigest().encode("utf-8") + salt.hex().encode("utf-8") + sequence
+    command_port.write(FEND + REMOTE_FRAME + signature + command + FEND)
 
 
 ## Issue local command
