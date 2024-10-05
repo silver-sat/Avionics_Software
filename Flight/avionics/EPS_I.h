@@ -1038,6 +1038,19 @@ public:
   bool getHeater3State();
 
   /**
+   * @brief method in EPS class that turns on the 5v LUP
+   *
+   */
+
+  bool turn_on_5v_LUP();
+
+/**
+   * @brief method in EPS class that turns on the 3.3v LUP
+   *
+   */
+
+  bool turn_off_3v3_LUP();
+  /**
    * @brief method in EPS class that sends cycle for 5v
    *
    */

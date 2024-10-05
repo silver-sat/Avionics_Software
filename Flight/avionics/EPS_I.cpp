@@ -223,6 +223,32 @@ bool EPS_I::getHeater3State()
 }
 
 /**
+  * @brief method in EPS class that turns on the 5v LUP
+ *
+ *
+ */
+
+bool EPS_I::turn_on_5v_LUP()
+{
+  auto state{static_cast<uint8_t>(EPS_I_Write_State::ON)};
+  Log.verboseln("Sending command to EPS_I to turn on 5v LUP");
+  return write_command(EPS_I_Write_Command::QUERYCONTROLS_AND_TOGGLEOUTPUT06, state);
+}
+
+/**
+  * @brief method in EPS class that turns off the 3.3v LUP
+ *
+ *
+ */
+
+bool EPS_I::turn_off_3v3_LUP()
+{
+  auto state{static_cast<uint8_t>(EPS_I_Write_State::OFF)};
+  Log.verboseln("Sending command to EPS_I to turn off 3.3v LUP");
+  return write_command(EPS_I_Write_Command::QUERYCONTROLS_AND_TOGGLEOUTPUT05, state);
+}
+
+/**
  * @brief method in EPS class that sends cycle for 5v
  *
  * default cycle time is two seconds
