@@ -35,13 +35,18 @@ public:
      *
      */
 
-    Command *get_command(String buffer);
+    Command *get_command(const String &buffer);
 
-private:
-    CommandParser command_parser{};
+    /**
+     * @brief Validate command signature
+     *
+     */
+
+    bool validate_signature(const String &buffer);
+
+private : 
+    CommandParser command_parser {};
     CommandWarehouse command_warehouse{};
-    char m_source{};
-    char m_command_buffer[maximum_command_length + 1]{""};
     long m_successful_commands{0};
     long m_failed_commands{0};
 };

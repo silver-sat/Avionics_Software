@@ -17,7 +17,8 @@
  * @brief Antenna constants
  *
  */
-constexpr unsigned long antenna_delay{80 * seconds_to_milliseconds};
+// constexpr unsigned long antenna_delay{80 * seconds_to_milliseconds};
+constexpr unsigned long antenna_delay{1 * seconds_to_milliseconds};
 
 /**
  * @brief Check antenna state
