@@ -20,6 +20,7 @@
 #include "AvionicsBoard.h"
 #include "PowerBoard.h"
 #include "PayloadBoard.h"
+#include "CommandProcessor.h"
 
 /**
  * @brief Acknowledge the command
@@ -34,7 +35,8 @@
 bool Command::acknowledge_command()
 {
     Log.traceln("Acknowledging command");
-    Message message{Message::acknowledgement, ACK};
+    extern CommandProcessor command_processor;
+    Message message{Message::acknowledgement, ACK + " " + command_processor.get_sequence()};
     return message.send();
 }
 
@@ -51,7 +53,8 @@ bool Command::acknowledge_command()
 bool Command::negative_acknowledge_command()
 {
     Log.traceln("Negative acknowledging command");
-    Message message{Message::negative_acknowledgement, NACK};
+    extern CommandProcessor command_processor;
+    Message message{Message::negative_acknowledgement, NACK + " " + command_processor.get_sequence()};
     return message.send();
 }
 
