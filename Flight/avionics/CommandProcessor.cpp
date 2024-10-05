@@ -49,7 +49,7 @@ bool CommandProcessor::check_for_command()
         auto frame{radio.get_frame()};
         Log.noticeln("Frame received on serial port");
         auto command_code{frame.type};
-        Log.verboseln("Command code: %X", command_code);
+        Log.verboseln("Command code: %x", command_code);
         String command_string{frame.command};
         Log.verboseln("Command string: %s", command_string.c_str());
 
@@ -172,6 +172,12 @@ bool CommandProcessor::validate_signature(const String &buffer)
 {
     Log.verboseln("Validating signature of command");
 
+    if (buffer.length() < signature_length_hex_ascii)
+    {
+        Log.errorln("Invalid command length");
+        return false;
+    }
+
     String hmac_hex_ascii{buffer.substring(0, hmac_length_hex_ascii)};
     Log.verboseln("HMAC: %s", hmac_hex_ascii.c_str());
     byte hmac[hmac_length]{};
@@ -184,6 +190,12 @@ bool CommandProcessor::validate_signature(const String &buffer)
 
     String sequence_hex_ascii{buffer.substring(hmac_length_hex_ascii + salt_length_hex_ascii, hmac_length_hex_ascii + salt_length_hex_ascii + sequence_length_hex_ascii)};
     Log.verboseln("Sequence: %s", sequence_hex_ascii.c_str());
+    ++m_command_sequence;
+    if(m_command_sequence != sequence_hex_ascii.toInt())
+    {
+        Log.errorln("Invalid sequence number");
+        return false;
+    }
 
     String command{buffer.substring(signature_length_hex_ascii)};
     Log.verboseln("Command: %s", command.c_str());
@@ -218,7 +230,7 @@ Command *CommandProcessor::get_command(const String &buffer)
     size_t token_count{0};
     String command_tokens[command_parameter_limit]{};
     command_string.trim();
-    if (command_parser.parse_parameters(command_string, command_tokens, token_count))
+    if (parse_parameters(command_string, command_tokens, token_count))
     {
         Log.traceln("Retrieving command object");
         return command_warehouse.RetrieveCommand(command_tokens, token_count);
@@ -229,4 +241,56 @@ Command *CommandProcessor::get_command(const String &buffer)
         String invalid[]{"Invalid"};
         return command_warehouse.RetrieveCommand(invalid, 1);
     }
+}
+
+/**
+ * @brief Parse command parameters
+ *
+ * @param[in] command_string command string
+ * @param[out] command_tokens tokens
+ * @param[out] token_count number of tokens
+ * @return true successful
+ * @return false failure
+ */
+
+bool CommandProcessor::parse_parameters(const String &command_string, String command_tokens[], size_t &token_count)
+{
+    size_t token_index{0};
+    String command{command_string};
+    while (command.length() > 0)
+    {
+        if (token_index >= command_parameter_limit)
+        {
+            Log.warningln("Too many command parameters");
+            return false;
+        }
+        command.trim();
+        int next_blank{command.indexOf(' ')};
+        if (next_blank == -1)
+        {
+            command_tokens[token_index++] = command;
+            command = "";
+        }
+        else
+        {
+            command_tokens[token_index++] = command.substring(0, static_cast<unsigned int>(next_blank));
+            command = command.substring(static_cast<unsigned int>(next_blank));
+        }
+    }
+    token_count = token_index;
+    return true;
+}
+
+/**
+ * @brief Get sequence
+ *
+ * @return sequence number
+ *
+ * Get last successful command sequence number
+ *
+ */
+
+String CommandProcessor::get_sequence()
+{
+    return String{m_command_sequence};
 }

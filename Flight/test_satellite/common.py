@@ -59,8 +59,8 @@ read_length = 256
 
 ## acknowledgement and response patterns
 
-acknowledgment_pattern = re.compile(rb"^ACK$")
-negative_acknowledgment_pattern = re.compile(rb"^NACK$")
+acknowledgment_pattern = re.compile(rb"^ACK \d+$")
+negative_acknowledgment_pattern = re.compile(rb"^NACK \d+$")
 no_response_pattern = re.compile(rb"")
 invalid_command_pattern = re.compile(rb"^ERR INV$")
 set_clock_pattern = re.compile(rb"^RES SRC$")
@@ -82,7 +82,7 @@ power_pattern = re.compile(
 )
 # todo: update radio status pattern
 comms_pattern = re.compile(b"^RES GRS .*$")
-beacon_interval_pattern = re.compile(rb"(^RES GBI )(\d+)$")
+beacon_interval_pattern = re.compile(rb"^RES GBI \d+$")
 no_operation_pattern = re.compile(rb"^RES NOP$")
 test_packet_pattern = re.compile(rb"^RES STP test packet$")
 pay_comms_pattern = re.compile(rb"^RES PYC$")
