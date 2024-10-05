@@ -23,9 +23,9 @@ constexpr size_t buffer_size{10};         /**< for data smoothing */
 
 // MPU6050 gyro calibration
 
-constexpr float x_calibration{-0.0232F};
-constexpr float y_calibration{-0.0086F};
-constexpr float z_calibration{-0.0058F};
+constexpr float x_calibration{-0.0655F};
+constexpr float y_calibration{-0.016F};
+constexpr float z_calibration{-0.0137F};
 
 /**
  * @brief Inertial Management Unit
