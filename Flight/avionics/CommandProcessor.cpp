@@ -47,6 +47,7 @@ bool CommandProcessor::check_for_command()
     if (radio.receive_frame())
     {
         auto frame{radio.get_frame()};
+        Log.noticeln("Frame received on serial port");
         auto command_code{frame.type};
         Log.verboseln("Command code: %X", command_code);
         String command_string{frame.command};
@@ -63,7 +64,7 @@ bool CommandProcessor::check_for_command()
                 Log.errorln("Invalid digitial signature");
                 return false;
             }
-            Log.verboseln("Command: %s", command_string.substring(signature_length_hex_ascii).c_str());
+            Log.verboseln("Command signature is valid");
             Command *command{get_command(command_string.substring(signature_length_hex_ascii))};
             command->acknowledge_command();
             Log.traceln("Command acknowledged");
@@ -169,7 +170,7 @@ void hex2bin(const char *src, byte *target)
 
 bool CommandProcessor::validate_signature(const String &buffer)
 {
-    Log.verboseln("Validating signature of command: %s", buffer.c_str());
+    Log.verboseln("Validating signature of command");
 
     String hmac_hex_ascii{buffer.substring(0, hmac_length_hex_ascii)};
     Log.verboseln("HMAC: %s", hmac_hex_ascii.c_str());
@@ -180,19 +181,9 @@ bool CommandProcessor::validate_signature(const String &buffer)
     Log.verboseln("Salt: %s", salt_hex_ascii.c_str());
     byte salt[salt_length]{};
     hex2bin(salt_hex_ascii.c_str(), salt);
-    for (size_t index{0}; index < salt_length; ++index)
-    {
-        Log.verboseln("Salt byte %d: %X", index, salt[index]);
-    }
 
     String sequence_hex_ascii{buffer.substring(hmac_length_hex_ascii + salt_length_hex_ascii, hmac_length_hex_ascii + salt_length_hex_ascii + sequence_length_hex_ascii)};
     Log.verboseln("Sequence: %s", sequence_hex_ascii.c_str());
-    byte sequence[sequence_length]{};
-    hex2bin(sequence_hex_ascii.c_str(), sequence);
-    for (size_t index{0}; index < sequence_length; ++index)
-    {
-        Log.verboseln("Sequence byte %d: %X", index, sequence[index]);
-    }
 
     String command{buffer.substring(signature_length_hex_ascii)};
     Log.verboseln("Command: %s", command.c_str());
@@ -200,19 +191,11 @@ bool CommandProcessor::validate_signature(const String &buffer)
     BLAKE2s blake{};
     byte secret[]{SECRET_HASH_KEY};
     byte computed_hmac[hmac_length]{};
-    for (size_t index{0}; index < sizeof(secret); ++index)
-    {
-        Log.verboseln("Secret: %X", secret[index]);
-    }
     blake.resetHMAC(secret, sizeof(secret));
-    // blake.update(salt, salt_length);
-    // blake.update(sequence, sequence_length);
+    blake.update(salt, salt_length);
+    blake.update(sequence_hex_ascii.c_str(), sequence_length_hex_ascii);
     blake.update(command.c_str(), buffer.length() - signature_length_hex_ascii);
     blake.finalizeHMAC(secret, sizeof(secret), computed_hmac, hmac_length);
-    for (size_t index{0}; index < hmac_length; ++index)
-    {
-        Log.verboseln("Computed HMAC: %X", computed_hmac[index]);
-    }
     return memcmp(computed_hmac, hmac, hmac_length) == 0;
 }
 
