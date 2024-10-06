@@ -126,8 +126,6 @@ void setup()
   Log.warningln("Required change: increase antenna delay to 80 seconds");
   Log.warningln("Required change: increase separation delay to 45 minutes");
   Log.warningln("Required change: turn off instrumentation");
-  Log.warningln("Required change: calibrate the IMU");
-  Log.warningln("Required change: establish and enable the minimum battery voltage for Payload Board activity");
   Log.noticeln("Initializing Avionics Process");
 
   // Initialize Avionics Board

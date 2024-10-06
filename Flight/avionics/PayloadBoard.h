@@ -100,7 +100,6 @@ private:
      */
     bool set_mode_photo();
 
-private:
     LastPayloadActivity m_last_payload_activity{LastPayloadActivity::none}; /**< last payload activity */
     long unsigned int m_last_payload_duration{};                            /**< duration of last payload activity */
     bool m_payload_active{false};                                           /**< payload in startup, photo, communications or shutdown mode */

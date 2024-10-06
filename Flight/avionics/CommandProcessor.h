@@ -65,7 +65,7 @@ private:
 
     bool parse_parameters(const String &command_string, String command_tokens[], size_t &token_count);
 
-    long m_command_sequence{0};
+    long m_command_sequence{1};
     CommandWarehouse command_warehouse{};
     long m_successful_commands{0};
     long m_failed_commands{0};

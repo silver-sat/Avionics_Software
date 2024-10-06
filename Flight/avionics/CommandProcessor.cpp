@@ -61,7 +61,7 @@ bool CommandProcessor::check_for_command()
             auto valid_signature{validate_signature(command_string)};
             if (!valid_signature)
             {
-                Log.errorln("Invalid digitial signature");
+                Log.errorln("Invalid digital signature");
                 return false;
             }
             Log.verboseln("Command signature is valid");
@@ -190,12 +190,12 @@ bool CommandProcessor::validate_signature(const String &buffer)
 
     String sequence_hex_ascii{buffer.substring(hmac_length_hex_ascii + salt_length_hex_ascii, hmac_length_hex_ascii + salt_length_hex_ascii + sequence_length_hex_ascii)};
     Log.verboseln("Sequence: %s", sequence_hex_ascii.c_str());
-    ++m_command_sequence;
     if(m_command_sequence != sequence_hex_ascii.toInt())
     {
-        Log.errorln("Invalid sequence number");
+        Log.errorln("Invalid sequence number, expected %l", m_command_sequence);
         return false;
     }
+    ++m_command_sequence;
 
     String command{buffer.substring(signature_length_hex_ascii)};
     Log.verboseln("Command: %s", command.c_str());
@@ -292,5 +292,5 @@ bool CommandProcessor::parse_parameters(const String &command_string, String com
 
 String CommandProcessor::get_sequence()
 {
-    return String{m_command_sequence};
+    return String{m_command_sequence - 1}; // last successful command sequence number is one less than the expected sequence number
 }
