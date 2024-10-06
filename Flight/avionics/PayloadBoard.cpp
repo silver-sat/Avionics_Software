@@ -98,7 +98,7 @@ bool PayloadBoard::communicate()
         Log.errorln("Inadequate power for communications session");
         return false;
     }
-    Log.noticeln("Starting Communication session");
+    Log.noticeln("Starting communication session");
     set_mode_comms();
     power_up();
     return true;
@@ -112,52 +112,66 @@ bool PayloadBoard::communicate()
  *
  */
 
-bool PayloadBoard::check_shutdown()
+void PayloadBoard::check_shutdown()
 {
-    // check shutdown signal after startup delay
-    if (m_payload_active && (millis() - m_payload_start_time > startup_delay))
+    if (m_payload_active)
     {
-        auto shutdown_a{digitalRead(SHUTDOWN_A)};
-        auto shutdown_b{digitalRead(SHUTDOWN_B)};
-        auto shutdown_c{digitalRead(SHUTDOWN_C)};
-        m_shutdown_signal_was_set = m_shutdown_signal_was_set || (shutdown_a + shutdown_b + shutdown_c >= 2);
-    }
-    // if shutdown signal received, shutdown payload after shutdown delay
-    if (m_shutdown_signal_was_set)
-    {
-        if (m_in_shutdown_delay)
+        bool shutdown{shutdown_vote()};
+
+        // check if entered user state
+        if (!shutdown && !m_payload_user_state)
         {
-            if (millis() - m_shutdown_start_time > shutdown_delay)
-            {
-                Log.infoln("Powering down payload");
-                power_down();
-            }
+            Log.verboseln("Payload entered user state");
+            m_payload_user_state = true;
         }
-        else
+        // check shutdown signal after user state
+        if (m_payload_user_state && shutdown && !m_in_shutdown_delay)
         {
-            Log.verboseln("Starting payload shutdown delay");
+            m_payload_user_state = false;
             m_in_shutdown_delay = true;
             m_shutdown_start_time = millis();
+            Log.verboseln("Starting payload shutdown delay");
         }
+        // if shutdown signal received, shutdown payload after shutdown delay
+        if (m_in_shutdown_delay && (millis() - m_shutdown_start_time > shutdown_delay))
+        {
+            Log.infoln("Powering down payload");
+            power_down();
+        }
+        // check for Payload Board timeout
+        if (m_payload_active && (millis() - m_payload_start_time > maximum_cycle_time))
+        {
+            Log.errorln("Payload cycle too long");
+            power_down();
+            m_timeout_occurred = true;
+            return;
+        }
+        // check for Payload Board over current (active low)
+        if (m_payload_active && !digitalRead(PAYLOAD_OC))
+        {
+            Log.errorln("Payload over current");
+            power_down();
+            m_last_payload_activity = LastPayloadActivity::overcurrent;
+            m_overcurrent_occurred = true;
+            return;
+        }
+        return;
     }
-    // check for Payload Board timeout
-    if (m_payload_active && (millis() - m_payload_start_time > maximum_cycle_time))
-    {
-        Log.errorln("Payload cycle too long");
-        power_down();
-        m_timeout_occurred = true;
-        return false;
-    }
-    // check for Payload Board over current (active low)
-    if (m_payload_active && !digitalRead(PAYLOAD_OC))
-    {
-        Log.errorln("Payload over current");
-        power_down();
-        m_last_payload_activity = LastPayloadActivity::overcurrent;
-        m_overcurrent_occurred = true;
-        return false;
-    }
-    return true;
+}
+
+/**
+ * @brief Shutdown vote
+ *
+ * @return true shutdown signal was set
+ * @false shutdown signal was not set
+ *
+ */
+bool PayloadBoard::shutdown_vote()
+{
+    auto shutdown_a{digitalRead(SHUTDOWN_A)};
+    auto shutdown_b{digitalRead(SHUTDOWN_B)};
+    auto shutdown_c{digitalRead(SHUTDOWN_C)};
+    return (shutdown_a + shutdown_b + shutdown_c >= 2);
 }
 
 /**
@@ -174,7 +188,7 @@ bool PayloadBoard::power_down()
     digitalWrite(PLD_ON_B_INT, HIGH);
     digitalWrite(PLD_ON_C_INT, HIGH);
     m_payload_active = false;
-    m_shutdown_signal_was_set = false;
+    m_payload_user_state = false;
     m_in_shutdown_delay = false;
     m_last_payload_duration = millis() - m_payload_start_time;
     Log.verboseln("Payload power off");

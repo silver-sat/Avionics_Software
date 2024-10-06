@@ -170,7 +170,7 @@ void hex2bin(const char *src, byte *target)
 
 bool CommandProcessor::validate_signature(const String &buffer)
 {
-    Log.verboseln("Validating signature of command");
+    Log.verboseln("Validating command signature");
 
     if (buffer.length() < signature_length_hex_ascii)
     {
