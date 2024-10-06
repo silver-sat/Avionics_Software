@@ -36,7 +36,7 @@ bool PowerBoard::begin()
     {
         m_eps_i.turn_off_3v3_LUP();
         m_eps_i.turn_on_5v_LUP();
-        Log.noticeln("EPS-I battery voltage: %F", m_eps_i.getBatteryVoltage());
+        Log.noticeln("EPS-I battery voltage: %FV", m_eps_i.getBatteryVoltage());
         Log.traceln("EPS-I initialization completed");
         return true;
     }
@@ -83,14 +83,14 @@ PowerBeacon PowerBoard::get_status()
 
 bool PowerBoard::power_adequate()
 {
-    if (m_eps_i.getBatteryVoltage() > payload_session_minimum)
+    auto battery_voltage{m_eps_i.getBatteryVoltage()};
+    if (battery_voltage > payload_session_minimum)
     {
         return true;
     }
     else
     {
-        Log.warningln("EPS-I voltage below payload session minimum");
-        // todo: restore battery voltage test for flight
+        Log.warningln("EPS-I voltage below payload session minimum: %FV", battery_voltage);
         return false;
     }
 }

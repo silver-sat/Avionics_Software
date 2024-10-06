@@ -230,7 +230,9 @@ bool EPS_I::getHeater3State()
 
 bool EPS_I::turn_on_5v_LUP()
 {
-  auto state{static_cast<uint8_t>(EPS_I_Write_State::ON)};
+  // Documentation error! OFF/ON and FORCED_OFF/FORCED_ON are each reversed
+
+  auto state{static_cast<uint8_t>(EPS_I_Write_State::FORCED_OFF)};
   Log.verboseln("Sending command to EPS_I to turn on 5v LUP");
   return write_command(EPS_I_Write_Command::QUERYCONTROLS_AND_TOGGLEOUTPUT06, state);
 }
@@ -243,7 +245,9 @@ bool EPS_I::turn_on_5v_LUP()
 
 bool EPS_I::turn_off_3v3_LUP()
 {
-  auto state{static_cast<uint8_t>(EPS_I_Write_State::OFF)};
+  // Documentation error! OFF/ON and FORCED_OFF/FORCED_ON are each reversed
+
+  auto state{static_cast<uint8_t>(EPS_I_Write_State::FORCED_ON)};
   Log.verboseln("Sending command to EPS_I to turn off 3.3v LUP");
   return write_command(EPS_I_Write_Command::QUERYCONTROLS_AND_TOGGLEOUTPUT05, state);
 }

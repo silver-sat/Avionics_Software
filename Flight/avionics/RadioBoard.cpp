@@ -61,7 +61,7 @@ bool RadioBoard::begin()
     Serial1.write(FEND);
     // Read radio response
     auto response_length{Serial1.readBytes(m_buffer, maximum_command_length)};
-    for (auto i{0}; i < response_length; ++i)
+    for (auto i{0}; i < static_cast<int>(response_length); ++i)
     {
         Log.verboseln("Radio response: %X", m_buffer[i]);
     }

@@ -909,6 +909,7 @@ enum class EPS_I_Write_Command
  */
 enum class EPS_I_Write_State
 {
+  // Documentation error! OFF/ON and FORCED_OFF/FORCED_ON are each reversed
   OFF = 0,            // turns in ON or OFF temporarily (until the next command, reset or internal algorithm are required to change it)
   ON = 1,             // turns in ON or OFF temporarily (until the next command, reset or internal algorithm are required to change it)
   FORCED_OFF = 2,     // turns it ON or OFF regardless of internal algorithms (until the next command or reset)
