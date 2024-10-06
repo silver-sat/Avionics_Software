@@ -190,13 +190,15 @@ bool CommandProcessor::validate_signature(const String &buffer)
 
     String sequence_hex_ascii{buffer.substring(hmac_length_hex_ascii + salt_length_hex_ascii, hmac_length_hex_ascii + salt_length_hex_ascii + sequence_length_hex_ascii)};
     Log.verboseln("Sequence: %s", sequence_hex_ascii.c_str());
-    if(m_command_sequence != sequence_hex_ascii.toInt())
+    if (m_command_sequence != sequence_hex_ascii.toInt())
     {
         Log.errorln("Invalid sequence number, expected %l", m_command_sequence);
-        return false;
+        // return false;
     }
-    ++m_command_sequence;
-
+    else
+    {
+        ++m_command_sequence;
+    }
     String command{buffer.substring(signature_length_hex_ascii)};
     Log.verboseln("Command: %s", command.c_str());
 
