@@ -20,7 +20,6 @@
  *
  */
 
-constexpr int startup_delay{45 * seconds_to_milliseconds};
 constexpr int shutdown_delay{15 * seconds_to_milliseconds};
 constexpr int maximum_cycle_time{10 * minutes_to_seconds * seconds_to_milliseconds};
 
@@ -38,6 +37,7 @@ bool PayloadBoard::begin()
     pinMode(PLD_ON_A_INT, OUTPUT);
     pinMode(PLD_ON_B_INT, OUTPUT);
     pinMode(PLD_ON_C_INT, OUTPUT);
+    power_down();
     pinMode(STATES_A_INT, OUTPUT);
     pinMode(STATES_B_INT, OUTPUT);
     pinMode(STATES_C_INT, OUTPUT);
@@ -45,7 +45,6 @@ bool PayloadBoard::begin()
     pinMode(SHUTDOWN_B, INPUT);
     pinMode(SHUTDOWN_C, INPUT);
     pinMode(PAYLOAD_OC, INPUT);
-    power_down();
     Log.traceln("Payload Board initialization complete");
     return true;
 }
@@ -60,7 +59,7 @@ bool PayloadBoard::begin()
 
 bool PayloadBoard::photo()
 {
-    if (m_payload_active)
+    if (m_state != PayloadState::off)
     {
         Log.errorln("Payload already active");
         return false;
@@ -87,7 +86,7 @@ bool PayloadBoard::photo()
 
 bool PayloadBoard::communicate()
 {
-    if (m_payload_active)
+    if (m_state != PayloadState::off)
     {
         Log.errorln("Payload already active");
         return false;
@@ -107,56 +106,92 @@ bool PayloadBoard::communicate()
 /**
  * @brief Shut off Payload Board if ready to sleep
  *
- * @return true successful
- * @return false error
  *
  */
 
 void PayloadBoard::check_shutdown()
 {
-    if (m_payload_active)
+    bool shutdown{shutdown_vote()};
+    check_timeout();
+    check_overcurrent();
+    switch (m_state)
     {
-        bool shutdown{shutdown_vote()};
-
-        // check if entered user state
-        if (!shutdown && !m_payload_user_state)
-        {
-            Log.verboseln("Payload entered user state");
-            m_payload_user_state = true;
-        }
-        // check shutdown signal after user state
-        if (m_payload_user_state && shutdown && !m_in_shutdown_delay)
-        {
-            m_payload_user_state = false;
-            m_in_shutdown_delay = true;
-            m_shutdown_start_time = millis();
-            Log.verboseln("Starting payload shutdown delay");
-        }
-        // if shutdown signal received, shutdown payload after shutdown delay
-        if (m_in_shutdown_delay && (millis() - m_shutdown_start_time > shutdown_delay))
-        {
-            Log.infoln("Powering down payload");
-            power_down();
-        }
-        // check for Payload Board timeout
-        if (m_payload_active && (millis() - m_payload_start_time > maximum_cycle_time))
-        {
-            Log.errorln("Payload cycle too long");
-            power_down();
-            m_timeout_occurred = true;
-            return;
-        }
-        // check for Payload Board over current (active low)
-        if (m_payload_active && !digitalRead(PAYLOAD_OC))
-        {
-            Log.errorln("Payload over current");
-            power_down();
-            m_last_payload_activity = LastPayloadActivity::overcurrent;
-            m_overcurrent_occurred = true;
-            return;
-        }
-        return;
+    case PayloadState::off:
+    {
+        break;
     }
+    case PayloadState::user_state_wait:
+    {
+        if (!shutdown)
+        {
+            Log.verboseln("Payload user state active");
+            if (m_activity == PayloadActivity::photo)
+            {
+                Log.verboseln("Photo session requested");
+                m_state = PayloadState::photo;
+            }
+            else if (m_activity == PayloadActivity::communications)
+            {
+                Log.verboseln("Communications session requested");
+                m_state = PayloadState::communications;
+            }
+            else
+            {
+                Log.errorln("Payload activity not set");
+                m_state = PayloadState::off;
+            }
+        }
+        break;
+    }
+    case PayloadState::photo:
+    {
+        if (shutdown)
+        {
+            Log.verboseln("Photo session complete");
+            m_state = PayloadState::shutdown;
+            m_shutdown_start_time = millis();
+        }
+        break;
+    }
+    case PayloadState::communications:
+    {
+        if (shutdown)
+        {
+            Log.verboseln("Communications session complete");
+            m_state = PayloadState::shutdown;
+            m_shutdown_start_time = millis();
+        }
+        break;
+    }
+    case PayloadState::shutdown:
+    {
+        if (millis() - m_shutdown_start_time > shutdown_delay)
+        {
+            Log.verboseln("Payload shutdown delay complete");
+            power_down();
+        }
+        break;
+    }
+    case PayloadState::timeout:
+    {
+        Log.errorln("Payload cycle timeout");
+        power_down();
+        m_timeout_occurred = true;
+        break;
+    }
+    case PayloadState::overcurrent:
+    {
+        Log.errorln("Payload overcurrent");
+        power_down();
+        m_overcurrent_occurred = true;
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }
+    return;
 }
 
 /**
@@ -187,9 +222,7 @@ bool PayloadBoard::power_down()
     digitalWrite(PLD_ON_A_INT, HIGH);
     digitalWrite(PLD_ON_B_INT, HIGH);
     digitalWrite(PLD_ON_C_INT, HIGH);
-    m_payload_active = false;
-    m_payload_user_state = false;
-    m_in_shutdown_delay = false;
+    m_state = PayloadState::off;
     m_last_payload_duration = millis() - m_payload_start_time;
     Log.verboseln("Payload power off");
     return true;
@@ -210,7 +243,7 @@ bool PayloadBoard::power_up()
     digitalWrite(PLD_ON_C_INT, LOW);
     m_timeout_occurred = false;
     m_overcurrent_occurred = false;
-    m_payload_active = true;
+    m_state = PayloadState::user_state_wait;
     m_payload_start_time = millis();
     Log.verboseln("Payload power on");
     return true;
@@ -229,7 +262,7 @@ bool PayloadBoard::set_mode_comms()
     digitalWrite(STATES_A_INT, HIGH);
     digitalWrite(STATES_B_INT, HIGH);
     digitalWrite(STATES_C_INT, HIGH);
-    m_last_payload_activity = LastPayloadActivity::communicate;
+    m_activity = PayloadActivity::communications;
     Log.verboseln("Payload mode set to communicate");
     return true;
 }
@@ -247,7 +280,7 @@ bool PayloadBoard::set_mode_photo()
     digitalWrite(STATES_A_INT, LOW);
     digitalWrite(STATES_B_INT, LOW);
     digitalWrite(STATES_C_INT, LOW);
-    m_last_payload_activity = LastPayloadActivity::photo;
+    m_activity = PayloadActivity::photo;
     Log.verboseln("Payload mode set to photo");
     return true;
 }
@@ -262,7 +295,7 @@ bool PayloadBoard::set_mode_photo()
 
 bool PayloadBoard::get_payload_active() const
 {
-    return m_payload_active;
+    return m_state != PayloadState::off;
 }
 
 /**
@@ -274,18 +307,47 @@ PayloadBeacon PayloadBoard::get_status()
 {
     const int duration_bucket{static_cast<int>(m_last_payload_duration / seconds_to_milliseconds / minutes_to_seconds)};
 
-    switch (m_last_payload_activity)
+    if (m_overcurrent_occurred)
+    {
+        Log.errorln("Payload overcurrent during previous activity, session lasted %u milliseconds (duration bucket %d)", m_last_payload_duration, duration_bucket);
+        switch (duration_bucket)
+        {
+        case 0:
+            return PayloadBeacon::overcurrent_0_1;
+        case 1:
+            return PayloadBeacon::overcurrent_1_2;
+        case 2:
+            return PayloadBeacon::overcurrent_2_3;
+        case 3:
+            return PayloadBeacon::overcurrent_3_4;
+        case 4:
+            return PayloadBeacon::overcurrent_4_5;
+        case 5:
+            return PayloadBeacon::overcurrent_5_6;
+        case 6:
+            return PayloadBeacon::overcurrent_6_7;
+        case 7:
+            return PayloadBeacon::overcurrent_7_8;
+        case 8:
+            return PayloadBeacon::overcurrent_8_9;
+        case 9:
+            return PayloadBeacon::overcurrent_9_10;
+        default:
+            return PayloadBeacon::unknown;
+        }
+    }
+    switch (m_activity)
     {
 
     // no payload activity
-    case LastPayloadActivity::none:
+    case PayloadActivity::none:
     {
         Log.verboseln("No payload activity has occurred");
         return PayloadBeacon::none;
     }
 
     // communications session
-    case LastPayloadActivity::communicate:
+    case PayloadActivity::communications:
     {
         if (m_timeout_occurred)
         {
@@ -324,7 +386,7 @@ PayloadBeacon PayloadBoard::get_status()
     }
 
     // photo session
-    case LastPayloadActivity::photo:
+    case PayloadActivity::photo:
     {
         if (m_timeout_occurred)
         {
@@ -362,42 +424,35 @@ PayloadBeacon PayloadBoard::get_status()
         }
     }
 
-    // overcurrent
-    case LastPayloadActivity::overcurrent:
-    {
-        Log.errorln("Payload overcurrent during previous activity, session lasted %u milliseconds (duration bucket %d)", m_last_payload_duration, duration_bucket);
-        switch (duration_bucket)
-        {
-        case 0:
-            return PayloadBeacon::overcurrent_0_1;
-        case 1:
-            return PayloadBeacon::overcurrent_1_2;
-        case 2:
-            return PayloadBeacon::overcurrent_2_3;
-        case 3:
-            return PayloadBeacon::overcurrent_3_4;
-        case 4:
-            return PayloadBeacon::overcurrent_4_5;
-        case 5:
-            return PayloadBeacon::overcurrent_5_6;
-        case 6:
-            return PayloadBeacon::overcurrent_6_7;
-        case 7:
-            return PayloadBeacon::overcurrent_7_8;
-        case 8:
-            return PayloadBeacon::overcurrent_8_9;
-        case 9:
-            return PayloadBeacon::overcurrent_9_10;
-        default:
-            return PayloadBeacon::unknown;
-        }
-    }
-
     // unknown beacon status
     default:
     {
         Log.errorln("Payload session beacon status error");
         return PayloadBeacon::unknown;
     }
+    }
+}
+
+/**
+ * @brief Check timeout
+ *
+ */
+void PayloadBoard::check_timeout()
+{
+    if (millis() - m_payload_start_time > maximum_cycle_time && m_state != PayloadState::off)
+    {
+        m_state = PayloadState::timeout;
+    }
+}
+
+/**
+ * @brief Check overcurrent
+ *
+ */
+void PayloadBoard::check_overcurrent()
+{
+    if (!digitalRead(PAYLOAD_OC))
+    {
+        m_state = PayloadState::overcurrent;
     }
 }
