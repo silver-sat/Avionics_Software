@@ -22,7 +22,7 @@ constexpr unsigned ANTENNA_I2C_ADDRESS{0x33}; /**< antenna I2C address @hideinit
 constexpr unsigned long separation_delay{3 * seconds_to_milliseconds}; /**< Separation delay prior to antenna deployment */
 // set to 80 seconds for flight
 // constexpr unsigned long antenna_delay{80 * seconds_to_milliseconds};
-constexpr unsigned long antenna_delay{60 * seconds_to_milliseconds};
+constexpr unsigned long antenna_delay{3 * seconds_to_milliseconds};
 
 /**
  * @brief Antenna states

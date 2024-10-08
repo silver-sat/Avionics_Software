@@ -154,9 +154,9 @@ void setup()
   payload.begin();
   Log.noticeln("Payload Board interface initialization completed");
 
-  // Initialization complete
+  // Setup phase complete
 
-  Log.noticeln("Avionics Process board initialization completed");
+  Log.noticeln("Avionics Process now accepting commands");
 
 #ifdef INSTRUMENTATION
   // Set up instrumentation
