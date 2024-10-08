@@ -29,6 +29,7 @@
 #define INSTRUMENTATION // Instrumentation for processor and memory usage
 
 #include "log_utility.h"
+#include "Antenna.h"
 #include "PowerBoard.h"
 #include "AvionicsBoard.h"
 #include "RadioBoard.h"
@@ -41,11 +42,9 @@
  */
 constexpr uint32_t serial_baud_rate{19200}; /**< speed of serial connection @hideinitializer */
 constexpr unsigned long serial_delay{2 * seconds_to_milliseconds};
-// todo: set to 45 minutes for flight
-constexpr unsigned long separation_delay{3 * seconds_to_milliseconds};
 
 /**
- * @brief Create the boards and command processor
+ * @brief Create the boards, antenna, and command processor
  *
  */
 
@@ -53,6 +52,7 @@ AvionicsBoard avionics{};
 PowerBoard power{};
 RadioBoard radio{};
 PayloadBoard payload{};
+Antenna antenna{};
 CommandProcessor command_processor{};
 
 
@@ -69,6 +69,8 @@ unsigned long loop_maximum{0};
 unsigned long loop_maximum_timestamp{};
 unsigned long watchdog_maximum{0};
 unsigned long watchdog_maximum_timestamp{};
+unsigned long antenna_maximum{0};
+unsigned long antenna_maximum_timestamp{};
 unsigned long stability_maximum{0};
 unsigned long stability_maximum_timestamp{};
 unsigned long beacon_maximum{0};
@@ -152,26 +154,9 @@ void setup()
   payload.begin();
   Log.noticeln("Payload Board interface initialization completed");
 
-  // Wait for separation delay
-
-  Log.noticeln("Beginning separation delay");
-  Log.noticeln("Separation delay is %d seconds", separation_delay/seconds_to_milliseconds);
-  unsigned long separation_timer_start{millis()};
-  while ((millis() - separation_timer_start) < separation_delay)
-  {
-    avionics.service_watchdog();
-  };
-  Log.noticeln("Ending separation delay");
-
-  // Deploy antenna
-
-  Log.noticeln("Beginning antenna deployment");
-  avionics.deploy_antenna();
-  Log.noticeln("Antenna deployment completed");
-
   // Initialization complete
 
-  Log.noticeln("Avionics Process initialization completed");
+  Log.noticeln("Avionics Process board initialization completed");
 
 #ifdef INSTRUMENTATION
   // Set up instrumentation
@@ -207,6 +192,20 @@ void loop()
   previous_time = micros();
 #endif // INSTRUMENTATION
 
+  // Check antenna
+
+  antenna.check_antenna();
+
+#ifdef INSTRUMENTATION
+  duration = micros() - previous_time;
+  if (duration > antenna_maximum)
+  {
+    antenna_maximum = duration;
+    antenna_maximum_timestamp = millis();
+  }
+  previous_time = micros();
+#endif // INSTRUMENTATION  
+  
   // Determine stability
 
   avionics.get_stability();
@@ -291,6 +290,8 @@ void loop()
     Log.verboseln("Maximum loop time %l microseconds at %s", loop_maximum, timestamp);
     formatTimestamp(timestamp, watchdog_maximum_timestamp);
     Log.verboseln("Maximum watchdog processing duration %l microseconds at %s", watchdog_maximum, timestamp);
+    formatTimestamp(timestamp, antenna_maximum_timestamp);
+    Log.verboseln("Maximum antenna processing duration %l microseconds at %s", antenna_maximum, timestamp);
     formatTimestamp(timestamp, stability_maximum_timestamp);
     Log.verboseln("Maximum stability processing duration %l microseconds at %s", stability_maximum, timestamp);
     formatTimestamp(timestamp, beacon_maximum_timestamp);

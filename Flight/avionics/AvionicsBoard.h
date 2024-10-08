@@ -17,7 +17,6 @@
 #include "IMU.h"
 #include "Beacon.h"
 #include "CY15B256J.h"
-#include "Antenna.h"
 #include <Wire.h>
 #include <wiring_private.h>
 
@@ -152,20 +151,6 @@ public:
    bool unset_clock();
 
    /**
-    * @brief Enable I2C bus switch
-    *
-    */
-
-   bool busswitch_enable();
-
-   /**
-    * @brief Deploy antenna
-    *
-    */
-
-   bool deploy_antenna();
-
-   /**
     * @brief Determine stability
     *
     */
@@ -173,6 +158,13 @@ public:
    bool get_stability();
 
 private:
+   /**
+    * @brief Enable I2C bus switch
+    *
+    */
+
+   bool busswitch_enable();
+
    /**
     * @brief Avionics Board member variables
     *
@@ -184,12 +176,10 @@ private:
    ExternalRTC m_external_rtc{};                                                      /**< External Real Time Clock */
    IMU m_imu{};                                                                       /**< Inertial Measurement Unit */
    CY15B256J m_fram{};                                                                /**< FRAM */
-   Antenna m_antenna{};                                                               /**< Antenna */
    unsigned long m_last_beacon_time{0};                                               /**< Last beacon time from millis() */
    unsigned long m_beacon_interval{2 * minutes_to_seconds * seconds_to_milliseconds}; /**< Initial beacon interval */
    bool m_rtc_initialization_error{false};                                            /**< Realtime clock initialization error */
    bool m_imu_initialization_error{false};                                            /**< IMU initialization error */
    bool m_FRAM_initialization_error{false};                                           /**< FRAM initialization error */
    bool m_radio_connection_error{false};                                              /**< Reserved for radio connection initialization */
-   bool m_antenna_deployment_error{false};                                            /**< Antenna deployment error */
 };
