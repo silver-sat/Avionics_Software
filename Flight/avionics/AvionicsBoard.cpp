@@ -13,6 +13,7 @@
 #include "log_utility.h"
 #include "I2C_ClearBus.h"
 #include "Beacon.h"
+#include "Antenna.h"
 #include "PowerBoard.h"
 #include "RadioBoard.h"
 #include "PayloadBoard.h"
@@ -190,14 +191,20 @@ bool AvionicsBoard::set_beacon_interval(const int seconds)
 bool AvionicsBoard::check_beacon()
 {
   extern RadioBoard radio;
+  extern Antenna antenna;
+  extern PowerBoard power;
+  extern PayloadBoard payload;
+
   if ((millis() - m_last_beacon_time > m_beacon_interval) && (m_beacon_interval > 0) && radio.recent_ground_contact())
   {
-    extern PowerBoard power;
-    extern PayloadBoard payload;
-    if (!payload.get_payload_active()) // only send beacon when Payload is not active
+    if (antenna.antenna_cycle_completed() && !payload.get_payload_active()) // only send beacon when Antenna deployment cycle completed and Payload is not active
     {
       Beacon beacon{power.get_status(), get_status(), payload.get_status()};
       beacon.send();
+    }
+    else
+    {
+      Log.verboseln("Beacon not sent, Antenna deployment cycle not completed or Payload active");
     }
     m_last_beacon_time = millis();
   }
@@ -229,10 +236,11 @@ AvionicsBeacon AvionicsBoard::get_status()
     status = AvionicsBeacon::FRAM_initialization_error;
     Log.verboseln("FRAM initialization error occurred");
   }
-  if (m_antenna_deployment_error)
+  extern Antenna antenna;
+  if (!antenna.antenna_deployed())
   {
     status = AvionicsBeacon::antenna_deployment_error;
-    Log.verboseln("Antenna deployment error occurred");
+    Log.verboseln("Antenna not deployed");
   }
   // todo: how to clear initialization errors
   // show stability if unstable and no initialization errors
@@ -442,18 +450,6 @@ bool AvionicsBoard::unset_clock()
   Log.verboseln("Unsetting the realtime clock");
   clear_pic_times();
   return m_external_rtc.unset_clock();
-}
-
-/**
- * @brief Deploy antenna
- *
- * @return true successful
- * @return false error
- */
-
-bool AvionicsBoard::deploy_antenna()
-{
-  return m_antenna.deploy();
 }
 
 /**

@@ -16,7 +16,7 @@
 #pragma once
 
 #include <Adafruit_MPU6050.h>
-#include <CircularBuffer.h>
+#include <CircularBuffer.hpp>
 
 constexpr unsigned IMU_I2C_ADDRESS{0x68}; /**< inertial measurement unit I2C address @hideinitializer */
 constexpr size_t buffer_size{10};         /**< for data smoothing */
