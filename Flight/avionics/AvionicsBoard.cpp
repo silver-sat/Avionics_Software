@@ -307,6 +307,46 @@ bool AvionicsBoard::set_picture_time(const DateTime time)
   return true;
 }
 
+bool AvionicsBoard::set_SSDV_time(const DateTime time)
+{
+  if (!m_external_rtc.is_set())
+  {
+    Log.errorln("External realtime clock is not set");
+    return false;
+  }
+  if ((time.year() < minimum_valid_year) || (time.year() > maximum_valid_year))
+  {
+    Log.errorln("SSDV time must be between %d and %d, inclusive", minimum_valid_year, maximum_valid_year);
+    return false;
+  }
+  DateTime current_time{};
+  if (!m_external_rtc.get_time(current_time))
+  {
+    Log.errorln("Error from external realtime clock");
+    return false;
+  }
+  if (time < current_time)
+  {
+    Log.errorln("SSDV time is before current time");
+    return false;
+  }
+  if (m_picture_time_count + 1 > maximum_scheduled_pictures)
+  {
+    Log.errorln("Too many SSDV times");
+    return false;
+  }
+  size_t index{m_picture_time_count++};
+  for (; index > 0; --index)
+  {
+    if (time > m_picture_times[index - 1])
+      break;
+    else
+      m_picture_times[index] = m_picture_times[index - 1];
+  }
+  m_picture_times[index] = time;
+  return true;
+}
+
 /**
  * @brief Check time for photo and start payload if required
  *
@@ -366,6 +406,20 @@ String AvionicsBoard::get_pic_times()
 }
 
 /**
+ * @brief Get SSDV times
+ *
+ * @return String count and timestamps
+ */
+
+String AvionicsBoard::get_SSDV_times()
+{
+  String response{m_SSDV_time_count};
+  for (size_t index = 0; index < m_SSDV_time_count; ++index)
+    response += (' ' + m_SSDV_times[index].timestamp());
+  return response;
+}
+
+/**
  * @brief Clear picture times
  *
  * @return true successful
@@ -375,6 +429,19 @@ String AvionicsBoard::get_pic_times()
 bool AvionicsBoard::clear_pic_times()
 {
   m_picture_time_count = 0;
+  return true;
+}
+
+/**
+ * @brief Clear picture times
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool AvionicsBoard::clear_SSDV_times()
+{
+  m_SSDV_time_count = 0;
   return true;
 }
 

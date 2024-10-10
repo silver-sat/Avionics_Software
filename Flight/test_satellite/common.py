@@ -66,13 +66,18 @@ invalid_command_pattern = re.compile(rb"^ERR INV$")
 set_clock_pattern = re.compile(rb"^RES SRC$")
 beacon_sp_pattern = re.compile(rb"^RES SBI$")
 pic_times_pattern = re.compile(rb"^RES SPT$")
+SSDV_times_pattern = re.compile(rb"^RES SST$")
 clear_pic_times_pattern = re.compile(rb"^RES CPT$")
+clear_SSDV_times_pattern = re.compile(rb"^RES CST$")
 unset_clock_pattern = re.compile(rb"^RES URC$")
 reportt_pattern = re.compile(
     rb"^RES GRC 20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)$"
 )
 get_pic_times_pattern = re.compile(
     rb"^RES GPT [0-5]( 20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)){0,5}$"
+)
+get_SSDV_times_pattern = re.compile(
+    rb"^RES GST [0-5]( 20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)){0,5}$"
 )
 telemetry_pattern = re.compile(
     rb"(^RES GTY AX -?\d+\.\d+)( AY -?\d+\.\d+)( AZ -?\d+\.\d+)( RX -?\d+\.\d+)( RY -?\d+\.\d+)( RZ -?\d+\.\d+)( T -?\d+\.\d+)$"

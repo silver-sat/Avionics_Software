@@ -83,10 +83,38 @@ Command *CommandWarehouse::RetrieveCommand(const String tokens[], const size_t t
         }
         return &m_command_invalid; // Wrong number of parameters or bad parameter
     }
+    else if (tokens[0] == "SSDVTimes")
+    {
+        if (argument_count == 6)
+        {
+            auto tokens_are_digits = true;
+            for (size_t token = 1; token <= argument_count; ++token)
+                for (size_t index = 0; index < tokens[token].length(); ++index)
+                    if (!isDigit(tokens[token][index]))
+                        tokens_are_digits = false;
+            if (tokens_are_digits)
+                m_SSDV_times.time(DateTime(
+                    static_cast<uint16_t>(tokens[1].toInt()),
+                    static_cast<uint8_t>(tokens[2].toInt()),
+                    static_cast<uint8_t>(tokens[3].toInt()),
+                    static_cast<uint8_t>(tokens[4].toInt()),
+                    static_cast<uint8_t>(tokens[5].toInt()),
+                    static_cast<uint8_t>(tokens[6].toInt())));
+                return &m_SSDV_times;
+        }
+        return &m_command_invalid; // Wrong number of parameters or bad parameter
+    }
     else if (tokens[0] == "ClearPicTimes")
     {
         if (argument_count == 0)
             return &m_clear_pic_times;
+        else
+            return &m_command_invalid; // Wrong number of parameters
+    }
+    else if (tokens[0] == "ClearSSDVTimes")
+    {
+        if (argument_count == 0)
+            return &m_clear_SSDV_times;
         else
             return &m_command_invalid; // Wrong number of parameters
     }
@@ -105,6 +133,13 @@ Command *CommandWarehouse::RetrieveCommand(const String tokens[], const size_t t
             return &m_command_invalid; // Wrong number of parameters
     }
     else if (tokens[0] == "GetPicTimes")
+    {
+        if (argument_count == 0)
+            return &m_get_pic_times;
+        else
+            return &m_command_invalid; // Wrong number of parameters
+    }
+    else if (tokens[0] == "GetSSDVTimes")
     {
         if (argument_count == 0)
             return &m_get_pic_times;

@@ -39,147 +39,40 @@ constexpr uint16_t maximum_valid_year{2040};                         /**< Restri
 class AvionicsBoard final
 {
 public:
-   /**
-    * @brief Initialize the Avionics Board
-    *
-    */
-
    bool begin();
-
-   /**
-    * @brief Force the watchdog to reset the processor
-    *
-    */
-
    void watchdog_force_reset();
-
-   /**
-    * @brief Set the external realtime clock
-    *
-    */
-
    bool set_external_rtc(const DateTime time);
-
-   /**
-    * @brief Get a timestamp
-    *
-    */
-
    String get_timestamp();
-
-   /**
-    * @brief Set beacon interval
-    *
-    */
-
    bool set_beacon_interval(const int seconds);
-
-   /**
-    * @brief Send a beacon if the beacon interval has elapsed
-    *
-    */
-
    bool check_beacon();
-
-   /**
-    * @brief Get Avionics status for beacon
-    *
-    */
-
    AvionicsBeacon get_status();
-
-   /**
-    * @brief Set the time for the next payload photo
-    *
-    */
-
    bool set_picture_time(const DateTime time);
-
-   /**
-    * @brief Check time for photo and start payload if required
-    *
-    */
-
+   bool set_SSDV_time(const DateTime time);
    bool check_photo();
-
-   /**
-    * @brief Get scheduled picture times
-    *
-    */
-
    String get_pic_times();
-
-   /**
-    * @brief Clear picture times
-    *
-    */
-
+   String get_SSDV_times();
    bool clear_pic_times();
-
-   /**
-    * @brief Get telemetry
-    *
-    */
-
+   bool clear_SSDV_times();
    String get_telemetry();
-
-   /**
-    * @brief Get the beacon interval
-    *
-    */
-
    String get_beacon_interval();
-
-   /**
-    * @brief Trigger the watchdog
-    *
-    */
    void service_watchdog();
-
-   /**
-    * @brief Read a byte from the FRAM
-    *
-    */
-
    String read_fram(const size_t address);
-
-   /**
-    * @brief Unset the realtime clock
-    *
-    */
-
    bool unset_clock();
-
-   /**
-    * @brief Determine stability
-    *
-    */
-
    bool get_stability();
-
 private:
-   /**
-    * @brief Enable I2C bus switch
-    *
-    */
-
    bool busswitch_enable();
-
-   /**
-    * @brief Avionics Board member variables
-    *
-    */
-
-   ExternalWatchdog m_external_watchdog{};                                            /**< Watchdog */
-   size_t m_picture_time_count{0};                                                    /**< Maximum picture count */
-   DateTime m_picture_times[maximum_scheduled_pictures]{};                            /**< Scheduled picture times */
-   ExternalRTC m_external_rtc{};                                                      /**< External Real Time Clock */
-   IMU m_imu{};                                                                       /**< Inertial Measurement Unit */
-   CY15B256J m_fram{};                                                                /**< FRAM */
-   unsigned long m_last_beacon_time{0};                                               /**< Last beacon time from millis() */
-   unsigned long m_beacon_interval{2 * minutes_to_seconds * seconds_to_milliseconds}; /**< Initial beacon interval */
-   bool m_rtc_initialization_error{false};                                            /**< Realtime clock initialization error */
-   bool m_imu_initialization_error{false};                                            /**< IMU initialization error */
-   bool m_FRAM_initialization_error{false};                                           /**< FRAM initialization error */
-   bool m_radio_connection_error{false};                                              /**< Reserved for radio connection initialization */
+   ExternalWatchdog m_external_watchdog{};
+   size_t m_picture_time_count{0};
+   size_t m_SSDV_time_count{0};
+   DateTime m_picture_times[maximum_scheduled_pictures]{};
+   DateTime m_SSDV_times[maximum_scheduled_pictures]{};
+   ExternalRTC m_external_rtc{};
+   IMU m_imu{};
+   CY15B256J m_fram{};
+   unsigned long m_last_beacon_time{0};
+   unsigned long m_beacon_interval{2 * minutes_to_seconds * seconds_to_milliseconds};
+   bool m_rtc_initialization_error{false};
+   bool m_imu_initialization_error{false};
+   bool m_FRAM_initialization_error{false};
+   bool m_radio_connection_error{false};
 };

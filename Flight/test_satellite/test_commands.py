@@ -36,12 +36,26 @@ class TestCommands:
         message = common.collect_message()
         assert common.verify_message(message, common.pic_times_pattern)
 
+    def test_SSDVtimes(self):
+        common.issue(f"SSDVTimes {common.now1m()}")
+        message = common.collect_message()
+        assert common.verify_message(message, common.acknowledgment_pattern)
+        message = common.collect_message()
+        assert common.verify_message(message, common.SSDV_times_pattern)
+
     def test_clear_pictimes(self):
         common.issue(f"ClearPicTimes")
         message = common.collect_message()
         assert common.verify_message(message, common.acknowledgment_pattern)
         message = common.collect_message()
         assert common.verify_message(message, common.clear_pic_times_pattern)
+
+    def test_clear_SSDVtimes(self):
+        common.issue(f"ClearSSDVTimes")
+        message = common.collect_message()
+        assert common.verify_message(message, common.acknowledgment_pattern)
+        message = common.collect_message()
+        assert common.verify_message(message, common.clear_SSDV_times_pattern)
 
     def test_get_realtime_clock(self):
         common.issue("ReportT")
@@ -63,6 +77,13 @@ class TestCommands:
         assert common.verify_message(message, common.acknowledgment_pattern)
         message = common.collect_message()
         assert common.verify_message(message, common.get_pic_times_pattern)
+
+    def test_get_SSDVtimes(self):
+        common.issue("GetSSDVTimes")
+        message = common.collect_message()
+        assert common.verify_message(message, common.acknowledgment_pattern)
+        message = common.collect_message()
+        assert common.verify_message(message, common.get_SSDV_times_pattern)
 
     def test_get_telemetry(self):
         common.issue("GetTelemetry")
