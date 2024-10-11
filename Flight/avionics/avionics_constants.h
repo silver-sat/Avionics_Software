@@ -102,6 +102,7 @@ constexpr byte BEACON{'\x07'};            /**< beacon */
 constexpr byte DIGITALIO_RELEASE{'\x08'}; /**< deploy antenna in recovery mode */
 constexpr byte GET_RADIO_STATUS{'\x09'};  /**< request radio status */
 constexpr byte HALT{'\x0A'};              /**< stop transmission */
+constexpr byte MODIFY_FREQUENCY{'\x0B'};  /**< change radio frequency */
 constexpr byte MODIFY_MODE{'\x0C'};       /**< change radio mode */
 constexpr byte TOGGLE_RADIO_5V{'\x0F'};   /**< Toggle radio 5v */
 
@@ -111,3 +112,10 @@ constexpr byte TOGGLE_RADIO_5V{'\x0F'};   /**< Toggle radio 5v */
  */
 
 constexpr size_t mode_length{1}; /**< mode */
+
+/**
+ * @brief Error code for frequency change
+ * 
+ */
+
+constexpr byte BELL{'\x07'}; /**< bell character */
