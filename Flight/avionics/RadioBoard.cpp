@@ -338,10 +338,10 @@ bool RadioBoard::get_frequencies()
     const unsigned long entry_timeout = 1 * minutes_to_seconds * seconds_to_milliseconds;
     char incoming_char = 0;
     String frequency_string_1 = "";
-    String frequency_string_2 = "";
+    String frequency_string = "";
     extern AvionicsBoard avionics;
 
-    Serial.print("Enter the two 9-digit frequency strings with no spaces (e.g., 123456789123456789): ");
+    Serial.print("Enter the 9-digit frequency string (e.g., 123456789): ");
 
     while (millis() - start_time < entry_timeout)
     {
@@ -358,36 +358,25 @@ bool RadioBoard::get_frequencies()
             {
                 Serial.write(incoming_char);
             }
-            if (frequency_string_1.length() < 9)
+            if (frequency_string.length() < 8)
             {
-                frequency_string_1 += incoming_char;
+                frequency_string += incoming_char;
                 continue;
             }
-            if (frequency_string_2.length() < 8)
-            {
-                frequency_string_2 += incoming_char;
-                continue;
-            }
-            frequency_string_2 += incoming_char;
+            frequency_string += incoming_char;
             for (auto i{0}; i < 2; ++i)
             {
                 Serial1.write(FEND);
                 Serial1.write(MODIFY_FREQUENCY);
-                Serial1.write(frequency_string_1.c_str(), 9);
-                Serial1.write(" ");
-                Serial1.write(frequency_string_2.c_str(), 9);
+                Serial1.write(frequency_string.c_str(), 9);
                 Serial1.write(FEND);
             }
             Serial.println();
-            String frequency1{};
-            frequency1 += frequency_string_1.substring(0, 6);
-            frequency1 += ".";
-            frequency1 += frequency_string_1.substring(6, 9);
-            String frequency2{};
-            frequency2 += frequency_string_2.substring(0, 6);
-            frequency2 += ".";
-            frequency2 += frequency_string_2.substring(6, 9);
-            Log.noticeln("Frequencies set to %s and %s", frequency1.c_str(), frequency2.c_str());
+            String display_frequency{};
+            display_frequency += frequency_string.substring(0, 6);
+            display_frequency += ".";
+            display_frequency += frequency_string.substring(6, 9);
+            Log.noticeln("Frequency set to %s", display_frequency.c_str());
             return true;
         }
     }
