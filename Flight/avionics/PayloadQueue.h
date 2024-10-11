@@ -61,8 +61,8 @@ public:
     size_t size() const;
     void clear();
     PayloadQueue::Element& operator[](size_t index);
-    const String activity_name(PayloadQueue::ActivityType type) const;
-
+    static const String activity_name(PayloadQueue::ActivityType type);
+    friend class CommandGetPayloadQueue;
 
 private:
     Element m_array[maximum_payload_queue_size]; // Array to store the payloads

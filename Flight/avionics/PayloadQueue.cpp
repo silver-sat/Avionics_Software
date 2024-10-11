@@ -159,7 +159,7 @@ PayloadQueue::Element &PayloadQueue::operator[](size_t index)
  * @return const String name of the ActivityType
  */
 
-const String PayloadQueue::activity_name(PayloadQueue::ActivityType type) const
+const String PayloadQueue::activity_name(PayloadQueue::ActivityType type)
 {
     switch (type)
     {

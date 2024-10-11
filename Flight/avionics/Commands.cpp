@@ -384,7 +384,8 @@ bool CommandGetPayloadQueue::execute_command()
     status = response.send() && status;
     for (auto i{0}; i < avionics.get_payload_queue_size(); i++)
     {
-        String element = String{i} + " " + avionics.m_payload_queue[i].time.timestamp() + " " + avionics.m_payload_queue[i].type;
+
+        String element = String{i} + " " + avionics.m_payload_queue[i].time.timestamp() + " " + PayloadQueue::activity_name(avionics.m_payload_queue[i].type);
         auto response{Response{status ? ("GPQ " + element) : "ERR"}};
         status = response.send() && status;
     }
