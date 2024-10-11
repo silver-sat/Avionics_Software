@@ -15,7 +15,6 @@
  * SPT: PicTimes: set times for photos
  * SST: SSDVTimes: set times for SSDV broadcasts
  * CPQ: ClearPayloadQueue: empty payload activity queue
- * URC: UnsetClock: change the realtime clock status to unset for testing
  *
  * Get satellite state:
  *
@@ -28,8 +27,6 @@
  *
  * Invoke satellite operation:
  *
- * NOP: NoOperate: subsumes Ping: acknowledge
- * STP: SendTestPacket: reply with test message
  * PYC: PayComms: subsumes Begin tweet : start payload in communications mode
  * TSL: TweeSlee: subsumes Halt: stop communicating
  * WDG: Watchdog: force watchdog timeout (reset SAMD21)
@@ -42,6 +39,13 @@
  * Radio commands:
  *
  * RMM: ModifyMode: modify radio mode
+ * 
+ * Test Commands
+ * 
+ * NOP: NoOperate: subsumes Ping: acknowledge
+ * STP: SendTestPacket: reply with test message
+ * URC: UnsetClock: change the realtime clock status to unset for testing
+ * LCA: LogArguments: Log command arguments with no acknowledgement or response
  *
  * Deprecated commands:
  *
@@ -740,4 +744,33 @@ bool CommandModifyMode::execute_command()
     Message message(Message::modify_mode, String(m_mode));
     Log.traceln("Requesting mode modification");
     return message.send() && status;
+}
+
+/**
+ * @brief Acknowledge LogArguments command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandLogArguments::acknowledge_command()
+{
+    auto status{Command::acknowledge_command()};
+    Log.verboseln("LogArguments");
+    return status;
+}
+
+/**
+ * @brief Execute LogArguments command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandLogArguments::execute_command()
+{
+    auto status{Command::execute_command()};
+    Log.verboseln("LogArguments");
+    Log.traceln("Logging command arguments: %s", m_arguments.c_str());
+    return status;
 }

@@ -199,3 +199,15 @@ public:
 private:
     char m_mode[2]{};
 };
+
+class CommandLogArguments final : public Command
+{
+public:
+    explicit CommandLogArguments(const String arguments) : m_arguments{arguments} {};
+    bool acknowledge_command() override;
+    bool execute_command() override;
+    void clear_arguments() { m_arguments = ""; }
+    void arguments(const String arguments) { m_arguments += arguments; }
+private:
+    String m_arguments;
+};

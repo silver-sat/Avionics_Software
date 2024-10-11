@@ -137,3 +137,6 @@ class TestCommands:
         assert common.verify_message(message, common.acknowledgment_pattern)
         message = common.collect_message()
         assert common.verify_message(message, common.modify_mode_pattern)
+
+    def test_log_arguments(self):
+        common.issue("LogArguments 1 2 3 4 5 6 7 8 9 10")

@@ -202,5 +202,12 @@ Command *CommandWarehouse::RetrieveCommand(const String tokens[], const size_t t
         else
             return &m_command_invalid; // Wrong number of parameters
     }
+    else if (tokens[0] == "LogArguments")
+    {
+        m_log_arguments.clear_arguments();
+        for (size_t token = 1; token <= argument_count; ++token)
+                m_log_arguments.arguments(tokens[token] + " ");
+        return &m_log_arguments;
+    }
     return &m_command_unknown; // Unknown command
 }
