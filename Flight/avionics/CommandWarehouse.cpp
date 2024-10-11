@@ -104,17 +104,10 @@ Command *CommandWarehouse::RetrieveCommand(const String tokens[], const size_t t
         }
         return &m_command_invalid; // Wrong number of parameters or bad parameter
     }
-    else if (tokens[0] == "ClearPicTimes")
+    else if (tokens[0] == "ClearPayloadQueue")
     {
         if (argument_count == 0)
-            return &m_clear_pic_times;
-        else
-            return &m_command_invalid; // Wrong number of parameters
-    }
-    else if (tokens[0] == "ClearSSDVTimes")
-    {
-        if (argument_count == 0)
-            return &m_clear_SSDV_times;
+            return &m_clear_payload_queue;
         else
             return &m_command_invalid; // Wrong number of parameters
     }
@@ -132,17 +125,10 @@ Command *CommandWarehouse::RetrieveCommand(const String tokens[], const size_t t
         else
             return &m_command_invalid; // Wrong number of parameters
     }
-    else if (tokens[0] == "GetPicTimes")
+    else if (tokens[0] == "GetPayloadQueue")
     {
         if (argument_count == 0)
-            return &m_get_pic_times;
-        else
-            return &m_command_invalid; // Wrong number of parameters
-    }
-    else if (tokens[0] == "GetSSDVTimes")
-    {
-        if (argument_count == 0)
-            return &m_get_pic_times;
+            return &m_get_payload_queue;
         else
             return &m_command_invalid; // Wrong number of parameters
     }

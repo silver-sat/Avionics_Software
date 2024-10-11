@@ -68,18 +68,10 @@ private:
     DateTime m_time;
 };
 
-class CommandClearPicTimes final : public Command
+class CommandClearPayloadQueue final : public Command
 {
 public:
-    CommandClearPicTimes() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
-};
-
-class CommandClearSSDVTimes final : public Command
-{
-public:
-    CommandClearSSDVTimes() = default;
+    CommandClearPayloadQueue() = default;
     bool acknowledge_command() override;
     bool execute_command() override;
 };
@@ -100,18 +92,10 @@ public:
     bool execute_command() override;
 };
 
-class CommandGetPicTimes final : public Command
+class CommandGetPayloadQueue final : public Command
 {
 public:
-    CommandGetPicTimes() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
-};
-
-class CommandGetSSDVTimes final : public Command
-{
-public:
-    CommandGetSSDVTimes() = default;
+    CommandGetPayloadQueue() = default;
     bool acknowledge_command() override;
     bool execute_command() override;
 };

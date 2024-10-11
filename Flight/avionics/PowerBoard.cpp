@@ -36,7 +36,6 @@ bool PowerBoard::begin()
     {
         m_eps_i.turn_off_3v3_LUP();
         m_eps_i.turn_on_5v_LUP();
-        Log.noticeln("EPS-I battery voltage: %FV", m_eps_i.getBatteryVoltage());
         Log.traceln("EPS-I initialization completed");
         return true;
     }

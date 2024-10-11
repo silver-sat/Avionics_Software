@@ -17,15 +17,13 @@
  * SBI: BeaconSp: set beacon spacing
  * SPT: PicTimes: set times for photos
  * SST: SSDVTimes: set times for SSDV broadcasts
- * CPT: ClearPicTimes: empty PicTimes queue
- * CST: ClearSSDVTimes: empty SSDVTimes queue
+ * CPQ: ClearPayloadQueue: empty payload activity queue
  * URC: UnsetClock: change the realtime clock status to unset for testing
  *
  * Get satellite state:
  *
  * GRC: ReportT: subsumes GetTime: reply with realtime clock setting
- * GPT: GetPicTimes: reply with picture schedule
- * GST: GetSSDVTimes: reply with SSDV schedule
+ * GPQ: GetPayloadQueue: reply with payload schedule
  * GTY: GetTelemetry: reply with telemetry
  * GPW: GetPower: reply with power status
  * GRS: GetComms: reply with Radio Board status
@@ -62,6 +60,12 @@
  * RST: SweepTransmitter: radio sweep transmitter
  * RSR: SweepReceiver: radio sweep receiver
  * RQR: QueryRegister: radio query register
+ * CPT: ClearPicTimes: replaced with ClearPayloadQueue
+ * CST: ClearSSDVTimes: replaced with ClearPayloadQueue
+ * GPT: GetPicTimes: replaced with GetPayloadQueue
+ * GST: GetSSDVTimes: replaced with GetPayloadQueue
+
+
  *
  */
 
@@ -255,64 +259,33 @@ bool CommandSSDVTimes::execute_command()
 }
 
 /**
- * @brief Acknowledge ClearPicTimes command
+ * @brief Acknowledge ClearPayloadQueue command
  *
  * @return true successful
  * @return false error
  */
 
-bool CommandClearPicTimes::acknowledge_command()
+bool CommandClearPayloadQueue::acknowledge_command()
 {
     auto status{Command::acknowledge_command()};
-    Log.verboseln("ClearPicTimes");
+    Log.verboseln("ClearPayloadQueue");
     return status;
 }
 
 /**
- * @brief Execute ClearPicTimes command
+ * @brief Execute ClearPayloadQueue command
  *
  * @return true successful
  * @return false error
  */
 
-bool CommandClearPicTimes::execute_command()
+bool CommandClearPayloadQueue::execute_command()
 {
     auto status{Command::execute_command()};
-    Log.verboseln("ClearPicTimes");
+    Log.verboseln("ClearPayloadQueue");
     extern AvionicsBoard avionics;
-    status = avionics.clear_pic_times() && status;
-    auto response{Response{status ? "CPT" : "ERR"}};
-    return response.send() && status;
-}
-
-/**
- * @brief Acknowledge ClearSSDVTimes command
- *
- * @return true successful
- * @return false error
- */
-
-bool CommandClearSSDVTimes::acknowledge_command()
-{
-    auto status{Command::acknowledge_command()};
-    Log.verboseln("ClearSSDVTimes");
-    return status;
-}
-
-/**
- * @brief Execute ClearSSDVTimes command
- *
- * @return true successful
- * @return false error
- */
-
-bool CommandClearSSDVTimes::execute_command()
-{
-    auto status{Command::execute_command()};
-    Log.verboseln("ClearSSDVTimes");
-    extern AvionicsBoard avionics;
-    status = avionics.clear_SSDV_times() && status;
-    auto response{Response{status ? "CST" : "ERR"}};
+    status = avionics.clear_payload_queue() && status;
+    auto response{Response{status ? "CPQ" : "ERR"}};
     return response.send() && status;
 }
 
@@ -381,62 +354,40 @@ bool CommandReportT::execute_command()
 }
 
 /**
- * @brief Acknowledge GetPicTimes command
+ * @brief Acknowledge GetPayloadQueue command
  *
  * @return true successful
  * @return false error
  */
 
-bool CommandGetPicTimes::acknowledge_command()
+bool CommandGetPayloadQueue::acknowledge_command()
 {
     auto status{Command::acknowledge_command()};
-    Log.verboseln("GetPicTimes");
+    Log.verboseln("GetPayloadfQueue");
     return status;
 }
 
 /**
- * @brief  Execute GetPicTimes command
+ * @brief  Execute GetPayloadQueue command
  *
  * @return true successful
  * @return false error
  */
 
-bool CommandGetPicTimes::execute_command()
+bool CommandGetPayloadQueue::execute_command()
 {
     auto status{Command::execute_command()};
-    Log.verboseln("GetPicTimes");
+    Log.verboseln("GetPayloadQueue");
     extern AvionicsBoard avionics;
-    auto response{Response{status ? ("GPT " + avionics.get_pic_times()) : "ERR"}};
-    return response.send() && status;
-}
-/**
- * @brief Acknowledge GetSSDVTimes command
- *
- * @return true successful
- * @return false error
- */
-
-bool CommandGetSSDVTimes::acknowledge_command()
-{
-    auto status{Command::acknowledge_command()};
-    Log.verboseln("GetSSDVTimes");
+    auto response{Response{status ? ("GPQ " + String{avionics.get_payload_queue_size()} + " entries in queue") : "ERR"}};
+    status = response.send() && status;
+    for (auto i{0}; i < avionics.get_payload_queue_size(); i++)
+    {
+        String element = String{i} + " " + avionics.m_payload_queue[i].time.timestamp() + " " + avionics.m_payload_queue[i].type;
+        auto response{Response{status ? ("GPQ " + element) : "ERR"}};
+        status = response.send() && status;
+    }
     return status;
-}
-
-/**
- * @brief  Execute GetSSDVTimes command
- *
- * @return true successful
- * @return false error
- */
-
-bool CommandGetSSDVTimes::execute_command()
-{
-    auto status{Command::execute_command()};
-    Log.verboseln("GetSSDVTimes");
-    extern AvionicsBoard avionics;
-    auto response{Response{status ? ("GST " + avionics.get_pic_times()) : "ERR"}};
-    return response.send() && status;
 }
 
 /**

@@ -32,32 +32,42 @@ void swap(T &a, T &b)
  *
  */
 
+/**
+ * @brief Add an element to the queue
+ *
+ * @param payload a PayloadQueue element
+ *
+ * @return bool true if successful
+ * @return bool false if error
+ *
+ */
+
 bool PayloadQueue::push(const PayloadQueue::Element &payload)
 {
     // todo: consider heap or linked list if insertion time is excessive
-    if (m_payload_queue_size >= maximum_payload_queue_size)
+    if (m_size >= maximum_payload_queue_size)
     {
         Log.errorln("Payload queue is full");
         return false;
     }
     // If the queue is empty or the new payload has lower priority (later time)
-    if (empty() || payload.time >= m_payload_queue[m_payload_queue_size - 1].time)
+    if (empty() || payload.time >= m_array[m_size - 1].time)
     {
-        m_payload_queue[m_payload_queue_size++] = payload; // Add the new payload at the end
+        m_array[m_size++] = payload; // Add the new payload at the end
         // Sort the queue to maintain priority order
-        for (size_t i = m_payload_queue_size - 1; i > 0 && m_payload_queue[i].time < m_payload_queue[i - 1].time; --i)
+        for (size_t i = m_size - 1; i > 0 && m_array[i].time < m_array[i - 1].time; --i)
         {
-            swap(m_payload_queue[i], m_payload_queue[i - 1]);
+            swap(m_array[i], m_array[i - 1]);
         }
     }
     else
     {
         // Find the correct position to insert the payload while maintaining order
-        size_t i = m_payload_queue_size;
-        m_payload_queue[m_payload_queue_size++] = payload;
-        while (i > 0 && m_payload_queue[i].time < m_payload_queue[i - 1].time)
+        size_t i = m_size;
+        m_array[m_size++] = payload;
+        while (i > 0 && m_array[i].time < m_array[i - 1].time)
         {
-            swap(m_payload_queue[i], m_payload_queue[i - 1]);
+            swap(m_array[i], m_array[i - 1]);
             --i;
         }
     }
@@ -76,24 +86,93 @@ PayloadQueue::Element PayloadQueue::pop()
     {
         return PayloadQueue::Element(DateTime(0, 0, 0, 0, 0, 0), PayloadQueue::Photo);
     }
-    PayloadQueue::Element head = m_payload_queue[0];
+    PayloadQueue::Element head = m_array[0];
     // Shift all elements one position to the left to remove the head
-    for (size_t i = 0; i < m_payload_queue_size - 1; ++i)
+    for (size_t i = 0; i < m_size - 1; ++i)
     {
-        m_payload_queue[i] = m_payload_queue[i + 1];
+        m_array[i] = m_array[i + 1];
     }
-    --m_payload_queue_size;
+    --m_size;
     return head;
 }
 
-// Check if the queue is empty
-bool PayloadQueue::empty() const
+/**
+ * @brief Get the highest priority payload from the queue
+ *
+ * @return Element highest priority element
+ */
+
+PayloadQueue::Element PayloadQueue::peek() const
 {
-    return m_payload_queue_size == 0;
+    if (empty())
+    {
+        return PayloadQueue::Element(DateTime(0, 0, 0, 0, 0, 0), PayloadQueue::Photo);
+    }
+    return m_array[0];
 }
 
-// Get the number of elements in the queue
+/**
+ * @brief Check if the queue is empty
+ *
+ * @return true
+ * @return false
+ */
+
+bool PayloadQueue::empty() const
+{
+    return m_size == 0;
+}
+/**
+ * @brief Get the number of elements in the queue
+ *
+ * @return Get
+ */
+
 size_t PayloadQueue::size() const
 {
-    return m_payload_queue_size;
+    return m_size;
+}
+
+/**
+ * @brief Clear the queue
+ *
+ */
+
+void PayloadQueue::clear()
+{
+    m_size = 0;
+}
+
+/**
+ * @brief Access an element in the queue
+ *
+ */
+
+PayloadQueue::Element &PayloadQueue::operator[](size_t index)
+{
+    if (index >= m_size)
+    {
+        Log.errorln("Payload queue index out of range");
+    }
+    return m_array[index];
+}
+
+/**
+ * @brief Get the name of the ActivityType
+ *
+ * @param type
+ * @return const String name of the ActivityType
+ */
+
+const String PayloadQueue::activity_name(PayloadQueue::ActivityType type) const
+{
+    switch (type)
+    {
+    case PayloadQueue::ActivityType::Photo:
+        return "Photo";
+    case PayloadQueue::ActivityType::SSDV:
+        return "SSDV";
+    default:
+        return "Unknown";
+    }
 }

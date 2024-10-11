@@ -43,19 +43,12 @@ class TestCommands:
         message = common.collect_message()
         assert common.verify_message(message, common.SSDV_times_pattern)
 
-    def test_clear_pictimes(self):
-        common.issue(f"ClearPicTimes")
+    def test_clear_payload_queue(self):
+        common.issue(f"ClearPayloadQueue")
         message = common.collect_message()
         assert common.verify_message(message, common.acknowledgment_pattern)
         message = common.collect_message()
-        assert common.verify_message(message, common.clear_pic_times_pattern)
-
-    def test_clear_SSDVtimes(self):
-        common.issue(f"ClearSSDVTimes")
-        message = common.collect_message()
-        assert common.verify_message(message, common.acknowledgment_pattern)
-        message = common.collect_message()
-        assert common.verify_message(message, common.clear_SSDV_times_pattern)
+        assert common.verify_message(message, common.clear_payload_queue_pattern)
 
     def test_get_realtime_clock(self):
         common.issue("ReportT")
@@ -71,19 +64,12 @@ class TestCommands:
         message = common.collect_message()
         assert common.verify_message(message, common.unset_clock_pattern)
 
-    def test_get_pictimes(self):
-        common.issue("GetPicTimes")
+    def test_get_payload_queue(self):
+        common.issue("GetPayloadQueue")
         message = common.collect_message()
         assert common.verify_message(message, common.acknowledgment_pattern)
         message = common.collect_message()
-        assert common.verify_message(message, common.get_pic_times_pattern)
-
-    def test_get_SSDVtimes(self):
-        common.issue("GetSSDVTimes")
-        message = common.collect_message()
-        assert common.verify_message(message, common.acknowledgment_pattern)
-        message = common.collect_message()
-        assert common.verify_message(message, common.get_SSDV_times_pattern)
+        assert common.verify_message(message, common.get_payload_queue_pattern)
 
     def test_get_telemetry(self):
         common.issue("GetTelemetry")

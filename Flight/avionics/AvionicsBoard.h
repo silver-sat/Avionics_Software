@@ -17,6 +17,7 @@
 #include "IMU.h"
 #include "Beacon.h"
 #include "CY15B256J.h"
+#include "PayloadQueue.h"
 #include <Wire.h>
 #include <wiring_private.h>
 
@@ -25,11 +26,10 @@
  *
  */
 
-constexpr uint16_t minimum_beacon_interval{1 * minutes_to_seconds};  /**< Restrict to a reasonable value */
-constexpr uint16_t maximum_beacon_interval{10 * minutes_to_seconds}; /**< Restrict to a reasonable value */
-constexpr size_t maximum_scheduled_pictures{5};                      /**< Assume small number of pictures in one orbit */
-constexpr uint16_t minimum_valid_year{2020};                         /**< Restrict to reasonable value */
-constexpr uint16_t maximum_valid_year{2040};                         /**< Restrict to reasonable value */
+constexpr uint16_t minimum_beacon_interval{1 * minutes_to_seconds};  /**< minimum beacon interval */
+constexpr uint16_t maximum_beacon_interval{10 * minutes_to_seconds}; /**< maximum beacon interval */
+constexpr uint16_t minimum_valid_year{2024};                         /**< minimum valid year */
+constexpr uint16_t maximum_valid_year{2030};                         /**< maximum valid year */
 
 /**
  * @brief Avionics Board class for managing the microcontroller and peripherals
@@ -48,24 +48,22 @@ public:
    AvionicsBeacon get_status();
    bool set_picture_time(const DateTime time);
    bool set_SSDV_time(const DateTime time);
-   bool check_photo();
-   String get_pic_times();
-   String get_SSDV_times();
-   bool clear_pic_times();
-   bool clear_SSDV_times();
+   bool check_payload();
+   bool clear_payload_queue();
+   size_t get_payload_queue_size();
    String get_telemetry();
    String get_beacon_interval();
    void service_watchdog();
    String read_fram(const size_t address);
    bool unset_clock();
    bool get_stability();
+
+friend class CommandGetPayloadQueue;
+
 private:
    bool busswitch_enable();
-   ExternalWatchdog m_external_watchdog{};
-   size_t m_picture_time_count{0};
-   size_t m_SSDV_time_count{0};
-   DateTime m_picture_times[maximum_scheduled_pictures]{};
-   DateTime m_SSDV_times[maximum_scheduled_pictures]{};
+   bool valid_time(const DateTime time);
+   ExternalWatchdog m_external_watchdog {};
    ExternalRTC m_external_rtc{};
    IMU m_imu{};
    CY15B256J m_fram{};
@@ -75,4 +73,5 @@ private:
    bool m_imu_initialization_error{false};
    bool m_FRAM_initialization_error{false};
    bool m_radio_connection_error{false};
+   PayloadQueue m_payload_queue{};
 };

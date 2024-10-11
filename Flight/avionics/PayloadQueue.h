@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "RTClib.h"
+#include <RTClib.h>
 
 /**
  * @brief Define the maximum size of the queue
@@ -24,6 +24,8 @@ static constexpr size_t maximum_payload_queue_size{100};
 
 class PayloadQueue
 {
+public:
+    PayloadQueue() : m_size(0) {}
 
     /**
      * @brief Define the ActivityType enum class
@@ -32,6 +34,7 @@ class PayloadQueue
 
     enum ActivityType
     {
+        Unknown,
         Photo,
         SSDV,
     };
@@ -47,17 +50,21 @@ class PayloadQueue
         DateTime time;
         ActivityType type;
 
-        // Constructor for convenience
+        Element() : time(DateTime(0, 0, 0, 0, 0, 0)), type(ActivityType::Photo) {}
         Element(DateTime time, ActivityType type) : time(time), type(type) {}
     };
 
-public:
     bool push(const Element &payload);
     Element pop();
+    Element peek() const;
     bool empty() const;
     size_t size() const;
+    void clear();
+    PayloadQueue::Element& operator[](size_t index);
+    const String activity_name(PayloadQueue::ActivityType type) const;
+
 
 private:
-    PayloadQueue::Element m_payload_queue[maximum_payload_queue_size]; // Array to store the payloads
-    size_t m_payload_queue_size = 0;                                   // Current number of elements in the queue
+    Element m_array[maximum_payload_queue_size]; // Array to store the payloads
+    size_t m_size = 0;                                   // Current number of elements in the queue
 };

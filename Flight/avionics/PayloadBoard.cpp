@@ -77,6 +77,33 @@ bool PayloadBoard::photo()
 }
 
 /**
+ * @brief Power up Payload Board and start SSDV
+ *
+ * @return true successful
+ * @return false error
+ *
+ */
+
+bool PayloadBoard::SSDV()
+{
+    if (m_state != PayloadState::off)
+    {
+        Log.errorln("Payload already active");
+        return false;
+    }
+    extern PowerBoard power;
+    if (!power.power_adequate())
+    {
+        Log.errorln("Inadequate power for photo session");
+        return false;
+    }
+    Log.noticeln("Starting SSDV session");
+    set_mode_SSDV_start();
+    power_up();
+    return true;
+}
+
+/**
  * @brief Power up Payload Board and communicate
  *
  * @return true successful
@@ -135,6 +162,12 @@ void PayloadBoard::check_shutdown()
                 Log.verboseln("Communications session requested");
                 m_state = PayloadState::communications;
             }
+            else if (m_activity == PayloadActivity::SSDV)
+            {
+                Log.verboseln("SSDV session requested");
+                m_SSDV_signal_start_time = millis();
+                m_state = PayloadState::signal_SSDV;
+            }
             else
             {
                 Log.errorln("Payload activity not set");
@@ -158,6 +191,26 @@ void PayloadBoard::check_shutdown()
         if (shutdown)
         {
             Log.verboseln("Communications session complete");
+            m_state = PayloadState::shutdown;
+            m_shutdown_start_time = millis();
+        }
+        break;
+    }
+    case PayloadState::signal_SSDV:
+    {
+        if (millis() - m_SSDV_signal_start_time > 1 * seconds_to_milliseconds)
+        {
+            set_mode_SSDV_transition();
+            Log.verboseln("SSDV signal completed");
+            m_state = PayloadState::SSDV;
+        }
+        break;
+    }
+    case PayloadState::SSDV:
+    {
+        if (shutdown)
+        {
+            Log.verboseln("SSDV session complete");
             m_state = PayloadState::shutdown;
             m_shutdown_start_time = millis();
         }
@@ -263,7 +316,42 @@ bool PayloadBoard::set_mode_comms()
     digitalWrite(STATES_B_INT, HIGH);
     digitalWrite(STATES_C_INT, HIGH);
     m_activity = PayloadActivity::communications;
-    Log.verboseln("Payload mode set to communicate");
+    Log.verboseln("STATES set to communicate");
+    return true;
+}
+
+/**
+ * @brief Set the mode to SSDV start
+ *
+ * @return true successful
+ * @return false error
+ *
+ */
+
+bool PayloadBoard::set_mode_SSDV_start()
+{
+    digitalWrite(STATES_A_INT, HIGH);
+    digitalWrite(STATES_B_INT, HIGH);
+    digitalWrite(STATES_C_INT, HIGH);
+    m_activity = PayloadActivity::SSDV;
+    Log.verboseln("STATES set to SSDV start");
+    return true;
+}
+
+/**
+ * @brief Set the mode to SSDV transition
+ *
+ * @return true successful
+ * @return false error
+ *
+ */
+
+bool PayloadBoard::set_mode_SSDV_transition()
+{
+    digitalWrite(STATES_A_INT, LOW);
+    digitalWrite(STATES_B_INT, LOW);
+    digitalWrite(STATES_C_INT, LOW);
+    Log.verboseln("STATES set to SSDV transition");
     return true;
 }
 
@@ -281,7 +369,7 @@ bool PayloadBoard::set_mode_photo()
     digitalWrite(STATES_B_INT, LOW);
     digitalWrite(STATES_C_INT, LOW);
     m_activity = PayloadActivity::photo;
-    Log.verboseln("Payload mode set to photo");
+    Log.verboseln("STATES set to photo");
     return true;
 }
 

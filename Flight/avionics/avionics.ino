@@ -24,7 +24,6 @@
  *
  */
 
-
 // todo: turn off instrumentation for flight
 #define INSTRUMENTATION // Instrumentation for processor and memory usage
 
@@ -54,7 +53,6 @@ RadioBoard radio{};
 PayloadBoard payload{};
 Antenna antenna{};
 CommandProcessor command_processor{};
-
 
 #ifdef INSTRUMENTATION
 /**
@@ -108,16 +106,17 @@ int FreeRam()
 void setup()
 
 {
-  // Initialize serial connection and log utility
+  // Initialize serial connection
 
   Serial.begin(serial_baud_rate);
-  // service the watchdog while waiting for the serial port
   unsigned long serial_delay_start{millis()};
   while ((millis() - serial_delay_start) < serial_delay)
   {
-    avionics.service_watchdog();
+    avionics.service_watchdog(); // service the watchdog while waiting for the serial port
   }
-  // todo: turn off log facility for flight
+
+  // Set up the log utility
+
   Log.setPrefix(printPrefix);
   Log.setSuffix(printSuffix);
   Log.begin(LOG_LEVEL_VERBOSE, &Serial);
@@ -157,6 +156,8 @@ void setup()
   // Setup phase complete
 
   Log.noticeln("Avionics Process now accepting commands");
+
+  // todo: create test script here
 
 #ifdef INSTRUMENTATION
   // Set up instrumentation
@@ -204,9 +205,9 @@ void loop()
     antenna_maximum_timestamp = millis();
   }
   previous_time = micros();
-#endif // INSTRUMENTATION  
-  
-  // Determine stability
+#endif // INSTRUMENTATION
+
+  // Check stability
 
   avionics.get_stability();
 
@@ -248,9 +249,9 @@ void loop()
   previous_time = micros();
 #endif // INSTRUMENTATION
 
-  // Check for photo time
+  // Check for payload activity
 
-  avionics.check_photo();
+  avionics.check_payload();
 
 #ifdef INSTRUMENTATION
   duration = micros() - previous_time;
@@ -262,7 +263,7 @@ void loop()
   previous_time = micros();
 #endif // INSTRUMENTATION
 
-  // Shut off Payload Board if ready to sleep
+  // Check for payload shutdown
 
   payload.check_shutdown();
 

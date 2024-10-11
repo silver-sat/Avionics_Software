@@ -33,12 +33,10 @@ private:
     CommandBeaconSp m_beacon_sp{0};
     CommandPicTimes m_pic_times{DateTime(0, 0, 0, 0, 0, 0)};
     CommandSSDVTimes m_SSDV_times{DateTime(0, 0, 0, 0, 0, 0)};
-    CommandClearPicTimes m_clear_pic_times{};
-    CommandClearSSDVTimes m_clear_SSDV_times{};
+    CommandClearPayloadQueue m_clear_payload_queue{};
     CommandUnsetClock m_unset_clock{};
     CommandReportT m_report_t{};
-    CommandGetPicTimes m_get_pic_times{};
-    CommandGetSSDVTimes m_get_SSDV_times{};
+    CommandGetPayloadQueue m_get_payload_queue{};
     CommandGetTelemetry m_get_telemetry{};
     CommandGetPower m_get_power{};
     CommandGetComms m_get_comms{};
