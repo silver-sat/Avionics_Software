@@ -326,3 +326,72 @@ void RadioBoard::ground_contact()
     m_milliseconds_since_last_ground_contact_day = millis();
     m_days_since_last_ground_contact = 0;
 }
+
+/**
+ * @brief Get frequencies for the Radio Board
+ *
+ */
+
+bool RadioBoard::get_frequencies()
+{
+    unsigned long start_time = millis();
+    const unsigned long entry_timeout = 1 * minutes_to_seconds * seconds_to_milliseconds;
+    char incoming_char = 0;
+    String frequency_string_1 = "";
+    String frequency_string_2 = "";
+    extern AvionicsBoard avionics;
+
+    Serial.print("Enter the two 9-digit frequency strings with no spaces (e.g., 123456789123456789): ");
+
+    while (millis() - start_time < entry_timeout)
+    {
+        avionics.service_watchdog(); // service the watchdog while waiting
+        if (Serial.available() > 0)
+        {
+            incoming_char = Serial.read();
+            if (!isDigit(incoming_char))
+            {
+                Serial.write(BELL);
+                continue;
+            }
+            else
+            {
+                Serial.write(incoming_char);
+            }
+            if (frequency_string_1.length() < 9)
+            {
+                frequency_string_1 += incoming_char;
+                continue;
+            }
+            if (frequency_string_2.length() < 8)
+            {
+                frequency_string_2 += incoming_char;
+                continue;
+            }
+            frequency_string_2 += incoming_char;
+            for (auto i{0}; i < 2; ++i)
+            {
+                Serial1.write(FEND);
+                Serial1.write(MODIFY_FREQUENCY);
+                Serial1.write(frequency_string_1.c_str(), 9);
+                Serial1.write(" ");
+                Serial1.write(frequency_string_2.c_str(), 9);
+                Serial1.write(FEND);
+            }
+            Serial.println();
+            String frequency1{};
+            frequency1 += frequency_string_1.substring(0, 6);
+            frequency1 += ".";
+            frequency1 += frequency_string_1.substring(6, 9);
+            String frequency2{};
+            frequency2 += frequency_string_2.substring(0, 6);
+            frequency2 += ".";
+            frequency2 += frequency_string_2.substring(6, 9);
+            Log.noticeln("Frequencies set to %s and %s", frequency1.c_str(), frequency2.c_str());
+            return true;
+        }
+    }
+    Serial.println();
+    Log.noticeln("Timeout during frequency entry");
+    return false;
+}

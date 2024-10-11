@@ -54,11 +54,6 @@ bool PayloadQueue::push(const PayloadQueue::Element &payload)
     if (empty() || payload.time >= m_array[m_size - 1].time)
     {
         m_array[m_size++] = payload; // Add the new payload at the end
-        // Sort the queue to maintain priority order
-        for (size_t i = m_size - 1; i > 0 && m_array[i].time < m_array[i - 1].time; --i)
-        {
-            swap(m_array[i], m_array[i - 1]);
-        }
     }
     else
     {

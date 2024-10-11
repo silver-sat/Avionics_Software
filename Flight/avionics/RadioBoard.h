@@ -29,84 +29,19 @@ struct Frame
 class RadioBoard final
 {
 public:
-    /**
-     * @brief Initialize the Radio Board
-     *
-     */
-
     bool begin();
-
-    /**
-     * @brief Start new frame
-     *
-     */
-
     bool receive_frame();
-
-    /**
-     * @brief Get frame
-     *
-     */
-
     Frame get_frame();
-
-    /**
-     * @brief Send message
-     *
-     */
-
     bool send_message(const Message message) const;
-
-    /**
-     * @brief Check for recent ground contact
-     *
-     */
-
     bool recent_ground_contact() const;
-
+    bool get_frequencies();
 private:
     void start_frame();
-
-    /**
-     * @brief End frame
-     *
-     */
-
     void end_frame();
-
-    /**
-     * @brief Enter escape mode
-     *
-     */
-
     void enter_escape_mode();
-
-    /**
-     * @brief Exit escape mode
-     *
-     */
-
     void exit_escape_mode();
-
-    /**
-     * @brief Add character to buffer
-     *
-     */
-
     bool add_character_to_buffer(char character);
-
-    /**
-     * @brief Record ground contact
-     *
-     */
-
     void ground_contact();
-
-    /**
-     * @brief Gather frame from Serial1 port
-     *
-     */
-
     size_t m_buffer_index{0};
     char m_buffer[maximum_command_length+1]{""};
     bool m_in_frame{false};
