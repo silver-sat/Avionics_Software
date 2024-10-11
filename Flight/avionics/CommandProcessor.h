@@ -1,9 +1,6 @@
 /**
- * @file CommandProcessor.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Manage command processing
- * @version 1.0.0
- * @date 2022-12-07
  *
  * This file declares the class that checks for ground commands, validates
  * and retrieves them and checks for local responses and commands and processes them

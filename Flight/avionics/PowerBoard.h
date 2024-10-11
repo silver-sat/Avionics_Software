@@ -1,10 +1,7 @@
 /**
- * @file PowerBoard.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @author Benjamin S. Cohen (ben@silversat.org)
  * @brief SilverSat Power Board
- * @version 2.0.2
- * @date 2022-07-24
  *
  * This file declares the class that interfaces to the Power Board
  *

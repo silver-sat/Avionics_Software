@@ -1,9 +1,6 @@
 /**
- * @file AvionicsBoard.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Avionics Board for SilverSat
- * @version 1.0.4
- * @date 2022-07-29
  *
  * This file declares the class which encapsulates the functions of the Avionics Board
  * hardware.

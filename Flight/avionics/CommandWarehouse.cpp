@@ -1,9 +1,6 @@
 /**
- * @file CommandWarehouse.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Supply command objects
- * @version 1.2.1
- * @date 2022-07-28
  *
  * This file implements the class used to warehouse ground commands.
  *

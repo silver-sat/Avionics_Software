@@ -1,9 +1,6 @@
 /**
- * @file Commands.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat commands
- * @version 1.2.0
- * @date 2022-07-25
  *
  * This file declares all Command objects. Each ground command object is derived
  * from the Command class.

@@ -1,10 +1,7 @@
 /**
- * @file EPS_I.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @author Benjamin S. Cohen (ben@silversat.org)
  * @brief SilverSat device driver for Endurosat EPS I
- * @version 1.0.0
- * @date 2022-10-23
  *
  * This file implements the class that interfaces with the Power Board
  *

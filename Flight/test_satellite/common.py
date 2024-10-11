@@ -1,10 +1,7 @@
 ##
-# @file common.py
 # @brief FlatSat test Avionics Board common functions
 # @author Lee A. Congdon (lee@silversat.org)
 # @author Benjamin S. Cohen (ben@silversat.org)
-# @version 1.0.0
-# @date 9 October 2022
 
 """FlatSat test Avionics Board common functions"""
 

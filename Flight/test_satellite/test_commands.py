@@ -1,9 +1,6 @@
 ##
-# @file test_commands.py
 # @brief Test Avionics Board commands
 # @author Lee A. Congdon (lee@silversat.org)
-# @version 1.0.0
-# @date 9 October 2022
 
 """Test Avionics Board commands"""
 

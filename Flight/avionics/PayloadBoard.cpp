@@ -1,10 +1,7 @@
 /**
- * @file PayloadBoard.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @author Benjamin S. Cohen (ben@silversat.org)
  * @brief SilverSat Payload Board
- * @version 1.1.1
- * @date 2022-07-24
  *
  * This file implements the class which interfaces with the Payload Board
  *

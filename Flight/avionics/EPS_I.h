@@ -1,10 +1,7 @@
 /**
- * @file EPS_I.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @author Benjamin S. Cohen (ben@silversat.org)
  * @brief SilverSat device driver for Endurosat EPS I
- * @version 1.1.0
- * @date 2022-10-23
  *
  * This file declares the class that interfaces with the EPS-I
  *

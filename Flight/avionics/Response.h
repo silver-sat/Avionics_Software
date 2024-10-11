@@ -1,9 +1,6 @@
 /**
- * @file Response.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat response messages
- * @version 1.0.0
- * @date 2023-02-03
  *
  * This file implements the Response class
  *

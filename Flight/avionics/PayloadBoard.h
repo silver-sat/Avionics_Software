@@ -1,9 +1,6 @@
 /**
- * @file PayloadBoard.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat Payload Board
- * @version 1.1.1
- * @date 2022-07-24
  *
  * This file declares the class which interfaces with the Payload Board
  *

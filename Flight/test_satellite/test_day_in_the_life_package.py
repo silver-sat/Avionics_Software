@@ -1,9 +1,6 @@
 ##
-# @file test_day_in_the_life_package.py
 # @brief FlatSat test Avionics Board day in the life scenario in one test
 # @author Lee A. Congdon (lee@silversat.org)
-# @version 1.0.0
-# @date 30 September 2024
 
 """FlatSat test Avionics Board day in the life scenario"""
 

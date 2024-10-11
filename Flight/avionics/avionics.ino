@@ -1,10 +1,7 @@
 /**
- * @file avionics.ino
  * @author Lee A. Congdon (lee@silversat.org)
  * @author Benjamin S. Cohen (ben@silversat.org)
  * @brief Avionics Board Setup and Process Loop
- * @version 1.3.0
- * @date 2022-07-24
  *
  */
 

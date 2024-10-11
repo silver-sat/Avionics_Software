@@ -1,9 +1,6 @@
 /**
- * @file CommandWarehouse.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Supply command objects
- * @version 1.3.0
- * @date 2022-07-28
  *
  * This file declares the class used to return a ground command.
  */

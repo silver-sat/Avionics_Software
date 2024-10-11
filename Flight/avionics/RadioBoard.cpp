@@ -1,10 +1,7 @@
 /**
- * @file RadioBoard.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @author Benjamin S. Cohen (ben@silversat.org)
  * @brief SilverSat Radio
- * @version 1.3.0
- * @date 2022-07-24
  *
  * This file implements the class that interfaces to the Radio Board
  *

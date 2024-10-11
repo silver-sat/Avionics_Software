@@ -1,9 +1,6 @@
 /**
- * @file IMU.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilveSat Inertial Management Unit
- * @version 1.0.1
- * @date 2022-08-02
  *
  * This file implements the class that interfaces with the Intertial
  * Management Unit

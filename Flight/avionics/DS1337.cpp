@@ -1,9 +1,6 @@
 /**
- * @file DS1337.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Device driver for DS1337 Real Time Clock
- * @version 1.0.0
- * @date 2022-10-17
  *
  * Based and dependent on Adafruit RTClib
  *
