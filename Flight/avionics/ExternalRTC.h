@@ -1,9 +1,6 @@
 /**
- * @file ExternalRTC.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat External Realtime Clock
- * @version 1.0.1
- * @date 2022-08-11
  *
  * This file declares the class that interfaces with the external realtime clock
  *

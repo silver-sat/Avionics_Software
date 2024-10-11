@@ -1,9 +1,6 @@
 /**
- * @file Beacon.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat beacon messages
- * @version 2.1.1
- * @date 2022-07-25
  *
  * This file implements the Beacon class, which inherits from Message. Beacons are sent
  * at intervals and includes status for the Power, Avionics, and Payload boards.

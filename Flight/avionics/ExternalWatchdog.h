@@ -1,9 +1,6 @@
 /**
- * @file ExternalWatchdog.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat External Watchdog Timer
- * @version 1.0.1
- * @date 2022-08-01
  *
  * This file declares the class that interfaces with the external watchdog
  *

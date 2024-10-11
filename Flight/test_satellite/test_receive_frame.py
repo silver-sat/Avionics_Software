@@ -1,9 +1,6 @@
 ##
-# @file test_receive_frame.py
 # @brief FlatSat test Avionics Board receive frame processing
 # @author Lee A. Congdon (lee@silversat.org)
-# @version 1.0.0
-# @date 7 August 2024
 
 """Test Avionics Board receive frame processing"""
 

@@ -1,10 +1,6 @@
 /**
- * @file Antenna.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Device driver for SilverSat antenna
- * @version 1.1.0
- * @date 2023-04-01
- *
  *
  */
 

@@ -1,9 +1,6 @@
 /**
- * @file Message.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat Avionics outbound messages
- * @version 2.0.0
- * @date 2022-07-31
  *
  * This file implements the outbound message class
  *

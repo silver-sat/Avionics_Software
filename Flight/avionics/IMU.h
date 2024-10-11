@@ -1,10 +1,7 @@
 /**
- * @file IMU.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @author Benjamin S. Cohen (ben@silversat.org)
  * @brief SilverSat Inertial Management Unit
- * @version 1.0.0
- * @date 2022-08-02
  *
  * This file declares the class that interfaces with the Intertial
  * Management Unit

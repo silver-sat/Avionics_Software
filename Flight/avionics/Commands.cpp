@@ -1,9 +1,6 @@
 /**
- * @file Commands.cpp
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat commands
- * @version 1.3.0
- * @date 2022-07-25
  *
  * This file implements the acknowledge and execute methods for all Command objects.
  * Virtual dispatch is used to select the correct methods based on command type. Each

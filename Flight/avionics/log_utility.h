@@ -1,9 +1,6 @@
 /**
- * @file log_utility.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief Logging Support Routines
- * @version 1.0.0
- * @date 2022-07-31
  *
  * This file declares customized methods for the log facility
  *

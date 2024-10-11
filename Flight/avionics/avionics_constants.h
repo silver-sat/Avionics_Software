@@ -1,10 +1,7 @@
 /**
- * @file avionics_constants.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @author Benjamin S. Cohen (ben@silversat.org)
  * @brief Hardware definitions for Avionics Board
- * @version 1.1.0
- * @date 2022-08-11
  *
  * This file contains the global constants used by the Avionics Board software.
  *

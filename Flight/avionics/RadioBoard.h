@@ -1,9 +1,6 @@
 /**
- * @file RadioBoard.h
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat Radio Board
- * @version 1.2.0
- * @date 2022-07-24
  *
  * The file declares the class that interfaces to the Radio Board
  *
