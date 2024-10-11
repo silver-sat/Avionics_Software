@@ -62,9 +62,7 @@
  * RSR: SweepReceiver: radio sweep receiver
  * RQR: QueryRegister: radio query register
  * CPT: ClearPicTimes: replaced with ClearPayloadQueue
- * CST: ClearSSDVTimes: replaced with ClearPayloadQueue
  * GPT: GetPicTimes: replaced with GetPayloadQueue
- * GST: GetSSDVTimes: replaced with GetPayloadQueue
 
 
  *
