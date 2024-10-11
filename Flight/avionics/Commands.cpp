@@ -8,7 +8,64 @@
  * This file implements the acknowledge and execute methods for all Command objects.
  * Virtual dispatch is used to select the correct methods based on command type. Each
  * derived Command calls the base class acknowledgement method for sending an
- * acknowledgement to the ground and the base execute method for logging.
+ * acknowledgement to the ground and the base execute method for logging. Abbreviations
+ * listed are used in command responses.
+ *
+ * Change satellite state:
+ *
+ * SRC: SetClock: subsumes SetTime: set realtime clock
+ * SBI: BeaconSp: set beacon spacing
+ * SPT: PicTimes: set times for photos
+ * SST: SSDVTimes: set times for SSDV broadcasts
+ * CPQ: ClearPayloadQueue: empty payload activity queue
+ * URC: UnsetClock: change the realtime clock status to unset for testing
+ *
+ * Get satellite state:
+ *
+ * GRC: ReportT: subsumes GetTime: reply with realtime clock setting
+ * GPQ: GetPayloadQueue: reply with payload schedule
+ * GTY: GetTelemetry: reply with telemetry
+ * GPW: GetPower: reply with power status
+ * GRS: GetComms: reply with Radio Board status
+ * GBI: GetBeaconInterval: reply with beacon interval
+ *
+ * Invoke satellite operation:
+ *
+ * NOP: NoOperate: subsumes Ping: acknowledge
+ * STP: SendTestPacket: reply with test message
+ * PYC: PayComms: subsumes Begin tweet : start payload in communications mode
+ * TSL: TweeSlee: subsumes Halt: stop communicating
+ * WDG: Watchdog: force watchdog timeout (reset SAMD21)
+ *
+ * Invalid and unknown commands
+ *
+ * INV: invalid
+ * UNK: unknown
+ *
+ * Radio commands:
+ *
+ * RMM: ModifyMode: modify radio mode
+ *
+ * Deprecated commands:
+ *
+ * halt, see TweeSlee
+ * s_call_sig deprecated
+ * g_call_sig, deprecated
+ * GPC: GetPhotos: reply with number of photos (Avionics Board does not have an accurate count)
+ * RMF: ModifyFrequency: modify radio frequency
+ * RAF: AdjustFrequency: adjust radio frequency temporarily
+ * RTC: TransmitCW: transmit carrier wave
+ * RBR: BackgroundRSSI: radio background rssi
+ * RCR: CurrentRSSI: radio current rssi
+ * RST: SweepTransmitter: radio sweep transmitter
+ * RSR: SweepReceiver: radio sweep receiver
+ * RQR: QueryRegister: radio query register
+ * CPT: ClearPicTimes: replaced with ClearPayloadQueue
+ * CST: ClearSSDVTimes: replaced with ClearPayloadQueue
+ * GPT: GetPicTimes: replaced with GetPayloadQueue
+ * GST: GetSSDVTimes: replaced with GetPayloadQueue
+
+
  *
  */
 
@@ -170,33 +227,65 @@ bool CommandPicTimes::execute_command()
 }
 
 /**
- * @brief Acknowledge ClearPicTimes command
+ * @brief Acknowlege SSDVTimes command
  *
  * @return true successful
  * @return false error
  */
 
-bool CommandClearPicTimes::acknowledge_command()
+bool CommandSSDVTimes::acknowledge_command()
 {
     auto status{Command::acknowledge_command()};
-    Log.verboseln("ClearPicTimes");
+    Log.verboseln("SSDVTimes: Year: %d Month: %d Day: %d Hour: %d Minute: %d Second: %d",
+                  m_time.year(), m_time.month(), m_time.day(), m_time.hour(), m_time.minute(), m_time.second());
     return status;
 }
 
 /**
- * @brief Execute ClearPicTimes command
+ * @brief Execute SSDVTimes command
  *
  * @return true successful
  * @return false error
  */
 
-bool CommandClearPicTimes::execute_command()
+bool CommandSSDVTimes::execute_command()
 {
     auto status{Command::execute_command()};
-    Log.verboseln("ClearPicTimes");
+    Log.verboseln("SSDVTimes");
     extern AvionicsBoard avionics;
-    status = avionics.clear_pic_times() && status;
-    auto response{Response{status ? "CPT" : "ERR"}};
+    status = avionics.set_SSDV_time(m_time) && status;
+    auto response{Response{status ? "SST" : "ERR"}};
+    return response.send() && status;
+}
+
+/**
+ * @brief Acknowledge ClearPayloadQueue command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandClearPayloadQueue::acknowledge_command()
+{
+    auto status{Command::acknowledge_command()};
+    Log.verboseln("ClearPayloadQueue");
+    return status;
+}
+
+/**
+ * @brief Execute ClearPayloadQueue command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandClearPayloadQueue::execute_command()
+{
+    auto status{Command::execute_command()};
+    Log.verboseln("ClearPayloadQueue");
+    extern AvionicsBoard avionics;
+    status = avionics.clear_payload_queue() && status;
+    auto response{Response{status ? "CPQ" : "ERR"}};
     return response.send() && status;
 }
 
@@ -265,33 +354,40 @@ bool CommandReportT::execute_command()
 }
 
 /**
- * @brief Acknowledge GetPicTimes command
+ * @brief Acknowledge GetPayloadQueue command
  *
  * @return true successful
  * @return false error
  */
 
-bool CommandGetPicTimes::acknowledge_command()
+bool CommandGetPayloadQueue::acknowledge_command()
 {
     auto status{Command::acknowledge_command()};
-    Log.verboseln("GetPicTimes");
+    Log.verboseln("GetPayloadfQueue");
     return status;
 }
 
 /**
- * @brief  Execute GetPicTimes command
+ * @brief  Execute GetPayloadQueue command
  *
  * @return true successful
  * @return false error
  */
 
-bool CommandGetPicTimes::execute_command()
+bool CommandGetPayloadQueue::execute_command()
 {
     auto status{Command::execute_command()};
-    Log.verboseln("GetPicTimes");
+    Log.verboseln("GetPayloadQueue");
     extern AvionicsBoard avionics;
-    auto response{Response{status ? ("GPT " + avionics.get_pic_times()) : "ERR"}};
-    return response.send() && status;
+    auto response{Response{status ? ("GPQ " + String{avionics.get_payload_queue_size()} + " entries in queue") : "ERR"}};
+    status = response.send() && status;
+    for (auto i{0}; i < avionics.get_payload_queue_size(); i++)
+    {
+        String element = String{i} + " " + avionics.m_payload_queue[i].time.timestamp() + " " + avionics.m_payload_queue[i].type;
+        auto response{Response{status ? ("GPQ " + element) : "ERR"}};
+        status = response.send() && status;
+    }
+    return status;
 }
 
 /**

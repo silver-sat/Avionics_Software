@@ -82,6 +82,14 @@ class TestDayInTheLife:
         assert common.verify_message(message, common.pay_comms_pattern)
         sleep(205 + 30) # predicted time plus buffer
 
+    def test_SSDVtimes(self):
+        common.issue(f"SSDVTimes {common.now1m()}")
+        message = common.collect_message()
+        assert common.verify_message(message, common.acknowledgment_pattern)
+        message = common.collect_message()
+        assert common.verify_message(message, common.SSDV_times_pattern)
+        sleep(162 + 60 + 30) # predicted time plus delay for SSDV time start plus buffer
+
     # def test_set_beacon_interval_3(self):
     #     common.issue("BeaconSp 180")
     #     message = common.collect_message()

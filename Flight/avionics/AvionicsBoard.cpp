@@ -17,6 +17,7 @@
 #include "PowerBoard.h"
 #include "RadioBoard.h"
 #include "PayloadBoard.h"
+#include "PayloadQueue.h"
 
 /**
  * @brief Initialize the Avionics Board
@@ -139,7 +140,7 @@ void AvionicsBoard::watchdog_force_reset()
 
 bool AvionicsBoard::set_external_rtc(const DateTime time)
 {
-  if ((time.year() <= minimum_valid_year) || (time.year() >= maximum_valid_year))
+  if ((time.year() < minimum_valid_year) || (time.year() > maximum_valid_year))
   {
     Log.errorln("Time must be between %d and %d, inclusive", minimum_valid_year, maximum_valid_year);
     return false;
@@ -269,6 +270,41 @@ AvionicsBeacon AvionicsBoard::get_status()
 
 bool AvionicsBoard::set_picture_time(const DateTime time)
 {
+  if (!valid_time(time))
+  {
+    return false;
+  }
+  if (!m_payload_queue.push(PayloadQueue::Element(time, PayloadQueue::ActivityType::Photo)))
+  {
+    return false;
+  }
+  return true;
+}
+
+/**
+ * @brief Set the time for the next payload photo
+ *
+ * @param time time for SSDV broadcast
+ * @return true successful
+ * @return false error
+ *
+ */
+
+bool AvionicsBoard::set_SSDV_time(const DateTime time)
+{
+  if (!valid_time(time))
+  {
+    return false;
+  }
+  if (!m_payload_queue.push(PayloadQueue::Element(time, PayloadQueue::ActivityType::SSDV)))
+  {
+    return false;
+  }
+  return true;
+}
+
+bool AvionicsBoard::valid_time(const DateTime time)
+{
   if (!m_external_rtc.is_set())
   {
     Log.errorln("External realtime clock is not set");
@@ -276,7 +312,7 @@ bool AvionicsBoard::set_picture_time(const DateTime time)
   }
   if ((time.year() < minimum_valid_year) || (time.year() > maximum_valid_year))
   {
-    Log.errorln("Picture time must be between %d and %d, inclusive", minimum_valid_year, maximum_valid_year);
+    Log.errorln("Payload activity time must be between %d and %d, inclusive", minimum_valid_year, maximum_valid_year);
     return false;
   }
   DateTime current_time{};
@@ -287,36 +323,27 @@ bool AvionicsBoard::set_picture_time(const DateTime time)
   }
   if (time < current_time)
   {
-    Log.errorln("Picture time is before current time");
+    Log.errorln("Payload activity time is before current time");
     return false;
   }
-  if (m_picture_time_count + 1 > maximum_scheduled_pictures)
+  if (m_payload_queue.size() + 1 > maximum_payload_queue_size)
   {
-    Log.errorln("Too many picture times");
+    Log.errorln("Too many payload activity times");
     return false;
   }
-  size_t index{m_picture_time_count++};
-  for (; index > 0; --index)
-  {
-    if (time > m_picture_times[index - 1])
-      break;
-    else
-      m_picture_times[index] = m_picture_times[index - 1];
-  }
-  m_picture_times[index] = time;
   return true;
 }
 
 /**
- * @brief Check time for photo and start payload if required
+ * @brief Check time for photo or SSDV session and start payload if required
  *
  * @return true successful
  * @return false error
  *
- * Picture times rely on the realtime clock
+ * Payload activity times rely on the realtime clock
  */
 
-bool AvionicsBoard::check_photo()
+bool AvionicsBoard::check_payload()
 {
   if (!m_external_rtc.is_set())
     return false;
@@ -324,57 +351,71 @@ bool AvionicsBoard::check_photo()
   if (!m_external_rtc.get_time(time))
   {
     Log.errorln("Error from external real time clock");
-    clear_pic_times();
+    clear_payload_queue();
     return false;
   }
   if ((time.year() < minimum_valid_year) || (time.year() > maximum_valid_year))
   {
     Log.errorln("Time outside valid range");
-    clear_pic_times();
+    clear_payload_queue();
     return false;
   }
-  if ((m_picture_time_count > 0) && (time >= m_picture_times[0]))
+  // todo: validate time zero entry
+  if (m_payload_queue.size() > 0 && (time >= m_payload_queue.peek().time))
   {
-    Log.traceln("Photo time reached %s", get_timestamp().c_str());
-    for (size_t index = 0; index < m_picture_time_count; ++index)
-      m_picture_times[index] = m_picture_times[index + 1];
-    --m_picture_time_count;
+    Log.traceln("Payload activity time reached %s", get_timestamp().c_str());
     extern PayloadBoard payload;
     if (payload.get_payload_active())
     {
-      Log.errorln("Payload board active, picture time ignored");
+      Log.errorln("Payload board active, activity ignored");
+      m_payload_queue.pop();
       return false;
     }
-    else
+
+    switch (m_payload_queue.pop().type)
+    {
+    case PayloadQueue::ActivityType::Photo:
+    {
+      Log.verboseln("Avionics starting photo session");
       payload.photo();
+      break;
+    }
+    case PayloadQueue::ActivityType::SSDV:
+    {
+      Log.verboseln("Avionics starting SSDV session");
+      payload.SSDV();
+      break;
+    }
+    default:
+    {
+      Log.errorln("Avionics encountered nnknown payload activity type");
+      return false;
+    }
+    }
   }
   return true;
 }
 
 /**
- * @brief Get picture times
+ * @brief Get the size of the payload queue
  *
- * @return String count and timestamps
+ * @return size_t size of the queue
  */
 
-String AvionicsBoard::get_pic_times()
-{
-  String response{m_picture_time_count};
-  for (size_t index = 0; index < m_picture_time_count; ++index)
-    response += (' ' + m_picture_times[index].timestamp());
-  return response;
-}
+   size_t AvionicsBoard::get_payload_queue_size(){
+      return m_payload_queue.size();
+   }
 
 /**
- * @brief Clear picture times
+ * @brief Clear payload activity times
  *
  * @return true successful
  * @return false error
  */
 
-bool AvionicsBoard::clear_pic_times()
+bool AvionicsBoard::clear_payload_queue()
 {
-  m_picture_time_count = 0;
+  m_payload_queue.clear();
   return true;
 }
 
@@ -448,7 +489,7 @@ String AvionicsBoard::read_fram(const size_t address)
 bool AvionicsBoard::unset_clock()
 {
   Log.verboseln("Unsetting the realtime clock");
-  clear_pic_times();
+  clear_payload_queue();
   return m_external_rtc.unset_clock();
 }
 

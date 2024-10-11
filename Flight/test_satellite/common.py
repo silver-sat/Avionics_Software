@@ -66,13 +66,17 @@ invalid_command_pattern = re.compile(rb"^ERR INV$")
 set_clock_pattern = re.compile(rb"^RES SRC$")
 beacon_sp_pattern = re.compile(rb"^RES SBI$")
 pic_times_pattern = re.compile(rb"^RES SPT$")
-clear_pic_times_pattern = re.compile(rb"^RES CPT$")
+SSDV_times_pattern = re.compile(rb"^RES SST$")
+clear_payload_queue_pattern = re.compile(rb"^RES CPQ$")
 unset_clock_pattern = re.compile(rb"^RES URC$")
 reportt_pattern = re.compile(
     rb"^RES GRC 20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)$"
 )
-get_pic_times_pattern = re.compile(
-    rb"^RES GPT [0-5]( 20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)){0,5}$"
+get_payload_queue_pattern = re.compile(
+    rb"^RES GPQ [0-5]( 20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)){0,5}$"
+)
+get_SSDV_times_pattern = re.compile(
+    rb"^RES GST [0-5]( 20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)){0,5}$"
 )
 telemetry_pattern = re.compile(
     rb"(^RES GTY AX -?\d+\.\d+)( AY -?\d+\.\d+)( AZ -?\d+\.\d+)( RX -?\d+\.\d+)( RY -?\d+\.\d+)( RZ -?\d+\.\d+)( T -?\d+\.\d+)$"
@@ -180,6 +184,14 @@ def verify_message(message, pattern):
 def now():
     return datetime.datetime.now(datetime.timezone.utc).strftime("%Y %m %d %H %M %S")
 
+## Current time one minute in the future UTC formatted for PicTimes command
+#
+# The time is formatted as "YYYY MM DD HH MM SS"
+#
+def now30s():
+    return (
+        datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(seconds=30)
+    ).strftime("%Y %m %d %H %M %S")
 
 ## Current time one minute in the future UTC formatted for PicTimes command
 #

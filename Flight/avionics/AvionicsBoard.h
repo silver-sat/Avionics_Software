@@ -17,6 +17,7 @@
 #include "IMU.h"
 #include "Beacon.h"
 #include "CY15B256J.h"
+#include "PayloadQueue.h"
 #include <Wire.h>
 #include <wiring_private.h>
 
@@ -25,11 +26,10 @@
  *
  */
 
-constexpr uint16_t minimum_beacon_interval{1 * minutes_to_seconds};  /**< Restrict to a reasonable value */
-constexpr uint16_t maximum_beacon_interval{10 * minutes_to_seconds}; /**< Restrict to a reasonable value */
-constexpr size_t maximum_scheduled_pictures{5};                      /**< Assume small number of pictures in one orbit */
-constexpr uint16_t minimum_valid_year{2020};                         /**< Restrict to reasonable value */
-constexpr uint16_t maximum_valid_year{2040};                         /**< Restrict to reasonable value */
+constexpr uint16_t minimum_beacon_interval{1 * minutes_to_seconds};  /**< minimum beacon interval */
+constexpr uint16_t maximum_beacon_interval{10 * minutes_to_seconds}; /**< maximum beacon interval */
+constexpr uint16_t minimum_valid_year{2024};                         /**< minimum valid year */
+constexpr uint16_t maximum_valid_year{2030};                         /**< maximum valid year */
 
 /**
  * @brief Avionics Board class for managing the microcontroller and peripherals
@@ -39,147 +39,39 @@ constexpr uint16_t maximum_valid_year{2040};                         /**< Restri
 class AvionicsBoard final
 {
 public:
-   /**
-    * @brief Initialize the Avionics Board
-    *
-    */
-
    bool begin();
-
-   /**
-    * @brief Force the watchdog to reset the processor
-    *
-    */
-
    void watchdog_force_reset();
-
-   /**
-    * @brief Set the external realtime clock
-    *
-    */
-
    bool set_external_rtc(const DateTime time);
-
-   /**
-    * @brief Get a timestamp
-    *
-    */
-
    String get_timestamp();
-
-   /**
-    * @brief Set beacon interval
-    *
-    */
-
    bool set_beacon_interval(const int seconds);
-
-   /**
-    * @brief Send a beacon if the beacon interval has elapsed
-    *
-    */
-
    bool check_beacon();
-
-   /**
-    * @brief Get Avionics status for beacon
-    *
-    */
-
    AvionicsBeacon get_status();
-
-   /**
-    * @brief Set the time for the next payload photo
-    *
-    */
-
    bool set_picture_time(const DateTime time);
-
-   /**
-    * @brief Check time for photo and start payload if required
-    *
-    */
-
-   bool check_photo();
-
-   /**
-    * @brief Get scheduled picture times
-    *
-    */
-
-   String get_pic_times();
-
-   /**
-    * @brief Clear picture times
-    *
-    */
-
-   bool clear_pic_times();
-
-   /**
-    * @brief Get telemetry
-    *
-    */
-
+   bool set_SSDV_time(const DateTime time);
+   bool check_payload();
+   bool clear_payload_queue();
+   size_t get_payload_queue_size();
    String get_telemetry();
-
-   /**
-    * @brief Get the beacon interval
-    *
-    */
-
    String get_beacon_interval();
-
-   /**
-    * @brief Trigger the watchdog
-    *
-    */
    void service_watchdog();
-
-   /**
-    * @brief Read a byte from the FRAM
-    *
-    */
-
    String read_fram(const size_t address);
-
-   /**
-    * @brief Unset the realtime clock
-    *
-    */
-
    bool unset_clock();
-
-   /**
-    * @brief Determine stability
-    *
-    */
-
    bool get_stability();
 
+friend class CommandGetPayloadQueue;
+
 private:
-   /**
-    * @brief Enable I2C bus switch
-    *
-    */
-
    bool busswitch_enable();
-
-   /**
-    * @brief Avionics Board member variables
-    *
-    */
-
-   ExternalWatchdog m_external_watchdog{};                                            /**< Watchdog */
-   size_t m_picture_time_count{0};                                                    /**< Maximum picture count */
-   DateTime m_picture_times[maximum_scheduled_pictures]{};                            /**< Scheduled picture times */
-   ExternalRTC m_external_rtc{};                                                      /**< External Real Time Clock */
-   IMU m_imu{};                                                                       /**< Inertial Measurement Unit */
-   CY15B256J m_fram{};                                                                /**< FRAM */
-   unsigned long m_last_beacon_time{0};                                               /**< Last beacon time from millis() */
-   unsigned long m_beacon_interval{2 * minutes_to_seconds * seconds_to_milliseconds}; /**< Initial beacon interval */
-   bool m_rtc_initialization_error{false};                                            /**< Realtime clock initialization error */
-   bool m_imu_initialization_error{false};                                            /**< IMU initialization error */
-   bool m_FRAM_initialization_error{false};                                           /**< FRAM initialization error */
-   bool m_radio_connection_error{false};                                              /**< Reserved for radio connection initialization */
+   bool valid_time(const DateTime time);
+   ExternalWatchdog m_external_watchdog {};
+   ExternalRTC m_external_rtc{};
+   IMU m_imu{};
+   CY15B256J m_fram{};
+   unsigned long m_last_beacon_time{0};
+   unsigned long m_beacon_interval{2 * minutes_to_seconds * seconds_to_milliseconds};
+   bool m_rtc_initialization_error{false};
+   bool m_imu_initialization_error{false};
+   bool m_FRAM_initialization_error{false};
+   bool m_radio_connection_error{false};
+   PayloadQueue m_payload_queue{};
 };

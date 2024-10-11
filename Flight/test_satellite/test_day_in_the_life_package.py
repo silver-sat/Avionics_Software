@@ -38,4 +38,6 @@ def test_package():
 
     test_class.test_paycomms_2()
 
+    test_class.test_SSDVtimes()
+
     # test_class.test_set_beacon_interval_3()

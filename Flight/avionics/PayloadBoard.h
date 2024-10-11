@@ -27,6 +27,8 @@ enum class PayloadState
     user_state_wait,
     photo,
     communications,
+    signal_SSDV,
+    SSDV,
     shutdown,
     timeout,
     overcurrent,
@@ -42,6 +44,7 @@ enum class PayloadActivity
     none,
     photo,
     communications,
+    SSDV,
 };
 
 /**
@@ -52,87 +55,22 @@ enum class PayloadActivity
 class PayloadBoard final
 {
 public:
-    /**
-     * @brief Initialize Payload Board
-     *
-     *
-     */
-
     bool begin();
-
-    /**
-     * @brief Power up Payload Board and take photo
-     *
-     */
     bool photo();
-
-    /**
-     * @brief Power up Payload Board and communicate
-     *
-     */
+    bool SSDV();
     bool communicate();
-
-    /**
-     * @brief Shut off Payload Board if ready to sleep
-     *
-     */
     void check_shutdown();
-
-    /**
-     * @brief Get the payload activity status
-     *
-     */
-
     bool get_payload_active() const;
-
-    /**
-     * @brief Power down Payload Board
-     *
-     */
     bool power_down();
-
-    /**
-     * @brief Get status for beacon
-     *
-     */
-
     PayloadBeacon get_status();
-
 private:
-    /**
-     * @brief Power up Payload Board
-     *
-     */
     bool power_up();
-
-    /**
-     * @brief Set the mode to communications
-     *
-     */
     bool set_mode_comms();
-
-    /**
-     * @brief Set the mode to photograph
-     *
-     */
     bool set_mode_photo();
-
-    /**
-     * @brief Shutdown vote
-     *
-     */
+    bool set_mode_SSDV_start();
+    bool set_mode_SSDV_transition();
     bool shutdown_vote();
-
-    /**
-     * @brief Check timeout
-     *
-     */
     void check_timeout();
-
-    /**
-     * @brief Check overcurrent
-     *
-     */
     void check_overcurrent();
 
     PayloadState m_state{PayloadState::off};                                /**< current state of payload board */
@@ -140,6 +78,7 @@ private:
     long unsigned int m_payload_start_time{};                               /**< beginning of last payload activity from millis() */
     long unsigned int m_shutdown_start_time{};                              /**< beginning of shutdown delay from millis() */
     long unsigned int m_last_payload_duration{};                            /**< duration of last payload activity */
+    long unsigned int m_SSDV_signal_start_time{};                                /**< beginning of signal delay for SSDV mode */
     bool m_timeout_occurred{false};                                         /**< true if Payload Board timeout */
     bool m_overcurrent_occurred{false};                                     /**< true if Payload Board overcurrent */
 };
