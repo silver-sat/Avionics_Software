@@ -327,9 +327,9 @@ bool PayloadBoard::set_mode_comms()
 
 bool PayloadBoard::set_mode_SSDV_start()
 {
-    digitalWrite(STATES_A_INT, HIGH);
-    digitalWrite(STATES_B_INT, HIGH);
-    digitalWrite(STATES_C_INT, HIGH);
+    digitalWrite(STATES_A_INT, LOW);
+    digitalWrite(STATES_B_INT, LOW);
+    digitalWrite(STATES_C_INT, LOW);
     m_activity = PayloadActivity::SSDV;
     Log.verboseln("STATES set to SSDV start");
     return true;
@@ -345,9 +345,9 @@ bool PayloadBoard::set_mode_SSDV_start()
 
 bool PayloadBoard::set_mode_SSDV_transition()
 {
-    digitalWrite(STATES_A_INT, LOW);
-    digitalWrite(STATES_B_INT, LOW);
-    digitalWrite(STATES_C_INT, LOW);
+    digitalWrite(STATES_A_INT, HIGH);
+    digitalWrite(STATES_B_INT, HIGH);
+    digitalWrite(STATES_C_INT, HIGH);
     Log.verboseln("STATES set to SSDV transition");
     return true;
 }
