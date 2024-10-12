@@ -55,6 +55,8 @@ public:
    bool unset_clock();
    bool get_stability();
    bool test_IMU();
+   bool test_FRAM();
+
 
 friend class CommandGetPayloadQueue;
 
