@@ -171,9 +171,17 @@ void setup()
   Log.noticeln("Testing IMU");
   avionics.test_IMU();
 
-// Test phase complete
+  /**
+   * @brief FRAM test
+   *
+   */
 
-Log.noticeln("Testing complete");
+  Log.noticeln("Testing FRAM");
+  avionics.test_FRAM();
+
+  // Test phase complete
+
+  Log.noticeln("Testing complete");
 
 #ifdef INSTRUMENTATION
   // Set up instrumentation

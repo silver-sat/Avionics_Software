@@ -523,3 +523,26 @@ bool AvionicsBoard::test_IMU()
   Log.noticeln("IMU indicates stability");
   return true;
 }
+
+/**
+ * @brief Test the FRAM
+ * 
+ * @return true 
+ * @return false 
+ */
+
+bool AvionicsBoard::test_FRAM()
+{
+  auto analog_pin{A0};
+  auto random_value{static_cast<u_int8_t>(analogRead(analog_pin))};
+  m_fram.write(0, random_value);
+  Log.verboseln("Wrote %X to FRAM address 0", random_value);
+  auto read_value{m_fram.read(0)};
+  if (read_value != random_value)
+  {
+    Log.errorln("FRAM test failed %X != %X", read_value, random_value);
+    return false;
+  }
+  Log.noticeln("FRAM test passed");
+  return true;
+}
