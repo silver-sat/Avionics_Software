@@ -54,16 +54,16 @@ public:
    String read_fram(const size_t address);
    bool unset_clock();
    bool get_stability();
+   bool test_external_rtc();
    bool test_IMU();
    bool test_FRAM();
 
-
-friend class CommandGetPayloadQueue;
+   friend class CommandGetPayloadQueue;
 
 private:
    bool busswitch_enable();
    bool valid_time(const DateTime time);
-   ExternalWatchdog m_external_watchdog {};
+   ExternalWatchdog m_external_watchdog{};
    ExternalRTC m_external_rtc{};
    IMU m_imu{};
    CY15B256J m_fram{};

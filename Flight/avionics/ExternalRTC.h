@@ -19,56 +19,17 @@
 class ExternalRTC final
 {
 public:
-    /**
-     * @brief Construct a new External realtime clock:: External realtime clock object
-     *
-     */
-
     ExternalRTC();
-
-    /**
-     * @brief Initialize the external realtime clock
-     *
-     */
-
     bool begin(TwoWire *theWire);
-
-    /**
-     * @brief Set the external realtime clock
-     *
-     */
-
     bool set_time(const DateTime &time);
-
-    /**
-     * @brief Get the current external realtime clock time
-     *
-     */
-
     bool get_time(DateTime &time);
-
-    /**
-     * @brief Get a timestamp
-     *
-     */
-
     String get_timestamp();
-
-    /**
-     * @brief Unset the realtime clock
-     *
-     */
-
     bool unset_clock();
-
-    /**
-     * @brief Get status of realtime clock
-     *
-     */
-
+    bool startup_error() const { return rtc_startup_error; };
     bool is_set() const;
 
 private:
     RTC_DS1337 m_rtc{};
+    bool rtc_startup_error{false};
     bool m_rtc_is_set{false};
 };

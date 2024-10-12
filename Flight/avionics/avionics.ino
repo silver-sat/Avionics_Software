@@ -166,6 +166,11 @@ void setup()
    *
    */
 
+  // Test external realtime clock
+
+  Log.noticeln("Verifying external realtime clock status");
+  avionics.test_external_rtc();
+
   // IMU test
 
   Log.noticeln("Testing IMU");

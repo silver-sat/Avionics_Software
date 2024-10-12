@@ -504,6 +504,25 @@ bool AvionicsBoard::get_stability()
 }
 
 /**
+ * @brief Report reatltime clock initialization status
+ *
+ * return true no error
+ * return false error
+ *
+ */
+
+bool AvionicsBoard::test_external_rtc()
+{
+  if (m_external_rtc.startup_error())
+  {
+    Log.errorln("External realtime clock initialization error");
+    return false;
+  }
+  Log.noticeln("External realtime clock initialized");
+  return true;
+}
+
+/**
  * @brief Test the inertial measurement unit
  *
  * @return true successful
@@ -526,9 +545,9 @@ bool AvionicsBoard::test_IMU()
 
 /**
  * @brief Test the FRAM
- * 
- * @return true 
- * @return false 
+ *
+ * @return true
+ * @return false
  */
 
 bool AvionicsBoard::test_FRAM()

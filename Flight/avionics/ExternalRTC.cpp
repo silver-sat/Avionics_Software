@@ -37,6 +37,7 @@ bool ExternalRTC::begin(TwoWire *theWire)
     if (!m_rtc.begin(theWire))
     {
         Log.errorln("Error starting realtime clock");
+        rtc_startup_error = true;
         return false;
     }
     else
