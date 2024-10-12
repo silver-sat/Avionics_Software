@@ -54,6 +54,7 @@ public:
    String read_fram(const size_t address);
    bool unset_clock();
    bool get_stability();
+   bool test_IMU();
 
 friend class CommandGetPayloadQueue;
 

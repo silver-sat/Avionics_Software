@@ -18,7 +18,7 @@
 constexpr unsigned IMU_I2C_ADDRESS{0x68}; /**< inertial measurement unit I2C address @hideinitializer */
 constexpr size_t buffer_size{10};         /**< for data smoothing */
 
-// MPU6050 gyro calibration
+// MPU6050 gyro calibration, hardware specific
 
 constexpr float x_calibration{-0.0655F};
 constexpr float y_calibration{-0.016F};
@@ -32,50 +32,13 @@ constexpr float z_calibration{-0.0137F};
 class IMU final
 {
 public:
-
-    /**
-     * @brief Initialize inertial management unit
-     *
-     */
-
     bool begin(TwoWire *theWire);
-
-    /**
-     * @brief Get acceleration
-     *
-     */
-
     String get_acceleration();
-
-    /**
-     * @brief Get rotation
-     *
-     */
-
     String get_rotation();
-
-    /**
-     * @brief Get temperature
-     *
-     */
-
     String get_temperature();
-
-    /**
-     * @brief Determine satellite stability
-     *
-     */
-
     bool is_stable();
-
 private:
-    /**
-     * @brief Update the data from the IMU
-     *
-     */
-
     bool refresh_data();
-
     Adafruit_MPU6050 m_mpu{};
     sensors_event_t m_a{};
     sensors_event_t m_g{};

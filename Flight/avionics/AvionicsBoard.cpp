@@ -399,9 +399,10 @@ bool AvionicsBoard::check_payload()
  * @return size_t size of the queue
  */
 
-   size_t AvionicsBoard::get_payload_queue_size(){
-      return m_payload_queue.size();
-   }
+size_t AvionicsBoard::get_payload_queue_size()
+{
+  return m_payload_queue.size();
+}
 
 /**
  * @brief Clear payload activity times
@@ -500,4 +501,25 @@ bool AvionicsBoard::unset_clock()
 bool AvionicsBoard::get_stability()
 {
   return m_imu.is_stable();
+}
+
+/**
+ * @brief Test the inertial measurement unit
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool AvionicsBoard::test_IMU()
+{
+  m_imu.get_acceleration();
+  m_imu.get_rotation();
+  m_imu.get_temperature();
+  if (!m_imu.is_stable())
+  {
+    Log.errorln("IMU indicates instability");
+    return false;
+  }
+  Log.noticeln("IMU indicates stability");
+  return true;
 }

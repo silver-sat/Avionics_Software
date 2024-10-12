@@ -103,6 +103,11 @@ int FreeRam()
 void setup()
 
 {
+  /**
+   * @brief Setup phase: initialize the devices and the boards
+   *
+   */
+
   // Initialize serial connection
 
   Serial.begin(serial_baud_rate);
@@ -153,9 +158,22 @@ void setup()
 
   // Setup phase complete
 
+  Log.noticeln("Setup complete");
   Log.noticeln("Avionics Process now accepting commands");
 
-  // todo: create test script here
+  /**
+   * @brief Test phase: test the devices and the boards
+   *
+   */
+
+  // IMU test
+
+  Log.noticeln("Testing IMU");
+  avionics.test_IMU();
+
+// Test phase complete
+
+Log.noticeln("Testing complete");
 
 #ifdef INSTRUMENTATION
   // Set up instrumentation
