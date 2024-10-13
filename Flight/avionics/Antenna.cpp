@@ -172,3 +172,16 @@ bool Antenna::check_deployment_state()
     }
     return false;
 }
+
+void Antenna::test_antenna()
+{
+    // During startup testing, antenna must be closed
+    if (check_deployment_state())
+    {
+        Log.fatalln("Antenna is open");
+    }
+    else
+    {
+        Log.noticeln("Antenna is not open");
+    }
+}

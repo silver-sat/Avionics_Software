@@ -557,6 +557,7 @@ bool AvionicsBoard::test_FRAM()
   m_fram.write(0, random_value);
   Log.verboseln("Wrote %X to FRAM address 0", random_value);
   auto read_value{m_fram.read(0)};
+  Log.verboseln("Read %X from FRAM address 0", read_value);
   if (read_value != random_value)
   {
     Log.errorln("FRAM test failed %X != %X", read_value, random_value);
