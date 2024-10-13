@@ -200,6 +200,13 @@ void setup()
  Log.noticeln("Testing Antenna");
  antenna.test_antenna();
 
+ /**
+  * @brief Payload test
+  * 
+  */
+
+ Log.noticeln("Testing Payload");
+ payload.photo();
  
   // Test phase complete
 
