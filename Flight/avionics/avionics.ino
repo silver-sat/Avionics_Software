@@ -159,7 +159,7 @@ void setup()
   // Setup phase complete
 
   Log.noticeln("Setup complete");
-  Log.noticeln("Avionics Process now accepting commands");
+  Log.noticeln("Avionics Process accepting commands");
   avionics.service_watchdog();
 
   /**
@@ -193,6 +193,14 @@ void setup()
   Log.noticeln("Testing EPS-I");
   power.test_EPS();
 
+ /**
+  * @brief Antenna test
+  * 
+  */
+ Log.noticeln("Testing Antenna");
+ antenna.test_antenna();
+
+ 
   // Test phase complete
 
   Log.noticeln("Testing complete");

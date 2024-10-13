@@ -60,13 +60,19 @@ public:
      */
     bool antenna_cycle_completed() { return m_antenna_cycle_completed; }
 
-private:
     /**
      * @brief Check antenna state
      *
      */
     bool check_deployment_state();
 
+    /**
+     * @brief Test the antenna
+     *
+     */
+    void test_antenna();
+
+private:
     /**
      * @brief deployment completed successfully
      *

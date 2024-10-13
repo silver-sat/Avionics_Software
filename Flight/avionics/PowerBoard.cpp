@@ -12,9 +12,9 @@
 
 // Raw battery voltage cutoffs for beacon character and payload session power
 
-constexpr float battery_excellent{3.8f};
-constexpr float battery_good{3.7f};
-constexpr float battery_fair{3.6f};
+constexpr float battery_excellent{4.1f};
+constexpr float battery_good{3.9f};
+constexpr float battery_fair{3.7f};
 constexpr float payload_session_minimum{3.65f};
 
 /**
@@ -131,7 +131,8 @@ bool PowerBoard::cycle_radio_5v()
 
 bool PowerBoard::test_EPS()
 {
-    m_eps_i.getBatteryVoltage();
+    Log.traceln("Retrieving key EPS-I values");
+    auto battery_voltage = m_eps_i.getBatteryVoltage();
     m_eps_i.getBatteryCurrent();
     m_eps_i.getTemperatureSensor1();
     m_eps_i.getTemperatureSensor2();
@@ -142,8 +143,17 @@ bool PowerBoard::test_EPS()
     m_eps_i.getHeater1State();
     m_eps_i.getHeater2State();
     m_eps_i.getHeater3State();
-    
+    Log.traceln("Dumping EPS-I data");
     m_eps_i.dump_data();
-    
+    if (battery_voltage >= battery_good)
+    {
+        Log.noticeln("EPS-I battery voltage is %FV", battery_voltage);
+        return true;
+    }
+    else
+    {
+        Log.warningln("EPS-I battery voltage is %FV", battery_voltage);
+        return false;
+    }
     return true;
 }
