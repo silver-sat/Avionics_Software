@@ -121,3 +121,29 @@ bool PowerBoard::cycle_radio_5v()
     Log.warningln("Cycling radio 5v");
     return m_eps_i.cycle_5v_bus();
 }
+
+/**
+ * @brief Test the EPS-I
+ *
+ * @return true success
+ * @return false error
+ */
+
+bool PowerBoard::test_EPS()
+{
+    m_eps_i.getBatteryVoltage();
+    m_eps_i.getBatteryCurrent();
+    m_eps_i.getTemperatureSensor1();
+    m_eps_i.getTemperatureSensor2();
+    m_eps_i.getTemperatureSensor3();
+    m_eps_i.getZNegativeCurrent();
+    m_eps_i.get5VCurrent();
+    m_eps_i.getLUP_5VVoltage();
+    m_eps_i.getHeater1State();
+    m_eps_i.getHeater2State();
+    m_eps_i.getHeater3State();
+    
+    m_eps_i.dump_data();
+    
+    return true;
+}

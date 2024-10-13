@@ -20,39 +20,12 @@
 class PowerBoard final
 {
 public:
-    /**
-     * @brief Initialize the Power Board
-     *
-     */
     bool begin();
-
-    /**
-     * @brief Get power status for beacon
-     *
-     */
-
     PowerBeacon get_status();
-
-    /**
-     * @brief Check for adequate power for payload activity
-     *
-     * @return true adequate power
-     * @return false inadequate power
-     */
     bool power_adequate();
-
-    /**
-     * @brief Get the power detail for command response
-     *
-     */
     const String get_detail();
-
-    /**
-     * @brief cycles the radio 5v power
-     *
-     */
     bool cycle_radio_5v();
-
+    bool test_EPS();
 private:
-    EPS_I m_eps_i{}; /**< Power Board */
+    EPS_I m_eps_i{};
 };
