@@ -950,132 +950,25 @@ class EPS_I final
 {
 
 public:
-  /**
-   * @brief Set up the hardware and initialize I2C
-   *
-   */
-
   bool begin();
-
-  /**
-   * @brief Get the battery voltage
-   *
-   */
-
   float getBatteryVoltage();
-
-  /**
-   * @brief Get the battery current
-   *
-   */
-
   float getBatteryCurrent();
-
-  /**
-   * @brief Get the temperature at sensor 1
-   *
-   */
-
   float getTemperatureSensor1();
-
-  /**
-   * @brief Get the temperature at sensor 2
-   *
-   */
-
   float getTemperatureSensor2();
-
-  /**
-   * @brief Get the temperature at sensor 3
-   *
-   */
-
   float getTemperatureSensor3();
-
-  /**
-   * @brief Get the Z negative panel current
-   *
-   */
-
   float getZNegativeCurrent();
-
-  /**
-   * @brief Get the 5 volt current
-   *
-   */
-
   float get5VCurrent();
-
-  /**
-   * @brief Get the LUP 5V voltage
-   *
-   * @return float voltage
-   */
-
   float getLUP_5VVoltage();
-
-  /**
-   * @brief Get the heater 1 state
-   *
-   */
-
   bool getHeater1State();
-
-  /**
-   * @brief Get the heater 2 state
-   *
-   */
-
   bool getHeater2State();
-
-  /**
-   * @brief Get the heater 3 state
-   *
-   */
-
   bool getHeater3State();
-
-  /**
-   * @brief method in EPS class that turns on the 5v LUP
-   *
-   */
-
   bool turn_on_5v_LUP();
-
-/**
-   * @brief method in EPS class that turns on the 3.3v LUP
-   *
-   */
-
   bool turn_off_3v3_LUP();
-  /**
-   * @brief method in EPS class that sends cycle for 5v
-   *
-   */
-
   bool cycle_5v_bus();
-
+  void dump_data();
 private:
-  /**
-   * @brief Initialization code for EPS I
-   *
-   */
-
   bool _init();
-
-  /**
-   * @brief Read 16 bits of data from the EPS I
-   *
-   */
-
   uint16_t read_value(EPS_I_Read_Command command);
-
-  /**
-   * @brief Write an 8-bit command and 8-bit state to the EPS I
-   *
-   */
-
   bool write_command(const EPS_I_Write_Command command, const uint8_t state);
-
   Adafruit_I2CDevice m_i2c_dev{Adafruit_I2CDevice(EPS_I_I2C_ADDRESS, &Wire1)};
 };

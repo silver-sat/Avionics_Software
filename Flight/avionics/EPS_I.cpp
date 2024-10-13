@@ -264,6 +264,24 @@ bool EPS_I::cycle_5v_bus()
 }
 
 /**
+ * @brief Dump all data from EPS I
+ *
+ */
+
+void EPS_I::dump_data()
+
+{
+  for (auto i{static_cast<int>(EPS_I_Read_Command::GETBATTERYINFO_BATTERY_BATT_VOLT)}; i <= static_cast<int>(EPS_I_Read_Command::GETSOFTWAREVERSION_BUILDTIME3); i++)
+  {
+    Log.verboseln("EPS-I Read Command %x: %X", i, read_value(static_cast<EPS_I_Read_Command>(i)));
+  }
+  for (auto i{static_cast<int>(EPS_I_Read_Command::QUERYWATCHDOG_NEW_TIMER)}; i <= static_cast<int>(EPS_I_Read_Command::QUERYLAUNCHSTATE_POWER_UP_DELAY); i++)
+  {
+    Log.verboseln("EPS-I Read Command %x: %X", i, read_value(static_cast<EPS_I_Read_Command>(i)));
+  }
+}
+
+/**
  * @brief Read 16 bits of data from the EPS I
  *
  * @return raw 16 bits in correct endian format

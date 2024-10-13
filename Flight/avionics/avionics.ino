@@ -160,6 +160,7 @@ void setup()
 
   Log.noticeln("Setup complete");
   Log.noticeln("Avionics Process now accepting commands");
+  avionics.service_watchdog();
 
   /**
    * @brief Test phase: test the devices and the boards
@@ -183,6 +184,14 @@ void setup()
 
   Log.noticeln("Testing FRAM");
   avionics.test_FRAM();
+
+  /**
+   * @brief EPS-I test
+   *
+   */
+
+  Log.noticeln("Testing EPS-I");
+  power.test_EPS();
 
   // Test phase complete
 
