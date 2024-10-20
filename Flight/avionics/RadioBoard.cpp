@@ -384,3 +384,16 @@ bool RadioBoard::get_frequencies()
     Log.noticeln("Timeout during frequency entry");
     return false;
 }
+
+/**
+ * @brief Test Radio Board
+ *
+ */
+
+bool RadioBoard::test_radio()
+{
+    Log.noticeln("Testing Radio Board");
+    Message message(Message::get_status, "");
+    message.send();
+    return true;
+}
