@@ -194,16 +194,19 @@ void setup()
   power.test_EPS();
 
  /**
+  * @brief Payload test
+  * 
+  */
+
+ Log.noticeln("Testing Payload");
+ payload.photo();
+
+ /**
   * @brief Antenna test
   * 
   */
  Log.noticeln("Testing Antenna");
  antenna.test_antenna();
-
- 
-  // Test phase complete
-
-  Log.noticeln("Testing complete");
 
 #ifdef INSTRUMENTATION
   // Set up instrumentation
