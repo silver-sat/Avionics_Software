@@ -35,6 +35,7 @@ public:
     bool send_message(const Message message) const;
     bool recent_ground_contact() const;
     bool get_frequencies();
+    bool test_radio();
 private:
     void start_frame();
     void end_frame();

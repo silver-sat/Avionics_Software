@@ -176,12 +176,12 @@ bool CommandProcessor::validate_signature(const String &buffer)
     }
 
     String hmac_hex_ascii{buffer.substring(0, hmac_length_hex_ascii)};
-    Log.verboseln("HMAC: %s", hmac_hex_ascii.c_str());
+    // Log.verboseln("HMAC: %s", hmac_hex_ascii.c_str());
     byte hmac[hmac_length]{};
     hex2bin(hmac_hex_ascii.c_str(), hmac);
 
     String salt_hex_ascii{buffer.substring(hmac_length_hex_ascii, hmac_length_hex_ascii + salt_length_hex_ascii)};
-    Log.verboseln("Salt: %s", salt_hex_ascii.c_str());
+    // Log.verboseln("Salt: %s", salt_hex_ascii.c_str());
     byte salt[salt_length]{};
     hex2bin(salt_hex_ascii.c_str(), salt);
 

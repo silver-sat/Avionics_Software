@@ -193,6 +193,14 @@ void setup()
   Log.noticeln("Testing EPS-I");
   power.test_EPS();
 
+  /**
+   * @brief Radio test
+   *
+   */
+
+  Log.noticeln("Testing Radio");
+  radio.test_radio();
+
  /**
   * @brief Payload test
   * 
