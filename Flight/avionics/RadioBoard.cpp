@@ -11,6 +11,7 @@
 #include "avionics_constants.h"
 #include "log_utility.h"
 #include "AvionicsBoard.h"
+#include "Antenna.h"
 
 constexpr uint32_t serial1_baud_rate{19200}; /**< speed of serial1 connection @hideinitializer */
 constexpr unsigned long radio_delay{2 * seconds_to_milliseconds};
@@ -93,7 +94,7 @@ bool RadioBoard::receive_frame()
     while (Serial1.available())
     {
         auto character{static_cast<char>(Serial1.read())};
-        // Log.verboseln("Character received on Serial1 port: %C", character);
+        Log.verboseln("Character received on Serial1 port: %C", character);
         switch (character)
         {
         // case FEND
@@ -227,9 +228,19 @@ bool RadioBoard::send_message(const Message message) const
     auto command = message.get_command();
     auto content = message.get_content();
     if (content.length() == 0)
+    {
         Log.noticeln("Sending message: KISS command %X", command);
+    }
     else
+    {
         Log.noticeln("Sending message: KISS command %X, content: %s", command, content.c_str());
+    }
+    extern Antenna antenna;
+    if (command == REMOTE_FRAME && !antenna.antenna_cycle_completed()) // supress message to ground if antenna deployment cycle not complete
+    {
+        Log.warningln("Antenna deployment cycle not complete, remote message not sent");
+        return false;
+    }
     Serial1.write(FEND);
     Serial1.write(command);
     Serial1.write(content.c_str());
