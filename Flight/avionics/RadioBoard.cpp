@@ -52,10 +52,8 @@ bool RadioBoard::begin()
     }
     // Send invalid command to Radio Board to determine if it is responding
     Log.verboseln("Sending invalid command to Radio Board");
-    Serial1.write(FEND);
-    Serial1.write(LOCAL_FRAME);
-    Serial1.write("Invalid");
-    Serial1.write(FEND);
+    Message message(Message::local_command, "Invalid");
+    message.send();
     // Read radio response
     auto response_length{Serial1.readBytes(m_buffer, maximum_command_length)};
     for (auto i{0}; i < static_cast<int>(response_length); ++i)
@@ -354,30 +352,21 @@ bool RadioBoard::get_frequencies()
                 Serial.write(BELL);
                 continue;
             }
-            else
-            {
-                Serial.write(incoming_char);
-            }
-            if (frequency_string.length() < 8)
-            {
-                frequency_string += incoming_char;
-                continue;
-            }
+            Serial.write(incoming_char);
             frequency_string += incoming_char;
-            for (auto i{0}; i < 2; ++i)
+            if (frequency_string.length() == 9)
             {
-                Serial1.write(FEND);
-                Serial1.write(MODIFY_FREQUENCY);
-                Serial1.write(frequency_string.c_str(), 9);
-                Serial1.write(FEND);
+                Serial.println();
+                Message message(Message::modify_frequency, frequency_string);
+                message.send();
+                message.send(); // send twice to make permanent change
+                String display_frequency{};
+                display_frequency += frequency_string.substring(0, 6);
+                display_frequency += ".";
+                display_frequency += frequency_string.substring(6, 9);
+                Log.noticeln("Frequency set to %s", display_frequency.c_str());
+                return true;
             }
-            Serial.println();
-            String display_frequency{};
-            display_frequency += frequency_string.substring(0, 6);
-            display_frequency += ".";
-            display_frequency += frequency_string.substring(6, 9);
-            Log.noticeln("Frequency set to %s", display_frequency.c_str());
-            return true;
         }
     }
     Serial.println();

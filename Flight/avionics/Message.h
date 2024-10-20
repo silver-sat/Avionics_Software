@@ -25,6 +25,7 @@ public:
      */
     enum Type
     {
+        local_command = LOCAL_FRAME,
         acknowledgement = REMOTE_FRAME,
         negative_acknowledgement = REMOTE_FRAME,
         response = REMOTE_FRAME,
@@ -33,6 +34,7 @@ public:
         antenna_release = DIGITALIO_RELEASE,
         get_status = GET_RADIO_STATUS,
         halt = HALT,
+        modify_frequency = MODIFY_FREQUENCY,
         modify_mode = MODIFY_MODE,
     };
 
