@@ -10,6 +10,43 @@
 #include "AvionicsBoard.h"
 
 /**
+ * @brief Initialize the antenna
+ * 
+ * @return true successful
+ */
+
+bool Antenna::begin()
+{
+    Log.traceln("Antenna initialzing");
+    Log.verboseln("Opening antenna device at address %X", ANTENNA_I2C_ADDRESS);
+    if (!m_i2c_dev.begin())
+    {
+        Log.errorln("Antenna I2C device not found");
+        return false;
+    }
+    Log.verboseln("Antenna device found");
+    Log.traceln("Antenna initialization complete");
+    return true;
+}
+
+/**
+ * @brief Test antenna state during startup
+ * 
+ */
+
+void Antenna::test_antenna()
+{
+    if (check_deployment_state() == AntennaStatus::closed)
+    {
+        Log.noticeln("Antenna is closed");
+    }
+    else
+    {
+        Log.warningln("Antenna is not closed");
+    }
+}
+
+/**
  * @brief Check antenna
  *
  * @return true open
@@ -22,7 +59,7 @@ bool Antenna::check_antenna()
     {
     case AntennaState::startup:
     {
-        Log.noticeln("Beginning antenna separation delay");
+        Log.noticeln("Beginning satellite separation delay");
         Log.verboseln("Separation delay is %d seconds", separation_delay / seconds_to_milliseconds);
         m_state = AntennaState::in_delay;
         m_state_start_time = millis();
@@ -32,9 +69,7 @@ bool Antenna::check_antenna()
     {
         if ((millis() - m_state_start_time) >= separation_delay)
         {
-            Log.verboseln("Separation delay completed, initializing antenna device");
-            m_i2c_dev.begin();
-
+            Log.verboseln("Separation delay completed");
             Log.verboseln("Antenna delay is %d seconds for each cycle required", antenna_delay / seconds_to_milliseconds);
             Log.noticeln("Beginning antenna deployment with algorithm 1");
             constexpr uint8_t algorithm1_all{0x1F};
@@ -48,7 +83,7 @@ bool Antenna::check_antenna()
     {
         if (millis() - m_state_start_time >= antenna_delay)
         {
-            if (check_deployment_state())
+            if (check_deployment_state() == AntennaStatus::open)
             {
                 deployment_completed();
             }
@@ -68,7 +103,7 @@ bool Antenna::check_antenna()
     {
         if (millis() - m_state_start_time >= antenna_delay)
         {
-            if (check_deployment_state())
+            if (check_deployment_state() == AntennaStatus::open)
             {
                 deployment_completed();
             }
@@ -88,7 +123,7 @@ bool Antenna::check_antenna()
     {
         if (millis() - m_state_start_time >= antenna_delay)
         {
-            if (check_deployment_state())
+            if (check_deployment_state() == AntennaStatus::open)
             {
                 deployment_completed();
             }
@@ -108,7 +143,7 @@ bool Antenna::check_antenna()
     {
         if (millis() - m_state_start_time >= antenna_delay)
         {
-            if (check_deployment_state())
+            if (check_deployment_state() == AntennaStatus::open)
             {
                 deployment_completed();
             }
@@ -147,41 +182,23 @@ void Antenna::deployment_completed()
     m_state = AntennaState::completed;
     m_state_start_time = millis();
     m_antenna_deployed = true;
+    m_antenna_cycle_completed = true;
 }
 
 /**
  * @brief Check antenna state
  *
- * @return true all doors deployed
- * @return false some doors not deployed
+ * @return Fourth byte of antenna state as defined in Antenna User Manual
  *
  */
 
-bool Antenna::check_deployment_state()
+AntennaStatus Antenna::check_deployment_state()
 {
-
-    Log.traceln("Reading antenna state");
+    Log.verboseln("Reading antenna state");
     byte antenna_state[4]{};
     m_i2c_dev.read(antenna_state, 4);
     for (size_t index{0}; index < 4; ++index)
         Log.verboseln("Antenna byte %d: %X", index, antenna_state[index]);
-    if (antenna_state[3] == 0xFF)
-    {
-        Log.traceln("All antenna doors open");
-        return true;
-    }
-    return false;
+    return static_cast<AntennaStatus>(antenna_state[3]);
 }
 
-void Antenna::test_antenna()
-{
-    // During startup testing, antenna must be closed
-    if (check_deployment_state())
-    {
-        Log.fatalln("Antenna is open");
-    }
-    else
-    {
-        Log.noticeln("Antenna is not open");
-    }
-}
