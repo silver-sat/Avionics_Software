@@ -156,6 +156,12 @@ void setup()
   payload.begin();
   Log.noticeln("Payload Board interface initialization completed");
 
+  // Initialize Antenna
+
+  Log.noticeln("Initializing Antenna");
+  antenna.begin();
+  Log.noticeln("Antenna initialization completed");
+
   // Setup phase complete
 
   Log.noticeln("Setup complete");
