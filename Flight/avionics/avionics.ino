@@ -147,7 +147,7 @@ void setup()
 
   Log.noticeln("Initializing Radio Board interface");
   radio.begin();
-  radio.get_frequencies();
+  radio.get_frequency();
   Log.noticeln("Radio Board interface initialization completed");
 
   // Initialize Payload Board
