@@ -124,11 +124,8 @@ void setup()
   Log.begin(LOG_LEVEL_VERBOSE, &Serial);
   Log.setShowLevel(false);
 
-  Log.noticeln("Avionics software compiled %s at %s local time", __DATE__, __TIME__);
-  Log.warningln("Not for flight use.");
-  Log.warningln("Required change: increase antenna delay to 80 seconds");
-  Log.warningln("Required change: increase separation delay to 45 minutes");
-  Log.warningln("Required change: turn off instrumentation");
+  Log.noticeln("Avionics Radio test software compiled %s at %s local time", __DATE__, __TIME__);
+  Log.warningln("Not for flight use: install main branch for flight software");
   Log.noticeln("Initializing Avionics Process");
 
   // Initialize Avionics Board
