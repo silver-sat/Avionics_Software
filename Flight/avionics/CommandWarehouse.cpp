@@ -192,16 +192,6 @@ Command *CommandWarehouse::RetrieveCommand(const String tokens[], const size_t t
         else
             return &m_command_invalid; // Wrong number of parameters
     }
-    else if (tokens[0] == "ModifyMode")
-    {
-        if ((argument_count == 1) && (tokens[1].length() == mode_length))
-        {
-            m_modify_mode.mode(tokens[1][0]);
-            return &m_modify_mode;
-        }
-        else
-            return &m_command_invalid; // Wrong number of parameters
-    }
     else if (tokens[0] == "LogArguments")
     {
         m_log_arguments.clear_arguments();
