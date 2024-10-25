@@ -28,6 +28,7 @@ public:
     bool acknowledge_command() override;
     bool execute_command() override;
     void time(const DateTime time) { m_time = time; }
+
 private:
     DateTime m_time;
 };
@@ -39,6 +40,7 @@ public:
     bool acknowledge_command() override;
     bool execute_command() override;
     void seconds(const int seconds) { m_seconds = seconds; }
+
 private:
     int m_seconds;
 };
@@ -50,6 +52,7 @@ public:
     bool acknowledge_command() override;
     bool execute_command() override;
     void time(const DateTime time) { m_time = time; }
+
 private:
     DateTime m_time;
 };
@@ -61,6 +64,7 @@ public:
     bool acknowledge_command() override;
     bool execute_command() override;
     void time(const DateTime time) { m_time = time; }
+
 private:
     DateTime m_time;
 };
@@ -185,21 +189,6 @@ public:
     bool execute_command() override;
 };
 
-class CommandModifyMode final : public Command
-{
-public:
-    explicit CommandModifyMode(const char mode)
-    {
-        m_mode[0] = mode;
-        m_mode[1] = '\0';
-    };
-    bool acknowledge_command() override;
-    bool execute_command() override;
-    void mode(const char mode) { m_mode[0] = mode; }
-private:
-    char m_mode[2]{};
-};
-
 class CommandLogArguments final : public Command
 {
 public:
@@ -208,6 +197,7 @@ public:
     bool execute_command() override;
     void clear_arguments() { m_arguments = ""; }
     void arguments(const String arguments) { m_arguments += arguments; }
+
 private:
     String m_arguments;
 };
