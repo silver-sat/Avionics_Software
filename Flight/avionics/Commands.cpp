@@ -36,8 +36,12 @@
  * INV: invalid
  * UNK: unknown
  *
- * Test Commands
+ * Radio commands:
  *
+ * RMM: ModifyMode: modify radio mode
+ * 
+ * Test Commands
+ * 
  * NOP: NoOperate: subsumes Ping: acknowledge
  * STP: SendTestPacket: reply with test message
  * URC: UnsetClock: change the realtime clock status to unset for testing
@@ -59,7 +63,6 @@
  * RQR: QueryRegister: radio query register
  * CPT: ClearPicTimes: replaced with ClearPayloadQueue
  * GPT: GetPicTimes: replaced with GetPayloadQueue
- * RMM: ModifyMode: modify radio mode, moved to Radio Test branch
 
 
  *
@@ -710,6 +713,36 @@ bool CommandUnknown::execute_command()
 {
     Log.errorln("Cannot execute unknown command");
     return false;
+}
+
+/**
+ * @brief Acknowledge ModifyMode command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandModifyMode::acknowledge_command()
+{
+    auto status{Command::acknowledge_command()};
+    Log.verboseln("ModifyMode");
+    return status;
+}
+
+/**
+ * @brief Execute ModifyMode command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandModifyMode::execute_command()
+{
+    auto status{Command::execute_command()};
+    Log.verboseln("ModifyMode");
+    Message message(Message::modify_mode, String(m_mode));
+    Log.traceln("Requesting mode modification");
+    return message.send() && status;
 }
 
 /**

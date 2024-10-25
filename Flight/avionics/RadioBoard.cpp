@@ -13,15 +13,9 @@
 #include "AvionicsBoard.h"
 #include "Antenna.h"
 
-/**
- * @brief Radio Board constants
- *
- */
-
-constexpr uint32_t serial1_baud_rate{19200};                                                        /**< speed of serial1 connection @hideinitializer >**/
-constexpr unsigned long radio_delay{2 * seconds_to_milliseconds};                                   /**< Radio Board startup delay >**/
-constexpr long ground_contact_interval{7};                                                          /**< maximum days without ground contact for beacon @hideinitializer >**/
-constexpr unsigned long frequency_entry_timeout = 1 * minutes_to_seconds * seconds_to_milliseconds; /**< User frequency entry delay >**/
+constexpr uint32_t serial1_baud_rate{19200}; /**< speed of serial1 connection @hideinitializer */
+constexpr unsigned long radio_delay{2 * seconds_to_milliseconds};
+constexpr long ground_contact_interval{7}; /**< maximum days without ground contact for beacon @hideinitializer */
 
 /**
  * @brief Initialize the Radio Board
@@ -34,14 +28,11 @@ constexpr unsigned long frequency_entry_timeout = 1 * minutes_to_seconds * secon
 bool RadioBoard::begin()
 {
     // Enable serial driver to Radio Board
-
     Log.traceln("Radio Board initializing");
     Log.verboseln("Enabling serial driver to Radio Board at %d baud", serial1_baud_rate);
     pinMode(EN_RADIO_SERIAL, OUTPUT);
     digitalWrite(EN_RADIO_SERIAL, HIGH);
-
     // Initialize command port
-
     Log.verboseln("Initializing command port");
     Serial1.begin(serial1_baud_rate);
     extern AvionicsBoard avionics;
@@ -49,30 +40,22 @@ bool RadioBoard::begin()
     {
         avionics.service_watchdog();
     }
-
     // Send abort transaction to Radio Board to clear buffer
-
     Log.verboseln("Sending abort transaction to Radio Board");
     Serial1.write(FESC);
     Serial1.write(FESC);
-
     // Wait for Radio Board to initialize
-
     Log.verboseln("Waiting for Radio Board to initialize");
     unsigned long serial_delay_start{millis()};
     while ((millis() - serial_delay_start) < radio_delay)
     {
         avionics.service_watchdog();
     }
-
     // Send invalid command to Radio Board to determine if it is responding
-
     Log.verboseln("Sending invalid command to Radio Board");
     Message message(Message::local_command, "Invalid");
     message.send();
-
     // Read radio response
-
     auto response_length{Serial1.readBytes(m_buffer, maximum_command_length)};
     for (auto i{0}; i < static_cast<int>(response_length); ++i)
     {
@@ -83,8 +66,11 @@ bool RadioBoard::begin()
         Log.verboseln("Command port initialized");
         return true;
     }
-    Log.errorln("Radio Board did not respond");
-    return false;
+    else
+    {
+        Log.errorln("Radio Board did not respond");
+        return false;
+    }
 }
 
 /**
@@ -98,7 +84,6 @@ bool RadioBoard::begin()
 bool RadioBoard::receive_frame()
 {
     // Increment days since last ground contact if a day has passed
-
     if (millis() - m_milliseconds_since_last_ground_contact_day > days_to_hours * hours_to_minutes * minutes_to_seconds * seconds_to_milliseconds)
     {
         ++m_days_since_last_ground_contact;
@@ -106,13 +91,13 @@ bool RadioBoard::receive_frame()
     }
 
     // if data available, process it
-    
     while (Serial1.available())
     {
         auto character{static_cast<char>(Serial1.read())};
         Log.verboseln("Character received on Serial1 port: %C", character);
         switch (character)
         {
+        // case FEND
         case FEND:
             // Not in frame, start frame
             if (!m_in_frame)
@@ -132,6 +117,7 @@ bool RadioBoard::receive_frame()
                 Log.noticeln("Additional FEND received, ignored");
             }
             break;
+        // case FESC
         case FESC:
             // Not in frame, error
             if (!m_in_frame)
@@ -150,6 +136,7 @@ bool RadioBoard::receive_frame()
                 enter_escape_mode();
             }
             break;
+        // case TFEND
         case TFEND:
             // Not in frame, error
             if (!m_in_frame)
@@ -168,6 +155,7 @@ bool RadioBoard::receive_frame()
                 exit_escape_mode();
             }
             break;
+        // case TFESC
         case TFESC:
             // Not in frame, error
             if (!m_in_frame)
@@ -186,6 +174,7 @@ bool RadioBoard::receive_frame()
                 exit_escape_mode();
             }
             break;
+            // case other
         default:
             // Not in frame, error
             if (!m_in_frame)
@@ -208,7 +197,6 @@ bool RadioBoard::receive_frame()
     }
     return false;
 }
-
 /**
  * @brief Get frame
  *
@@ -248,15 +236,11 @@ bool RadioBoard::send_message(const Message message) const
         Log.noticeln("Sending message: KISS command %X, content: %s", command, content.c_str());
     }
     extern Antenna antenna;
-    
-    // supress message to ground if antenna deployment cycle not complete
-    
-    if (command == REMOTE_FRAME && !antenna.antenna_cycle_completed()) 
+    if (command == REMOTE_FRAME && !antenna.antenna_cycle_completed()) // supress message to ground if antenna deployment cycle not complete
     {
         Log.warningln("Antenna deployment cycle not complete, remote message not sent");
         return false;
     }
-    
     Serial1.write(FEND);
     Serial1.write(command);
     Serial1.write(content.c_str());
@@ -353,13 +337,14 @@ void RadioBoard::ground_contact()
 }
 
 /**
- * @brief Get frequency for the Radio Board
+ * @brief Get frequencies for the Radio Board
  *
  */
 
-bool RadioBoard::get_frequency()
+bool RadioBoard::get_frequencies()
 {
     unsigned long start_time = millis();
+    const unsigned long entry_timeout = 1 * minutes_to_seconds * seconds_to_milliseconds;
     char incoming_char = 0;
     String frequency_string_1 = "";
     String frequency_string = "";
@@ -367,7 +352,7 @@ bool RadioBoard::get_frequency()
 
     Serial.print("Enter the 9-digit frequency string (e.g., 123456789): ");
 
-    while (millis() - start_time < frequency_entry_timeout)
+    while (millis() - start_time < entry_timeout)
     {
         avionics.service_watchdog(); // service the watchdog while waiting
         if (Serial.available() > 0)

@@ -43,6 +43,7 @@ private:
     CommandPayComms m_pay_comms{};
     CommandTweeSlee m_twee_slee{};
     CommandWatchdog m_watchdog{};
+    CommandModifyMode m_modify_mode{0};
     CommandInvalid m_command_invalid{};
     CommandUnknown m_command_unknown{};
     CommandLogArguments m_log_arguments{""};
