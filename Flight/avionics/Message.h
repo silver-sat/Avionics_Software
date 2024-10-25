@@ -36,6 +36,8 @@ public:
         halt = HALT,
         modify_frequency = MODIFY_FREQUENCY,
         modify_mode = MODIFY_MODE,
+        background_rssi = BACKGROUND_RSSI,
+        current_rssi = CURRENT_RSSI,
     };
 
     /**

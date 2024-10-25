@@ -39,6 +39,8 @@
  * Radio commands:
  *
  * RMM: ModifyMode: modify radio mode
+ * RBR: BackgroundRSSI: radio background RSSI
+ * RCR: CurrentRSSI: radio current RSSI
  * 
  * Test Commands
  * 
@@ -56,8 +58,6 @@
  * RMF: ModifyFrequency: modify radio frequency
  * RAF: AdjustFrequency: adjust radio frequency temporarily
  * RTC: TransmitCW: transmit carrier wave
- * RBR: BackgroundRSSI: radio background rssi
- * RCR: CurrentRSSI: radio current rssi
  * RST: SweepTransmitter: radio sweep transmitter
  * RSR: SweepReceiver: radio sweep receiver
  * RQR: QueryRegister: radio query register
@@ -739,9 +739,65 @@ bool CommandModifyMode::acknowledge_command()
 bool CommandModifyMode::execute_command()
 {
     auto status{Command::execute_command()};
-    Log.verboseln("ModifyMode");
+    Log.verboseln("ModifyMode: %d", m_mode);
     Message message(Message::modify_mode, String(m_mode));
     Log.traceln("Requesting mode modification");
+    return message.send() && status;
+}
+
+/**
+ * @brief Acknowledge BackgroundRSSI command
+ * 
+ * @return true successful
+ * @return false error
+ */
+bool CommandBackgroundRSSI::acknowledge_command()
+{
+    auto status{Command::acknowledge_command()};
+    Log.verboseln("BackgroundRSSI: %d", m_background_rssi);
+    return status;
+}
+
+/**
+ * @brief Execute BackgroundRSSI command
+ * 
+ * @return true successful
+ * @return false error
+ */
+bool CommandBackgroundRSSI::execute_command()
+{
+    auto status{Command::execute_command()};
+    Log.verboseln("BackgroundRSSI");
+    Message message(Message::background_rssi, String(m_background_rssi));
+    Log.traceln("Requesting background RSSI");
+    return message.send() && status;
+}
+
+/**
+ * @brief Acknowledge CurrentRSSI command
+ * 
+ * @return true successful
+ * @return false error
+ */
+bool CommandCurrentRSSI::acknowledge_command()
+{
+    auto status{Command::acknowledge_command()};
+    Log.verboseln("CurrentRSSI");
+    return status;
+}
+
+/**
+ * @brief Execute CurrentRSSI command
+ * 
+ * @return true successful
+ * @return false error
+ */
+bool CommandCurrentRSSI::execute_command()
+{
+    auto status{Command::execute_command()};
+    Log.verboseln("CurrentRSSI");
+    Message message(Message::current_rssi, "");
+    Log.traceln("Requesting current RSSI");
     return message.send() && status;
 }
 

@@ -200,6 +200,25 @@ private:
     char m_mode[2]{};
 };
 
+class CommandBackgroundRSSI final : public Command
+{
+public:
+    explicit CommandBackgroundRSSI(const int background_rssi) : m_background_rssi{background_rssi} {};
+    bool acknowledge_command() override;
+    bool execute_command() override;
+    void background_rssi(const int background_rssi) { m_background_rssi = background_rssi; }
+private:
+    int m_background_rssi;
+};
+
+class CommandCurrentRSSI final : public Command
+{
+public:
+    CommandCurrentRSSI() = default;
+    bool acknowledge_command() override;
+    bool execute_command() override;
+};
+
 class CommandLogArguments final : public Command
 {
 public:

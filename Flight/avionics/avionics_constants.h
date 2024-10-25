@@ -20,7 +20,7 @@ constexpr unsigned long seconds_to_milliseconds{1000}; /**< conversion factor fo
 constexpr unsigned long minutes_to_seconds{60};        /**< conversion factor for time in minutes @hideinitializer */
 constexpr unsigned long hours_to_minutes{60};          /**< conversion factor for time in hours @hideinitializer */
 constexpr unsigned long days_to_hours{24};             /**< conversion factor for time in days @hideinitializer */
-constexpr unsigned long weeks_to_days{7};             /**< conversion factor for time in weeks @hideinitializer */
+constexpr unsigned long weeks_to_days{7};              /**< conversion factor for time in weeks @hideinitializer */
 
 /**
  * @brief SAMD21 pin definitions
@@ -66,21 +66,20 @@ constexpr unsigned wait_for_i2c_device{20}; /**< wait for I2C device to become a
 
 /**
  * @brief Maximum size of command from Radio Board
- * 
+ *
  */
 
-constexpr size_t maximum_command_length{256};  /**< maximum characters in command */
-
+constexpr size_t maximum_command_length{256}; /**< maximum characters in command */
 
 /**
  * @brief KISS protocol constants
- * 
+ *
  */
 
-constexpr byte FEND{'\xC0'};                 /**< frame end */
-constexpr byte FESC{'\xDB'};                 /**< frame escape */
-constexpr byte TFEND{'\xDC'};                /**< transposed frame end */
-constexpr byte TFESC{'\xDD'};                /**< transposed frame escape */
+constexpr byte FEND{'\xC0'};  /**< frame end */
+constexpr byte FESC{'\xDB'};  /**< frame escape */
+constexpr byte TFEND{'\xDC'}; /**< transposed frame end */
+constexpr byte TFESC{'\xDD'}; /**< transposed frame escape */
 
 /**
  * @brief Local message content
@@ -105,17 +104,20 @@ constexpr byte HALT{'\x0A'};              /**< stop transmission */
 constexpr byte MODIFY_FREQUENCY{'\x0B'};  /**< change radio frequency */
 constexpr byte MODIFY_MODE{'\x0C'};       /**< change radio mode */
 constexpr byte TOGGLE_RADIO_5V{'\x0F'};   /**< Toggle radio 5v */
+constexpr byte BACKGROUND_RSSI{'\x18'};   /**< Report average background RSSI */
+constexpr byte CURRENT_RSSI{'\x19'};      /**< Report current RSSI */
 
 /**
  * @brief Radio command parameter lengths
  *
  */
 
-constexpr size_t mode_length{1}; /**< mode */
+constexpr size_t mode_length{1};            /**< mode */
+constexpr size_t background_rssi_length{2}; /**< background RSSI */
 
 /**
  * @brief Error code for frequency change
- * 
+ *
  */
 
 constexpr byte BELL{'\x07'}; /**< bell character */

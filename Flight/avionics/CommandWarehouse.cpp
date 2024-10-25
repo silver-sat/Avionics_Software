@@ -202,6 +202,36 @@ Command *CommandWarehouse::RetrieveCommand(const String tokens[], const size_t t
         else
             return &m_command_invalid; // Wrong number of parameters
     }
+    else if (tokens[0] == "BackgroundRSSI")
+    {
+        if (argument_count == 1)
+        {
+            auto token_is_digits = true;
+            for (size_t index = 0; index < tokens[1].length(); ++index)
+                if (!isDigit(tokens[1][index]))
+                    token_is_digits = false;
+            if (token_is_digits)
+                m_background_rssi.background_rssi(tokens[1].toInt());
+                return &m_background_rssi;
+        }
+        else
+            return &m_command_invalid; // Wrong number of parameters or bad parameter
+    }
+    else if (tokens[0] == "CurrentRSSI")
+    {
+        if (argument_count == 0)
+            return &m_current_rssi;
+        else
+            return &m_command_invalid; // Wrong number of parameters
+    }
+    else if (tokens[0] == "Invalid")
+    {
+        return &m_command_invalid;
+    }
+    else if (tokens[0] == "Unknown")
+    {
+        return &m_command_unknown;
+    }
     else if (tokens[0] == "LogArguments")
     {
         m_log_arguments.clear_arguments();

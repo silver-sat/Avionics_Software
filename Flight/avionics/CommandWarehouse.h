@@ -44,6 +44,8 @@ private:
     CommandTweeSlee m_twee_slee{};
     CommandWatchdog m_watchdog{};
     CommandModifyMode m_modify_mode{0};
+    CommandBackgroundRSSI m_background_rssi{0};
+    CommandCurrentRSSI m_current_rssi{};
     CommandInvalid m_command_invalid{};
     CommandUnknown m_command_unknown{};
     CommandLogArguments m_log_arguments{""};
