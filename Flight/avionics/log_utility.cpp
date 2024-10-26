@@ -60,8 +60,9 @@ void formatTimestamp(char *timestamp, const unsigned long msecs)
   int Seconds = secs % SECS_PER_MIN;
   int Minutes = (secs / SECS_PER_MIN) % SECS_PER_MIN;
   int Hours = (secs % SECS_PER_DAY) / SECS_PER_HOUR;
+  int Days = (secs / SECS_PER_DAY);
 
-  sprintf(timestamp, "%02d:%02d:%02d.%03d ", Hours, Minutes, Seconds, MilliSeconds);
+  sprintf(timestamp, "%03d:%02d:%02d:%02d.%03d ", Days, Hours, Minutes, Seconds, MilliSeconds);
 }
 
 /**
