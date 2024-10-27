@@ -16,188 +16,251 @@ class Command
 {
 public:
     virtual ~Command() = default;
-    virtual bool acknowledge_command();
-    virtual bool negative_acknowledge_command();
-    virtual bool execute_command();
+    virtual bool validate_arguments(const String tokens[], const size_t token_count);
+    virtual bool load_data(const String tokens[], const size_t token_count);
+    virtual bool acknowledge_receipt();
+    virtual bool negative_acknowledge_receipt();
+    virtual bool execute();
+
+protected:
+    static const String m_action;
 };
 
 class CommandSetClock final : public Command
 {
 public:
     explicit CommandSetClock(const DateTime time) : m_time{time} {};
-    bool acknowledge_command() override;
-    bool execute_command() override;
+    bool validate_arguments(const String tokens[], const size_t token_count);
+    bool load_data(const String tokens[], const size_t token_count);
+    bool acknowledge_receipt() override;
+    bool execute() override;
     void time(const DateTime time) { m_time = time; }
 
 private:
     DateTime m_time;
+    static const String m_action;
 };
 
 class CommandBeaconSp final : public Command
 {
 public:
     explicit CommandBeaconSp(const int seconds) : m_seconds{seconds} {};
-    bool acknowledge_command() override;
-    bool execute_command() override;
+    bool validate_arguments(const String tokens[], const size_t token_count);
+    bool load_data(const String tokens[], const size_t token_count);
+    bool acknowledge_receipt() override;
+    bool execute() override;
     void seconds(const int seconds) { m_seconds = seconds; }
 
 private:
     int m_seconds;
+    static const String m_action;
 };
 
 class CommandPicTimes final : public Command
 {
 public:
     explicit CommandPicTimes(const DateTime time) : m_time{time} {};
-    bool acknowledge_command() override;
-    bool execute_command() override;
+    bool validate_arguments(const String tokens[], const size_t token_count);
+    bool load_data(const String tokens[], const size_t token_count);
+    bool acknowledge_receipt() override;
+    bool execute() override;
     void time(const DateTime time) { m_time = time; }
 
 private:
     DateTime m_time;
+    static const String m_action;
 };
 
 class CommandSSDVTimes final : public Command
 {
 public:
     explicit CommandSSDVTimes(const DateTime time) : m_time{time} {};
-    bool acknowledge_command() override;
-    bool execute_command() override;
+    bool validate_arguments(const String tokens[], const size_t token_count);
+    bool load_data(const String tokens[], const size_t token_count);
+    bool acknowledge_receipt() override;
+    bool execute() override;
     void time(const DateTime time) { m_time = time; }
 
 private:
     DateTime m_time;
+    static const String m_action;
 };
 
 class CommandClearPayloadQueue final : public Command
 {
 public:
     CommandClearPayloadQueue() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
-};
+    bool acknowledge_receipt() override;
+    bool execute() override;
 
-class CommandUnsetClock final : public Command
-{
-public:
-    CommandUnsetClock() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
+private:
+    static const String m_action;
 };
 
 class CommandReportT final : public Command
 {
 public:
     CommandReportT() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
+    bool acknowledge_receipt() override;
+    bool execute() override;
+
+private:
+    static const String m_action;
 };
 
 class CommandGetPayloadQueue final : public Command
 {
 public:
     CommandGetPayloadQueue() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
+    bool acknowledge_receipt() override;
+    bool execute() override;
+
+private:
+    static const String m_action;
 };
 
 class CommandGetTelemetry final : public Command
 {
 public:
     CommandGetTelemetry() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
+    bool acknowledge_receipt() override;
+    bool execute() override;
+
+private:
+    static const String m_action;
 };
 
 class CommandGetPower final : public Command
 {
 public:
     CommandGetPower() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
+    bool acknowledge_receipt() override;
+    bool execute() override;
+
+private:
+    static const String m_action;
 };
 
 class CommandGetComms final : public Command
 {
 public:
     CommandGetComms() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
+    bool acknowledge_receipt() override;
+    bool execute() override;
+
+private:
+    static const String m_action;
 };
 
 class CommandGetBeaconInterval final : public Command
 {
 public:
     CommandGetBeaconInterval() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
-};
+    bool acknowledge_receipt() override;
+    bool execute() override;
 
-class CommandNoOperate final : public Command
-{
-public:
-    CommandNoOperate() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
-};
-
-class CommandSendTestPacket final : public Command
-{
-public:
-    CommandSendTestPacket() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
+private:
+    static const String m_action;
 };
 
 class CommandPayComms final : public Command
 {
 public:
     CommandPayComms() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
+    bool acknowledge_receipt() override;
+    bool execute() override;
+
+private:
+    static const String m_action;
 };
 
 class CommandTweeSlee final : public Command
 {
 public:
     CommandTweeSlee() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
+    bool acknowledge_receipt() override;
+    bool execute() override;
+
+private:
+    static const String m_action;
 };
 
 class CommandWatchdog final : public Command
 {
 public:
     CommandWatchdog() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
+    bool acknowledge_receipt() override;
+    bool execute() override;
+
+private:
+    static const String m_action;
 };
 
 class CommandInvalid final : public Command
 {
 public:
     CommandInvalid() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
+    bool acknowledge_receipt() override;
+    bool execute() override;
+
+private:
+    static const String m_action;
 };
 
 class CommandUnknown final : public Command
 {
 public:
     CommandUnknown() = default;
-    bool acknowledge_command() override;
-    bool execute_command() override;
+    bool acknowledge_receipt() override;
+    bool execute() override;
+
+private:
+    static const String m_action;
+};
+
+class CommandNoOperate final : public Command
+{
+public:
+    CommandNoOperate() = default;
+    bool acknowledge_receipt() override;
+    bool execute() override;
+
+private:
+    static const String m_action;
+};
+
+class CommandSendTestPacket final : public Command
+{
+public:
+    CommandSendTestPacket() = default;
+    bool acknowledge_receipt() override;
+    bool execute() override;
+
+private:
+    static const String m_action;
+};
+
+class CommandUnsetClock final : public Command
+{
+public:
+    CommandUnsetClock() = default;
+    bool acknowledge_receipt() override;
+    bool execute() override;
+
+private:
+    static const String m_action;
 };
 
 class CommandLogArguments final : public Command
 {
 public:
     explicit CommandLogArguments(const String arguments) : m_arguments{arguments} {};
-    bool acknowledge_command() override;
-    bool execute_command() override;
-    void clear_arguments() { m_arguments = ""; }
-    void arguments(const String arguments) { m_arguments += arguments; }
+    bool validate_arguments(const String tokens[], const size_t token_count);
+    bool load_data(const String tokens[], const size_t token_count);
+    bool acknowledge_receipt() override;
+    bool execute() override;
 
 private:
     String m_arguments;
+    static const String m_action;
 };

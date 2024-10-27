@@ -11,6 +11,49 @@
 #include "Commands.h"
 #include "log_utility.h"
 
+CommandSetClock CommandWarehouse::m_set_clock{DateTime(0, 0, 0, 0, 0, 0)};
+CommandBeaconSp CommandWarehouse::m_beacon_sp{0};
+CommandPicTimes CommandWarehouse::m_pic_times{DateTime(0, 0, 0, 0, 0, 0)};
+CommandSSDVTimes CommandWarehouse::m_SSDV_times{DateTime(0, 0, 0, 0, 0, 0)};
+CommandClearPayloadQueue CommandWarehouse::m_clear_payload_queue{};
+CommandReportT CommandWarehouse::m_report_t{};
+CommandGetPayloadQueue CommandWarehouse::m_get_payload_queue{};
+CommandGetTelemetry CommandWarehouse::m_get_telemetry{};
+CommandGetPower CommandWarehouse::m_get_power{};
+CommandGetComms CommandWarehouse::m_get_comms{};
+CommandGetBeaconInterval CommandWarehouse::m_get_beacon_interval{};
+CommandPayComms CommandWarehouse::m_pay_comms{};
+CommandTweeSlee CommandWarehouse::m_twee_slee{};
+CommandWatchdog CommandWarehouse::m_watchdog{};
+CommandInvalid CommandWarehouse::m_command_invalid{};
+CommandUnknown CommandWarehouse::m_command_unknown{};
+CommandNoOperate CommandWarehouse::m_no_operate{};
+CommandSendTestPacket CommandWarehouse::m_send_test_packet{};
+CommandUnsetClock CommandWarehouse::m_unset_clock{};
+CommandLogArguments CommandWarehouse::m_log_arguments{""};
+
+CommandWarehouse::CommandMap CommandWarehouse::command_description[]{
+    {"SetClock", &m_set_clock},
+    {"BeaconSp", &m_beacon_sp},
+    {"PicTimes", &m_pic_times},
+    {"SSDVTimes", &m_SSDV_times},
+    {"ClearPayloadQueue", &m_clear_payload_queue},
+    {"ReportT", &m_report_t},
+    {"GetPayloadQueue", &m_get_payload_queue},
+    {"GetTelemetry", &m_get_telemetry},
+    {"GetPower", &m_get_power},
+    {"GetComms", &m_get_comms},
+    {"GetBeaconInterval", &m_get_beacon_interval},
+    {"PayComms", &m_pay_comms},
+    {"TweeSlee", &m_twee_slee},
+    {"Watchdog", &m_watchdog},
+    {"Invalid", &m_command_invalid},
+    {"Unknown", &m_command_unknown},
+    {"NoOperate", &m_no_operate},
+    {"SendTestPacket", &m_send_test_packet},
+    {"UnsetClock", &m_unset_clock},
+    {"LogArguments", &m_log_arguments}};
+
 /**
  * @brief Return a command object
  *
@@ -19,185 +62,23 @@
  * @return Command* command object to be executed
  *
  */
+
 Command *CommandWarehouse::RetrieveCommand(const String tokens[], const size_t token_count)
 {
-    auto argument_count{token_count - 1};
-    if (tokens[0] == "SetClock")
+    for (const auto &entry : command_description)
     {
-        if (argument_count == 6)
+        if (tokens[0] == entry.command_name)
         {
-            auto tokens_are_digits = true;
-            for (size_t token = 1; token <= argument_count; ++token)
-                for (size_t index = 0; index < tokens[token].length(); ++index)
-                    if (!isDigit(tokens[token][index]))
-                        tokens_are_digits = false;
-            if (tokens_are_digits)
+            if (entry.command_pointer->validate_arguments(tokens, token_count))
             {
-                m_set_clock.time(DateTime(
-                    static_cast<uint16_t>(tokens[1].toInt()),
-                    static_cast<uint8_t>(tokens[2].toInt()),
-                    static_cast<uint8_t>(tokens[3].toInt()),
-                    static_cast<uint8_t>(tokens[4].toInt()),
-                    static_cast<uint8_t>(tokens[5].toInt()),
-                    static_cast<uint8_t>(tokens[6].toInt())));
-                return &m_set_clock;
+                entry.command_pointer->load_data(tokens, token_count);
+                return entry.command_pointer;
+            }
+            else
+            {
+                return &m_command_invalid;
             }
         }
-        return &m_command_invalid; // Wrong number of parameters or bad parameter
     }
-    else if (tokens[0] == "BeaconSp")
-    {
-        if (argument_count == 1)
-        {
-            auto token_is_digits = true;
-            for (size_t index = 0; index < tokens[1].length(); ++index)
-                if (!isDigit(tokens[1][index]))
-                    token_is_digits = false;
-            if (token_is_digits)
-                m_beacon_sp.seconds(tokens[1].toInt());
-                return &m_beacon_sp;
-        }
-        return &m_command_invalid; // Wrong number of parameters or bad parameter
-    }
-    else if (tokens[0] == "PicTimes")
-    {
-        if (argument_count == 6)
-        {
-            auto tokens_are_digits = true;
-            for (size_t token = 1; token <= argument_count; ++token)
-                for (size_t index = 0; index < tokens[token].length(); ++index)
-                    if (!isDigit(tokens[token][index]))
-                        tokens_are_digits = false;
-            if (tokens_are_digits)
-                m_pic_times.time(DateTime(
-                    static_cast<uint16_t>(tokens[1].toInt()),
-                    static_cast<uint8_t>(tokens[2].toInt()),
-                    static_cast<uint8_t>(tokens[3].toInt()),
-                    static_cast<uint8_t>(tokens[4].toInt()),
-                    static_cast<uint8_t>(tokens[5].toInt()),
-                    static_cast<uint8_t>(tokens[6].toInt())));
-                return &m_pic_times;
-        }
-        return &m_command_invalid; // Wrong number of parameters or bad parameter
-    }
-    else if (tokens[0] == "SSDVTimes")
-    {
-        if (argument_count == 6)
-        {
-            auto tokens_are_digits = true;
-            for (size_t token = 1; token <= argument_count; ++token)
-                for (size_t index = 0; index < tokens[token].length(); ++index)
-                    if (!isDigit(tokens[token][index]))
-                        tokens_are_digits = false;
-            if (tokens_are_digits)
-                m_SSDV_times.time(DateTime(
-                    static_cast<uint16_t>(tokens[1].toInt()),
-                    static_cast<uint8_t>(tokens[2].toInt()),
-                    static_cast<uint8_t>(tokens[3].toInt()),
-                    static_cast<uint8_t>(tokens[4].toInt()),
-                    static_cast<uint8_t>(tokens[5].toInt()),
-                    static_cast<uint8_t>(tokens[6].toInt())));
-                return &m_SSDV_times;
-        }
-        return &m_command_invalid; // Wrong number of parameters or bad parameter
-    }
-    else if (tokens[0] == "ClearPayloadQueue")
-    {
-        if (argument_count == 0)
-            return &m_clear_payload_queue;
-        else
-            return &m_command_invalid; // Wrong number of parameters
-    }
-    else if (tokens[0] == "UnsetClock")
-    {
-        if (argument_count == 0)
-            return &m_unset_clock;
-        else
-            return &m_command_invalid; // Wrong number of parameters
-    }
-    else if (tokens[0] == "ReportT")
-    {
-        if (argument_count == 0)
-            return &m_report_t;
-        else
-            return &m_command_invalid; // Wrong number of parameters
-    }
-    else if (tokens[0] == "GetPayloadQueue")
-    {
-        if (argument_count == 0)
-            return &m_get_payload_queue;
-        else
-            return &m_command_invalid; // Wrong number of parameters
-    }
-    else if (tokens[0] == "GetTelemetry")
-    {
-        if (argument_count == 0)
-            return &m_get_telemetry;
-        else
-            return &m_command_invalid; // Wrong number of parameters
-    }
-    else if (tokens[0] == "GetPower")
-    {
-        if (argument_count == 0)
-            return &m_get_power;
-        else
-            return &m_command_invalid; // Wrong number of parameters
-    }
-    else if (tokens[0] == "GetComms")
-    {
-        if (argument_count == 0)
-            return &m_get_comms;
-        else
-            return &m_command_invalid; // Wrong number of parameters
-    }
-    else if (tokens[0] == "GetBeaconInterval")
-    {
-        if (argument_count == 0)
-            return &m_get_beacon_interval;
-        else
-            return &m_command_invalid; // Wrong number of parameters
-    }
-    else if (tokens[0] == "NoOperate")
-    {
-        if (argument_count == 0)
-            return &m_no_operate;
-        else
-            return &m_command_invalid; // Wrong number of parameters
-    }
-    else if (tokens[0] == "SendTestPacket")
-    {
-        if (argument_count == 0)
-            return &m_send_test_packet;
-        else
-            return &m_command_invalid; // Wrong number of parameters
-    }
-    else if (tokens[0] == "PayComms")
-    {
-        if (argument_count == 0)
-            return &m_pay_comms;
-        else
-            return &m_command_invalid; // Wrong number of parameters
-    }
-    else if (tokens[0] == "TweeSlee")
-    {
-        if (argument_count == 0)
-            return &m_twee_slee;
-        else
-            return &m_command_invalid; // Wrong number of parameters
-    }
-    else if (tokens[0] == "Watchdog")
-    {
-        if (argument_count == 0)
-            return &m_watchdog;
-        else
-            return &m_command_invalid; // Wrong number of parameters
-    }
-    else if (tokens[0] == "LogArguments")
-    {
-        m_log_arguments.clear_arguments();
-        for (size_t token = 1; token <= argument_count; ++token)
-                m_log_arguments.arguments(tokens[token] + " ");
-        return &m_log_arguments;
-    }
-    return &m_command_unknown; // Unknown command
+    return &m_command_unknown;
 }

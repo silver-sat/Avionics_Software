@@ -63,10 +63,10 @@ bool CommandProcessor::check_for_command()
             }
             Log.verboseln("Command signature is valid");
             Command *command{get_command(command_string.substring(signature_length_hex_ascii))};
-            command->acknowledge_command();
+            command->acknowledge_receipt();
             Log.traceln("Command acknowledged");
 
-            if (command->execute_command())
+            if (command->execute())
             {
                 Log.traceln("Executed (%l executed, %l failed)", ++m_successful_commands, m_failed_commands);
                 return true;
