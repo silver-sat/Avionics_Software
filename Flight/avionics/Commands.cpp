@@ -339,6 +339,10 @@ bool CommandBeaconSp::validate_arguments(const String tokens[], const size_t tok
         return false;
     }
     long seconds = tokens[1].toInt();
+    if (seconds == 0)
+    {
+        return true; // zero turns off the beacon
+    }
     if (seconds < minimum_beacon_interval || seconds > maximum_beacon_interval)
     {
         return false;
