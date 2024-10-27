@@ -75,17 +75,141 @@
 #include "PayloadBoard.h"
 #include "CommandProcessor.h"
 
+const String Command::m_action{"Command"};
+const String CommandSetClock::m_action{"Set realtime clock"};
+const String CommandBeaconSp::m_action{"Set beacon spacing"};
+const String CommandPicTimes::m_action{"Set picture times"};
+const String CommandSSDVTimes::m_action{"Set SSDV times"};
+const String CommandClearPayloadQueue::m_action{"Clear payload queue"};
+const String CommandReportT::m_action{"Report time"};
+const String CommandGetPayloadQueue::m_action{"Get payload queue"};
+const String CommandGetTelemetry::m_action{"Get telemetry"};
+const String CommandGetPower::m_action{"Get power data"};
+const String CommandGetComms::m_action{"Get radio status"};
+const String CommandGetBeaconInterval::m_action{"Get beacon interval"};
+const String CommandPayComms::m_action{"Payload communications"};
+const String CommandTweeSlee::m_action{"Payload halt"};
+const String CommandWatchdog::m_action{"Force watchdog reset"};
+const String CommandInvalid::m_action{"Invalid command"};
+const String CommandUnknown::m_action{"Unknown command"};
+const String CommandNoOperate::m_action{"No operate"};
+const String CommandSendTestPacket::m_action{"Send test packet"};
+const String CommandUnsetClock::m_action{"Unset reatime clock"};
+const String CommandLogArguments::m_action{"Log command arguments"};
+
+/**
+ * @brief Helper function to determine if a string is numeric
+ *
+ */
+
+bool is_numeric(const String &str)
+{
+    for (auto i{0}; i < str.length(); i++)
+    {
+        if (!isdigit(str[i]))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * @brief Helper function to validate a date
+ *
+ */
+
+bool is_valid_time(const String tokens[], const size_t token_count)
+{
+    if (token_count != 7)
+    {
+        return false;
+    }
+    if (!is_numeric(tokens[1]) || !is_numeric(tokens[2]) || !is_numeric(tokens[3]) || !is_numeric(tokens[4]) || !is_numeric(tokens[5]) || !is_numeric(tokens[6]))
+    {
+        return false;
+    }
+    long year = tokens[1].toInt();
+    if (year < minimum_valid_year || year > maximum_valid_year)
+    {
+        return false;
+    }
+    long month = tokens[2].toInt();
+    if (month < 1 || month > 12)
+    {
+        return false;
+    }
+    // todo: add check for valid days in month
+    long day = tokens[3].toInt();
+    if (day < 1 || day > 31)
+    {
+        return false;
+    }
+    long hour = tokens[4].toInt();
+    if (hour < 0 || hour > 23)
+    {
+        return false;
+    }
+    long minute = tokens[5].toInt();
+    if (minute < 0 || minute > 59)
+    {
+        return false;
+    }
+    long second = tokens[6].toInt();
+    if (second < 0 || second > 59)
+    {
+        return false;
+    }
+    return true;
+}
+
+/**
+ * @brief Validate the arguments
+ *
+ * @return true successful
+ * @return false error
+ *
+ * Validate arguments
+ *
+ */
+
+bool Command::validate_arguments(const String tokens[], const size_t token_count)
+{
+    Log.traceln("Validating %d arguments for: %s", token_count - 1, tokens[0].c_str());
+    if (token_count < 2)
+    {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * @brief Load command data
+ *
+ * @return true successful
+ * @return false error
+ *
+ * Load command data
+ *
+ */
+
+bool Command::load_data(const String tokens[], const size_t token_count)
+{
+    Log.traceln("No data to load for: %s", tokens[0].c_str());
+    return true;
+}
+
 /**
  * @brief Acknowledge the command
  *
  * @return true successful
  * @return false error
  *
- * Called by each command type to send acknowledgment to the ground
+ * Send acknowledgement to the ground
  *
  */
 
-bool Command::acknowledge_command()
+bool Command::acknowledge_receipt()
 {
     Log.traceln("Acknowledging command");
     extern CommandProcessor command_processor;
@@ -103,7 +227,7 @@ bool Command::acknowledge_command()
  *
  */
 
-bool Command::negative_acknowledge_command()
+bool Command::negative_acknowledge_receipt()
 {
     Log.traceln("Negative acknowledging command");
     extern CommandProcessor command_processor;
@@ -121,9 +245,45 @@ bool Command::negative_acknowledge_command()
  *
  */
 
-bool Command::execute_command()
+bool Command::execute()
 {
     Log.traceln("Executing command");
+    return true;
+}
+
+/**
+ * @brief Validate arguments for SetClock command
+ *
+ * @return true successful
+ * @return false error
+ *
+ */
+
+bool CommandSetClock::validate_arguments(const String tokens[], const size_t token_count)
+{
+    Log.traceln("Validating %d arguments for: %s", token_count - 1, tokens[0].c_str());
+    return is_valid_time(tokens, token_count);
+}
+
+/**
+ * @brief Load data for SetClock command
+ *
+ * @return true successful
+ * @return false error
+ *
+ */
+
+bool CommandSetClock::load_data(const String tokens[], const size_t token_count)
+{
+    Log.traceln("Loading data for: %s", tokens[0].c_str());
+    uint16_t year = static_cast<uint16_t>(tokens[1].toInt());
+    uint8_t month = static_cast<uint8_t>(tokens[2].toInt());
+    uint8_t day = static_cast<uint8_t>(tokens[3].toInt());
+    uint8_t hour = static_cast<uint8_t>(tokens[4].toInt());
+    uint8_t minute = static_cast<uint8_t>(tokens[5].toInt());
+    uint8_t second = static_cast<uint8_t>(tokens[6].toInt());
+
+    m_time = DateTime{year, month, day, hour, minute, second};
     return true;
 }
 
@@ -134,9 +294,9 @@ bool Command::execute_command()
  * @return false error
  */
 
-bool CommandSetClock::acknowledge_command()
+bool CommandSetClock::acknowledge_receipt()
 {
-    auto status{Command::acknowledge_command()};
+    auto status{Command::acknowledge_receipt()};
     Log.verboseln("SetClock: Year: %d Month: %d Day: %d Hour: %d Minute: %d Second: %d",
                   m_time.year(), m_time.month(), m_time.day(), m_time.hour(), m_time.minute(), m_time.second());
     return status;
@@ -149,14 +309,60 @@ bool CommandSetClock::acknowledge_command()
  * @return false error
  */
 
-bool CommandSetClock::execute_command()
+bool CommandSetClock::execute()
 {
-    auto status{Command::execute_command()};
+    auto status{Command::execute()};
     Log.verboseln("SetClock");
     extern AvionicsBoard avionics;
     status = avionics.set_external_rtc(m_time) && status;
     auto response{Response{status ? "SRC" : "ERR"}};
     return response.send() && status;
+}
+
+/**
+ * @brief Validate arguments for BeaconSp command
+ *
+ * @return true successful
+ * @return false error
+ *
+ */
+
+bool CommandBeaconSp::validate_arguments(const String tokens[], const size_t token_count)
+{
+    Log.traceln("Validating %d arguments for: %s", token_count - 1, tokens[0].c_str());
+    if (token_count != 2)
+    {
+        return false;
+    }
+    if (!is_numeric(tokens[1]))
+    {
+        return false;
+    }
+    long seconds = tokens[1].toInt();
+    if (seconds == 0)
+    {
+        return true; // zero turns off the beacon
+    }
+    if (seconds < minimum_beacon_interval || seconds > maximum_beacon_interval)
+    {
+        return false;
+    }
+    return true;
+}
+
+/**
+ * @brief Load data for BeaconSp command
+ *
+ * @return true successful
+ * @return false error
+ *
+ */
+
+bool CommandBeaconSp::load_data(const String tokens[], const size_t token_count)
+{
+    Log.traceln("Loading data for: %s", tokens[0].c_str());
+    m_seconds = tokens[1].toInt();
+    return true;
 }
 
 /**
@@ -166,9 +372,9 @@ bool CommandSetClock::execute_command()
  * @return false error
  */
 
-bool CommandBeaconSp::acknowledge_command()
+bool CommandBeaconSp::acknowledge_receipt()
 {
-    auto status{Command::acknowledge_command()};
+    auto status{Command::acknowledge_receipt()};
     Log.verboseln("BeaconSp: %d seconds", m_seconds);
     return status;
 }
@@ -180,14 +386,48 @@ bool CommandBeaconSp::acknowledge_command()
  * @return false error
  */
 
-bool CommandBeaconSp::execute_command()
+bool CommandBeaconSp::execute()
 {
-    auto status{Command::execute_command()};
+    auto status{Command::execute()};
     Log.verboseln("BeaconSp");
     extern AvionicsBoard avionics;
     status = avionics.set_beacon_interval(m_seconds) && status;
     auto response{Response{status ? "SBI" : "ERR"}};
     return response.send() && status;
+}
+
+/**
+ * @brief Valiidate arguments for PicTimes command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandPicTimes::validate_arguments(const String tokens[], const size_t token_count)
+{
+    Log.traceln("Validating %d arguments for: %s", token_count - 1, tokens[0].c_str());
+    return is_valid_time(tokens, token_count);
+}
+
+/**
+ * @brief Load data for PicTimes command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandPicTimes::load_data(const String tokens[], const size_t token_count)
+{
+    Log.traceln("Loading data for: %s", tokens[0].c_str());
+    uint16_t year = static_cast<uint16_t>(tokens[1].toInt());
+    uint8_t month = static_cast<uint8_t>(tokens[2].toInt());
+    uint8_t day = static_cast<uint8_t>(tokens[3].toInt());
+    uint8_t hour = static_cast<uint8_t>(tokens[4].toInt());
+    uint8_t minute = static_cast<uint8_t>(tokens[5].toInt());
+    uint8_t second = static_cast<uint8_t>(tokens[6].toInt());
+
+    m_time = DateTime{year, month, day, hour, minute, second};
+    return true;
 }
 
 /**
@@ -197,9 +437,9 @@ bool CommandBeaconSp::execute_command()
  * @return false error
  */
 
-bool CommandPicTimes::acknowledge_command()
+bool CommandPicTimes::acknowledge_receipt()
 {
-    auto status{Command::acknowledge_command()};
+    auto status{Command::acknowledge_receipt()};
     Log.verboseln("PicTimes: Year: %d Month: %d Day: %d Hour: %d Minute: %d Second: %d",
                   m_time.year(), m_time.month(), m_time.day(), m_time.hour(), m_time.minute(), m_time.second());
     return status;
@@ -212,14 +452,48 @@ bool CommandPicTimes::acknowledge_command()
  * @return false error
  */
 
-bool CommandPicTimes::execute_command()
+bool CommandPicTimes::execute()
 {
-    auto status{Command::execute_command()};
+    auto status{Command::execute()};
     Log.verboseln("PicTimes");
     extern AvionicsBoard avionics;
     status = avionics.set_picture_time(m_time) && status;
     auto response{Response{status ? "SPT" : "ERR"}};
     return response.send() && status;
+}
+
+/**
+ * @brief Validate arguments for SSDVTimes command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandSSDVTimes::validate_arguments(const String tokens[], const size_t token_count)
+{
+    Log.traceln("Validating %d arguments for: %s", token_count - 1, tokens[0].c_str());
+    return is_valid_time(tokens, token_count);
+}
+
+/**
+ * @brief Load data for SSDVTimes command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandSSDVTimes::load_data(const String tokens[], const size_t token_count)
+{
+    Log.traceln("Loading data for: %s", tokens[0].c_str());
+    uint16_t year = static_cast<uint16_t>(tokens[1].toInt());
+    uint8_t month = static_cast<uint8_t>(tokens[2].toInt());
+    uint8_t day = static_cast<uint8_t>(tokens[3].toInt());
+    uint8_t hour = static_cast<uint8_t>(tokens[4].toInt());
+    uint8_t minute = static_cast<uint8_t>(tokens[5].toInt());
+    uint8_t second = static_cast<uint8_t>(tokens[6].toInt());
+
+    m_time = DateTime{year, month, day, hour, minute, second};
+    return true;
 }
 
 /**
@@ -229,9 +503,9 @@ bool CommandPicTimes::execute_command()
  * @return false error
  */
 
-bool CommandSSDVTimes::acknowledge_command()
+bool CommandSSDVTimes::acknowledge_receipt()
 {
-    auto status{Command::acknowledge_command()};
+    auto status{Command::acknowledge_receipt()};
     Log.verboseln("SSDVTimes: Year: %d Month: %d Day: %d Hour: %d Minute: %d Second: %d",
                   m_time.year(), m_time.month(), m_time.day(), m_time.hour(), m_time.minute(), m_time.second());
     return status;
@@ -244,9 +518,9 @@ bool CommandSSDVTimes::acknowledge_command()
  * @return false error
  */
 
-bool CommandSSDVTimes::execute_command()
+bool CommandSSDVTimes::execute()
 {
-    auto status{Command::execute_command()};
+    auto status{Command::execute()};
     Log.verboseln("SSDVTimes");
     extern AvionicsBoard avionics;
     status = avionics.set_SSDV_time(m_time) && status;
@@ -261,9 +535,9 @@ bool CommandSSDVTimes::execute_command()
  * @return false error
  */
 
-bool CommandClearPayloadQueue::acknowledge_command()
+bool CommandClearPayloadQueue::acknowledge_receipt()
 {
-    auto status{Command::acknowledge_command()};
+    auto status{Command::acknowledge_receipt()};
     Log.verboseln("ClearPayloadQueue");
     return status;
 }
@@ -275,44 +549,13 @@ bool CommandClearPayloadQueue::acknowledge_command()
  * @return false error
  */
 
-bool CommandClearPayloadQueue::execute_command()
+bool CommandClearPayloadQueue::execute()
 {
-    auto status{Command::execute_command()};
+    auto status{Command::execute()};
     Log.verboseln("ClearPayloadQueue");
     extern AvionicsBoard avionics;
     status = avionics.clear_payload_queue() && status;
     auto response{Response{status ? "CPQ" : "ERR"}};
-    return response.send() && status;
-}
-
-/**
- * @brief Acknowledge UnsetClock command
- *
- * @return true successful
- * @return false error
- */
-
-bool CommandUnsetClock::acknowledge_command()
-{
-    auto status{Command::acknowledge_command()};
-    Log.verboseln("Unset clock");
-    return status;
-}
-
-/**
- * @brief Execute UnsetClock command
- *
- * @return true successful
- * @return false error
- */
-
-bool CommandUnsetClock::execute_command()
-{
-    auto status{Command::execute_command()};
-    Log.verboseln("Unset clock");
-    extern AvionicsBoard avionics;
-    status = avionics.unset_clock() && status;
-    auto response{Response{status ? "URC" : "ERR"}};
     return response.send() && status;
 }
 
@@ -323,9 +566,9 @@ bool CommandUnsetClock::execute_command()
  * @return false error
  */
 
-bool CommandReportT::acknowledge_command()
+bool CommandReportT::acknowledge_receipt()
 {
-    auto status{Command::acknowledge_command()};
+    auto status{Command::acknowledge_receipt()};
     Log.verboseln("ReportT");
     return status;
 }
@@ -337,9 +580,9 @@ bool CommandReportT::acknowledge_command()
  * @return false error
  */
 
-bool CommandReportT::execute_command()
+bool CommandReportT::execute()
 {
-    auto status{Command::execute_command()};
+    auto status{Command::execute()};
     Log.verboseln("ReportT");
     extern AvionicsBoard avionics;
     auto timestamp{avionics.get_timestamp()};
@@ -356,9 +599,9 @@ bool CommandReportT::execute_command()
  * @return false error
  */
 
-bool CommandGetPayloadQueue::acknowledge_command()
+bool CommandGetPayloadQueue::acknowledge_receipt()
 {
-    auto status{Command::acknowledge_command()};
+    auto status{Command::acknowledge_receipt()};
     Log.verboseln("GetPayloadfQueue");
     return status;
 }
@@ -370,9 +613,9 @@ bool CommandGetPayloadQueue::acknowledge_command()
  * @return false error
  */
 
-bool CommandGetPayloadQueue::execute_command()
+bool CommandGetPayloadQueue::execute()
 {
-    auto status{Command::execute_command()};
+    auto status{Command::execute()};
     Log.verboseln("GetPayloadQueue");
     extern AvionicsBoard avionics;
     auto response{Response{status ? ("GPQ " + String{avionics.get_payload_queue_size()} + " entries in queue") : "ERR"}};
@@ -394,9 +637,9 @@ bool CommandGetPayloadQueue::execute_command()
  * @return false error
  */
 
-bool CommandGetTelemetry::acknowledge_command()
+bool CommandGetTelemetry::acknowledge_receipt()
 {
-    auto status{Command::acknowledge_command()};
+    auto status{Command::acknowledge_receipt()};
     Log.verboseln("GetTelemetry");
     return status;
 }
@@ -408,9 +651,9 @@ bool CommandGetTelemetry::acknowledge_command()
  * @return false error
  */
 
-bool CommandGetTelemetry::execute_command()
+bool CommandGetTelemetry::execute()
 {
-    auto status{Command::execute_command()};
+    auto status{Command::execute()};
     Log.verboseln("GetTelemetry");
     extern AvionicsBoard avionics;
     auto response{Response{status ? ("GTY" + avionics.get_telemetry()) : "ERR"}};
@@ -424,9 +667,9 @@ bool CommandGetTelemetry::execute_command()
  * @return false error
  */
 
-bool CommandGetPower::acknowledge_command()
+bool CommandGetPower::acknowledge_receipt()
 {
-    auto status{Command::acknowledge_command()};
+    auto status{Command::acknowledge_receipt()};
     Log.verboseln("GetPower");
     return status;
 }
@@ -438,9 +681,9 @@ bool CommandGetPower::acknowledge_command()
  * @return false error
  */
 
-bool CommandGetPower::execute_command()
+bool CommandGetPower::execute()
 {
-    auto status{Command::execute_command()};
+    auto status{Command::execute()};
     Log.verboseln("GetPower");
     extern PowerBoard power;
     auto response{Response{status ? ("GPW" + power.get_detail()) : "ERR"}};
@@ -454,9 +697,9 @@ bool CommandGetPower::execute_command()
  * @return false error
  */
 
-bool CommandGetComms::acknowledge_command()
+bool CommandGetComms::acknowledge_receipt()
 {
-    auto status{Command::acknowledge_command()};
+    auto status{Command::acknowledge_receipt()};
     Log.verboseln("GetComms");
     return status;
 }
@@ -468,9 +711,9 @@ bool CommandGetComms::acknowledge_command()
  * @return false error
  */
 
-bool CommandGetComms::execute_command()
+bool CommandGetComms::execute()
 {
-    auto status{Command::execute_command()};
+    auto status{Command::execute()};
     Log.verboseln("GetComms");
     Log.traceln("Requesting radio status");
     Message message(Message::get_status, "");
@@ -484,9 +727,9 @@ bool CommandGetComms::execute_command()
  * @return false error
  */
 
-bool CommandGetBeaconInterval::acknowledge_command()
+bool CommandGetBeaconInterval::acknowledge_receipt()
 {
-    auto status{Command::acknowledge_command()};
+    auto status{Command::acknowledge_receipt()};
     Log.verboseln("GetBeaconInterval");
     return status;
 }
@@ -498,70 +741,12 @@ bool CommandGetBeaconInterval::acknowledge_command()
  * @return false error
  */
 
-bool CommandGetBeaconInterval::execute_command()
+bool CommandGetBeaconInterval::execute()
 {
-    auto status{Command::execute_command()};
+    auto status{Command::execute()};
     Log.verboseln("GetBeaconInterval");
     extern AvionicsBoard avionics;
     auto response{Response{status ? ("GBI " + avionics.get_beacon_interval()) : "ERR"}};
-    return response.send() && status;
-}
-
-/**
- * @brief Acknowledge NoOperate command
- *
- * @return true successful
- * @return false error
- */
-
-bool CommandNoOperate::acknowledge_command()
-{
-    auto status{Command::acknowledge_command()};
-    Log.verboseln("NoOperate");
-    return status;
-}
-
-/**
- * @brief Execute NoOperate command
- *
- * @return true successful
- * @return false error
- */
-
-bool CommandNoOperate::execute_command()
-{
-    auto status{Command::execute_command()};
-    Log.verboseln("NoOperate");
-    auto response{Response{status ? "NOP" : "ERR"}};
-    return response.send() && status;
-}
-
-/**
- * @brief Acknowledge SendTestPacket command
- *
- * @return true successful
- * @return false error
- */
-
-bool CommandSendTestPacket::acknowledge_command()
-{
-    auto status{Command::acknowledge_command()};
-    Log.verboseln("SendTestPacket");
-    return status;
-}
-
-/**
- * @brief Execute SendTestPacket command
- *
- * @return true successful
- * @return false error
- */
-
-bool CommandSendTestPacket::execute_command()
-{
-    auto status{Command::execute_command()};
-    Log.verboseln("SendTestPacket");
-    auto response{Response{status ? "STP test packet" : "ERR"}};
     return response.send() && status;
 }
 
@@ -572,9 +757,9 @@ bool CommandSendTestPacket::execute_command()
  * @return false error
  */
 
-bool CommandPayComms::acknowledge_command()
+bool CommandPayComms::acknowledge_receipt()
 {
-    auto status{Command::acknowledge_command()};
+    auto status{Command::acknowledge_receipt()};
     Log.verboseln("PayComms");
     return status;
 }
@@ -586,9 +771,9 @@ bool CommandPayComms::acknowledge_command()
  * @return false error
  */
 
-bool CommandPayComms::execute_command()
+bool CommandPayComms::execute()
 {
-    auto status{Command::execute_command()};
+    auto status{Command::execute()};
     Log.verboseln("PayComms");
     extern PayloadBoard payload;
     status = payload.communicate() && status;
@@ -603,9 +788,9 @@ bool CommandPayComms::execute_command()
  * @return false error
  */
 
-bool CommandTweeSlee::acknowledge_command()
+bool CommandTweeSlee::acknowledge_receipt()
 {
-    auto status{Command::acknowledge_command()};
+    auto status{Command::acknowledge_receipt()};
     Log.verboseln("TweeSlee");
     return status;
 }
@@ -617,9 +802,9 @@ bool CommandTweeSlee::acknowledge_command()
  * @return false error
  */
 
-bool CommandTweeSlee::execute_command()
+bool CommandTweeSlee::execute()
 {
-    auto status{Command::execute_command()};
+    auto status{Command::execute()};
     Log.verboseln("TweeSlee");
     auto response{Response{status ? "TSL" : "ERR"}};
     status = response.send() && status;
@@ -638,9 +823,9 @@ bool CommandTweeSlee::execute_command()
  * @return false error
  */
 
-bool CommandWatchdog::acknowledge_command()
+bool CommandWatchdog::acknowledge_receipt()
 {
-    auto status{Command::acknowledge_command()};
+    auto status{Command::acknowledge_receipt()};
     Log.verboseln("Watchdog");
     return status;
 }
@@ -651,9 +836,9 @@ bool CommandWatchdog::acknowledge_command()
  * @return true successful
  * @return false error
  */
-bool CommandWatchdog::execute_command()
+bool CommandWatchdog::execute()
 {
-    auto status{Command::execute_command()};
+    auto status{Command::execute()};
     Log.verboseln("Watchdog");
     auto response{Response{status ? "WDG" : "ERR"}};
     status = response.send() && status;
@@ -668,9 +853,9 @@ bool CommandWatchdog::execute_command()
  * @return false error
  */
 
-bool CommandInvalid::acknowledge_command()
+bool CommandInvalid::acknowledge_receipt()
 {
-    Command::negative_acknowledge_command();
+    Command::negative_acknowledge_receipt();
     Log.verboseln("Invalid");
     return false;
 }
@@ -681,7 +866,7 @@ bool CommandInvalid::acknowledge_command()
  * @return false error
  */
 
-bool CommandInvalid::execute_command()
+bool CommandInvalid::execute()
 {
     Log.errorln("Cannot execute invalid command");
     return false;
@@ -693,9 +878,9 @@ bool CommandInvalid::execute_command()
  * @return false error
  */
 
-bool CommandUnknown::acknowledge_command()
+bool CommandUnknown::acknowledge_receipt()
 {
-    Command::negative_acknowledge_command();
+    Command::negative_acknowledge_receipt();
     Log.verboseln("Unknown");
     return false;
 }
@@ -706,10 +891,136 @@ bool CommandUnknown::acknowledge_command()
  * @return false error
  */
 
-bool CommandUnknown::execute_command()
+bool CommandUnknown::execute()
 {
     Log.errorln("Cannot execute unknown command");
     return false;
+}
+
+/**
+ * @brief Acknowledge NoOperate command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandNoOperate::acknowledge_receipt()
+{
+    auto status{Command::acknowledge_receipt()};
+    Log.verboseln("NoOperate");
+    return status;
+}
+
+/**
+ * @brief Execute NoOperate command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandNoOperate::execute()
+{
+    auto status{Command::execute()};
+    Log.verboseln("NoOperate");
+    auto response{Response{status ? "NOP" : "ERR"}};
+    return response.send() && status;
+}
+
+/**
+ * @brief Acknowledge SendTestPacket command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandSendTestPacket::acknowledge_receipt()
+{
+    auto status{Command::acknowledge_receipt()};
+    Log.verboseln("SendTestPacket");
+    return status;
+}
+
+/**
+ * @brief Execute SendTestPacket command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandSendTestPacket::execute()
+{
+    auto status{Command::execute()};
+    Log.verboseln("SendTestPacket");
+    auto response{Response{status ? "STP test packet" : "ERR"}};
+    return response.send() && status;
+}
+
+/**
+ * @brief Acknowledge UnsetClock command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandUnsetClock::acknowledge_receipt()
+{
+    auto status{Command::acknowledge_receipt()};
+    Log.verboseln("Unset clock");
+    return status;
+}
+
+/**
+ * @brief Execute UnsetClock command
+ *
+ * @return true successful
+ * @return false error
+ */
+
+bool CommandUnsetClock::execute()
+{
+    auto status{Command::execute()};
+    Log.verboseln("Unset clock");
+    extern AvionicsBoard avionics;
+    status = avionics.unset_clock() && status;
+    auto response{Response{status ? "URC" : "ERR"}};
+    return response.send() && status;
+}
+
+/**
+ * @brief Validate the arguments
+ *
+ * @return true successful
+ * @return false error
+ *
+ * Validate arguments
+ *
+ */
+
+bool CommandLogArguments::validate_arguments(const String tokens[], const size_t token_count)
+{
+    Log.traceln("%d arguments for: %s", token_count - 1, tokens[0].c_str());
+    return true;
+}
+
+/**
+ * @brief Load command data
+ *
+ * @return true successful
+ * @return false error
+ *
+ * Load command data
+ *
+ */
+
+bool CommandLogArguments::load_data(const String tokens[], const size_t token_count)
+{
+    Log.traceln("Loading data for: %s", tokens[0].c_str());
+    m_arguments = "";
+    for (auto i{1}; i < token_count; ++i)
+    {
+        m_arguments += tokens[i] + " ";
+    }
+    return true;
 }
 
 /**
@@ -719,9 +1030,9 @@ bool CommandUnknown::execute_command()
  * @return false error
  */
 
-bool CommandLogArguments::acknowledge_command()
+bool CommandLogArguments::acknowledge_receipt()
 {
-    auto status{Command::acknowledge_command()};
+    auto status{Command::acknowledge_receipt()};
     Log.verboseln("LogArguments");
     return status;
 }
@@ -733,9 +1044,9 @@ bool CommandLogArguments::acknowledge_command()
  * @return false error
  */
 
-bool CommandLogArguments::execute_command()
+bool CommandLogArguments::execute()
 {
-    auto status{Command::execute_command()};
+    auto status{Command::execute()};
     Log.verboseln("LogArguments");
     Log.traceln("Logging command arguments: %s", m_arguments.c_str());
     return status;

@@ -17,33 +17,35 @@
 class CommandWarehouse final
 {
 public:
-    /**
-     * @brief Return a Command object
-     *
-     */
-
     Command *RetrieveCommand(const String tokens[], const size_t token_count);
 
 private:
+    static CommandSetClock m_set_clock;
+    static CommandBeaconSp m_beacon_sp;
+    static CommandPicTimes m_pic_times;
+    static CommandSSDVTimes m_SSDV_times;
+    static CommandClearPayloadQueue m_clear_payload_queue;
+    static CommandReportT m_report_t;
+    static CommandGetPayloadQueue m_get_payload_queue;
+    static CommandGetTelemetry m_get_telemetry;
+    static CommandGetPower m_get_power;
+    static CommandGetComms m_get_comms;
+    static CommandGetBeaconInterval m_get_beacon_interval;
+    static CommandPayComms m_pay_comms;
+    static CommandTweeSlee m_twee_slee;
+    static CommandWatchdog m_watchdog;
+    static CommandInvalid m_command_invalid;
+    static CommandUnknown m_command_unknown;
+    static CommandNoOperate m_no_operate;
+    static CommandSendTestPacket m_send_test_packet;
+    static CommandUnsetClock m_unset_clock;
+    static CommandLogArguments m_log_arguments;
 
-    CommandSetClock m_set_clock{DateTime(0, 0, 0, 0, 0, 0)};
-    CommandBeaconSp m_beacon_sp{0};
-    CommandPicTimes m_pic_times{DateTime(0, 0, 0, 0, 0, 0)};
-    CommandSSDVTimes m_SSDV_times{DateTime(0, 0, 0, 0, 0, 0)};
-    CommandClearPayloadQueue m_clear_payload_queue{};
-    CommandUnsetClock m_unset_clock{};
-    CommandReportT m_report_t{};
-    CommandGetPayloadQueue m_get_payload_queue{};
-    CommandGetTelemetry m_get_telemetry{};
-    CommandGetPower m_get_power{};
-    CommandGetComms m_get_comms{};
-    CommandGetBeaconInterval m_get_beacon_interval{};
-    CommandNoOperate m_no_operate{};
-    CommandSendTestPacket m_send_test_packet{};
-    CommandPayComms m_pay_comms{};
-    CommandTweeSlee m_twee_slee{};
-    CommandWatchdog m_watchdog{};
-    CommandInvalid m_command_invalid{};
-    CommandUnknown m_command_unknown{};
-    CommandLogArguments m_log_arguments{""};
+    struct CommandMap
+    {
+        const String command_name;
+        Command *const command_pointer;
+    };
+
+    static CommandMap command_description[];
 };
