@@ -59,21 +59,18 @@ read_length = 256
 acknowledgment_pattern = re.compile(rb"^ACK \d+$")
 negative_acknowledgment_pattern = re.compile(rb"^NACK \d+$")
 no_response_pattern = re.compile(rb"")
-invalid_command_pattern = re.compile(rb"^ERR INV$")
+error_pattern = re.compile(rb"^ERR$")
 set_clock_pattern = re.compile(rb"^RES SRC$")
 beacon_sp_pattern = re.compile(rb"^RES SBI$")
 pic_times_pattern = re.compile(rb"^RES SPT$")
 SSDV_times_pattern = re.compile(rb"^RES SST$")
 clear_payload_queue_pattern = re.compile(rb"^RES CPQ$")
-unset_clock_pattern = re.compile(rb"^RES URC$")
 reportt_pattern = re.compile(
     rb"^RES GRC 20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)$"
 )
-get_payload_queue_pattern = re.compile(
+# todo: update payload queue pattern
+payload_queue_pattern = re.compile(
     rb"^RES GPQ [0-5]( 20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)){0,5}$"
-)
-get_SSDV_times_pattern = re.compile(
-    rb"^RES GST [0-5]( 20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)){0,5}$"
 )
 telemetry_pattern = re.compile(
     rb"(^RES GTY AX -?\d+\.\d+)( AY -?\d+\.\d+)( AZ -?\d+\.\d+)( RX -?\d+\.\d+)( RY -?\d+\.\d+)( RZ -?\d+\.\d+)( T -?\d+\.\d+)$"
@@ -84,13 +81,16 @@ power_pattern = re.compile(
 # todo: update radio status pattern
 comms_pattern = re.compile(b"^RES GRS .*$")
 beacon_interval_pattern = re.compile(rb"^RES GBI \d+$")
-no_operation_pattern = re.compile(rb"^RES NOP$")
-test_packet_pattern = re.compile(rb"^RES STP test packet$")
 pay_comms_pattern = re.compile(rb"^RES PYC$")
 twee_slee_pattern = re.compile(rb"^RES TSL$")
 watchdog_pattern = re.compile(rb"^RES WDG$")
-modify_mode_pattern = re.compile(rb"^RES RMM \d$")
-error_pattern = re.compile(rb"^ERR$")
+invalid_command_pattern = re.compile(rb"^ERR INV$")
+unknown_command_pattern = re.compile(rb"^ERR UNK$")
+no_operation_pattern = re.compile(rb"^RES NOP$")
+test_packet_pattern = re.compile(rb"^RES STP test packet$")
+unset_clock_pattern = re.compile(rb"^RES URC$")
+background_rssi_pattern = re.compile(rb"^RES RMM \d$")
+current_rssi_pattern = re.compile(rb"^RES RMM \d$")
 
 # Sequence counter for commands
 

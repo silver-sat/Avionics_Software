@@ -54,19 +54,12 @@ class TestCommands:
         message = common.collect_message()
         assert common.verify_message(message, common.reportt_pattern)
 
-    def test_unset_clock(self):
-        common.issue(f"UnsetClock")
-        message = common.collect_message()
-        assert common.verify_message(message, common.acknowledgment_pattern)
-        message = common.collect_message()
-        assert common.verify_message(message, common.unset_clock_pattern)
-
     def test_get_payload_queue(self):
         common.issue("GetPayloadQueue")
         message = common.collect_message()
         assert common.verify_message(message, common.acknowledgment_pattern)
         message = common.collect_message()
-        assert common.verify_message(message, common.get_payload_queue_pattern)
+        assert common.verify_message(message, common.payload_queue_pattern)
 
     def test_get_telemetry(self):
         common.issue("GetTelemetry")
@@ -96,20 +89,6 @@ class TestCommands:
         message = common.collect_message()
         assert common.verify_message(message, common.beacon_interval_pattern)
 
-    def test_no_operate(self):
-        common.issue("NoOperate")
-        message = common.collect_message()
-        assert common.verify_message(message, common.acknowledgment_pattern)
-        message = common.collect_message()
-        assert common.verify_message(message, common.no_operation_pattern)
-
-    def test_send_packet(self):
-        common.issue("SendTestPacket")
-        message = common.collect_message()
-        assert common.verify_message(message, common.acknowledgment_pattern)
-        message = common.collect_message()
-        assert common.verify_message(message, common.test_packet_pattern)
-
     def test_paycomms(self):
         common.issue("PayComms")
         message = common.collect_message()
@@ -131,5 +110,40 @@ class TestCommands:
         message = common.collect_message()
         assert common.verify_message(message, common.watchdog_pattern)
 
+    def test_no_operate(self):
+        common.issue("NoOperate")
+        message = common.collect_message()
+        assert common.verify_message(message, common.acknowledgment_pattern)
+        message = common.collect_message()
+        assert common.verify_message(message, common.no_operation_pattern)
+
+    def test_send_packet(self):
+        common.issue("SendTestPacket")
+        message = common.collect_message()
+        assert common.verify_message(message, common.acknowledgment_pattern)
+        message = common.collect_message()
+        assert common.verify_message(message, common.test_packet_pattern)
+
+    def test_unset_clock(self):
+        common.issue(f"UnsetClock")
+        message = common.collect_message()
+        assert common.verify_message(message, common.acknowledgment_pattern)
+        message = common.collect_message()
+        assert common.verify_message(message, common.unset_clock_pattern)
+
     def test_log_arguments(self):
         common.issue("LogArguments 1 2 3 4 5 6 7 8 9 10")
+
+    def test_background_rssi(self):
+        common.issue("BackgroundRSSI 30")
+        message = common.collect_message()
+        assert common.verify_message(message, common.acknowledgment_pattern)
+        message = common.collect_message()
+        assert common.verify_message(message, common.background_rssi_pattern)
+
+    def test_current_rssi(self):
+        common.issue("CurrentRSSI")
+        message = common.collect_message()
+        assert common.verify_message(message, common.acknowledgment_pattern)
+        message = common.collect_message()
+        assert common.verify_message(message, common.current_rssi_pattern)
