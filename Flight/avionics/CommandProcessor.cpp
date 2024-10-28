@@ -29,6 +29,60 @@ constexpr auto sequence_length_hex_ascii{sequence_length * 2};                  
 constexpr auto signature_length_hex_ascii{hmac_length_hex_ascii + salt_length_hex_ascii + sequence_length_hex_ascii}; /**< Signature length as hex ascii */
 
 /**
+ * @brief Helper function to determine if a string is hexadecimal digits
+ *
+ */
+
+bool is_hex(const String &str)
+{
+    for (auto i{0}; i < str.length(); i++)
+    {
+        if (!isxdigit(str[i]))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * @brief Helper function for hexadecimal text to binary conversion
+ *
+ * @param input a character in one of the ranges 0-9, a-f, or A-F
+ * @return int value of the hexadecimal representation (e.g. "A" == 0x0A, decimal 10)
+ */
+
+int char2int(const char input)
+{
+    if (input >= '0' && input <= '9')
+        return input - '0';
+    if (input >= 'A' && input <= 'F')
+        return input - 'A' + 10;
+    if (input >= 'a' && input <= 'f')
+        return input - 'a' + 10;
+    return 0; // invalid data
+};
+
+/**
+ * @brief Convert hexadecimal text representation to binary values
+ *
+ * @param src hexadecimal representation
+ * @param target binary values
+ */
+
+// This function assumes src to be a zero terminated sanitized string with
+// an even number of [0-9a-f] characters and target to be sufficiently large
+
+void hex2bin(const char *src, byte *target)
+{
+    while (*src && src[1])
+    {
+        *(target++) = (char2int(*src) << 4) + char2int(src[1]);
+        src += 2;
+    }
+};
+
+/**
  * @brief Check for command from Radio Board
  *
  * @return true no command or successful
@@ -81,19 +135,36 @@ bool CommandProcessor::check_for_command()
         // Local response
         case LOCAL_FRAME:
         {
-            if (command_string.length() > RES.length() && command_string.startsWith(RES))
+            if (command_string.startsWith(RES))
             {
-                auto response_type{command_string[RES.length()]};
-                auto radio_data{command_string.substring(RES.length() + 1)};
+                auto response_type_end{command_string.indexOf(' ', RES.length() + 1)};
+                auto response_type_char{command_string.substring(RES.length() + 1, response_type_end)};
+                auto response_type_length{response_type_char.length()};
+                if (!is_hex(response_type_char) || response_type_char.length() != 2)
+                {
+                    Log.errorln("Invalid response type");
+                    return false;
+                }
+                if ((response_type_length % 2) != 0)
+                {
+                    response_type_char = "0" + response_type_char; // hex2bin requires even number of characters
+                }
+                byte response_type{};
+                hex2bin(response_type_char.c_str(), &response_type);
+                auto radio_data{command_string.substring(RES.length() + 1 + response_type_length + 1)};
                 Log.verboseln("Response type: %X, content: %s", response_type, radio_data.c_str());
                 switch (response_type)
                 {
                 case GET_RADIO_STATUS:
                     Response{"GRS " + radio_data}.send();
                     break;
-                case MODIFY_MODE:
-                    Response{"RMM " + radio_data}.send();
-                    break;
+                // todo: should these be sent to the ground
+                // case BACKGROUND_RSSI:
+                //     Response{"RBR " + radio_data}.send();
+                //     break;
+                // case CURRENT_RSSI:
+                //     Response{"RCR " + radio_data}.send();
+                //     break;
                 default:
                     break;
                 }
@@ -117,43 +188,6 @@ bool CommandProcessor::check_for_command()
     }
     return true;
 }
-
-/**
- * @brief Helper function for hexadecimal text to binary conversion
- *
- * @param input a character in one of the ranges 0-9, a-f, or A-F
- * @return int value of the hexadecimal representation (e.g. "A" == 0x0A, decimal 10)
- */
-
-int char2int(const char input)
-{
-    if (input >= '0' && input <= '9')
-        return input - '0';
-    if (input >= 'A' && input <= 'F')
-        return input - 'A' + 10;
-    if (input >= 'a' && input <= 'f')
-        return input - 'a' + 10;
-    return 0; // invalid data
-};
-
-/**
- * @brief Convert hexadecimal text representation to binary values
- *
- * @param src hexadecimal representation
- * @param target binary values
- */
-
-// This function assumes src to be a zero terminated sanitized string with
-// an even number of [0-9a-f] characters and target to be sufficiently large
-
-void hex2bin(const char *src, byte *target)
-{
-    while (*src && src[1])
-    {
-        *(target++) = (char2int(*src) << 4) + char2int(src[1]);
-        src += 2;
-    }
-};
 
 /**
  * @brief Validate command signature

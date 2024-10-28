@@ -2,8 +2,10 @@
  * @author Lee A. Congdon (lee@silversat.org)
  * @brief SilverSat commands
  *
- * This file implements the acknowledge and execute methods for all Command objects.
- * Virtual dispatch is used to select the correct methods based on command type. Each
+ * This file implements the methods for all Command objects.
+ * Virtual dispatch is used to select the correct methods based on command type.
+ * Each derived command validates arguments. If data is required, it is loaded.
+ * Each
  * derived Command calls the base class acknowledgement method for sending an
  * acknowledgement to the ground and the base execute method for logging. Abbreviations
  * listed are used in command responses.
@@ -42,6 +44,8 @@
  * STP: SendTestPacket: reply with test message
  * URC: UnsetClock: change the realtime clock status to unset for testing
  * LCA: LogArguments: Log command arguments with no acknowledgement or response
+ * RBR: BackgroundRSSI: radio background RSSI
+ * RCR: CurrentRSSI: radio current RSSI
  *
  * Deprecated commands:
  *
@@ -49,19 +53,15 @@
  * s_call_sig deprecated
  * g_call_sig, deprecated
  * GPC: GetPhotos: reply with number of photos (Avionics Board does not have an accurate count)
- * RMF: ModifyFrequency: modify radio frequency
  * RAF: AdjustFrequency: adjust radio frequency temporarily
  * RTC: TransmitCW: transmit carrier wave
- * RBR: BackgroundRSSI: radio background rssi
- * RCR: CurrentRSSI: radio current rssi
  * RST: SweepTransmitter: radio sweep transmitter
  * RSR: SweepReceiver: radio sweep receiver
  * RQR: QueryRegister: radio query register
  * CPT: ClearPicTimes: replaced with ClearPayloadQueue
  * GPT: GetPicTimes: replaced with GetPayloadQueue
- * RMM: ModifyMode: modify radio mode, moved to Radio Test branch
-
-
+ * RMF: ModifyFrequency: modify radio frequency
+ * RMM: ModifyMode: modify radio mode
  *
  */
 
@@ -96,6 +96,8 @@ const String CommandNoOperate::m_action{"No operate"};
 const String CommandSendTestPacket::m_action{"Send test packet"};
 const String CommandUnsetClock::m_action{"Unset reatime clock"};
 const String CommandLogArguments::m_action{"Log command arguments"};
+const String CommandBackgroundRSSI::m_action("Report background RSSI");
+const String CommandCurrentRSSI::m_action("Report current RSSI");
 
 /**
  * @brief Helper function to determine if a string is numeric
@@ -173,9 +175,9 @@ bool is_valid_time(const String tokens[], const size_t token_count)
  *
  */
 
-bool Command::validate_arguments(const String tokens[], const size_t token_count)
+bool Command::validate_arguments(const String tokens[], const size_t token_count) const
 {
-    Log.traceln("Validating %d arguments for: %s", token_count - 1, tokens[0].c_str());
+    Log.traceln("Validating %d argument(s) for: %s", token_count - 1, tokens[0].c_str());
     if (token_count < 2)
     {
         return true;
@@ -209,7 +211,7 @@ bool Command::load_data(const String tokens[], const size_t token_count)
  *
  */
 
-bool Command::acknowledge_receipt()
+bool Command::acknowledge_receipt() const
 {
     Log.traceln("Acknowledging command");
     extern CommandProcessor command_processor;
@@ -227,7 +229,7 @@ bool Command::acknowledge_receipt()
  *
  */
 
-bool Command::negative_acknowledge_receipt()
+bool Command::negative_acknowledge_receipt() const
 {
     Log.traceln("Negative acknowledging command");
     extern CommandProcessor command_processor;
@@ -245,7 +247,7 @@ bool Command::negative_acknowledge_receipt()
  *
  */
 
-bool Command::execute()
+bool Command::execute() const
 {
     Log.traceln("Executing command");
     return true;
@@ -259,9 +261,9 @@ bool Command::execute()
  *
  */
 
-bool CommandSetClock::validate_arguments(const String tokens[], const size_t token_count)
+bool CommandSetClock::validate_arguments(const String tokens[], const size_t token_count) const
 {
-    Log.traceln("Validating %d arguments for: %s", token_count - 1, tokens[0].c_str());
+    Log.traceln("Validating %d argument(s) for: %s", token_count - 1, tokens[0].c_str());
     return is_valid_time(tokens, token_count);
 }
 
@@ -294,7 +296,7 @@ bool CommandSetClock::load_data(const String tokens[], const size_t token_count)
  * @return false error
  */
 
-bool CommandSetClock::acknowledge_receipt()
+bool CommandSetClock::acknowledge_receipt() const
 {
     auto status{Command::acknowledge_receipt()};
     Log.verboseln("SetClock: Year: %d Month: %d Day: %d Hour: %d Minute: %d Second: %d",
@@ -309,7 +311,7 @@ bool CommandSetClock::acknowledge_receipt()
  * @return false error
  */
 
-bool CommandSetClock::execute()
+bool CommandSetClock::execute() const
 {
     auto status{Command::execute()};
     Log.verboseln("SetClock");
@@ -327,9 +329,9 @@ bool CommandSetClock::execute()
  *
  */
 
-bool CommandBeaconSp::validate_arguments(const String tokens[], const size_t token_count)
+bool CommandBeaconSp::validate_arguments(const String tokens[], const size_t token_count) const
 {
-    Log.traceln("Validating %d arguments for: %s", token_count - 1, tokens[0].c_str());
+    Log.traceln("Validating %d argument(s) for: %s", token_count - 1, tokens[0].c_str());
     if (token_count != 2)
     {
         return false;
@@ -372,7 +374,7 @@ bool CommandBeaconSp::load_data(const String tokens[], const size_t token_count)
  * @return false error
  */
 
-bool CommandBeaconSp::acknowledge_receipt()
+bool CommandBeaconSp::acknowledge_receipt() const
 {
     auto status{Command::acknowledge_receipt()};
     Log.verboseln("BeaconSp: %d seconds", m_seconds);
@@ -386,7 +388,7 @@ bool CommandBeaconSp::acknowledge_receipt()
  * @return false error
  */
 
-bool CommandBeaconSp::execute()
+bool CommandBeaconSp::execute() const
 {
     auto status{Command::execute()};
     Log.verboseln("BeaconSp");
@@ -403,9 +405,9 @@ bool CommandBeaconSp::execute()
  * @return false error
  */
 
-bool CommandPicTimes::validate_arguments(const String tokens[], const size_t token_count)
+bool CommandPicTimes::validate_arguments(const String tokens[], const size_t token_count) const
 {
-    Log.traceln("Validating %d arguments for: %s", token_count - 1, tokens[0].c_str());
+    Log.traceln("Validating %d argument(s) for: %s", token_count - 1, tokens[0].c_str());
     return is_valid_time(tokens, token_count);
 }
 
@@ -437,7 +439,7 @@ bool CommandPicTimes::load_data(const String tokens[], const size_t token_count)
  * @return false error
  */
 
-bool CommandPicTimes::acknowledge_receipt()
+bool CommandPicTimes::acknowledge_receipt() const
 {
     auto status{Command::acknowledge_receipt()};
     Log.verboseln("PicTimes: Year: %d Month: %d Day: %d Hour: %d Minute: %d Second: %d",
@@ -452,7 +454,7 @@ bool CommandPicTimes::acknowledge_receipt()
  * @return false error
  */
 
-bool CommandPicTimes::execute()
+bool CommandPicTimes::execute() const
 {
     auto status{Command::execute()};
     Log.verboseln("PicTimes");
@@ -469,9 +471,9 @@ bool CommandPicTimes::execute()
  * @return false error
  */
 
-bool CommandSSDVTimes::validate_arguments(const String tokens[], const size_t token_count)
+bool CommandSSDVTimes::validate_arguments(const String tokens[], const size_t token_count) const
 {
-    Log.traceln("Validating %d arguments for: %s", token_count - 1, tokens[0].c_str());
+    Log.traceln("Validating %d argument(s) for: %s", token_count - 1, tokens[0].c_str());
     return is_valid_time(tokens, token_count);
 }
 
@@ -503,7 +505,7 @@ bool CommandSSDVTimes::load_data(const String tokens[], const size_t token_count
  * @return false error
  */
 
-bool CommandSSDVTimes::acknowledge_receipt()
+bool CommandSSDVTimes::acknowledge_receipt() const
 {
     auto status{Command::acknowledge_receipt()};
     Log.verboseln("SSDVTimes: Year: %d Month: %d Day: %d Hour: %d Minute: %d Second: %d",
@@ -518,7 +520,7 @@ bool CommandSSDVTimes::acknowledge_receipt()
  * @return false error
  */
 
-bool CommandSSDVTimes::execute()
+bool CommandSSDVTimes::execute() const
 {
     auto status{Command::execute()};
     Log.verboseln("SSDVTimes");
@@ -535,7 +537,7 @@ bool CommandSSDVTimes::execute()
  * @return false error
  */
 
-bool CommandClearPayloadQueue::acknowledge_receipt()
+bool CommandClearPayloadQueue::acknowledge_receipt() const
 {
     auto status{Command::acknowledge_receipt()};
     Log.verboseln("ClearPayloadQueue");
@@ -549,7 +551,7 @@ bool CommandClearPayloadQueue::acknowledge_receipt()
  * @return false error
  */
 
-bool CommandClearPayloadQueue::execute()
+bool CommandClearPayloadQueue::execute() const
 {
     auto status{Command::execute()};
     Log.verboseln("ClearPayloadQueue");
@@ -566,7 +568,7 @@ bool CommandClearPayloadQueue::execute()
  * @return false error
  */
 
-bool CommandReportT::acknowledge_receipt()
+bool CommandReportT::acknowledge_receipt() const
 {
     auto status{Command::acknowledge_receipt()};
     Log.verboseln("ReportT");
@@ -580,7 +582,7 @@ bool CommandReportT::acknowledge_receipt()
  * @return false error
  */
 
-bool CommandReportT::execute()
+bool CommandReportT::execute() const
 {
     auto status{Command::execute()};
     Log.verboseln("ReportT");
@@ -599,7 +601,7 @@ bool CommandReportT::execute()
  * @return false error
  */
 
-bool CommandGetPayloadQueue::acknowledge_receipt()
+bool CommandGetPayloadQueue::acknowledge_receipt() const
 {
     auto status{Command::acknowledge_receipt()};
     Log.verboseln("GetPayloadfQueue");
@@ -613,7 +615,7 @@ bool CommandGetPayloadQueue::acknowledge_receipt()
  * @return false error
  */
 
-bool CommandGetPayloadQueue::execute()
+bool CommandGetPayloadQueue::execute() const
 {
     auto status{Command::execute()};
     Log.verboseln("GetPayloadQueue");
@@ -622,7 +624,6 @@ bool CommandGetPayloadQueue::execute()
     status = response.send() && status;
     for (auto i{0}; i < avionics.get_payload_queue_size(); i++)
     {
-
         String element = String{i} + " " + avionics.m_payload_queue[i].time.timestamp() + " " + PayloadQueue::activity_name(avionics.m_payload_queue[i].type);
         auto response{Response{status ? ("GPQ " + element) : "ERR"}};
         status = response.send() && status;
@@ -637,7 +638,7 @@ bool CommandGetPayloadQueue::execute()
  * @return false error
  */
 
-bool CommandGetTelemetry::acknowledge_receipt()
+bool CommandGetTelemetry::acknowledge_receipt() const
 {
     auto status{Command::acknowledge_receipt()};
     Log.verboseln("GetTelemetry");
@@ -651,7 +652,7 @@ bool CommandGetTelemetry::acknowledge_receipt()
  * @return false error
  */
 
-bool CommandGetTelemetry::execute()
+bool CommandGetTelemetry::execute() const
 {
     auto status{Command::execute()};
     Log.verboseln("GetTelemetry");
@@ -667,7 +668,7 @@ bool CommandGetTelemetry::execute()
  * @return false error
  */
 
-bool CommandGetPower::acknowledge_receipt()
+bool CommandGetPower::acknowledge_receipt() const
 {
     auto status{Command::acknowledge_receipt()};
     Log.verboseln("GetPower");
@@ -681,7 +682,7 @@ bool CommandGetPower::acknowledge_receipt()
  * @return false error
  */
 
-bool CommandGetPower::execute()
+bool CommandGetPower::execute() const
 {
     auto status{Command::execute()};
     Log.verboseln("GetPower");
@@ -697,7 +698,7 @@ bool CommandGetPower::execute()
  * @return false error
  */
 
-bool CommandGetComms::acknowledge_receipt()
+bool CommandGetComms::acknowledge_receipt() const
 {
     auto status{Command::acknowledge_receipt()};
     Log.verboseln("GetComms");
@@ -711,7 +712,7 @@ bool CommandGetComms::acknowledge_receipt()
  * @return false error
  */
 
-bool CommandGetComms::execute()
+bool CommandGetComms::execute() const
 {
     auto status{Command::execute()};
     Log.verboseln("GetComms");
@@ -727,7 +728,7 @@ bool CommandGetComms::execute()
  * @return false error
  */
 
-bool CommandGetBeaconInterval::acknowledge_receipt()
+bool CommandGetBeaconInterval::acknowledge_receipt() const
 {
     auto status{Command::acknowledge_receipt()};
     Log.verboseln("GetBeaconInterval");
@@ -741,7 +742,7 @@ bool CommandGetBeaconInterval::acknowledge_receipt()
  * @return false error
  */
 
-bool CommandGetBeaconInterval::execute()
+bool CommandGetBeaconInterval::execute() const
 {
     auto status{Command::execute()};
     Log.verboseln("GetBeaconInterval");
@@ -757,7 +758,7 @@ bool CommandGetBeaconInterval::execute()
  * @return false error
  */
 
-bool CommandPayComms::acknowledge_receipt()
+bool CommandPayComms::acknowledge_receipt() const
 {
     auto status{Command::acknowledge_receipt()};
     Log.verboseln("PayComms");
@@ -771,7 +772,7 @@ bool CommandPayComms::acknowledge_receipt()
  * @return false error
  */
 
-bool CommandPayComms::execute()
+bool CommandPayComms::execute() const
 {
     auto status{Command::execute()};
     Log.verboseln("PayComms");
@@ -788,7 +789,7 @@ bool CommandPayComms::execute()
  * @return false error
  */
 
-bool CommandTweeSlee::acknowledge_receipt()
+bool CommandTweeSlee::acknowledge_receipt() const
 {
     auto status{Command::acknowledge_receipt()};
     Log.verboseln("TweeSlee");
@@ -802,7 +803,7 @@ bool CommandTweeSlee::acknowledge_receipt()
  * @return false error
  */
 
-bool CommandTweeSlee::execute()
+bool CommandTweeSlee::execute() const
 {
     auto status{Command::execute()};
     Log.verboseln("TweeSlee");
@@ -823,7 +824,7 @@ bool CommandTweeSlee::execute()
  * @return false error
  */
 
-bool CommandWatchdog::acknowledge_receipt()
+bool CommandWatchdog::acknowledge_receipt() const
 {
     auto status{Command::acknowledge_receipt()};
     Log.verboseln("Watchdog");
@@ -836,7 +837,7 @@ bool CommandWatchdog::acknowledge_receipt()
  * @return true successful
  * @return false error
  */
-bool CommandWatchdog::execute()
+bool CommandWatchdog::execute() const
 {
     auto status{Command::execute()};
     Log.verboseln("Watchdog");
@@ -853,7 +854,7 @@ bool CommandWatchdog::execute()
  * @return false error
  */
 
-bool CommandInvalid::acknowledge_receipt()
+bool CommandInvalid::acknowledge_receipt() const
 {
     Command::negative_acknowledge_receipt();
     Log.verboseln("Invalid");
@@ -866,7 +867,7 @@ bool CommandInvalid::acknowledge_receipt()
  * @return false error
  */
 
-bool CommandInvalid::execute()
+bool CommandInvalid::execute() const
 {
     Log.errorln("Cannot execute invalid command");
     return false;
@@ -878,7 +879,7 @@ bool CommandInvalid::execute()
  * @return false error
  */
 
-bool CommandUnknown::acknowledge_receipt()
+bool CommandUnknown::acknowledge_receipt() const
 {
     Command::negative_acknowledge_receipt();
     Log.verboseln("Unknown");
@@ -891,7 +892,7 @@ bool CommandUnknown::acknowledge_receipt()
  * @return false error
  */
 
-bool CommandUnknown::execute()
+bool CommandUnknown::execute() const
 {
     Log.errorln("Cannot execute unknown command");
     return false;
@@ -904,7 +905,7 @@ bool CommandUnknown::execute()
  * @return false error
  */
 
-bool CommandNoOperate::acknowledge_receipt()
+bool CommandNoOperate::acknowledge_receipt() const
 {
     auto status{Command::acknowledge_receipt()};
     Log.verboseln("NoOperate");
@@ -918,7 +919,7 @@ bool CommandNoOperate::acknowledge_receipt()
  * @return false error
  */
 
-bool CommandNoOperate::execute()
+bool CommandNoOperate::execute() const
 {
     auto status{Command::execute()};
     Log.verboseln("NoOperate");
@@ -933,7 +934,7 @@ bool CommandNoOperate::execute()
  * @return false error
  */
 
-bool CommandSendTestPacket::acknowledge_receipt()
+bool CommandSendTestPacket::acknowledge_receipt() const
 {
     auto status{Command::acknowledge_receipt()};
     Log.verboseln("SendTestPacket");
@@ -947,7 +948,7 @@ bool CommandSendTestPacket::acknowledge_receipt()
  * @return false error
  */
 
-bool CommandSendTestPacket::execute()
+bool CommandSendTestPacket::execute() const
 {
     auto status{Command::execute()};
     Log.verboseln("SendTestPacket");
@@ -962,7 +963,7 @@ bool CommandSendTestPacket::execute()
  * @return false error
  */
 
-bool CommandUnsetClock::acknowledge_receipt()
+bool CommandUnsetClock::acknowledge_receipt() const
 {
     auto status{Command::acknowledge_receipt()};
     Log.verboseln("Unset clock");
@@ -976,7 +977,7 @@ bool CommandUnsetClock::acknowledge_receipt()
  * @return false error
  */
 
-bool CommandUnsetClock::execute()
+bool CommandUnsetClock::execute() const
 {
     auto status{Command::execute()};
     Log.verboseln("Unset clock");
@@ -996,7 +997,7 @@ bool CommandUnsetClock::execute()
  *
  */
 
-bool CommandLogArguments::validate_arguments(const String tokens[], const size_t token_count)
+bool CommandLogArguments::validate_arguments(const String tokens[], const size_t token_count) const
 {
     Log.traceln("%d arguments for: %s", token_count - 1, tokens[0].c_str());
     return true;
@@ -1030,7 +1031,7 @@ bool CommandLogArguments::load_data(const String tokens[], const size_t token_co
  * @return false error
  */
 
-bool CommandLogArguments::acknowledge_receipt()
+bool CommandLogArguments::acknowledge_receipt() const
 {
     auto status{Command::acknowledge_receipt()};
     Log.verboseln("LogArguments");
@@ -1044,10 +1045,116 @@ bool CommandLogArguments::acknowledge_receipt()
  * @return false error
  */
 
-bool CommandLogArguments::execute()
+bool CommandLogArguments::execute() const
 {
     auto status{Command::execute()};
     Log.verboseln("LogArguments");
     Log.traceln("Logging command arguments: %s", m_arguments.c_str());
     return status;
+}
+
+/**
+ * @brief Validate the arguments for BackgroundRSSI command
+ *
+ * @return true successful
+ * @return false error
+ *
+ */
+
+bool CommandBackgroundRSSI::validate_arguments(const String tokens[], const size_t token_count) const
+{
+    Log.traceln("Validating %d argument(s) for: %s", token_count - 1, tokens[0].c_str());
+    if (token_count != 2)
+    {
+        return false;
+    }
+    if (!is_numeric(tokens[1]))
+    {
+        return false;
+    }
+    long seconds = tokens[1].toInt();
+    if (seconds < minimum_background_rssi_interval || seconds > maximum_background_rssi_interval)
+    {
+        return false;
+    }
+    return true;
+}
+
+/**
+ * @brief Load data for BackgroundRSSI command
+ *
+ * @return true successful
+ * @return false error
+ *
+ */
+
+bool CommandBackgroundRSSI::load_data(const String tokens[], const size_t token_count)
+{
+    Log.traceln("Loading data for: %s", tokens[0].c_str());
+    m_seconds = tokens[1].toInt();
+    return true;
+}
+
+/**
+ * @brief Acknowledge BackgroundRSSI command
+ *
+ * @return true successful
+ * @return false error
+ *
+ */
+
+bool CommandBackgroundRSSI::acknowledge_receipt() const
+{
+    auto status{Command::acknowledge_receipt()};
+    Log.verboseln("BackgroundRSSI: %d seconds", m_seconds);
+    return status;
+}
+
+/**
+ * @brief Execute BackgroundRSSI command
+ *
+ * @return true successful
+ * @return false error
+ *
+ */
+
+bool CommandBackgroundRSSI::execute() const
+{
+    auto status{Command::execute()};
+    Log.verboseln("BackgroundRSSI");
+    Log.traceln("Requesting background RSSI for %d seconds", m_seconds);
+    Message message(Message::background_rssi, m_seconds);
+    return message.send() && status;
+}
+
+/**
+ * @brief Acknowledge CurrentRSSI command
+ * 
+ * @return true successful
+ * @return false error
+ * 
+ */
+
+bool CommandCurrentRSSI::acknowledge_receipt() const
+{
+    auto status{Command::acknowledge_receipt()};
+    Log.verboseln("CurrentRSSI");
+    return status;
+}
+
+/**
+ * @brief Execute CurrentRSSI command
+ * 
+ * @return true successful
+ * @return false error
+ * 
+ */ 
+
+bool CommandCurrentRSSI::execute() const
+{
+    auto status{Command::execute()};
+    Log.verboseln("CurrentRSSI");
+    Log.traceln("Requesting current RSSI");
+    Message message(Message::current_rssi, "");
+    return message.send() && status;
 }

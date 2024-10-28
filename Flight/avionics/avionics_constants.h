@@ -20,7 +20,7 @@ constexpr unsigned long seconds_to_milliseconds{1000}; /**< conversion factor fo
 constexpr unsigned long minutes_to_seconds{60};        /**< conversion factor for time in minutes @hideinitializer */
 constexpr unsigned long hours_to_minutes{60};          /**< conversion factor for time in hours @hideinitializer */
 constexpr unsigned long days_to_hours{24};             /**< conversion factor for time in days @hideinitializer */
-constexpr unsigned long weeks_to_days{7};             /**< conversion factor for time in weeks @hideinitializer */
+constexpr unsigned long weeks_to_days{7};              /**< conversion factor for time in weeks @hideinitializer */
 
 /**
  * @brief SAMD21 pin definitions
@@ -66,21 +66,20 @@ constexpr unsigned wait_for_i2c_device{20}; /**< wait for I2C device to become a
 
 /**
  * @brief Maximum size of command from Radio Board
- * 
+ *
  */
 
-constexpr size_t maximum_command_length{256};  /**< maximum characters in command */
-
+constexpr size_t maximum_command_length{256}; /**< maximum characters in command */
 
 /**
  * @brief KISS protocol constants
- * 
+ *
  */
 
-constexpr byte FEND{'\xC0'};                 /**< frame end */
-constexpr byte FESC{'\xDB'};                 /**< frame escape */
-constexpr byte TFEND{'\xDC'};                /**< transposed frame end */
-constexpr byte TFESC{'\xDD'};                /**< transposed frame escape */
+constexpr byte FEND{'\xC0'};  /**< frame end */
+constexpr byte FESC{'\xDB'};  /**< frame escape */
+constexpr byte TFEND{'\xDC'}; /**< transposed frame end */
+constexpr byte TFESC{'\xDD'}; /**< transposed frame escape */
 
 /**
  * @brief Local message content
@@ -105,17 +104,39 @@ constexpr byte HALT{'\x0A'};              /**< stop transmission */
 constexpr byte MODIFY_FREQUENCY{'\x0B'};  /**< change radio frequency */
 constexpr byte MODIFY_MODE{'\x0C'};       /**< change radio mode */
 constexpr byte TOGGLE_RADIO_5V{'\x0F'};   /**< Toggle radio 5v */
+constexpr byte BACKGROUND_RSSI{'\x18'};   /**< background RSSI */
+constexpr byte CURRENT_RSSI{'\x19'};      /**< current RSSI */
 
 /**
- * @brief Radio command parameter lengths
+ * @brief SilverSat defined KISS local command types as characters
  *
  */
 
-constexpr size_t mode_length{1}; /**< mode */
+const String LOCAL_FRAME_CHAR{"0"};       /**< local data frame */
+const String REMOTE_FRAME_CHAR{"A"};      /**< remote data frame */
+const String BEACON_CHAR{"7"};            /**< beacon */
+const String DIGITALIO_RELEASE_CHAR{"8"}; /**< deploy antenna in recovery mode */
+const String GET_RADIO_STATUS_CHAR{"9"};  /**< request radio status */
+const String HALT_CHAR{"A"};              /**< stop transmission */
+const String MODIFY_FREQUENCY_CHAR{"B"};  /**< change radio frequency */
+const String MODIFY_MODE_CHAR{"C"};       /**< change radio mode */
+const String TOGGLE_RADIO_5V_CHAR{"F"};   /**< Toggle radio 5v */
+const String BACKGROUND_RSSI_CHAR{"18"};  /**< background RSSI */
+const String CURRENT_RSSI_CHAR{"19"};     /**< current RSSI */
 
 /**
- * @brief Error code for frequency change
- * 
+ * @brief Radio test command
+ *
  */
 
-constexpr byte BELL{'\x07'}; /**< bell character */
+constexpr size_t background_RSSI_length{2}; /**< integration time in seconds */
+constexpr int minimum_background_rssi_interval{1} /**< minimum background RSSI interval */;
+constexpr int maximum_background_rssi_interval{60} /**< maximum background RSSI interval */;
+
+/**
+ * @brief Common UTF-8 characters
+ *
+ */
+
+constexpr byte BELL{'\x07'};  /**< bell character */
+constexpr byte SPACE('\x20'); /**< space character */

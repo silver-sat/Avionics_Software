@@ -14,7 +14,7 @@ import hmac
 
 ## port for command input and output
 
-COMMAND_PORT = "/tmp/radio"
+COMMAND_PORT = "/dev/tty.usbserial-A10MHKWZ"
 
 ## serial transmission speed
 
