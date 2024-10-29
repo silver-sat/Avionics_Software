@@ -110,7 +110,7 @@ bool RadioBoard::receive_frame()
     while (Serial1.available())
     {
         auto character{static_cast<char>(Serial1.read())};
-        Log.verboseln("Character received on Serial1 port: %C", character);
+        // Log.verboseln("Character received on Serial1 port: %C", character);
         switch (character)
         {
         case FEND:
