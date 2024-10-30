@@ -1122,7 +1122,7 @@ bool CommandBackgroundRSSI::execute() const
 {
     auto status{Command::execute()};
     Log.verboseln("BackgroundRSSI");
-    Log.traceln("Requesting background RSSI for %d seconds", m_seconds);
+    Log.traceln("Requesting background RSSI for %s seconds", m_seconds.c_str());
     Message message(Message::background_rssi, m_seconds);
     return message.send() && status;
 }
