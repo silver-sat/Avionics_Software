@@ -140,7 +140,7 @@ bool CommandProcessor::check_for_command()
                 auto response_type_end{command_string.indexOf(' ', RES.length() + 1)};
                 auto response_type_char{command_string.substring(RES.length() + 1, response_type_end)};
                 auto response_type_length{response_type_char.length()};
-                if (!is_hex(response_type_char) || response_type_char.length() != 2)
+                if (!is_hex(response_type_char) || response_type_char.length() < 1 || response_type_char.length() > 2)
                 {
                     Log.errorln("Invalid response type");
                     return false;
@@ -152,7 +152,14 @@ bool CommandProcessor::check_for_command()
                 byte response_type{};
                 hex2bin(response_type_char.c_str(), &response_type);
                 auto radio_data{command_string.substring(RES.length() + 1 + response_type_length + 1)};
-                Log.verboseln("Response type: %X, content: %s", response_type, radio_data.c_str());
+                if (radio_data.length() == 0)
+                {
+                    Log.verboseln("Response type: %X", response_type);
+                }
+                else
+                {
+                    Log.verboseln("Response type: %X, content: %s", response_type, radio_data.c_str());
+                }
                 switch (response_type)
                 {
                 case GET_RADIO_STATUS:
