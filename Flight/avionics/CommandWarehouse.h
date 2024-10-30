@@ -40,6 +40,8 @@ private:
     static CommandSendTestPacket m_send_test_packet;
     static CommandUnsetClock m_unset_clock;
     static CommandLogArguments m_log_arguments;
+    static CommandBackgroundRSSI m_background_RSSI;
+    static CommandCurrentRSSI m_current_RSSI;
 
     struct CommandMap
     {

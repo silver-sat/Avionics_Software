@@ -18,10 +18,10 @@
  *
  */
 
-constexpr uint32_t serial1_baud_rate{19200};                                                        /**< speed of serial1 connection @hideinitializer >**/
-constexpr unsigned long radio_delay{2 * seconds_to_milliseconds};                                   /**< Radio Board startup delay >**/
-constexpr long ground_contact_interval{7};                                                          /**< maximum days without ground contact for beacon @hideinitializer >**/
-constexpr unsigned long frequency_entry_timeout = 1 * minutes_to_seconds * seconds_to_milliseconds; /**< User frequency entry delay >**/
+constexpr uint32_t serial1_baud_rate{19200};                                                        /**< speed of serial1 connection @hideinitializer */
+constexpr unsigned long radio_delay{2 * seconds_to_milliseconds};                                   /**< Radio Board startup delay */
+constexpr long ground_contact_interval{7};                                                          /**< maximum days without ground contact for beacon @hideinitializer */
+constexpr unsigned long frequency_entry_timeout = 1 * minutes_to_seconds * seconds_to_milliseconds; /**< User frequency entry delay */
 
 /**
  * @brief Initialize the Radio Board
@@ -110,7 +110,7 @@ bool RadioBoard::receive_frame()
     while (Serial1.available())
     {
         auto character{static_cast<char>(Serial1.read())};
-        Log.verboseln("Character received on Serial1 port: %C", character);
+        // Log.verboseln("Character received on Serial1 port: %C", character);
         switch (character)
         {
         case FEND:

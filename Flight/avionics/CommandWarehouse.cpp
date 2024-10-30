@@ -31,6 +31,8 @@ CommandNoOperate CommandWarehouse::m_no_operate{};
 CommandSendTestPacket CommandWarehouse::m_send_test_packet{};
 CommandUnsetClock CommandWarehouse::m_unset_clock{};
 CommandLogArguments CommandWarehouse::m_log_arguments{""};
+CommandBackgroundRSSI CommandWarehouse::m_background_RSSI{"00"};
+CommandCurrentRSSI CommandWarehouse::m_current_RSSI{};
 
 CommandWarehouse::CommandMap CommandWarehouse::command_description[]{
     {"SetClock", &m_set_clock},
@@ -52,7 +54,10 @@ CommandWarehouse::CommandMap CommandWarehouse::command_description[]{
     {"NoOperate", &m_no_operate},
     {"SendTestPacket", &m_send_test_packet},
     {"UnsetClock", &m_unset_clock},
-    {"LogArguments", &m_log_arguments}};
+    {"LogArguments", &m_log_arguments},
+    {"BackgroundRSSI", &m_background_RSSI},
+    {"CurrentRSSI", &m_current_RSSI}
+};
 
 /**
  * @brief Return a command object
