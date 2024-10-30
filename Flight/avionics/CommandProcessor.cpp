@@ -158,13 +158,6 @@ bool CommandProcessor::check_for_command()
                 case GET_RADIO_STATUS:
                     Response{"GRS " + radio_data}.send();
                     break;
-                // todo: should these be sent to the ground
-                // case BACKGROUND_RSSI:
-                //     Response{"RBR " + radio_data}.send();
-                //     break;
-                // case CURRENT_RSSI:
-                //     Response{"RCR " + radio_data}.send();
-                //     break;
                 default:
                     break;
                 }
