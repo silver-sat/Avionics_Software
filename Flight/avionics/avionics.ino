@@ -89,8 +89,8 @@ void setup()
   Log.setShowLevel(false);
   Log.noticeln("Avionics software compiled %s at %s local time", __DATE__, __TIME__);
 
-  Log.warningln("Not for flight use.");
-  Log.warningln("Required change: remove prompt for sequence validation");
+  Log.warningln("Not for flight use");
+  Log.warningln("Required change: remove prompt for command sequence validation");
   Log.warningln("Required change: remove prompt for delay bypass");
   Log.warningln("Required change: turn off instrumentation");
   Log.noticeln("Initializing Avionics Process");
@@ -118,10 +118,12 @@ void setup()
   Log.noticeln("Antenna initialization completed");
 
   Log.noticeln("Setup complete");
-  Log.noticeln("Avionics Process accepting commands");
+  Log.noticeln("Avionics process accepting commands");
   avionics.service_watchdog();
 
   // Testing: test the devices and the boards
+
+  Log.noticeln("Testing satellite components");
 
   Log.noticeln("Verifying external realtime clock status");
   avionics.test_external_rtc();
@@ -144,7 +146,7 @@ void setup()
   Log.noticeln("Testing Antenna");
   antenna.test_antenna();
 
-  Log.noticeln("Initial testing complete, some tests continue");
+  Log.noticeln("Initial testing complete, Radio and Payload tests continue");
 
   loop_start_time = micros();
   display_start_time = millis();

@@ -85,7 +85,7 @@ float EPS_I::getTemperatureSensor1()
     temperature = static_cast<float>(value) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE;
   else
     temperature = static_cast<float>((((value >> 4) - 1) ^ 0xFFFF)) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE;
-  Log.verboseln("Temperature Sensor 1 is %F deg C", temperature);
+  Log.verboseln("Temperature sensor 1 is %F deg C", temperature);
   return temperature;
 }
 
@@ -104,7 +104,7 @@ float EPS_I::getTemperatureSensor2()
     temperature = static_cast<float>(value) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE;
   else
     temperature = static_cast<float>((((value >> 4) - 1) ^ 0xFFFF)) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE;
-  Log.verboseln("Temperature Sensor 2 is %F deg C", temperature);
+  Log.verboseln("Temperature sensor 2 is %F deg C", temperature);
   return temperature;
 }
 
@@ -123,7 +123,7 @@ float EPS_I::getTemperatureSensor3()
     temperature = static_cast<float>(value) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_POSITIVE;
   else
     temperature = static_cast<float>((((value >> 4) - 1) ^ 0xFFFF)) * GETTEMPERATURESINFO_TEMPERATURES_BATTERY_COEFFICIENT_NEGATIVE;
-  Log.verboseln("Temperature Sensor 3 is %F deg C", temperature);
+  Log.verboseln("Temperature sensor 3 is %F deg C", temperature);
   return temperature;
 }
 

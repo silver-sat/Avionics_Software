@@ -369,7 +369,7 @@ bool RadioBoard::get_frequency()
     String frequency_string = {""};
     extern AvionicsBoard avionics;
 
-    Serial.print("Enter the 9-digit frequency string (e.g., 123456789): ");
+    Serial.print("Enter the 9-digit Radio frequency (e.g., 433000000): ");
 
     while (millis() - start_time < frequency_entry_timeout)
     {
@@ -391,7 +391,9 @@ bool RadioBoard::get_frequency()
                 message.send();
                 message.send(); // send twice to make permanent change
                 String display_frequency{};
-                display_frequency += frequency_string.substring(0, 6);
+                display_frequency += frequency_string.substring(0, 3);
+                display_frequency += ".";
+                display_frequency += frequency_string.substring(3, 6);
                 display_frequency += ".";
                 display_frequency += frequency_string.substring(6, 9);
                 Log.noticeln("Frequency set to %s", display_frequency.c_str());

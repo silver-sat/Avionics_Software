@@ -536,10 +536,10 @@ bool AvionicsBoard::test_IMU()
   m_imu.get_temperature();
   if (!m_imu.is_stable())
   {
-    Log.errorln("IMU indicates instability");
+    Log.errorln("IMU indicates satellite is not stable");
     return false;
   }
-  Log.noticeln("IMU indicates stability");
+  Log.noticeln("IMU indicates satellite is stable");
   return true;
 }
 

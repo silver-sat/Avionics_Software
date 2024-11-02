@@ -23,7 +23,7 @@ bool Antenna::begin()
 {
     Log.traceln("Antenna initialzing");
     get_bypass();
-    Log.verboseln("Opening antenna device at address %X", ANTENNA_I2C_ADDRESS);
+    Log.verboseln("Opening antenna device");
     if (!m_i2c_dev.begin())
     {
         Log.errorln("Antenna I2C device not found");
@@ -182,7 +182,7 @@ bool Antenna::get_bypass()
     char incoming_char{};
     extern AvionicsBoard avionics;
 
-    Serial.print("Press 'n' or 'N' to bypass separation and antenna delay: ");
+    Serial.print("Press 'n' or 'N' to bypass separation and antenna delays: ");
 
     while (millis() - start_time < bypass_entry_timeout)
     {
@@ -196,14 +196,14 @@ bool Antenna::get_bypass()
                 continue;
             }
             Serial.println(incoming_char);
-            Log.noticeln("Bypassing separation and antenna delay");
+            Log.noticeln("Bypassing separation and antenna delays");
             separation_delay = bypass_separation_delay;
             antenna_delay = bypass_antenna_delay;
             return true;
         }
     }
     Serial.println();
-    Log.noticeln("Timeout during bypass entry, bypassing separation and antenna delay");
+    Log.noticeln("Timeout during bypass entry, bypassing separation and antenna delays");
     separation_delay = bypass_separation_delay;
     antenna_delay = bypass_antenna_delay;
     return false;
