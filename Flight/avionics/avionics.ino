@@ -81,6 +81,8 @@ unsigned long RAM_minimum_timestamp{};
 unsigned long display_start_time{};
 constexpr int display_interval{5 * minutes_to_seconds * seconds_to_milliseconds};
 
+
+
 /**
  * @brief Helper function for memory use
  *
@@ -234,7 +236,7 @@ void setup()
 
 void loop()
 {
-
+updateLogDay();
 #ifdef INSTRUMENTATION
   previous_time = micros();
 #endif // INSTRUMENTATION

@@ -44,3 +44,10 @@ void printLogLevel(Print *_logOutput, int logLevel);
  */
 
 void printSuffix(Print *_logOutput, int logLevel);
+
+/**
+ * @brief updates the day in the log
+ *
+ */
+
+void updateLogDay();
