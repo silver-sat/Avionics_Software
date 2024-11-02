@@ -65,6 +65,10 @@ bool RadioBoard::begin()
         avionics.service_watchdog();
     }
 
+    // Optionally set the frequency for the Radio Board
+
+    get_frequency();
+
     // Send invalid command to Radio Board to determine if it is responding
 
     Log.verboseln("Sending invalid command to Radio Board");
@@ -76,7 +80,7 @@ bool RadioBoard::begin()
     auto response_length{Serial1.readBytes(m_buffer, maximum_command_length)};
     for (auto i{0}; i < static_cast<int>(response_length); ++i)
     {
-        Log.verboseln("Radio response: %X", m_buffer[i]);
+        Log.verboseln("Radio response: %C", m_buffer[i]);
     }
     if (response_length > 0)
     {
@@ -106,7 +110,7 @@ bool RadioBoard::receive_frame()
     }
 
     // if data available, process it
-    
+
     while (Serial1.available())
     {
         auto character{static_cast<char>(Serial1.read())};
@@ -248,15 +252,15 @@ bool RadioBoard::send_message(const Message message) const
         Log.noticeln("Sending message: KISS command %X, content: %s", command, content.c_str());
     }
     extern Antenna antenna;
-    
+
     // supress message to ground if antenna deployment cycle not complete
-    
-    if (command == REMOTE_FRAME && !antenna.antenna_cycle_completed()) 
+
+    if (command == REMOTE_FRAME && !antenna.antenna_cycle_completed())
     {
         Log.warningln("Antenna deployment cycle not complete, remote message not sent");
         return false;
     }
-    
+
     Serial1.write(FEND);
     Serial1.write(command);
     Serial1.write(content.c_str());
