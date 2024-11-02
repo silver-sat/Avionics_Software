@@ -90,10 +90,12 @@ void setup()
   Log.noticeln("Avionics software compiled %s at %s local time", __DATE__, __TIME__);
 
   Log.warningln("Not for flight use.");
-  Log.warningln("Required change: increase antenna delay to 80 seconds");
-  Log.warningln("Required change: increase separation delay to 45 minutes");
+  Log.warningln("Required change: remove prompt for sequence validation");
+  Log.warningln("Required change: remove prompt for delay bypass");
   Log.warningln("Required change: turn off instrumentation");
   Log.noticeln("Initializing Avionics Process");
+
+  command_processor.get_validation(); // not for flight use
 
   Log.noticeln("Initializing Avionics Board");
   avionics.begin();

@@ -9,11 +9,9 @@
 #include "log_utility.h"
 #include "AvionicsBoard.h"
 
-unsigned long separation_delay{45 * minutes_to_seconds * seconds_to_milliseconds}; /**< Separation delay prior to antenna deployment */
-constexpr unsigned long bypass_separation_delay{3 * seconds_to_milliseconds};      /**< Separation delay prior to antenna deployment */
-unsigned long antenna_delay{80 * seconds_to_milliseconds};                         /** Delay for each attempt at antenna deployment */
-constexpr unsigned long bypass_antenna_delay{3 * seconds_to_milliseconds};         /** Delay for each attempt at antenna deployment */
-constexpr unsigned long bypass_entry_timeout = 30 * seconds_to_milliseconds;       /**< Bypass entry delay */
+constexpr unsigned long bypass_separation_delay{3 * seconds_to_milliseconds}; /**< Separation delay prior to antenna deployment for testing */
+constexpr unsigned long bypass_antenna_delay{3 * seconds_to_milliseconds};    /** Delay for each attempt at antenna deployment for testing */
+constexpr unsigned long bypass_entry_timeout = 30 * seconds_to_milliseconds;  /**< Bypass entry delay */
 
 /**
  * @brief Initialize the antenna
@@ -180,11 +178,11 @@ bool Antenna::check_antenna()
 
 bool Antenna::get_bypass()
 {
-    unsigned long start_time = millis();
-    char incoming_char = 0;
+    unsigned long start_time{millis()};
+    char incoming_char{};
     extern AvionicsBoard avionics;
 
-    Serial.print("Press 'b' or 'B' to bypass separation and antenna delay: ");
+    Serial.print("Press 'n' or 'N' to bypass separation and antenna delay: ");
 
     while (millis() - start_time < bypass_entry_timeout)
     {
@@ -192,7 +190,7 @@ bool Antenna::get_bypass()
         if (Serial.available() > 0)
         {
             incoming_char = Serial.read();
-            if (incoming_char != 'b' && incoming_char != 'B')
+            if (incoming_char != 'n' && incoming_char != 'N')
             {
                 Serial.write(BELL);
                 continue;

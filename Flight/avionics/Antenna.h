@@ -58,9 +58,11 @@ private:
     AntennaStatus check_deployment_state();
     void deployment_completed();
     bool get_bypass();
-    Adafruit_I2CDevice m_i2c_dev { Adafruit_I2CDevice(ANTENNA_I2C_ADDRESS, &Wire1) };
+    Adafruit_I2CDevice m_i2c_dev{Adafruit_I2CDevice(ANTENNA_I2C_ADDRESS, &Wire1)};
     AntennaState m_state{AntennaState::startup};
     unsigned long m_state_start_time{};
     bool m_antenna_deployed{false};
     bool m_antenna_cycle_completed{false};
+    unsigned long separation_delay{45 * minutes_to_seconds * seconds_to_milliseconds}; /**< Separation delay prior to antenna deployment */
+    unsigned long antenna_delay{80 * seconds_to_milliseconds};                         /** Delay for each attempt at antenna deployment */
 };

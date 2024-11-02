@@ -363,10 +363,10 @@ void RadioBoard::ground_contact()
 
 bool RadioBoard::get_frequency()
 {
-    unsigned long start_time = millis();
-    char incoming_char = 0;
-    String frequency_string_1 = "";
-    String frequency_string = "";
+    unsigned long start_time{millis()};
+    char incoming_char{};
+    String frequency_string_1{""};
+    String frequency_string = {""};
     extern AvionicsBoard avionics;
 
     Serial.print("Enter the 9-digit frequency string (e.g., 123456789): ");
