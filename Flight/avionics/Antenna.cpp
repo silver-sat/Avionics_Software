@@ -9,16 +9,21 @@
 #include "log_utility.h"
 #include "AvionicsBoard.h"
 
+constexpr unsigned long bypass_separation_delay{3 * seconds_to_milliseconds}; /**< Separation delay prior to antenna deployment for testing */
+constexpr unsigned long bypass_antenna_delay{3 * seconds_to_milliseconds};    /** Delay for each attempt at antenna deployment for testing */
+constexpr unsigned long bypass_entry_timeout = 30 * seconds_to_milliseconds;  /**< Bypass entry delay */
+
 /**
  * @brief Initialize the antenna
- * 
+ *
  * @return true successful
  */
 
 bool Antenna::begin()
 {
     Log.traceln("Antenna initialzing");
-    Log.verboseln("Opening antenna device at address %X", ANTENNA_I2C_ADDRESS);
+    get_bypass();
+    Log.verboseln("Opening antenna device");
     if (!m_i2c_dev.begin())
     {
         Log.errorln("Antenna I2C device not found");
@@ -31,7 +36,7 @@ bool Antenna::begin()
 
 /**
  * @brief Test antenna state during startup
- * 
+ *
  */
 
 void Antenna::test_antenna()
@@ -171,6 +176,39 @@ bool Antenna::check_antenna()
     return m_antenna_deployed;
 }
 
+bool Antenna::get_bypass()
+{
+    unsigned long start_time{millis()};
+    char incoming_char{};
+    extern AvionicsBoard avionics;
+
+    Serial.print("Press 'n' or 'N' to bypass separation and antenna delays: ");
+
+    while (millis() - start_time < bypass_entry_timeout)
+    {
+        avionics.service_watchdog(); // service the watchdog while waiting
+        if (Serial.available() > 0)
+        {
+            incoming_char = Serial.read();
+            if (incoming_char != 'n' && incoming_char != 'N')
+            {
+                Serial.write(BELL);
+                continue;
+            }
+            Serial.println(incoming_char);
+            Log.noticeln("Bypassing separation and antenna delays");
+            separation_delay = bypass_separation_delay;
+            antenna_delay = bypass_antenna_delay;
+            return true;
+        }
+    }
+    Serial.println();
+    Log.noticeln("Timeout during bypass entry, bypassing separation and antenna delays");
+    separation_delay = bypass_separation_delay;
+    antenna_delay = bypass_antenna_delay;
+    return false;
+}
+
 /**
  * @brief deployment completed successfully
  *
@@ -201,4 +239,3 @@ AntennaStatus Antenna::check_deployment_state()
         Log.verboseln("Antenna byte %d: %X", index, antenna_state[index]);
     return static_cast<AntennaStatus>(antenna_state[3]);
 }
-

@@ -21,7 +21,7 @@
 constexpr uint32_t serial1_baud_rate{19200};                                                        /**< speed of serial1 connection @hideinitializer */
 constexpr unsigned long radio_delay{2 * seconds_to_milliseconds};                                   /**< Radio Board startup delay */
 constexpr long ground_contact_interval{7};                                                          /**< maximum days without ground contact for beacon @hideinitializer */
-constexpr unsigned long frequency_entry_timeout = 1 * minutes_to_seconds * seconds_to_milliseconds; /**< User frequency entry delay */
+constexpr unsigned long frequency_entry_timeout = 30 * seconds_to_milliseconds; /**< User frequency entry delay */
 
 /**
  * @brief Initialize the Radio Board
@@ -65,6 +65,10 @@ bool RadioBoard::begin()
         avionics.service_watchdog();
     }
 
+    // Optionally set the frequency for the Radio Board
+
+    get_frequency();
+
     // Send invalid command to Radio Board to determine if it is responding
 
     Log.verboseln("Sending invalid command to Radio Board");
@@ -76,7 +80,7 @@ bool RadioBoard::begin()
     auto response_length{Serial1.readBytes(m_buffer, maximum_command_length)};
     for (auto i{0}; i < static_cast<int>(response_length); ++i)
     {
-        Log.verboseln("Radio response: %X", m_buffer[i]);
+        Log.verboseln("Radio response: %C", m_buffer[i]);
     }
     if (response_length > 0)
     {
@@ -106,11 +110,11 @@ bool RadioBoard::receive_frame()
     }
 
     // if data available, process it
-    
+
     while (Serial1.available())
     {
         auto character{static_cast<char>(Serial1.read())};
-        // Log.verboseln("Character received on Serial1 port: %C", character);
+        Log.verboseln("Character received on Serial1 port: %C", character);
         switch (character)
         {
         case FEND:
@@ -248,15 +252,15 @@ bool RadioBoard::send_message(const Message message) const
         Log.noticeln("Sending message: KISS command %X, content: %s", command, content.c_str());
     }
     extern Antenna antenna;
-    
+
     // supress message to ground if antenna deployment cycle not complete
-    
-    if (command == REMOTE_FRAME && !antenna.antenna_cycle_completed()) 
+
+    if (command == REMOTE_FRAME && !antenna.antenna_cycle_completed())
     {
         Log.warningln("Antenna deployment cycle not complete, remote message not sent");
         return false;
     }
-    
+
     Serial1.write(FEND);
     Serial1.write(command);
     Serial1.write(content.c_str());
@@ -359,13 +363,13 @@ void RadioBoard::ground_contact()
 
 bool RadioBoard::get_frequency()
 {
-    unsigned long start_time = millis();
-    char incoming_char = 0;
-    String frequency_string_1 = "";
-    String frequency_string = "";
+    unsigned long start_time{millis()};
+    char incoming_char{};
+    String frequency_string_1{""};
+    String frequency_string = {""};
     extern AvionicsBoard avionics;
 
-    Serial.print("Enter the 9-digit frequency string (e.g., 123456789): ");
+    Serial.print("Enter the 9-digit Radio frequency (e.g., 433000000): ");
 
     while (millis() - start_time < frequency_entry_timeout)
     {
@@ -387,7 +391,9 @@ bool RadioBoard::get_frequency()
                 message.send();
                 message.send(); // send twice to make permanent change
                 String display_frequency{};
-                display_frequency += frequency_string.substring(0, 6);
+                display_frequency += frequency_string.substring(0, 3);
+                display_frequency += ".";
+                display_frequency += frequency_string.substring(3, 6);
                 display_frequency += ".";
                 display_frequency += frequency_string.substring(6, 9);
                 Log.noticeln("Frequency set to %s", display_frequency.c_str());

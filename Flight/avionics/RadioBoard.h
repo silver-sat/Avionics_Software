@@ -34,7 +34,6 @@ public:
     Frame get_frame();
     bool send_message(const Message message) const;
     bool recent_ground_contact() const;
-    bool get_frequency();
     bool test_radio();
 private:
     void start_frame();
@@ -43,6 +42,7 @@ private:
     void exit_escape_mode();
     bool add_character_to_buffer(char character);
     void ground_contact();
+    bool get_frequency();
     size_t m_buffer_index{0};
     char m_buffer[maximum_command_length+1]{""};
     bool m_in_frame{false};
