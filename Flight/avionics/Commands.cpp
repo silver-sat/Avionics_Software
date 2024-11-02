@@ -268,7 +268,7 @@ bool CommandSetClock::validate_arguments(const String tokens[], const size_t tok
 }
 
 /**
- * @brief Load data for SetClock command
+ * @brief Load arguments for SetClock command
  *
  * @return true successful
  * @return false error
@@ -277,7 +277,7 @@ bool CommandSetClock::validate_arguments(const String tokens[], const size_t tok
 
 bool CommandSetClock::load_data(const String tokens[], const size_t token_count)
 {
-    Log.traceln("Loading data for: %s", tokens[0].c_str());
+    Log.traceln("Loading arguments for: %s", tokens[0].c_str());
     uint16_t year = static_cast<uint16_t>(tokens[1].toInt());
     uint8_t month = static_cast<uint8_t>(tokens[2].toInt());
     uint8_t day = static_cast<uint8_t>(tokens[3].toInt());
@@ -353,7 +353,7 @@ bool CommandBeaconSp::validate_arguments(const String tokens[], const size_t tok
 }
 
 /**
- * @brief Load data for BeaconSp command
+ * @brief Load argument for BeaconSp command
  *
  * @return true successful
  * @return false error
@@ -362,7 +362,7 @@ bool CommandBeaconSp::validate_arguments(const String tokens[], const size_t tok
 
 bool CommandBeaconSp::load_data(const String tokens[], const size_t token_count)
 {
-    Log.traceln("Loading data for: %s", tokens[0].c_str());
+    Log.traceln("Loading argument for: %s", tokens[0].c_str());
     m_seconds = tokens[1].toInt();
     return true;
 }
@@ -412,7 +412,7 @@ bool CommandPicTimes::validate_arguments(const String tokens[], const size_t tok
 }
 
 /**
- * @brief Load data for PicTimes command
+ * @brief Load arguments for PicTimes command
  *
  * @return true successful
  * @return false error
@@ -420,7 +420,7 @@ bool CommandPicTimes::validate_arguments(const String tokens[], const size_t tok
 
 bool CommandPicTimes::load_data(const String tokens[], const size_t token_count)
 {
-    Log.traceln("Loading data for: %s", tokens[0].c_str());
+    Log.traceln("Loading arguments for: %s", tokens[0].c_str());
     uint16_t year = static_cast<uint16_t>(tokens[1].toInt());
     uint8_t month = static_cast<uint8_t>(tokens[2].toInt());
     uint8_t day = static_cast<uint8_t>(tokens[3].toInt());
@@ -478,7 +478,7 @@ bool CommandSSDVTimes::validate_arguments(const String tokens[], const size_t to
 }
 
 /**
- * @brief Load data for SSDVTimes command
+ * @brief Load arguments for SSDVTimes command
  *
  * @return true successful
  * @return false error
@@ -486,7 +486,7 @@ bool CommandSSDVTimes::validate_arguments(const String tokens[], const size_t to
 
 bool CommandSSDVTimes::load_data(const String tokens[], const size_t token_count)
 {
-    Log.traceln("Loading data for: %s", tokens[0].c_str());
+    Log.traceln("Loading arguments for: %s", tokens[0].c_str());
     uint16_t year = static_cast<uint16_t>(tokens[1].toInt());
     uint8_t month = static_cast<uint8_t>(tokens[2].toInt());
     uint8_t day = static_cast<uint8_t>(tokens[3].toInt());
@@ -988,7 +988,7 @@ bool CommandUnsetClock::execute() const
 }
 
 /**
- * @brief Validate the arguments
+ * @brief Validate arguments for LogArguments command
  *
  * @return true successful
  * @return false error
@@ -1004,7 +1004,7 @@ bool CommandLogArguments::validate_arguments(const String tokens[], const size_t
 }
 
 /**
- * @brief Load command data
+ * @brief Load arguments for LogArguments command
  *
  * @return true successful
  * @return false error
@@ -1015,7 +1015,7 @@ bool CommandLogArguments::validate_arguments(const String tokens[], const size_t
 
 bool CommandLogArguments::load_data(const String tokens[], const size_t token_count)
 {
-    Log.traceln("Loading data for: %s", tokens[0].c_str());
+    Log.traceln("Loading argument(s) for: %s", tokens[0].c_str());
     m_arguments = "";
     for (auto i{1}; i < token_count; ++i)
     {
@@ -1081,7 +1081,7 @@ bool CommandBackgroundRSSI::validate_arguments(const String tokens[], const size
 }
 
 /**
- * @brief Load data for BackgroundRSSI command
+ * @brief Load argument for BackgroundRSSI command
  *
  * @return true successful
  * @return false error
@@ -1090,7 +1090,7 @@ bool CommandBackgroundRSSI::validate_arguments(const String tokens[], const size
 
 bool CommandBackgroundRSSI::load_data(const String tokens[], const size_t token_count)
 {
-    Log.traceln("Loading data for: %s", tokens[0].c_str());
+    Log.traceln("Loading argument for: %s", tokens[0].c_str());
     m_seconds = tokens[1].toInt();
     return true;
 }
