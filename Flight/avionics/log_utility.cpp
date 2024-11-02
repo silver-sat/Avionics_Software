@@ -7,7 +7,7 @@
  */
 
 #include "log_utility.h"
-
+static unsigned long daysSinceStart{0};
 /**
  * @brief Print log prefix
  *
@@ -56,11 +56,11 @@ void formatTimestamp(char *timestamp, const unsigned long msecs)
   const unsigned long secs = msecs / MSECS_PER_SEC;
 
   // Time in components
-  int MilliSeconds = msecs % MSECS_PER_SEC;
-  int Seconds = secs % SECS_PER_MIN;
-  int Minutes = (secs / SECS_PER_MIN) % SECS_PER_MIN;
-  int Hours = (secs % SECS_PER_DAY) / SECS_PER_HOUR;
-  int Days = (secs / SECS_PER_DAY);
+  const int MilliSeconds = msecs % MSECS_PER_SEC;
+  const int Seconds = secs % SECS_PER_MIN;
+  const int Minutes = (secs / SECS_PER_MIN) % SECS_PER_MIN;
+  const int Hours = (secs % SECS_PER_DAY) / SECS_PER_HOUR;
+  const int Days = (secs / SECS_PER_DAY);
 
   sprintf(timestamp, "%03d:%02d:%02d:%02d.%03d ", Days, Hours, Minutes, Seconds, MilliSeconds);
 }
