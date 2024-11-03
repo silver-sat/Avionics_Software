@@ -159,7 +159,7 @@ void setup()
 
 void loop()
 {
-
+  updateLogDay();
   avionics.service_watchdog();
   antenna.check_antenna();
   avionics.get_stability();
@@ -192,7 +192,7 @@ void loop()
 
   // Record loop time
 
-  auto duration {micros() - loop_start_time};
+  auto duration{micros() - loop_start_time};
   if (duration > loop_maximum)
   {
     loop_maximum = duration;

@@ -1,5 +1,6 @@
 /**
  * @author Lee A. Congdon (lee@silversat.org)
+ * @author Benjamin S. Cohen (ben@silversat.org)
  * @brief Logging Support Routines
  *
  * This file implements customized methods for the log facility
@@ -7,6 +8,13 @@
  */
 
 #include "log_utility.h"
+static unsigned long daysSinceStart{0};
+static unsigned long timer{millis()};
+// Division constants
+const unsigned long MSECS_PER_SEC = 1000;
+const unsigned long SECS_PER_MIN = 60;
+const unsigned long SECS_PER_HOUR = 3600;
+const unsigned long SECS_PER_DAY = 86400;
 
 /**
  * @brief Print log prefix
@@ -46,22 +54,18 @@ void printTimestamp(Print *_logOutput)
 
 void formatTimestamp(char *timestamp, const unsigned long msecs)
 {
-  // Division constants
-  const unsigned long MSECS_PER_SEC = 1000;
-  const unsigned long SECS_PER_MIN = 60;
-  const unsigned long SECS_PER_HOUR = 3600;
-  const unsigned long SECS_PER_DAY = 86400;
 
   // Total time
-  const unsigned long secs = msecs / MSECS_PER_SEC;
+  unsigned long secs = msecs / MSECS_PER_SEC;
 
   // Time in components
   int MilliSeconds = msecs % MSECS_PER_SEC;
   int Seconds = secs % SECS_PER_MIN;
   int Minutes = (secs / SECS_PER_MIN) % SECS_PER_MIN;
   int Hours = (secs % SECS_PER_DAY) / SECS_PER_HOUR;
+  int Days = daysSinceStart;
 
-  sprintf(timestamp, "%02d:%02d:%02d.%03d ", Hours, Minutes, Seconds, MilliSeconds);
+  sprintf(timestamp, "%03d:%02d:%02d:%02d.%03d ", Days, Hours, Minutes, Seconds, MilliSeconds);
 }
 
 /**
@@ -112,4 +116,12 @@ void printLogLevel(Print *_logOutput, int logLevel)
 void printSuffix(Print *_logOutput, int logLevel)
 {
   _logOutput->print("");
+}
+void updateLogDay()
+{
+if(millis()-timer>=SECS_PER_DAY*MSECS_PER_SEC ){
+  
+    ++daysSinceStart;
+    timer=millis();
+  }
 }
