@@ -72,24 +72,39 @@ void setup()
   command_processor.get_validation(); // not for flight use
 
   Log.noticeln("Initializing Avionics Board");
-  avionics.begin();
-  Log.noticeln("Avionics Board initialization completed");
+  if (avionics.begin()) {
+    Log.noticeln("Avionics Board initialization completed");
+  } else {
+    Log.errorln("Avionics Board initialization failed");
+  }
 
   Log.noticeln("Initializing Power Board interface");
-  power.begin();
-  Log.noticeln("Power Board interface initialization completed");
+  if (power.begin()) {
+    Log.noticeln("Power Board interface initialization completed");
+  } else {
+    Log.errorln("Power Board interface initialization failed");
+  }
 
   Log.noticeln("Initializing Radio Board interface");
-  radio.begin();
-  Log.noticeln("Radio Board interface initialization completed");
+  if (radio.begin()) {
+    Log.noticeln("Radio Board interface initialization completed");
+  } else {
+    Log.errorln("Radio Board interface initialization failed");
+  }
 
   Log.noticeln("Initializing Payload Board interface");
-  payload.begin();
-  Log.noticeln("Payload Board interface initialization completed");
+  if (payload.begin()) {
+    Log.noticeln("Payload Board interface initialization completed");
+  } else {
+    Log.errorln("Payload Board interface initialization failed");
+  }
 
   Log.noticeln("Initializing Antenna");
-  antenna.begin();
-  Log.noticeln("Antenna initialization completed");
+  if (antenna.begin()) {
+    Log.noticeln("Antenna initialization completed");
+  } else {
+    Log.errorln("Antenna initialization failed");
+  }
 
   Log.noticeln("Setup complete");
   Log.noticeln("Avionics process accepting commands");
