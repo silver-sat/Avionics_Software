@@ -8,9 +8,14 @@
  */
 
 #include "log_utility.h"
+
+// Logging global variables
+
 static unsigned long daysSinceStart{0};
 static unsigned long timer{millis()};
-// Division constants
+
+// Time division constants
+
 const unsigned long MSECS_PER_SEC = 1000;
 const unsigned long SECS_PER_MIN = 60;
 const unsigned long SECS_PER_HOUR = 3600;

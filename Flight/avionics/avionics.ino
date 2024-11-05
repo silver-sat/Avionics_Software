@@ -21,9 +21,6 @@
  *
  */
 
-// todo: turn off instrumentation for flight
-#define INSTRUMENTATION // Instrumentation for processor and memory usage
-
 #include "log_utility.h"
 #include "Antenna.h"
 #include "PowerBoard.h"
@@ -45,28 +42,6 @@ RadioBoard radio{};
 PayloadBoard payload{};
 Antenna antenna{};
 CommandProcessor command_processor{};
-
-// Test instrumentation values
-
-unsigned long loop_start_time{};
-unsigned long loop_maximum{0};
-unsigned long loop_maximum_timestamp{};
-long RAM_minimum{32768};
-unsigned long RAM_minimum_timestamp{};
-unsigned long display_start_time{};
-constexpr int display_interval{5 * minutes_to_seconds * seconds_to_milliseconds};
-
-/**
- * @brief Helper function for memory use
- *
- */
-extern "C" char *sbrk(int i);
-
-int FreeRam()
-{
-  char stack_dummy = 0;
-  return &stack_dummy - sbrk(0);
-}
 
 /**
  * @brief Arduino setup function to initialize the boards and devices and test them
@@ -92,7 +67,6 @@ void setup()
   Log.warningln("Not for flight use");
   Log.warningln("Required change: remove prompt for command sequence validation");
   Log.warningln("Required change: remove prompt for delay bypass");
-  Log.warningln("Required change: turn off instrumentation");
   Log.noticeln("Initializing Avionics Process");
 
   command_processor.get_validation(); // not for flight use
@@ -147,9 +121,6 @@ void setup()
   antenna.test_antenna();
 
   Log.noticeln("Initial testing complete, Radio and Payload tests continue");
-
-  loop_start_time = micros();
-  display_start_time = millis();
 }
 
 /**
@@ -167,36 +138,4 @@ void loop()
   command_processor.check_for_command();
   avionics.check_payload();
   payload.check_shutdown();
-
-  // Record free RAM
-
-  auto free_RAM{FreeRam()};
-  if (free_RAM < RAM_minimum)
-  {
-    RAM_minimum = free_RAM;
-    RAM_minimum_timestamp = millis();
-  }
-
-  // Display instrumentation
-
-  if (millis() - display_start_time > display_interval)
-  {
-    char timestamp[20]{};
-    formatTimestamp(timestamp, loop_maximum_timestamp);
-    Log.verboseln("Maximum loop time %l microseconds at %s", loop_maximum, timestamp);
-    formatTimestamp(timestamp, RAM_minimum_timestamp);
-    Log.verboseln("Minimum free RAM %l bytes at %s", RAM_minimum, timestamp);
-    display_start_time = millis();
-    Log.verboseln("Current free RAM %l bytes", FreeRam());
-  }
-
-  // Record loop time
-
-  auto duration{micros() - loop_start_time};
-  if (duration > loop_maximum)
-  {
-    loop_maximum = duration;
-    loop_maximum_timestamp = millis();
-  }
-  loop_start_time = micros();
 }
