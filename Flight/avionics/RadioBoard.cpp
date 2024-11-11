@@ -65,10 +65,6 @@ bool RadioBoard::begin()
         avionics.service_watchdog();
     }
 
-    // Optionally set the frequency for the Radio Board
-
-    get_frequency();
-
     // Send invalid command to Radio Board to determine if it is responding
 
     Log.verboseln("Sending invalid command to Radio Board");
