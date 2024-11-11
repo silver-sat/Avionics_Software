@@ -203,9 +203,9 @@ bool Antenna::get_bypass()
         }
     }
     Serial.println();
-    Log.noticeln("Timeout during bypass entry, bypassing separation and antenna delays");
-    separation_delay = bypass_separation_delay;
-    antenna_delay = bypass_antenna_delay;
+    Log.noticeln("Timeout during bypass entry, full separation and antenna delays will be used");
+    // separation_delay = bypass_separation_delay;
+    // antenna_delay = bypass_antenna_delay;
     return false;
 }
 

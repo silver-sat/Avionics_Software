@@ -368,7 +368,7 @@ bool CommandProcessor::get_validation()
         }
     }
     Serial.println();
-    Log.noticeln("Timeout during validation entry, command sequence numbers will not be validated");
-    m_validate_sequence = false;
+    Log.noticeln("Timeout during validation entry, command sequence numbers will be validated");
+    m_validate_sequence = true;
     return false;
 }
