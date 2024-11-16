@@ -1197,7 +1197,7 @@ bool CommandModifyCCA::validate_arguments(const String tokens[], const size_t to
 bool CommandModifyCCA::load_data(const String tokens[], const size_t token_count)
 {
     Log.traceln("Loading argument for: %s", tokens[0].c_str());
-    m_seconds = tokens[1].toInt();
+    m_seconds = tokens[1];
     return true;
 }
 
