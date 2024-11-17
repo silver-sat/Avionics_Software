@@ -9,6 +9,7 @@
 
 #include "PayloadBoard.h"
 #include "PowerBoard.h"
+#include "Beacon.h"
 #include "log_utility.h"
 
 /**
@@ -438,7 +439,7 @@ PayloadBeacon PayloadBoard::get_status()
     if (m_overcurrent_occurred)
     {
         Log.errorln("Payload overcurrent during previous activity, session lasted %u milliseconds (interval %d)", m_last_payload_duration, duration_interval);
-        return overcurrent_beacons[static_cast<size_t>(duration_interval)];
+        return static_cast<PayloadBeacon>(static_cast<size_t>(PayloadBeacon::overcurrent_0_1) + static_cast<size_t>(duration_interval));
     }
 
     switch (m_activity)
@@ -457,7 +458,7 @@ PayloadBeacon PayloadBoard::get_status()
         Log.noticeln("Previous Payload communication activity lasted %u milliseconds (interval %d)", m_last_payload_duration, duration_interval);
         if (duration_interval >= DurationInterval::less_than_1_minute && duration_interval < DurationInterval::count)
         {
-            return communicate_beacons[static_cast<size_t>(duration_interval)];
+            return static_cast<PayloadBeacon>(static_cast<size_t>(PayloadBeacon::communicate_0_1) + static_cast<size_t>(duration_interval));
         }
         break;
     }
@@ -468,7 +469,7 @@ PayloadBeacon PayloadBoard::get_status()
         Log.noticeln("Previous Payload photo activity lasted %u milliseconds (interval %d)", m_last_payload_duration, duration_interval);
         if (duration_interval >= DurationInterval::less_than_1_minute && duration_interval < DurationInterval::count)
         {
-            return photo_beacons[static_cast<size_t>(duration_interval)];
+            return static_cast<PayloadBeacon>(static_cast<size_t>(PayloadBeacon::photo_0_1) + static_cast<size_t>(duration_interval));
         }
         break;
     }
@@ -479,7 +480,7 @@ PayloadBeacon PayloadBoard::get_status()
         Log.noticeln("Previous Payload SSDV activity lasted %u milliseconds (interval %d)", m_last_payload_duration, duration_interval);
         if (duration_interval >= DurationInterval::less_than_1_minute && duration_interval < DurationInterval::count)
         {
-            return SSDV_beacons[static_cast<size_t>(duration_interval)];
+            return static_cast<PayloadBeacon>(static_cast<size_t>(PayloadBeacon::SSDV_0_1) + static_cast<size_t>(duration_interval));
         }
         break;
     }

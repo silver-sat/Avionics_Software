@@ -56,7 +56,7 @@ enum class AvionicsBeacon
 /**
  * @brief Payload Board Beacon
  *
- * see https://docs.google.com/document/d/1y_QmltteIbUQHrYqqVDfCnWsfpcF2DDvKiVARtVozjs/edit?usp=sharing
+ * see https://docs.google.com/spreadsheets/d/1_hdVNVKwpzFvHbcQnjpvcPh6uuIx0EniHY1gVKyH-vw/edit?usp=sharing
  *
  */
 

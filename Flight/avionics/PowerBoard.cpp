@@ -84,11 +84,8 @@ bool PowerBoard::power_adequate()
     {
         return true;
     }
-    else
-    {
-        Log.warningln("EPS-I voltage below payload session minimum: %FV", battery_voltage);
-        return false;
-    }
+    Log.warningln("EPS-I voltage below payload session minimum: %FV", battery_voltage);
+    return false;
 }
 
 /**
