@@ -16,7 +16,8 @@ def test_package():
 
     test_class = test_day_in_the_life.TestDayInTheLife()
 
-
+    test_class.test_reset()
+    
     test_class.test_no_operate()
 
     test_class.test_set_beacon_interval_1()
