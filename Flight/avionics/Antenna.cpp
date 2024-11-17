@@ -10,7 +10,6 @@
 #include "AvionicsBoard.h"
 
 constexpr unsigned long bypass_separation_delay{3 * seconds_to_milliseconds}; /**< Separation delay prior to antenna deployment for testing */
-constexpr unsigned long bypass_antenna_delay{3 * seconds_to_milliseconds};    /** Delay for each attempt at antenna deployment for testing */
 constexpr unsigned long bypass_entry_timeout = 30 * seconds_to_milliseconds;  /**< Bypass entry delay */
 
 /**
@@ -182,7 +181,7 @@ bool Antenna::get_bypass()
     char incoming_char{};
     extern AvionicsBoard avionics;
 
-    Serial.print("Press 'n' or 'N' to bypass separation and antenna delays: ");
+    Serial.print("Press 'n' or 'N' to bypass separation delay: ");
 
     while (millis() - start_time < bypass_entry_timeout)
     {
@@ -196,16 +195,14 @@ bool Antenna::get_bypass()
                 continue;
             }
             Serial.println(incoming_char);
-            Log.noticeln("Bypassing separation and antenna delays");
+            Log.noticeln("Bypassing separation delay");
             separation_delay = bypass_separation_delay;
-            antenna_delay = bypass_antenna_delay;
             return true;
         }
     }
     Serial.println();
-    Log.noticeln("Timeout during bypass entry, full separation and antenna delays will be used");
+    Log.noticeln("Timeout during bypass entry, full separation delay will be used");
     // separation_delay = bypass_separation_delay;
-    // antenna_delay = bypass_antenna_delay;
     return false;
 }
 
