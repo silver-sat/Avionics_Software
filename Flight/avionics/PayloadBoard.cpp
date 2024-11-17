@@ -56,15 +56,8 @@ bool PayloadBoard::begin()
 
 bool PayloadBoard::photo()
 {
-    if (m_state != PayloadState::off)
+    if (!check_startup())
     {
-        Log.errorln("Payload already active");
-        return false;
-    }
-    extern PowerBoard power;
-    if (!power.power_adequate())
-    {
-        Log.errorln("Inadequate power for photo session");
         return false;
     }
     Log.noticeln("Starting photo session");
@@ -83,15 +76,8 @@ bool PayloadBoard::photo()
 
 bool PayloadBoard::SSDV()
 {
-    if (m_state != PayloadState::off)
+    if (!check_startup())
     {
-        Log.errorln("Payload already active");
-        return false;
-    }
-    extern PowerBoard power;
-    if (!power.power_adequate())
-    {
-        Log.errorln("Inadequate power for photo session");
         return false;
     }
     Log.noticeln("Starting SSDV session");
@@ -110,15 +96,8 @@ bool PayloadBoard::SSDV()
 
 bool PayloadBoard::communicate()
 {
-    if (m_state != PayloadState::off)
+    if (!check_startup())
     {
-        Log.errorln("Payload already active");
-        return false;
-    }
-    extern PowerBoard power;
-    if (!power.power_adequate())
-    {
-        Log.errorln("Inadequate power for communications session");
         return false;
     }
     Log.noticeln("Starting communication session");
@@ -128,7 +107,30 @@ bool PayloadBoard::communicate()
 }
 
 /**
- * @brief Shut off Payload Board if ready to sleep
+ * @brief Verify Payload Board is ready to start
+ *
+ * @return true Payload Board is ready
+ * @return false Payload Board is not ready
+ */
+
+bool PayloadBoard::check_startup()
+{
+    if (m_state != PayloadState::off)
+    {
+        Log.errorln("Payload already active");
+        return false;
+    }
+    extern PowerBoard power;
+    if (!power.power_adequate())
+    {
+        Log.errorln("Inadequate power for Payload session");
+        return false;
+    }
+    return true;
+}
+
+/**
+ * @brief Manage Payload Board state
  *
  *
  */
@@ -383,6 +385,47 @@ bool PayloadBoard::get_payload_active() const
     return m_state != PayloadState::off;
 }
 
+/*
+ * @brief Get the duration interval for the last payload activity
+ *
+ * @return duration_interval
+ *
+ */
+
+PayloadBoard::DurationInterval PayloadBoard::get_duration_interval(unsigned long duration_ms)
+{
+    const unsigned long duration_min = duration_ms / seconds_to_milliseconds / minutes_to_seconds;
+
+    if (duration_min < 1)
+    {
+        return DurationInterval::less_than_1_minute;
+    }
+    else if (duration_min < 2)
+    {
+        return DurationInterval::between_1_and_2_minutes;
+    }
+    else if (duration_min < 4)
+    {
+        return DurationInterval::between_2_and_4_minutes;
+    }
+    else if (duration_min < 6)
+    {
+        return DurationInterval::between_4_and_6_minutes;
+    }
+    else if (duration_min < 8)
+    {
+        return DurationInterval::between_6_and_8_minutes;
+    }
+    else if (duration_min < 10)
+    {
+        return DurationInterval::between_8_and_10_minutes;
+    }
+    else
+    {
+        return DurationInterval::forced_shutdown;
+    }
+}
+
 /**
  * @brief Get status for beacon
  *
@@ -390,37 +433,14 @@ bool PayloadBoard::get_payload_active() const
 
 PayloadBeacon PayloadBoard::get_status()
 {
-    const int duration_bucket{static_cast<int>(m_last_payload_duration / seconds_to_milliseconds / minutes_to_seconds)};
+    const auto duration_interval{get_duration_interval(m_last_payload_duration)};
 
     if (m_overcurrent_occurred)
     {
-        Log.errorln("Payload overcurrent during previous activity, session lasted %u milliseconds (duration bucket %d)", m_last_payload_duration, duration_bucket);
-        switch (duration_bucket)
-        {
-        case 0:
-            return PayloadBeacon::overcurrent_0_1;
-        case 1:
-            return PayloadBeacon::overcurrent_1_2;
-        case 2:
-            return PayloadBeacon::overcurrent_2_3;
-        case 3:
-            return PayloadBeacon::overcurrent_3_4;
-        case 4:
-            return PayloadBeacon::overcurrent_4_5;
-        case 5:
-            return PayloadBeacon::overcurrent_5_6;
-        case 6:
-            return PayloadBeacon::overcurrent_6_7;
-        case 7:
-            return PayloadBeacon::overcurrent_7_8;
-        case 8:
-            return PayloadBeacon::overcurrent_8_9;
-        case 9:
-            return PayloadBeacon::overcurrent_9_10;
-        default:
-            return PayloadBeacon::unknown;
-        }
+        Log.errorln("Payload overcurrent during previous activity, session lasted %u milliseconds (interval %d)", m_last_payload_duration, duration_interval);
+        return overcurrent_beacons[static_cast<size_t>(duration_interval)];
     }
+
     switch (m_activity)
     {
 
@@ -434,88 +454,43 @@ PayloadBeacon PayloadBoard::get_status()
     // communications session
     case PayloadActivity::communications:
     {
-        if (m_timeout_occurred)
+        Log.noticeln("Previous Payload communication activity lasted %u milliseconds (interval %d)", m_last_payload_duration, duration_interval);
+        if (duration_interval >= DurationInterval::less_than_1_minute && duration_interval < DurationInterval::count)
         {
-            Log.errorln("Timeout during previous activity (communications)");
-            return PayloadBeacon::communicate_timeout;
+            return communicate_beacons[static_cast<size_t>(duration_interval)];
         }
-        else
-        {
-            Log.verboseln("Previous activity (communications) lasted %u milliseconds (duration bucket %d)", m_last_payload_duration, duration_bucket);
-            switch (duration_bucket)
-            {
-            case 0:
-                return PayloadBeacon::communicate_0_1;
-            case 1:
-                return PayloadBeacon::communicate_1_2;
-            case 2:
-                return PayloadBeacon::communicate_2_3;
-            case 3:
-                return PayloadBeacon::communicate_3_4;
-            case 4:
-                return PayloadBeacon::communicate_4_5;
-            case 5:
-                return PayloadBeacon::communicate_5_6;
-            case 6:
-                return PayloadBeacon::communicate_6_7;
-            case 7:
-                return PayloadBeacon::communicate_7_8;
-            case 8:
-                return PayloadBeacon::communicate_8_9;
-            case 9:
-                return PayloadBeacon::communicate_9_10;
-            default:
-                return PayloadBeacon::unknown;
-            }
-        }
+        break;
     }
 
     // photo session
     case PayloadActivity::photo:
     {
-        if (m_timeout_occurred)
+        Log.noticeln("Previous Payload photo activity lasted %u milliseconds (interval %d)", m_last_payload_duration, duration_interval);
+        if (duration_interval >= DurationInterval::less_than_1_minute && duration_interval < DurationInterval::count)
         {
-            Log.errorln("Timeout during previous activity (photo)");
-            return PayloadBeacon::photo_timeout;
+            return photo_beacons[static_cast<size_t>(duration_interval)];
         }
-        else
+        break;
+    }
+
+    // SSDV session
+    case PayloadActivity::SSDV:
+    {
+        Log.noticeln("Previous Payload SSDV activity lasted %u milliseconds (interval %d)", m_last_payload_duration, duration_interval);
+        if (duration_interval >= DurationInterval::less_than_1_minute && duration_interval < DurationInterval::count)
         {
-            Log.verboseln("Previous activity (photo) lasted %u milliseconds (duration bucket %d)", m_last_payload_duration, duration_bucket);
-            switch (duration_bucket)
-            {
-            case 0:
-                return PayloadBeacon::photo_0_1;
-            case 1:
-                return PayloadBeacon::photo_1_2;
-            case 2:
-                return PayloadBeacon::photo_2_3;
-            case 3:
-                return PayloadBeacon::photo_3_4;
-            case 4:
-                return PayloadBeacon::photo_4_5;
-            case 5:
-                return PayloadBeacon::photo_5_6;
-            case 6:
-                return PayloadBeacon::photo_6_7;
-            case 7:
-                return PayloadBeacon::photo_7_8;
-            case 8:
-                return PayloadBeacon::photo_8_9;
-            case 9:
-                return PayloadBeacon::photo_9_10;
-            default:
-                return PayloadBeacon::unknown;
-            }
+            return SSDV_beacons[static_cast<size_t>(duration_interval)];
         }
+        break;
     }
 
     // unknown beacon status
     default:
     {
-        Log.errorln("Payload session beacon status error");
-        return PayloadBeacon::unknown;
     }
     }
+    Log.errorln("Payload session beacon status error");
+    return PayloadBeacon::unknown;
 }
 
 /**

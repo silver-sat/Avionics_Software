@@ -33,6 +33,7 @@ CommandUnsetClock CommandWarehouse::m_unset_clock{};
 CommandLogArguments CommandWarehouse::m_log_arguments{""};
 CommandBackgroundRSSI CommandWarehouse::m_background_RSSI{"00"};
 CommandCurrentRSSI CommandWarehouse::m_current_RSSI{};
+CommandModifyCCA CommandWarehouse::m_modify_CCA{"000"};
 
 CommandWarehouse::CommandMap CommandWarehouse::command_description[]{
     {"SetClock", &m_set_clock},
@@ -56,7 +57,8 @@ CommandWarehouse::CommandMap CommandWarehouse::command_description[]{
     {"UnsetClock", &m_unset_clock},
     {"LogArguments", &m_log_arguments},
     {"BackgroundRSSI", &m_background_RSSI},
-    {"CurrentRSSI", &m_current_RSSI}
+    {"CurrentRSSI", &m_current_RSSI},
+    {"ModifyCCA", &m_modify_CCA}
 };
 
 /**

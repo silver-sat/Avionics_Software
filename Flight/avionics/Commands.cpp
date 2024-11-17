@@ -46,6 +46,7 @@
  * LCA: LogArguments: Log command arguments with no acknowledgement or response
  * RBR: BackgroundRSSI: radio background RSSI
  * RCR: CurrentRSSI: radio current RSSI
+ * RMC: ModifyCCA: Modify CCA threshold
  *
  * Deprecated commands:
  *
@@ -1156,5 +1157,78 @@ bool CommandCurrentRSSI::execute() const
     Log.verboseln("CurrentRSSI");
     Log.traceln("Requesting current RSSI");
     Message message(Message::current_rssi, "");
+    return message.send() && status;
+}
+/**
+ * @brief Validate the arguments for ModifyCCA command
+ *
+ * @return true successful
+ * @return false error
+ *
+ */
+
+bool CommandModifyCCA::validate_arguments(const String tokens[], const size_t token_count) const
+{
+    Log.traceln("Validating %d argument(s) for: %s", token_count - 1, tokens[0].c_str());
+    if (token_count != 2)
+    {
+        return false;
+    }
+    if (!is_numeric(tokens[1]))
+    {
+        return false;
+    }
+    long seconds = tokens[1].toInt();
+    if (seconds < minimum_background_rssi_interval || seconds > maximum_background_rssi_interval)
+    {
+        return false;
+    }
+    return true;
+}
+
+/**
+ * @brief Load argument for ModifyCCA command
+ *
+ * @return true successful
+ * @return false error
+ *
+ */
+
+bool CommandModifyCCA::load_data(const String tokens[], const size_t token_count)
+{
+    Log.traceln("Loading argument for: %s", tokens[0].c_str());
+    m_seconds = tokens[1];
+    return true;
+}
+
+/**
+ * @brief Acknowledge ModifyCCA command
+ *
+ * @return true successful
+ * @return false error
+ *
+ */
+
+bool CommandModifyCCA::acknowledge_receipt() const
+{
+    auto status{Command::acknowledge_receipt()};
+    Log.verboseln("ModifyCCA: %d seconds", m_seconds);
+    return status;
+}
+
+/**
+ * @brief Execute ModifyCCA command
+ *
+ * @return true successful
+ * @return false error
+ *
+ */
+
+bool CommandModifyCCA::execute() const
+{
+    auto status{Command::execute()};
+    Log.verboseln("ModifyCCA");
+    Log.traceln("Requesting background RSSI for %s seconds", m_seconds.c_str());
+    Message message(Message::background_rssi, m_seconds);
     return message.send() && status;
 }

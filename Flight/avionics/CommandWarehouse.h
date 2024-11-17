@@ -42,7 +42,7 @@ private:
     static CommandLogArguments m_log_arguments;
     static CommandBackgroundRSSI m_background_RSSI;
     static CommandCurrentRSSI m_current_RSSI;
-
+    static CommandModifyCCA m_modify_CCA;
     struct CommandMap
     {
         const String command_name;
