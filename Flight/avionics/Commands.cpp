@@ -99,6 +99,7 @@ const String CommandUnsetClock::m_action{"Unset reatime clock"};
 const String CommandLogArguments::m_action{"Log command arguments"};
 const String CommandBackgroundRSSI::m_action("Report background RSSI");
 const String CommandCurrentRSSI::m_action("Report current RSSI");
+const String CommandModifyCCA::m_action("Modify CCA threshold");
 
 /**
  * @brief Helper function to determine if a string is numeric
@@ -1178,11 +1179,6 @@ bool CommandModifyCCA::validate_arguments(const String tokens[], const size_t to
     {
         return false;
     }
-    long seconds = tokens[1].toInt();
-    if (seconds < minimum_background_rssi_interval || seconds > maximum_background_rssi_interval)
-    {
-        return false;
-    }
     return true;
 }
 
@@ -1197,7 +1193,7 @@ bool CommandModifyCCA::validate_arguments(const String tokens[], const size_t to
 bool CommandModifyCCA::load_data(const String tokens[], const size_t token_count)
 {
     Log.traceln("Loading argument for: %s", tokens[0].c_str());
-    m_seconds = tokens[1];
+    m_threshold = tokens[1];
     return true;
 }
 
@@ -1212,7 +1208,7 @@ bool CommandModifyCCA::load_data(const String tokens[], const size_t token_count
 bool CommandModifyCCA::acknowledge_receipt() const
 {
     auto status{Command::acknowledge_receipt()};
-    Log.verboseln("ModifyCCA: %d seconds", m_seconds);
+    Log.verboseln("ModifyCCA: %s seconds", m_threshold.c_str());
     return status;
 }
 
@@ -1228,7 +1224,7 @@ bool CommandModifyCCA::execute() const
 {
     auto status{Command::execute()};
     Log.verboseln("ModifyCCA");
-    Log.traceln("Requesting background RSSI for %s seconds", m_seconds.c_str());
-    Message message(Message::background_rssi, m_seconds);
+    Log.traceln("Requesting CCA threshold %s", m_threshold.c_str());
+    Message message(Message::modify_cca, m_threshold);
     return message.send() && status;
 }

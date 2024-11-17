@@ -292,13 +292,13 @@ private:
 class CommandModifyCCA final : public Command
 {
 public:
-    explicit CommandModifyCCA(const String seconds) : m_seconds{seconds} {};
+    explicit CommandModifyCCA(const String threshold) : m_threshold{threshold} {};
     bool validate_arguments(const String tokens[], const size_t token_count) const override;
     bool load_data(const String tokens[], const size_t token_count);
     bool acknowledge_receipt() const override;
     bool execute() const override;
 
 private:
-    String m_seconds;
+    String m_threshold;
     static const String m_action;
 };

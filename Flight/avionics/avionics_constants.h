@@ -106,6 +106,7 @@ constexpr byte MODIFY_MODE{'\x0C'};       /**< change radio mode */
 constexpr byte TOGGLE_RADIO_5V{'\x0F'};   /**< Toggle radio 5v */
 constexpr byte BACKGROUND_RSSI{'\x18'};   /**< background RSSI */
 constexpr byte CURRENT_RSSI{'\x19'};      /**< current RSSI */
+constexpr byte MODIFY_CCA{'\x1F'};        /**< modify CCA threshold */
 
 /**
  * @brief SilverSat defined KISS local command types as characters
@@ -123,6 +124,7 @@ const String MODIFY_MODE_CHAR{"C"};       /**< change radio mode */
 const String TOGGLE_RADIO_5V_CHAR{"F"};   /**< Toggle radio 5v */
 const String BACKGROUND_RSSI_CHAR{"18"};  /**< background RSSI */
 const String CURRENT_RSSI_CHAR{"19"};     /**< current RSSI */
+const String MODIFY_CCA_CHAR{"1F"};       /**< modify CCA threshold */
 
 /**
  * @brief Radio test command

@@ -37,6 +37,7 @@ public:
         modify_frequency = MODIFY_FREQUENCY,
         background_rssi = BACKGROUND_RSSI,
         current_rssi = CURRENT_RSSI,
+        modify_cca = MODIFY_CCA,
     };
 
     /**
