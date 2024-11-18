@@ -21,9 +21,6 @@ public:
     virtual bool acknowledge_receipt() const;
     virtual bool negative_acknowledge_receipt() const;
     virtual bool execute() const;
-
-protected:
-    static const String m_action;
 };
 
 class CommandSetClock final : public Command
@@ -38,7 +35,6 @@ public:
 
 private:
     DateTime m_time;
-    static const String m_action;
 };
 
 class CommandBeaconSp final : public Command
@@ -53,7 +49,6 @@ public:
 
 private:
     int m_seconds;
-    static const String m_action;
 };
 
 class CommandPicTimes final : public Command
@@ -68,7 +63,6 @@ public:
 
 private:
     DateTime m_time;
-    static const String m_action;
 };
 
 class CommandSSDVTimes final : public Command
@@ -83,7 +77,6 @@ public:
 
 private:
     DateTime m_time;
-    static const String m_action;
 };
 
 class CommandClearPayloadQueue final : public Command
@@ -92,9 +85,6 @@ public:
     CommandClearPayloadQueue() = default;
     bool acknowledge_receipt() const override;
     bool execute() const override;
-
-private:
-    static const String m_action;
 };
 
 class CommandReportT final : public Command
@@ -103,9 +93,6 @@ public:
     CommandReportT() = default;
     bool acknowledge_receipt() const override;
     bool execute() const override;
-
-private:
-    static const String m_action;
 };
 
 class CommandGetPayloadQueue final : public Command
@@ -114,9 +101,6 @@ public:
     CommandGetPayloadQueue() = default;
     bool acknowledge_receipt() const override;
     bool execute() const override;
-
-private:
-    static const String m_action;
 };
 
 class CommandGetTelemetry final : public Command
@@ -125,9 +109,6 @@ public:
     CommandGetTelemetry() = default;
     bool acknowledge_receipt() const override;
     bool execute() const override;
-
-private:
-    static const String m_action;
 };
 
 class CommandGetPower final : public Command
@@ -136,9 +117,6 @@ public:
     CommandGetPower() = default;
     bool acknowledge_receipt() const override;
     bool execute() const override;
-
-private:
-    static const String m_action;
 };
 
 class CommandGetComms final : public Command
@@ -147,9 +125,6 @@ public:
     CommandGetComms() = default;
     bool acknowledge_receipt() const override;
     bool execute() const override;
-
-private:
-    static const String m_action;
 };
 
 class CommandGetBeaconInterval final : public Command
@@ -158,9 +133,6 @@ public:
     CommandGetBeaconInterval() = default;
     bool acknowledge_receipt() const override;
     bool execute() const override;
-
-private:
-    static const String m_action;
 };
 
 class CommandPayComms final : public Command
@@ -169,9 +141,6 @@ public:
     CommandPayComms() = default;
     bool acknowledge_receipt() const override;
     bool execute() const override;
-
-private:
-    static const String m_action;
 };
 
 class CommandTweeSlee final : public Command
@@ -180,9 +149,6 @@ public:
     CommandTweeSlee() = default;
     bool acknowledge_receipt() const override;
     bool execute() const override;
-
-private:
-    static const String m_action;
 };
 
 class CommandWatchdog final : public Command
@@ -191,9 +157,6 @@ public:
     CommandWatchdog() = default;
     bool acknowledge_receipt() const override;
     bool execute() const override;
-
-private:
-    static const String m_action;
 };
 
 class CommandInvalid final : public Command
@@ -202,9 +165,6 @@ public:
     CommandInvalid() = default;
     bool acknowledge_receipt() const override;
     bool execute() const override;
-
-private:
-    static const String m_action;
 };
 
 class CommandUnknown final : public Command
@@ -213,9 +173,6 @@ public:
     CommandUnknown() = default;
     bool acknowledge_receipt() const override;
     bool execute() const override;
-
-private:
-    static const String m_action;
 };
 
 class CommandNoOperate final : public Command
@@ -224,9 +181,6 @@ public:
     CommandNoOperate() = default;
     bool acknowledge_receipt() const override;
     bool execute() const override;
-
-private:
-    static const String m_action;
 };
 
 class CommandSendTestPacket final : public Command
@@ -235,9 +189,6 @@ public:
     CommandSendTestPacket() = default;
     bool acknowledge_receipt() const override;
     bool execute() const override;
-
-private:
-    static const String m_action;
 };
 
 class CommandUnsetClock final : public Command
@@ -246,9 +197,6 @@ public:
     CommandUnsetClock() = default;
     bool acknowledge_receipt() const override;
     bool execute() const override;
-
-private:
-    static const String m_action;
 };
 
 class CommandLogArguments final : public Command
@@ -262,7 +210,6 @@ public:
 
 private:
     String m_arguments;
-    static const String m_action;
 };
 
 class CommandBackgroundRSSI final : public Command
@@ -276,7 +223,6 @@ public:
 
 private:
     String m_seconds;
-    static const String m_action;
 };
 
 class CommandCurrentRSSI final : public Command
@@ -285,9 +231,6 @@ public:
     CommandCurrentRSSI() = default;
     bool acknowledge_receipt() const override;
     bool execute() const override;
-
-private:
-    static const String m_action;
 };
 class CommandModifyCCA final : public Command
 {
@@ -300,5 +243,4 @@ public:
 
 private:
     String m_threshold;
-    static const String m_action;
 };
