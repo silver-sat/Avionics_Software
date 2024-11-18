@@ -100,12 +100,15 @@ command_count = 0
 #
 # Commands must be framed with KISS encoding
 #
-def issue(command):
+def issue(command, new_command_count=None):
 
-    secret = open("secret.txt", "rb").read()
-    salt = (secrets.token_bytes(8))
     global command_count
-    command_count = command_count + 1
+    if new_command_count is not None:
+        command_count = new_command_count
+    else:
+        command_count += 1
+    salt = (secrets.token_bytes(8))
+    secret = open("secret.txt", "rb").read()
     sequence = str(command_count).zfill(8).encode("utf-8")
     command = command.encode("utf-8")
     computed_hmac = hmac.new(secret, digestmod=hashlib.blake2s)
