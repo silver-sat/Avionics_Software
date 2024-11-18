@@ -38,7 +38,8 @@ bool PowerBoard::begin()
     }
     else
     {
-        Log.errorln("EPS-I not initialized");
+        external_power = true;
+        Log.errorln("EPS-I not initialized, assuming external power");
         return false;
     }
 }
@@ -80,7 +81,7 @@ PowerBeacon PowerBoard::get_status()
 bool PowerBoard::power_adequate()
 {
     auto battery_voltage{m_eps_i.getBatteryVoltage()};
-    if (battery_voltage > payload_session_minimum)
+    if ((battery_voltage > payload_session_minimum) || external_power)
     {
         return true;
     }
