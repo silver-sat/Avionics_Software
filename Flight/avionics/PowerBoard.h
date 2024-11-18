@@ -28,4 +28,5 @@ public:
     bool test_EPS();
 private:
     EPS_I m_eps_i{};
+    bool external_power{false};
 };
