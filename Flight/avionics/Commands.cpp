@@ -76,31 +76,6 @@
 #include "PayloadBoard.h"
 #include "CommandProcessor.h"
 
-const String Command::m_action{"Command"};
-const String CommandSetClock::m_action{"Set realtime clock"};
-const String CommandBeaconSp::m_action{"Set beacon spacing"};
-const String CommandPicTimes::m_action{"Set picture times"};
-const String CommandSSDVTimes::m_action{"Set SSDV times"};
-const String CommandClearPayloadQueue::m_action{"Clear payload queue"};
-const String CommandReportT::m_action{"Report time"};
-const String CommandGetPayloadQueue::m_action{"Get payload queue"};
-const String CommandGetTelemetry::m_action{"Get telemetry"};
-const String CommandGetPower::m_action{"Get power data"};
-const String CommandGetComms::m_action{"Get radio status"};
-const String CommandGetBeaconInterval::m_action{"Get beacon interval"};
-const String CommandPayComms::m_action{"Payload communications"};
-const String CommandTweeSlee::m_action{"Payload halt"};
-const String CommandWatchdog::m_action{"Force watchdog reset"};
-const String CommandInvalid::m_action{"Invalid command"};
-const String CommandUnknown::m_action{"Unknown command"};
-const String CommandNoOperate::m_action{"No operate"};
-const String CommandSendTestPacket::m_action{"Send test packet"};
-const String CommandUnsetClock::m_action{"Unset reatime clock"};
-const String CommandLogArguments::m_action{"Log command arguments"};
-const String CommandBackgroundRSSI::m_action("Report background RSSI");
-const String CommandCurrentRSSI::m_action("Report current RSSI");
-const String CommandModifyCCA::m_action("Modify CCA threshold");
-
 /**
  * @brief Helper function to determine if a string is numeric
  *
@@ -1035,9 +1010,9 @@ bool CommandLogArguments::load_data(const String tokens[], const size_t token_co
 
 bool CommandLogArguments::acknowledge_receipt() const
 {
-    auto status{Command::acknowledge_receipt()};
-    Log.verboseln("LogArguments");
-    return status;
+    // Do not ACK the LogArguments command to avoid radio traffic
+    Log.verboseln("LogArguments does not ACK the command");
+    return true;
 }
 
 /**
@@ -1131,10 +1106,10 @@ bool CommandBackgroundRSSI::execute() const
 
 /**
  * @brief Acknowledge CurrentRSSI command
- * 
+ *
  * @return true successful
  * @return false error
- * 
+ *
  */
 
 bool CommandCurrentRSSI::acknowledge_receipt() const
@@ -1146,11 +1121,11 @@ bool CommandCurrentRSSI::acknowledge_receipt() const
 
 /**
  * @brief Execute CurrentRSSI command
- * 
+ *
  * @return true successful
  * @return false error
- * 
- */ 
+ *
+ */
 
 bool CommandCurrentRSSI::execute() const
 {

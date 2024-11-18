@@ -118,7 +118,7 @@ bool CommandProcessor::check_for_command()
             Log.verboseln("Command signature is valid");
             Command *command{get_command(command_string.substring(signature_length_hex_ascii))};
             command->acknowledge_receipt();
-            Log.traceln("Command acknowledged");
+            Log.traceln("Acknowledge completed");
 
             if (command->execute())
             {
