@@ -16,6 +16,8 @@ def test_package():
 
     test_class = test_day_in_the_life.TestDayInTheLife()
 
+    sleep(45 * 60) # 45 minutes
+
     test_class.test_reset()
     
     test_class.test_no_operate()
@@ -38,4 +40,4 @@ def test_package():
 
     test_class.test_SSDVtimes()
 
-    # test_class.test_set_beacon_interval_3()
+    test_class.test_set_beacon_interval_3()

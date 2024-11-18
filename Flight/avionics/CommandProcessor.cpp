@@ -163,7 +163,8 @@ bool CommandProcessor::check_for_command()
                 switch (response_type)
                 {
                 case GET_RADIO_STATUS:
-                    Response{"GRS " + radio_data}.send();
+                    // todo: refactor quick test
+                    Response{"GRS " + radio_data.substring(0, 150)}.send();
                     break;
                 default:
                     break;
