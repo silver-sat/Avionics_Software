@@ -27,6 +27,7 @@ constexpr auto sequence_length{4};                                              
 constexpr auto sequence_length_hex_ascii{sequence_length * 2};                                                        /**< Sequence length as hex characters */
 constexpr auto signature_length_hex_ascii{hmac_length_hex_ascii + salt_length_hex_ascii + sequence_length_hex_ascii}; /**< Signature length as hex ascii */
 constexpr unsigned long validation_entry_timeout = 30 * seconds_to_milliseconds;                                      /**< Bypass validation delay */
+constexpr auto radio_response_limit{191};                                                                             /**< Radio response limit, does not include 'RES GRS ' */
 
 /**
  * @brief Helper function to determine if a string is hexadecimal digits
@@ -164,7 +165,7 @@ bool CommandProcessor::check_for_command()
                 {
                 case GET_RADIO_STATUS:
                     // todo: refactor quick test
-                    Response{"GRS " + radio_data.substring(0, 150)}.send();
+                    Response{"GRS " + radio_data.substring(0, radio_response_limit)}.send();
                     break;
                 default:
                     break;
