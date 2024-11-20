@@ -223,14 +223,14 @@ bool CommandProcessor::validate_signature(const String &buffer)
 
     String sequence_hex_ascii{buffer.substring(hmac_length_hex_ascii + salt_length_hex_ascii, hmac_length_hex_ascii + salt_length_hex_ascii + sequence_length_hex_ascii)};
     Log.verboseln("Sequence: %s", sequence_hex_ascii.c_str());
-    if (m_command_sequence == sequence_hex_ascii.toInt())
+    if (m_command_sequence <= sequence_hex_ascii.toInt())
     {
         Log.verboseln("Sequence number is valid");
         ++m_command_sequence;
     }
     else
     {
-        Log.errorln("Invalid sequence number, expected %l", m_command_sequence);
+        Log.errorln("Invalid sequence number, expected equal to or greater than %l", m_command_sequence);
         if (m_validate_sequence)
         {
             return false;
