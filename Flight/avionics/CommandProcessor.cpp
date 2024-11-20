@@ -114,6 +114,7 @@ bool CommandProcessor::check_for_command()
             if (!valid_signature)
             {
                 Log.errorln("Invalid digital signature");
+                Message message{Message::negative_acknowledgement, NACK + " " + get_sequence()};
                 return false;
             }
             Log.verboseln("Command signature is valid");
