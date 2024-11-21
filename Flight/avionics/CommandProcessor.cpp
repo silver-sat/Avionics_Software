@@ -26,7 +26,6 @@ constexpr auto salt_length_hex_ascii{salt_length * 2};                          
 constexpr auto sequence_length{4};                                                                                    /**< Sequence length in bytes */
 constexpr auto sequence_length_hex_ascii{sequence_length * 2};                                                        /**< Sequence length as hex characters */
 constexpr auto signature_length_hex_ascii{hmac_length_hex_ascii + salt_length_hex_ascii + sequence_length_hex_ascii}; /**< Signature length as hex ascii */
-constexpr unsigned long validation_entry_timeout = 30 * seconds_to_milliseconds;                                      /**< Bypass validation delay */
 constexpr auto radio_response_limit{191};                                                                             /**< Radio response limit, does not include 'RES GRS ' */
 
 /**
@@ -232,11 +231,8 @@ bool CommandProcessor::validate_signature(const String &buffer)
     }
     else
     {
-        Log.errorln("Invalid sequence number, expected equal to or greater than %l", m_command_sequence);
-        if (m_validate_sequence)
-        {
-            return false;
-        }
+        Log.errorln("Invalid sequence number, expected number equal to or greater than %l", m_command_sequence);
+        return false;
     }
     String command{buffer.substring(signature_length_hex_ascii)};
     Log.verboseln("Command: %s", command.c_str());
@@ -334,45 +330,4 @@ bool CommandProcessor::parse_parameters(const String &command_string, String com
 String CommandProcessor::get_sequence()
 {
     return String{m_command_sequence - 1}; // last successful command sequence number is one less than the expected sequence number
-}
-
-/**
- * @brief Get validation
- *
- * @return true successful
- * @return false error
- *
- * Get validation status
- *
- */
-
-bool CommandProcessor::get_validation()
-{
-    unsigned long start_time{millis()};
-    char incoming_char{};
-    extern AvionicsBoard avionics;
-
-    Serial.print("Press 'n' or 'N' to bypass command sequence validation: ");
-
-    while (millis() - start_time < validation_entry_timeout)
-    {
-        avionics.service_watchdog(); // service the watchdog while waiting
-        if (Serial.available() > 0)
-        {
-            incoming_char = Serial.read();
-            if (incoming_char != 'n' && incoming_char != 'N')
-            {
-                Serial.write(BELL);
-                continue;
-            }
-            Serial.println(incoming_char);
-            Log.noticeln("Command sequence numbers will not be validated");
-            m_validate_sequence = false;
-            return true;
-        }
-    }
-    Serial.println();
-    Log.noticeln("Timeout during validation entry, command sequence numbers will be validated");
-    m_validate_sequence = true;
-    return false;
 }

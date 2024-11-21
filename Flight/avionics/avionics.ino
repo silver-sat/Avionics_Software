@@ -65,11 +65,9 @@ void setup()
   Log.noticeln("Avionics software compiled %s at %s local time", __DATE__, __TIME__);
 
   Log.warningln("Not for flight use");
-  Log.warningln("Required change: remove prompt for command sequence validation");
-  Log.warningln("Required change: remove prompt for delay bypass");
+  Log.warningln("Recommended change: calibration for flight MPU");
+  Log.warningln("Required change: remove prompt for delay bypasses");
   Log.noticeln("Initializing Avionics Process");
-
-  command_processor.get_validation(); // not for flight use
 
   Log.noticeln("Initializing Avionics Board");
   if (avionics.begin()) {

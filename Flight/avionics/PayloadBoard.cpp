@@ -455,7 +455,7 @@ PayloadBeacon PayloadBoard::get_status()
     // communications session
     case PayloadActivity::communications:
     {
-        Log.noticeln("Previous Payload communication activity lasted %u milliseconds (interval %d)", m_last_payload_duration, duration_interval);
+        Log.verboseln("Previous Payload communication activity lasted %u milliseconds (interval %d)", m_last_payload_duration, duration_interval);
         if (duration_interval >= DurationInterval::less_than_1_minute && duration_interval < DurationInterval::count)
         {
             return static_cast<PayloadBeacon>(static_cast<size_t>(PayloadBeacon::communicate_0_1) + static_cast<size_t>(duration_interval));
@@ -466,7 +466,7 @@ PayloadBeacon PayloadBoard::get_status()
     // photo session
     case PayloadActivity::photo:
     {
-        Log.noticeln("Previous Payload photo activity lasted %u milliseconds (interval %d)", m_last_payload_duration, duration_interval);
+        Log.verboseln("Previous Payload photo activity lasted %u milliseconds (interval %d)", m_last_payload_duration, duration_interval);
         if (duration_interval >= DurationInterval::less_than_1_minute && duration_interval < DurationInterval::count)
         {
             return static_cast<PayloadBeacon>(static_cast<size_t>(PayloadBeacon::photo_0_1) + static_cast<size_t>(duration_interval));
@@ -477,7 +477,7 @@ PayloadBeacon PayloadBoard::get_status()
     // SSDV session
     case PayloadActivity::SSDV:
     {
-        Log.noticeln("Previous Payload SSDV activity lasted %u milliseconds (interval %d)", m_last_payload_duration, duration_interval);
+        Log.verboseln("Previous Payload SSDV activity lasted %u milliseconds (interval %d)", m_last_payload_duration, duration_interval);
         if (duration_interval >= DurationInterval::less_than_1_minute && duration_interval < DurationInterval::count)
         {
             return static_cast<PayloadBeacon>(static_cast<size_t>(PayloadBeacon::SSDV_0_1) + static_cast<size_t>(duration_interval));

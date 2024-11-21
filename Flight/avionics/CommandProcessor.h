@@ -18,7 +18,6 @@ class CommandProcessor final
 public:
     bool check_for_command();
     String get_sequence();
-    bool get_validation();
 
 private:
     Command *get_command(const String &buffer);
@@ -28,5 +27,4 @@ private:
     CommandWarehouse command_warehouse{};
     long m_successful_commands{0};
     long m_failed_commands{0};
-    bool m_validate_sequence{true};
 };
