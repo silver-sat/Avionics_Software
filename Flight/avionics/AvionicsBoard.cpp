@@ -240,7 +240,6 @@ AvionicsBeacon AvionicsBoard::get_status()
     status = AvionicsBeacon::antenna_deployment_error;
     Log.verboseln("Antenna not deployed");
   }
-  // todo: how to clear initialization errors
   // show stability if unstable and no initialization errors
   if ((status == AvionicsBeacon::everything_ok) && (!get_stability()))
   {
@@ -357,7 +356,6 @@ bool AvionicsBoard::check_payload()
     clear_payload_queue();
     return false;
   }
-  // todo: validate time zero entry
   if (m_payload_queue.size() > 0 && (time >= m_payload_queue.peek().time))
   {
     Log.traceln("Payload activity time reached %s", get_timestamp().c_str());
@@ -425,7 +423,6 @@ bool AvionicsBoard::clear_payload_queue()
 
 String AvionicsBoard::get_telemetry()
 {
-  // todo: calibrate device and adjust results for flight
   return m_imu.get_acceleration() + m_imu.get_rotation() + m_imu.get_temperature();
 }
 
