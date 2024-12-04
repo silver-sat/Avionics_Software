@@ -168,6 +168,9 @@ bool CommandProcessor::check_for_command()
                     // todo: refactor quick test
                     Response{"GRS " + radio_data.substring(0, radio_response_limit)}.send();
                     break;
+                case BACKGROUND_RSSI:
+                    Response{"RBR " + radio_data.substring(0, radio_response_limit)}.send();    
+                    break;
                 default:
                     break;
                 }

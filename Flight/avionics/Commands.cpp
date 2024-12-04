@@ -1068,7 +1068,7 @@ bool CommandBackgroundRSSI::validate_arguments(const String tokens[], const size
 bool CommandBackgroundRSSI::load_data(const String tokens[], const size_t token_count)
 {
     Log.traceln("Loading argument for: %s", tokens[0].c_str());
-    m_seconds = tokens[1].toInt();
+    m_seconds = tokens[1];
     return true;
 }
 
@@ -1083,7 +1083,7 @@ bool CommandBackgroundRSSI::load_data(const String tokens[], const size_t token_
 bool CommandBackgroundRSSI::acknowledge_receipt() const
 {
     auto status{Command::acknowledge_receipt()};
-    Log.verboseln("BackgroundRSSI: %d seconds", m_seconds);
+    Log.verboseln("BackgroundRSSI: %s seconds", m_seconds.c_str());
     return status;
 }
 
@@ -1099,7 +1099,6 @@ bool CommandBackgroundRSSI::execute() const
 {
     auto status{Command::execute()};
     Log.verboseln("BackgroundRSSI");
-    Log.traceln("Requesting background RSSI for %s seconds", m_seconds.c_str());
     Message message(Message::background_rssi, m_seconds);
     return message.send() && status;
 }
