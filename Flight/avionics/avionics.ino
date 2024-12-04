@@ -64,7 +64,6 @@ void setup()
   Log.setShowLevel(false);
   Log.noticeln("Avionics software compiled %s at %s local time", __DATE__, __TIME__);
 
-  Log.warningln("Not for flight use");
   Log.warningln("Recommended change: calibration for flight MPU");
   Log.warningln("Required change: remove prompt for delay bypasses");
   Log.noticeln("Initializing Avionics Process");

@@ -165,7 +165,6 @@ bool CommandProcessor::check_for_command()
                 switch (response_type)
                 {
                 case GET_RADIO_STATUS:
-                    // todo: refactor quick test
                     Response{"GRS " + radio_data.substring(0, radio_response_limit)}.send();
                     break;
                 case BACKGROUND_RSSI:
