@@ -57,7 +57,6 @@ public:
 private:
     AntennaStatus check_deployment_state();
     void deployment_completed();
-    bool get_bypass();
     Adafruit_I2CDevice m_i2c_dev{Adafruit_I2CDevice(ANTENNA_I2C_ADDRESS, &Wire1)};
     AntennaState m_state{AntennaState::startup};
     unsigned long m_state_start_time{};

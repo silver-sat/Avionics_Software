@@ -64,42 +64,56 @@ void setup()
   Log.setShowLevel(false);
   Log.noticeln("Avionics software compiled %s at %s local time", __DATE__, __TIME__);
 
-  Log.warningln("Recommended change: calibration for flight MPU");
-  Log.warningln("Required change: remove prompt for delay bypasses");
+  Log.noticeln("Flight Software");
   Log.noticeln("Initializing Avionics Process");
 
   Log.noticeln("Initializing Avionics Board");
-  if (avionics.begin()) {
+  if (avionics.begin())
+  {
     Log.noticeln("Avionics Board initialization completed");
-  } else {
+  }
+  else
+  {
     Log.errorln("Avionics Board initialization failed");
   }
 
   Log.noticeln("Initializing Power Board interface");
-  if (power.begin()) {
+  if (power.begin())
+  {
     Log.noticeln("Power Board interface initialization completed");
-  } else {
+  }
+  else
+  {
     Log.errorln("Power Board interface initialization failed");
   }
 
   Log.noticeln("Initializing Radio Board interface");
-  if (radio.begin()) {
+  if (radio.begin())
+  {
     Log.noticeln("Radio Board interface initialization completed");
-  } else {
+  }
+  else
+  {
     Log.errorln("Radio Board interface initialization failed");
   }
 
   Log.noticeln("Initializing Payload Board interface");
-  if (payload.begin()) {
+  if (payload.begin())
+  {
     Log.noticeln("Payload Board interface initialization completed");
-  } else {
+  }
+  else
+  {
     Log.errorln("Payload Board interface initialization failed");
   }
 
   Log.noticeln("Initializing Antenna");
-  if (antenna.begin()) {
+  if (antenna.begin())
+  {
     Log.noticeln("Antenna initialization completed");
-  } else {
+  }
+  else
+  {
     Log.errorln("Antenna initialization failed");
   }
 
