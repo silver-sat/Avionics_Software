@@ -14,7 +14,7 @@ import hmac
 
 ## port for command input and output
 
-COMMAND_PORT = "/dev/tty.usbserial-AL062R13"
+COMMAND_PORT = "/dev/ttyUSB0"
 
 ## serial transmission speed
 
