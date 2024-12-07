@@ -94,7 +94,7 @@ current_rssi_pattern = re.compile(rb"^RES RMM \d$")
 
 # Sequence counter for commands
 
-command_count = 0
+command_count = 55
 
 ## Issue command
 #

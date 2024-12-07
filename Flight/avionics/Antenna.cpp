@@ -9,10 +9,6 @@
 #include "log_utility.h"
 #include "AvionicsBoard.h"
 
-constexpr unsigned long bypass_separation_delay{3 * seconds_to_milliseconds}; /**< Separation delay prior to antenna deployment for testing */
-constexpr unsigned long bypass_antenna_delay{3 * seconds_to_milliseconds};    /**< Antenna opening delay for each attempt for testing */
-constexpr unsigned long bypass_entry_timeout{30 * seconds_to_milliseconds};   /**< Bypass entry delay */
-
 /**
  * @brief Initialize the antenna
  *
@@ -22,7 +18,6 @@ constexpr unsigned long bypass_entry_timeout{30 * seconds_to_milliseconds};   /*
 bool Antenna::begin()
 {
     Log.traceln("Antenna initialzing");
-    get_bypass();
     Log.verboseln("Opening antenna device");
     if (!m_i2c_dev.begin())
     {
@@ -174,39 +169,6 @@ bool Antenna::check_antenna()
     }
     }
     return m_antenna_deployed;
-}
-
-bool Antenna::get_bypass()
-{
-    unsigned long start_time{millis()};
-    char incoming_char{};
-    extern AvionicsBoard avionics;
-
-    Serial.print("Press 'n' or 'N' to bypass antenna and separation delays: ");
-
-    while (millis() - start_time < bypass_entry_timeout)
-    {
-        avionics.service_watchdog(); // service the watchdog while waiting
-        if (Serial.available() > 0)
-        {
-            incoming_char = Serial.read();
-            if (incoming_char != 'n' && incoming_char != 'N')
-            {
-                Serial.write(BELL);
-                continue;
-            }
-            Serial.println(incoming_char);
-            Log.noticeln("Bypassing separation and antenna delays");
-            separation_delay = bypass_separation_delay;
-            antenna_delay = bypass_antenna_delay;
-            return true;
-        }
-    }
-    Serial.println();
-    Log.noticeln("Timeout during bypass entry, full separation and antenna delays will be used");
-    // separation_delay = bypass_separation_delay;
-    // antenna_delay = bypass_antenna_delay;
-    return false;
 }
 
 /**
