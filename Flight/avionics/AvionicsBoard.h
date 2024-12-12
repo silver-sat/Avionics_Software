@@ -68,7 +68,7 @@ private:
    IMU m_imu{};
    CY15B256J m_fram{};
    unsigned long m_last_beacon_time{0};
-   unsigned long m_beacon_interval{2 * minutes_to_seconds * seconds_to_milliseconds};
+   unsigned long m_beacon_interval{0 * minutes_to_seconds * seconds_to_milliseconds}; // start with beacon off
    bool m_rtc_initialization_error{false};
    bool m_imu_initialization_error{false};
    bool m_FRAM_initialization_error{false};

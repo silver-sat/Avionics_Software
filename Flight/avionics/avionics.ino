@@ -33,6 +33,7 @@
 
 constexpr uint32_t serial_baud_rate{19200}; /**< speed of serial connection @hideinitializer */
 constexpr unsigned long serial_delay{2 * seconds_to_milliseconds};
+constexpr unsigned long test_delay{30 * minutes_to_seconds * seconds_to_milliseconds};
 
 // Create the boards, antenna, and command processor
 
@@ -116,10 +117,19 @@ void setup()
   {
     Log.errorln("Antenna initialization failed");
   }
-
+  
   Log.noticeln("Setup complete");
+
+  // Test delay
+
+  Log.noticeln("Starting test delay");
+  unsigned long test_delay_start{millis()};
+  while ((millis() - test_delay_start) < test_delay)
+  {
+    avionics.service_watchdog(); // service the watchdog during the test delay
+  }
+  Log.noticeln("Test delay complete");
   Log.noticeln("Avionics process accepting commands");
-  avionics.service_watchdog();
 
   // Testing: test the devices and the boards
 
