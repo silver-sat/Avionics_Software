@@ -18,7 +18,7 @@
 bool Antenna::begin()
 {
     Log.traceln("Antenna initialzing");
-    Log.verboseln("Opening antenna device");
+    Log.verboseln("Opening antenna I2C device");
     if (!m_i2c_dev.begin())
     {
         Log.errorln("Antenna I2C device not found");

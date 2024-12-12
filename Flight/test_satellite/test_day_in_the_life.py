@@ -14,6 +14,7 @@ class TestDayInTheLife:
     """Test day in the life scenario"""
 
     def test_reset(self):
+        sleep((30 + 45 + 15) * 60) # wait for the satellite to boot
         common.issue("BeaconSp 0")
         sleep(5)
         common.read() # clear buffer
