@@ -70,7 +70,9 @@ reportt_pattern = re.compile(
 )
 # todo: update payload queue pattern
 payload_queue_pattern = re.compile(
-    rb"^RES GPQ [0-5]( 20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)){0,5}$"
+    rb"^RES GPQ \d{1,2} entries in queue$"
+    # toto: verify the additional responses if any
+    # rb"^RES GPQ [0-5]( 20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T([01]\d|2[0-4]):([0-5]\d):([0-5]\d)){0,5}$"
 )
 telemetry_pattern = re.compile(
     rb"(^RES GTY AX -?\d+\.\d+)( AY -?\d+\.\d+)( AZ -?\d+\.\d+)( RX -?\d+\.\d+)( RY -?\d+\.\d+)( RZ -?\d+\.\d+)( T -?\d+\.\d+)$"
@@ -89,12 +91,12 @@ unknown_command_pattern = re.compile(rb"^ERR UNK$")
 no_operation_pattern = re.compile(rb"^RES NOP$")
 test_packet_pattern = re.compile(rb"^RES STP test packet$")
 unset_clock_pattern = re.compile(rb"^RES URC$")
-background_rssi_pattern = re.compile(rb"^RES RMM \d$")
-current_rssi_pattern = re.compile(rb"^RES RMM \d$")
+background_rssi_pattern = re.compile(rb"^RES RBR \d{1,3}$")
+current_rssi_pattern = re.compile(rb"^RES RBC \d{1,3}$")
 
 # Sequence counter for commands
 
-command_count = 55
+command_count = 200
 
 ## Issue command
 #
